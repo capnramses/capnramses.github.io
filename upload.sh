@@ -1,3 +1,3 @@
 git add --all
-git commit -m "automated upload"
+git commit -m "$(date +%s)"
 git push
