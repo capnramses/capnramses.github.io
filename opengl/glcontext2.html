@@ -36,14 +36,14 @@
 <body>
 <p><a href="index.html">[index]</a></p>
 <h1>Extended Initialisation</h1>
-<h4>Anton Gerdelan. Last Updated 8 Apr 2016</h4>
+<h4>Anton Gerdelan. Last Updated 2 Oct 2016</h4>
 
 <p>
 So, following on from the minimal start-up last time, it's useful to get some statistics
 on what the computer's video driver can handle, and specify some additional parameters
-for start-up. Our GL programme will dump <u>a lot</u> of information, which can be a
+for start-up. Our OpenGL programme will dump <u>a lot</u> of information, which can be a
 little infuriating to pick through when there's a problem, so we'll start by setting up
-a log file for capturing GL-related output.
+a log file for capturing OpenGL-related output.
 </p>
 
 <h2>Starting a Log File</h2>
@@ -166,7 +166,7 @@ has gone wrong.
 We can start GLFW in the same way as before, but add some extra checks. This
 will tell us if we've made a mistake such as calling a GLFW function with the
 wrong parameters.
-<u>Before</u> intialising GLFW, we can set up an error callback, which we can
+<u>Before</u> initialising GLFW, we can set up an error callback, which we can
 use to spit out some error information, then exit the programme. We create a
 little function for the callback:
 </p>
@@ -178,7 +178,7 @@ void glfw_error_callback (int error, const char* description) {
 </pre>
 
 <p>
-This will tell is if there was a special problem intialising GLFW. I also put in
+This will tell is if there was a special problem initialising GLFW. I also put in
 an <tt>assert ()</tt> to make sure that the log file could be opened. If you
 want to use this then you'll need to include <tt>assert.h</tt>.
 </p>
@@ -355,7 +355,7 @@ glViewport (0, 0, g_gl_width, g_gl_height);
 <h2>Printing Parameters from the GL Context</h2>
 
 <p>
-After intialising GLEW we can start to use the GL interface - <a href="http://www.opengl.org/sdk/docs/man4/xhtml/glGet.xml">
+After initialising GLEW we can start to use the GL interface - <a href="http://www.opengl.org/sdk/docs/man4/xhtml/glGet.xml">
 glGet</a> to print out some more parameters. Most of this information is from previous
 incarnations of OpenGL, and is no longer useful. Some information is going to be really
 useful to determine the capabilities of the graphics hardware - how big textures can be,
@@ -552,7 +552,7 @@ Keep in mind that the frame rate is not an objective measure of how fast your
 code is. You can't display faster than the refresh rate of the monitor (around 60Hz or 60FPS).
 Rendering at 100Hz is therefore not beneficial in the same way as it would be
 to game logic, which can then compute more time steps per second (more detailed
-movment paths and stuff). Fast GPU clocks will give you huge numbers when
+movement paths and stuff). Fast GPU clocks will give you huge numbers when
 drawing nothing. This doesn't really
 mean anything that you can compare until you start drawing a more involved scene.
 Measuring frame rate is useful when optimising more complex scenes. If you are drawing at
@@ -566,17 +566,20 @@ which techniques are relatively more GPU hungry than others.
 </p>
 
 <p>
-The maxim <b>never optimise early</b> has some truth behind it. You can waste a huge amount of your
-programming time on optimisations that don't end up making much practical improvement -
+The maxim <b>never optimise early</b> has some truth behind it. It is of course
+very important for us in real time rendering to use highly efficient code, and
+reasoning about how the underlying hardware deals with complexity we create can
+be most beneficial. However, there is a bit of a trap in spending a huge amount of your
+programming time on optimisations that don't end up making much practical improvement,
 or are for experimental features that end up getting cut from the project.
 I still catch myself doing this all the time. I think it takes some experience
-to know how to write graphics (and general) code that is efficient to begin with
-for whatever platform you are using, and how to be very selective about which areas
-would genuinely benefit from some hours spent on optimisation work. It would be
-wise to wait until you know your programme is running too slowly, then use all
-the profiling and timing tools at your disposal to find how inefficient
-different conventions and blocks of code are in reality - perhaps we can modify
-the maxim to <b>optimise selectively</b>.
+to know how to write graphics (and general) code that is efficient <u>to begin with</u>
+for whatever platform you are using, and then how to be very selective about which areas
+would genuinely benefit more than others from some hours spent on optimisation work.
+In the beginning, it would be wise to wait until you know your programme is running
+too slowly, then use all the profiling and timing tools at your disposal to find
+how inefficient different conventions and blocks of code are in reality - 
+<b>optimise selectively</b>.
 </p>
 
 <h2>Extending Further</h2>
