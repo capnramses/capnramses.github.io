@@ -2,6 +2,11 @@
 
 ##TODO
 
+* make a small utility that creates a blog index page
+  * scan all files in posts/ folder
+  * make an archive index list but
+  * feature the latest 3 with images and "read more"
+
 * sed all fonts to ubuntu
 * check that https links to book with amazon
 * and itch.io work
