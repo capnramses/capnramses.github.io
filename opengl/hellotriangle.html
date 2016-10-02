@@ -312,7 +312,7 @@ Now an unusual step. Most meshes will use a collection of one or more vertex
 buffer objects to hold vertex points, texture-coordinates,  vertex normals, etc. In
 older GL implementations we would have to bind each one, and define their memory
 layout, <b>every time that we draw the mesh</b>. To simplify that, we have new
-thing called the <b>vertex attribute object</b> (VAO), which remembers all of
+thing called the <b>vertex array object</b> (VAO), which remembers all of
 the vertex buffers that you want to use, and the memory layout of each one. We
 set up the vertex array object once per mesh. When we want to draw, all we do
 then is bind the VAO and draw.
@@ -346,7 +346,7 @@ You might try compiling at this point to make sure that there were no mistakes.
 
 <p>
 We need to use a shader programme, written in OpenGL Shader Language (GLSL), to define <b>how to draw</b>
-our shape from the vertex attribute object. You will see that the attribute pointer from the VAO will match
+our shape from the vertex array object. You will see that the attribute pointer from the VAO will match
 up to our input variables in the shader.
 </p>
 
