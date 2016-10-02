@@ -67,9 +67,11 @@ div.sidepanel {
 }
 
 table, td {
-    border: 0;
+  background-color: #FFFFFF;
+  border: 0;
 }
 
 div.widetable table {
+  background-color: #FFFFFF;
 	width: 1024px;
 }
