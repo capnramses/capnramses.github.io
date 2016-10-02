@@ -390,7 +390,7 @@ To get shaders up and running quickly you can bang this into a minimal GL progra
 <li>call <tt>glLinkProgram</tt></li>
 <li>call <tt>glGetUniformLocation</tt> to get the unique location of the variable called "<tt>inputColour</tt>"</li>
 <li>call <tt>glUseProgram</tt> to switch to your shader before calling...
-<li><tt>glUniform4f (location, r,g,b,a)</tt> to assign an initial colour to your fragment shader (e.g. <tt>glUniform4f (colour_loc, 1.0f, 0.0f, 0.0f, 1.0f)</tt> for red)</li>
+<li><tt>glUniform4f(location, r,g,b,a)</tt> to assign an initial colour to your fragment shader (e.g. <tt>glUniform4f(colour_loc, 1.0f, 0.0f, 0.0f, 1.0f)</tt> for red)</li>
 </ol>
 
 <p>
@@ -451,13 +451,13 @@ Right after calling <tt>glCompileShader</tt>:
 </p>
 
 <textarea rows="9">
-glCompileShader (shader_index);
+glCompileShader(shader_index);
 // check for compile errors
 int params = -1;
-glGetShaderiv (shader_index, GL_COMPILE_STATUS, &amp;params);
+glGetShaderiv(shader_index, GL_COMPILE_STATUS, &amp;params);
 if (GL_TRUE != params) {
-  fprintf (stderr, "ERROR: GL shader index %i did not compile\n", shader_index);
-  _print_shader_info_log (shader_index);
+  fprintf(stderr, "ERROR: GL shader index %i did not compile\n", shader_index);
+  _print_shader_info_log(shader_index);
   return false; // or exit or something
 }</textarea>
 
@@ -469,12 +469,12 @@ next section.
 <h3>Print the Shader Info Log</h3>
 
 <textarea rows="7">
-void _print_shader_info_log (GLuint shader_index) {
+void _print_shader_info_log(GLuint shader_index) {
   int max_length = 2048;
   int actual_length = 0;
   char shader_log[2048];
-  glGetShaderInfoLog (shader_index, max_length, &amp;actual_length, shader_log);
-  printf ("shader info log for GL index %u:\n%s\n", shader_index, shader_log);
+  glGetShaderInfoLog(shader_index, max_length, &amp;actual_length, shader_log);
+  printf("shader info log for GL index %u:\n%s\n", shader_index, shader_log);
 }</textarea>
 
 <p>This is the most useful shader debugging function; it will tell you which line in
@@ -487,14 +487,12 @@ which shader is causing the error.</p>
 <textarea rows="12">
 // check if link was successful
 int params = -1;
-glGetProgramiv (programme, GL_LINK_STATUS, &amp;params);
+glGetProgramiv(programme, GL_LINK_STATUS, &amp;params);
 if (GL_TRUE != params) {
-  fprintf (
-    stderr,
+  fprintf(stderr,
     "ERROR: could not link shader programme GL index %u\n",
-    programme
-  );
-  _print_programme_info_log (programme);
+    programme);
+  _print_programme_info_log(programme);
   return false;
 }</textarea>
 
@@ -506,12 +504,12 @@ next section.
 <h3>Print the Program Info Log</h3>
 
 <textarea rows="7">
-void _print_programme_info_log (GLuint programme) {
+void _print_programme_info_log(GLuint programme) {
   int max_length = 2048;
   int actual_length = 0;
   char program_log[2048];
-  glGetProgramInfoLog (programme, max_length, &amp;actual_length, program_log);
-  printf ("program info log for GL index %u:\n%s", programme, program_log);
+  glGetProgramInfoLog(programme, max_length, &amp;actual_length, program_log);
+  printf("program info log for GL index %u:\n%s", programme, program_log);
 }</textarea>
 
 <p>
@@ -531,17 +529,17 @@ is the index of my shader programme.
 
 
 <textarea rows="20">
-void print_all (GLuint programme) {
-  printf ("--------------------\nshader programme %i info:\n", programme);
+void print_all(GLuint programme) {
+  printf("--------------------\nshader programme %i info:\n", programme);
   int params = -1;
-  glGetProgramiv (programme, GL_LINK_STATUS, &amp;params);
-  printf ("GL_LINK_STATUS = %i\n", params);
+  glGetProgramiv(programme, GL_LINK_STATUS, &amp;params);
+  printf("GL_LINK_STATUS = %i\n", params);
   
-  glGetProgramiv (programme, GL_ATTACHED_SHADERS, &amp;params);
-  printf ("GL_ATTACHED_SHADERS = %i\n", params);
+  glGetProgramiv(programme, GL_ATTACHED_SHADERS, &amp;params);
+  printf("GL_ATTACHED_SHADERS = %i\n", params);
   
-  glGetProgramiv (programme, GL_ACTIVE_ATTRIBUTES, &amp;params);
-  printf ("GL_ACTIVE_ATTRIBUTES = %i\n", params);
+  glGetProgramiv(programme, GL_ACTIVE_ATTRIBUTES, &amp;params);
+  printf("GL_ACTIVE_ATTRIBUTES = %i\n", params);
   for (int i = 0; i < params; i++) {
     char name[64];
     int max_length = 64;
@@ -558,29 +556,29 @@ void print_all (GLuint programme) {
       name
     );
     if (size > 1) {
-      for (int j = 0; j < size; j++) {
+      for(int j = 0; j < size; j++) {
         char long_name[64];
-        sprintf (long_name, "%s[%i]", name, j);
-        int location = glGetAttribLocation (programme, long_name);
-        printf ("  %i) type:%s name:%s location:%i\n",
-          i, GL_type_to_string (type), long_name, location);
+        sprintf(long_name, "%s[%i]", name, j);
+        int location = glGetAttribLocation(programme, long_name);
+        printf("  %i) type:%s name:%s location:%i\n",
+          i, GL_type_to_string(type), long_name, location);
       }
     } else {
-      int location = glGetAttribLocation (programme, name);
-      printf ("  %i) type:%s name:%s location:%i\n",
-        i, GL_type_to_string (type), name, location);
+      int location = glGetAttribLocation(programme, name);
+      printf("  %i) type:%s name:%s location:%i\n",
+        i, GL_type_to_string(type), name, location);
     }
   }
   
-  glGetProgramiv (programme, GL_ACTIVE_UNIFORMS, &amp;params);
-  printf ("GL_ACTIVE_UNIFORMS = %i\n", params);
-  for (int i = 0; i < params; i++) {
+  glGetProgramiv(programme, GL_ACTIVE_UNIFORMS, &amp;params);
+  printf("GL_ACTIVE_UNIFORMS = %i\n", params);
+  for(int i = 0; i < params; i++) {
     char name[64];
     int max_length = 64;
     int actual_length = 0;
     int size = 0;
     GLenum type;
-    glGetActiveUniform (
+    glGetActiveUniform(
       programme,
       i,
       max_length,
@@ -589,22 +587,22 @@ void print_all (GLuint programme) {
       &amp;type,
       name
     );
-    if (size > 1) {
-      for (int j = 0; j < size; j++) {
+    if(size > 1) {
+      for(int j = 0; j < size; j++) {
         char long_name[64];
-        sprintf (long_name, "%s[%i]", name, j);
-        int location = glGetUniformLocation (programme, long_name);
-        printf ("  %i) type:%s name:%s location:%i\n",
-          i, GL_type_to_string (type), long_name, location);
+        sprintf(long_name, "%s[%i]", name, j);
+        int location = glGetUniformLocation(programme, long_name);
+        printf("  %i) type:%s name:%s location:%i\n",
+          i, GL_type_to_string(type), long_name, location);
       }
     } else {
-      int location = glGetUniformLocation (programme, name);
-      printf ("  %i) type:%s name:%s location:%i\n",
-        i, GL_type_to_string (type), name, location);
+      int location = glGetUniformLocation(programme, name);
+      printf("  %i) type:%s name:%s location:%i\n",
+        i, GL_type_to_string(type), name, location);
     }
   }
   
-  _print_programme_info_log (programme);
+  _print_programme_info_log(programme);
 }</textarea>
 
 <p>
@@ -623,8 +621,8 @@ This function converts a GL enumerated data type to a C string (for readable pri
 </p>
 
 <textarea rows="19">
-const char* GL_type_to_string (GLenum type) {
-  switch (type) {
+const char* GL_type_to_string(GLenum type) {
+  switch(type) {
     case GL_BOOL: return "bool";
     case GL_INT: return "int";
     case GL_FLOAT: return "float";
@@ -658,13 +656,13 @@ index.
 </p>
 
 <textarea rows="11">
-bool is_valid (GLuint programme) {
-  glValidateProgram (programme);
+bool is_valid(GLuint programme) {
+  glValidateProgram(programme);
   int params = -1;
-  glGetProgramiv (programme, GL_VALIDATE_STATUS, &amp;params);
-  printf ("program %i GL_VALIDATE_STATUS = %i\n", programme, params);
+  glGetProgramiv(programme, GL_VALIDATE_STATUS, &amp;params);
+  printf("program %i GL_VALIDATE_STATUS = %i\n", programme, params);
   if (GL_TRUE != params) {
-    _print_programme_info_log (programme);
+    _print_programme_info_log(programme);
     return false;
   }
   return true;
@@ -730,7 +728,7 @@ have been loaded before attaching and linking.
 </li>
 
 <li>
-If you have a shader manager, and have written a function along the lines of <tt>setUniform (shader_index, value)</tt>
+If you have a shader manager, and have written a function along the lines of <tt>setUniform(shader_index, value)</tt>
 from the manager, it could then check to make sure that shader is <u>in use</u> first (a common
 cause of error).
 </li>
