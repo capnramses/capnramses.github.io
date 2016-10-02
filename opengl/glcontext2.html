@@ -69,18 +69,18 @@ take a variable number of arguments; <tt>#include &lt;stdarg.h&gt;</tt>.
 #include <stdarg.h>
 #define GL_LOG_FILE "gl.log"
 
-bool restart_gl_log () {
-  FILE* file = fopen (GL_LOG_FILE, "w");
-  if (!file) {
-    fprintf (stderr,
+bool restart_gl_log() {
+  FILE* file = fopen(GL_LOG_FILE, "w");
+  if(!file) {
+    fprintf(stderr,
       "ERROR: could not open GL_LOG_FILE log file %s for writing\n",
       GL_LOG_FILE);
     return false;
   }
-  time_t now = time (NULL);
-  char* date = ctime (&now);
-  fprintf (file, "GL_LOG_FILE log. local time %s\n", date);
-  fclose (file);
+  time_t now = time(NULL);
+  char* date = ctime(&now);
+  fprintf(file, "GL_LOG_FILE log. local time %s\n", date);
+  fclose(file);
   return true;
 }</textarea>
 
@@ -94,21 +94,21 @@ rather than keep it open.
 
 
 <pre>
-bool gl_log (const char* message, ...) {
+bool gl_log(const char* message, ...) {
   va_list argptr;
-  FILE* file = fopen (GL_LOG_FILE, "a");
-  if (!file) {
-    fprintf (
+  FILE* file = fopen(GL_LOG_FILE, "a");
+  if(!file) {
+    fprintf(
       stderr,
       "ERROR: could not open GL_LOG_FILE %s file for appending\n",
       GL_LOG_FILE
     );
     return false;
   }
-  va_start (argptr, message);
-  vfprintf (file, message, argptr);
-  va_end (argptr);
-  fclose (file);
+  va_start(argptr, message);
+  vfprintf(file, message, argptr);
+  va_end(argptr);
+  fclose(file);
   return true;
 }
 </pre>
@@ -128,24 +128,22 @@ enlightening.
 
 
 <pre>
-bool gl_log_err (const char* message, ...) {
+bool gl_log_err(const char* message, ...) {
   va_list argptr;
-  FILE* file = fopen (GL_LOG_FILE, "a");
-  if (!file) {
-    fprintf (
-      stderr,
+  FILE* file = fopen(GL_LOG_FILE, "a");
+  if(!file) {
+    fprintf(stderr,
       "ERROR: could not open GL_LOG_FILE %s file for appending\n",
-      GL_LOG_FILE
-    );
+      GL_LOG_FILE);
     return false;
   }
-  va_start (argptr, message);
-  vfprintf (file, message, argptr);
-  va_end (argptr);
-  va_start (argptr, message);
-  vfprintf (stderr, message, argptr);
-  va_end (argptr);
-  fclose (file);
+  va_start(argptr, message);
+  vfprintf(file, message, argptr);
+  va_end(argptr);
+  va_start(argptr, message);
+  vfprintf(stderr, message, argptr);
+  va_end(argptr);
+  fclose(file);
   return true;
 }
 </pre>
@@ -172,26 +170,26 @@ little function for the callback:
 </p>
 
 <pre>
-void glfw_error_callback (int error, const char* description) {
-  gl_log_err ("GLFW ERROR: code %i msg: %s\n", error, description);
+void glfw_error_callback(int error, const char* description) {
+  gl_log_err("GLFW ERROR: code %i msg: %s\n", error, description);
 }
 </pre>
 
 <p>
 This will tell is if there was a special problem initialising GLFW. I also put in
-an <tt>assert ()</tt> to make sure that the log file could be opened. If you
+an <tt>assert()</tt> to make sure that the log file could be opened. If you
 want to use this then you'll need to include <tt>assert.h</tt>.
 </p>
 
 <pre>
-int main () {
-  assert (restart_gl_log ());
+int main() {
+  assert(restart_gl_log());
   // start GL context and O/S window using the GLFW helper library
-  gl_log ("starting GLFW\n%s\n", glfwGetVersionString ());
+  gl_log("starting GLFW\n%s\n", glfwGetVersionString());
   // register the error call-back function that we wrote, above
-  glfwSetErrorCallback (glfw_error_callback);
-  if (!glfwInit ()) {
-    fprintf (stderr, "ERROR: could not start GLFW3\n");
+  glfwSetErrorCallback(glfw_error_callback);
+  if(!glfwInit()) {
+    fprintf(stderr, "ERROR: could not start GLFW3\n");
     return 1;
   }
 ...
@@ -217,10 +215,10 @@ we are on Mavericks:
 </p>
 
 <pre>
-glfwWindowHint (GLFW_CONTEXT_VERSION_MAJOR, 3);
-glfwWindowHint (GLFW_CONTEXT_VERSION_MINOR, 2);
-glfwWindowHint (GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-glfwWindowHint (GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 </pre>
 
 <p>
@@ -260,7 +258,7 @@ look, but it gets more expensive. Set it to "16" before taking screen shots!
 </p>
 
 <pre>
-glfwWindowHint (GLFW_SAMPLES, 4);
+glfwWindowHint(GLFW_SAMPLES, 4);
 </pre>
 
 <h3>Window Resolution and Full-Screen</h3>
@@ -284,9 +282,9 @@ just use the current resolution, and change our <tt>glfwCreateWindow</tt> call:
 </p>
 
 <pre>
-GLFWmonitor* mon = glfwGetPrimaryMonitor ();
-const GLFWvidmode* vmode = glfwGetVideoMode (mon);
-GLFWwindow* window = glfwCreateWindow (
+GLFWmonitor* mon = glfwGetPrimaryMonitor();
+const GLFWvidmode* vmode = glfwGetVideoMode(mon);
+GLFWwindow* window = glfwCreateWindow(
   vmode->width, vmode->height, "Extended GL Init", mon, NULL
 );
 </pre>
@@ -299,8 +297,8 @@ loop:
 </p>
 
 <pre>
-if (GLFW_PRESS == glfwGetKey (window, GLFW_KEY_ESCAPE)) {
-  glfwSetWindowShouldClose (window, 1);
+if (GLFW_PRESS == glfwGetKey(window, GLFW_KEY_ESCAPE)) {
+  glfwSetWindowShouldClose(window, 1);
 }
 </pre>
 
@@ -330,7 +328,7 @@ int g_gl_width = 640;
 int g_gl_height = 480;
 
 // a call-back function
-void glfw_window_size_callback (GLFWwindow* window, int width, int height) {
+void glfw_window_size_callback(GLFWwindow* window, int width, int height) {
   g_gl_width = width;
   g_gl_height = height;
   
@@ -339,17 +337,17 @@ void glfw_window_size_callback (GLFWwindow* window, int width, int height) {
 </pre>
 
 <p>
-Then we can call: <tt>glfwSetWindowSizeCallback (window, glfw_window_size_callback);</tt>
+Then we can call: <tt>glfwSetWindowSizeCallback(window, glfw_window_size_callback);</tt>
 </p>
 
 <p>
 You'll notice that if you resize your window that the OpenGL part doesn't scale
 to fit. We need to update the viewport size. Put this in the rendering loop,
-just after the <tt>glClear ()</tt> function:
+just after the <tt>glClear()</tt> function:
 </p>
 
 <pre>
-glViewport (0, 0, g_gl_width, g_gl_height);
+glViewport(0, 0, g_gl_width, g_gl_height);
 </pre>
 
 <h2>Printing Parameters from the GL Context</h2>
@@ -364,7 +362,7 @@ function right after where I log the GL version being used.
 </p>
 
 <pre>
-void log_gl_params () {
+void log_gl_params() {
   GLenum params[] = {
     GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS,
     GL_MAX_CUBE_MAP_TEXTURE_SIZE,
@@ -393,23 +391,23 @@ void log_gl_params () {
     "GL_MAX_VIEWPORT_DIMS",
     "GL_STEREO",
   };
-  gl_log ("GL Context Params:\n");
+  gl_log("GL Context Params:\n");
   char msg[256];
   // integers - only works if the order is 0-10 integer return types
   for (int i = 0; i < 10; i++) {
     int v = 0;
-    glGetIntegerv (params[i], &v);
-    gl_log ("%s %i\n", names[i], v);
+    glGetIntegerv(params[i], &v);
+    gl_log("%s %i\n", names[i], v);
   }
   // others
   int v[2];
   v[0] = v[1] = 0;
-  glGetIntegerv (params[10], v);
-  gl_log ("%s %i %i\n", names[10], v[0], v[1]);
+  glGetIntegerv(params[10], v);
+  gl_log("%s %i %i\n", names[10], v[0], v[1]);
   unsigned char s = 0;
-  glGetBooleanv (params[11], &s);
-  gl_log (m"%s %u\n", names[11], (unsigned int)s);
-  gl_log ("-----------------------------\n");
+  glGetBooleanv(params[11], &s);
+  gl_log(m"%s %u\n", names[11], (unsigned int)s);
+  gl_log("-----------------------------\n");
 }
 </pre>
 
@@ -498,17 +496,17 @@ second.
 </p>
 
 <pre>
-while (!glfwWindowShouldClose (window)) {
-  _update_fps_counter (window);
-  glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glViewport (0, 0, g_gl_width, g_gl_height);
+while (!glfwWindowShouldClose(window)) {
+  _update_fps_counter(window);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glViewport(0, 0, g_gl_width, g_gl_height);
   
   /* DRAW STUFF HERE */
   
-  glfwSwapBuffers (window);
-  glfwPollEvents ();
-  if (GLFW_PRESS == glfwGetKey (window, GLFW_KEY_ESCAPE)) {
-    glfwSetWindowShouldClose (window, 1);
+  glfwSwapBuffers(window);
+  glfwPollEvents();
+  if (GLFW_PRESS == glfwGetKey(window, GLFW_KEY_ESCAPE)) {
+    glfwSetWindowShouldClose(window, 1);
   }
 }
 </pre>
@@ -528,17 +526,17 @@ the functionality to do that just yet.
 </p>
 
 <pre>
-void _update_fps_counter (GLFWwindow* window) {
-  static double previous_seconds = glfwGetTime ();
+void _update_fps_counter(GLFWwindow* window) {
+  static double previous_seconds = glfwGetTime();
   static int frame_count;
-  double current_seconds = glfwGetTime ();
+  double current_seconds = glfwGetTime();
   double elapsed_seconds = current_seconds - previous_seconds;
   if (elapsed_seconds > 0.25) {
     previous_seconds = current_seconds;
     double fps = (double)frame_count / elapsed_seconds;
     char tmp[128];
-    sprintf (tmp, "opengl @ fps: %.2f", fps);
-    glfwSetWindowTitle (window, tmp);
+    sprintf(tmp, "opengl @ fps: %.2f", fps);
+    glfwSetWindowTitle(window, tmp);
     frame_count = 0;
   }
   frame_count++;
