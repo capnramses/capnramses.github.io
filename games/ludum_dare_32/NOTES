@@ -1,0 +1,3 @@
+game_graph.js line 237
+var totalScore = baseScore * me.talent * targetCityHumour * interCityModifier;
+is THE difficulty level basically

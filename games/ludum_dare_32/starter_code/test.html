@@ -1,0 +1,84 @@
+<html>
+<body>
+<canvas id="canvas" width="512" height="512"></canvas>
+</body>
+
+<script id="snippet.glsl" type="text/glsl">
+//
+// A trivial function to #include from other files
+// 8 April 2015, by Anton Gerdelan
+//
+float snippet (float a, float b) {
+	return a + b;
+}
+</script>
+
+<script id="test.glsl" type="text/glsl">
+//
+// a test shader to see if #include works
+//
+
+#vert // this part is the vertex shader.
+
+#include "snippet.glsl"
+
+attribute vec2 vp;
+varying float y;
+
+void main () {
+	y = snippet (0.1, 0.1);
+	gl_Position = vec4 (vp.x, vp.y + y, 0.0, 1.0);
+}
+
+#frag // this part is the fragment shader
+
+precision mediump float;
+#include "snippet.glsl"
+
+varying float y;
+
+void main () {
+	float r = snippet (0.8, 0.0);
+	gl_FragColor = vec4 (y + r, y, y, 1.0);
+}
+</script>
+
+<script src="test_webgl.js" type="text/javascript"></script>
+<script src="apg_glsl.js" type="text/javascript"></script>
+<script type="text/javascript">
+function init () {
+	init_gl ();
+	
+	// actual programmes to build from particular files
+	var shader_prog_srcs = [
+		"test.glsl"
+	];
+	if (!load_shaders (shader_prog_srcs)) {
+		return false;
+	}
+	return true;
+}
+
+function draw_frame () {
+	gl.clear (gl.COLOR_BUFFER_BIT);
+	
+	gl.useProgram (shader_progs[0]);
+	vao_ext.bindVertexArrayOES (quad_vao);
+	gl.drawArrays (gl.TRIANGLE_STRIP, 0, 4);
+}
+
+function main_loop () {
+	draw_frame ();
+	window.requestAnimFrame (main_loop, canvas);
+}
+
+function main () {
+	if (!init ()) {
+		return;
+	}
+	main_loop ();
+}
+
+main ();
+</script>
+</html>
