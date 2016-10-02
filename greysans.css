@@ -3,7 +3,7 @@ body {
 	background-color: #202020;
 	background-image: url(images/white_bar.png), url(images/bkrd.png);
 	background-repeat: repeat-y, no-repeat;
-	background-position: center, center;
+	background-position: center, top;
 	background-size:  600px 8px, 1920px 992px;
 	width: 512px;
 	margin: auto;
