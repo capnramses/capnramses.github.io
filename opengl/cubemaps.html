@@ -141,16 +141,16 @@ float points[] = {
    10.0f, -10.0f,  10.0f
 };
 GLuint vbo;
-glGenBuffers (1, &vbo);
-glBindBuffer (GL_ARRAY_BUFFER, vbo);
-glBufferData (GL_ARRAY_BUFFER, 3 * 36 * sizeof (float), &points, GL_STATIC_DRAW);
+glGenBuffers(1, &vbo);
+glBindBuffer(GL_ARRAY_BUFFER, vbo);
+glBufferData(GL_ARRAY_BUFFER, 3 * 36 * sizeof(float), &points, GL_STATIC_DRAW);
 
 GLuint vao;
-glGenVertexArrays (1, &vao);
-glBindVertexArray (vao);
-glEnableVertexAttribArray (0);
-glBindBuffer (GL_ARRAY_BUFFER, vbo);
-glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, 0, NULL);</textarea>
+glGenVertexArrays(1, &vao);
+glBindVertexArray(vao);
+glEnableVertexAttribArray(0);
+glBindBuffer(GL_ARRAY_BUFFER, vbo);
+glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);</textarea>
 
 <h3>Create a Cube-Map Texture</h3>
 
@@ -179,32 +179,31 @@ texture handle is passed back as a function parameter.
 </p>
 
 <textarea rows=20>
-void create_cube_map (
+void create_cube_map(
   const char* front,
   const char* back,
   const char* top,
   const char* bottom,
   const char* left,
   const char* right,
-  GLuint* tex_cube
-) {
+  GLuint* tex_cube) {
   // generate a cube-map texture to hold all the sides
-  glActiveTexture (GL_TEXTURE0);
-  glGenTextures (1, tex_cube);
+  glActiveTexture(GL_TEXTURE0);
+  glGenTextures(1, tex_cube);
   
   // load each image and copy into a side of the cube-map texture
-  load_cube_map_side (*tex_cube, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, front);
-  load_cube_map_side (*tex_cube, GL_TEXTURE_CUBE_MAP_POSITIVE_Z, back);
-  load_cube_map_side (*tex_cube, GL_TEXTURE_CUBE_MAP_POSITIVE_Y, top);
-  load_cube_map_side (*tex_cube, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, bottom);
-  load_cube_map_side (*tex_cube, GL_TEXTURE_CUBE_MAP_NEGATIVE_X, left);
-  load_cube_map_side (*tex_cube, GL_TEXTURE_CUBE_MAP_POSITIVE_X, right);
+  load_cube_map_side(*tex_cube, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, front);
+  load_cube_map_side(*tex_cube, GL_TEXTURE_CUBE_MAP_POSITIVE_Z, back);
+  load_cube_map_side(*tex_cube, GL_TEXTURE_CUBE_MAP_POSITIVE_Y, top);
+  load_cube_map_side(*tex_cube, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, bottom);
+  load_cube_map_side(*tex_cube, GL_TEXTURE_CUBE_MAP_NEGATIVE_X, left);
+  load_cube_map_side(*tex_cube, GL_TEXTURE_CUBE_MAP_POSITIVE_X, right);
   // format cube map texture
-  glTexParameteri (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-  glTexParameteri (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }</textarea>
 
 <p>
@@ -218,28 +217,27 @@ image loader (stb_image):
 </p>
 
 <textarea rows=20>
-bool load_cube_map_side (
-  GLuint texture, GLenum side_target, const char* file_name
-) {
-  glBindTexture (GL_TEXTURE_CUBE_MAP, texture);
+bool load_cube_map_side(
+  GLuint texture, GLenum side_target, const char* file_name) {
+  glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
 
   int x, y, n;
   int force_channels = 4;
-  unsigned char*  image_data = stbi_load (
+  unsigned char*  image_data = stbi_load(
     file_name, &x, &y, &n, force_channels);
   if (!image_data) {
-    fprintf (stderr, "ERROR: could not load %s\n", file_name);
+    fprintf(stderr, "ERROR: could not load %s\n", file_name);
     return false;
   }
   // non-power-of-2 dimensions check
   if ((x & (x - 1)) != 0 || (y & (y - 1)) != 0) {
-    fprintf (
-      stderr, "WARNING: image %s is not power-of-2 dimensions\n", file_name
-    );
+    fprintf(stderr,
+    	"WARNING: image %s is not power-of-2 dimensions\n",
+    	file_name);
   }
   
   // copy image data into 'target' side of cube map
-  glTexImage2D (
+  glTexImage2D(
     side_target,
     0,
     GL_RGBA,
@@ -248,9 +246,8 @@ bool load_cube_map_side (
     0,
     GL_RGBA,
     GL_UNSIGNED_BYTE,
-    image_data
-  );
-  free (image_data);
+    image_data);
+  free(image_data);
   return true;
 }</textarea>
 
@@ -296,9 +293,9 @@ in vec3 vp;
 uniform mat4 P, V;
 out vec3 texcoords;
 
-void main () {
+void main() {
   texcoords = vp;
-  gl_Position = P * V * vec4 (vp, 1.0);
+  gl_Position = P * V * vec4(vp, 1.0);
 }</textarea>
 
 <p>
@@ -315,9 +312,9 @@ different maths library then you will have different matrix functions here.
 
 <textarea rows=5>
 if (cam_moved) {
-  mat4 R = rotate_y_deg (identity_mat4 (), -cam_heading);
-  glUseProgram (shader_programme);
-  glUniformMatrix4fv (V_loc, 1, GL_FALSE, R.m);
+  mat4 R = rotate_y_deg(identity_mat4(), -cam_heading);
+  glUseProgram(shader_programme);
+  glUniformMatrix4fv(V_loc, 1, GL_FALSE, R.m);
 }</textarea>
 
 <p>
@@ -334,8 +331,8 @@ in vec3 texcoords;
 uniform samplerCube cube_texture;
 out vec4 frag_colour;
 
-void main () {
-  frag_colour = texture (cube_texture, texcoords);
+void main() {
+  frag_colour = texture(cube_texture, texcoords);
 }</textarea>
 
 <h3>Rendering</h3>
@@ -349,13 +346,13 @@ be in front of the sky box.
 </p>
 
 <textarea rows=7>
-glDepthMask (GL_FALSE);
-glUseProgram (shader_programme);
-glActiveTexture (GL_TEXTURE0);
-glBindTexture (GL_TEXTURE_CUBE_MAP, tex_cube);
-glBindVertexArray (vao);
-glDrawArrays (GL_TRIANGLES, 0, 36);
-glDepthMask (GL_TRUE);</textarea>
+glDepthMask(GL_FALSE);
+glUseProgram(shader_programme);
+glActiveTexture(GL_TEXTURE0);
+glBindTexture(GL_TEXTURE_CUBE_MAP, tex_cube);
+glBindVertexArray(vao);
+glDrawArrays(GL_TRIANGLES, 0, 36);
+glDepthMask(GL_TRUE);</textarea>
 
 <div class="centre">
 <img src="images/cubemap0.png" width="512px"/>
@@ -425,16 +422,16 @@ uniform mat4 P, V, M; // proj, view, model matrices
 out vec3 pos_eye;
 out vec3 n_eye;
 
-void main () {
-  pos_eye = vec3 (V * M * vec4 (vp, 1.0));
-  n_eye = vec3 (V * M * vec4 (vn, 0.0));
-  gl_Position = P * V * M * vec4 (vp, 1.0);
+void main() {
+  pos_eye = vec3(V * M * vec4(vp, 1.0));
+  n_eye = vec3(V * M * vec4(vn, 0.0));
+  gl_Position = P * V * M * vec4(vp, 1.0);
 }</textarea>
 
 <p>
 The fragment shader calculates the direction
 vector from the camera to the surface as <tt>incident_eye</tt>; the incident
-direction in eye space. Note that this is normally <tt>vec3 dir = normalize (to - from)</tt>
+direction in eye space. Note that this is normally <tt>vec3 dir = normalize(to - from)</tt>
 but the "from" here is the camera position (0,0,0) in eye space. The built-in
 reflection function then gets the reflected vector, which is converted to
 world space and used as the texture coordinates.
@@ -449,16 +446,16 @@ uniform samplerCube cube_texture;
 uniform mat4 V; // view matrix
 out vec4 frag_colour;
 
-void main () {
+void main() {
   /* reflect ray around normal from eye to surface */
-  vec3 incident_eye = normalize (pos_eye);
-  vec3 normal = normalize (n_eye);
+  vec3 incident_eye = normalize(pos_eye);
+  vec3 normal = normalize(n_eye);
 
-  vec3 reflected = reflect (incident_eye, normal);
+  vec3 reflected = reflect(incident_eye, normal);
   // convert from eye to world space
-  reflected = vec3 (inverse (V) * vec4 (reflected, 0.0));
+  reflected = vec3(inverse(V) * vec4(reflected, 0.0));
 
-  frag_colour = texture (cube_texture, reflected);
+  frag_colour = texture(cube_texture, reflected);
 }</textarea>
 
 <p>
@@ -510,8 +507,8 @@ of <tt>vec3 reflected</tt>:</p>
 
 <textarea rows=3>
 float ratio = 1.0 /1.3333;
-vec3 refracted = refract (incident_eye, normal, ratio);
-refracted = vec3 (inverse (V) * vec4 (refracted, 0.0));</textarea>
+vec3 refracted = refract(incident_eye, normal, ratio);
+refracted = vec3(inverse(V) * vec4(refracted, 0.0));</textarea>
 
 <p>
 Where the <tt>ratio</tt> is the ratio between the <b>refractive index</b> of the

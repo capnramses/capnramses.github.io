@@ -71,7 +71,7 @@ with the equation for points on a ray, then we get the intersection of points
 that are common to both. It's interesting to do this technique now because it
 shows us how we can use the transformation pipeline in reverse; from 2d screen
 to a 3d world space by using the inverse of our matrices e.g
-<tt>...inverse (view_matrix) * inverse (projection_matrix)...</tt>. In a later
+<tt>...inverse(view_matrix) * inverse(projection_matrix)...</tt>. In a later
 tutorial we will look at an alternative technique using unique colours to
 determine where the mouse is hovering or clicking.
 </p>
@@ -109,7 +109,7 @@ something like this:
 </p>
 
 <textarea rows="1">
-void mouse_click_callback (int b, int s, int mouse_x, int mouse_y);</textarea>
+void mouse_click_callback(int b, int s, int mouse_x, int mouse_y);</textarea>
 
 <p>
 This gives us an x in the range of <tt>0:width</tt> and y from
@@ -133,7 +133,7 @@ y already, so we scale their range, and reverse the direction of y.
 float x = (2.0f * mouse_x) / width - 1.0f;
 float y = 1.0f - (2.0f * mouse_y) / height;
 float z = 1.0f;
-vec3 ray_nds = vec3 (x, y, z);</textarea>
+vec3 ray_nds = vec3(x, y, z);</textarea>
 
 <p>
 We don't actually need to specify a z yet, but I put one in (for the craic).
@@ -152,7 +152,7 @@ this is usually the negative z direction in OpenGL style. We can add a
 </p>
 
 <textarea rows="1">
-vec4 ray_clip = vec4 (ray_nds.xy, -1.0, 1.0);</textarea>
+vec4 ray_clip = vec4(ray_nds.xy, -1.0, 1.0);</textarea>
 
 <p>
 <b>Note:</b> we <u>do not need to reverse perspective division here</u> because
@@ -174,7 +174,7 @@ matrix.
 </p>
 
 <textarea rows="1">
-vec4 ray_eye = inverse (projection_matrix) * ray_clip;</textarea>
+vec4 ray_eye = inverse(projection_matrix) * ray_clip;</textarea>
 
 <p>
 Now, we only needed to un-project the <var>x,y</var> part, so let's manually set
@@ -182,7 +182,7 @@ the <var>z,w</var> part to mean "forwards, and not a point".
 </p>
 
 <textarea rows="1">
-ray_eye = vec4 (ray_eye.xy, -1.0, 0.0);</textarea>
+ray_eye = vec4(ray_eye.xy, -1.0, 0.0);</textarea>
 
 <h3>Step 4: 4d World Coordinates</h3>
 
@@ -197,9 +197,9 @@ isn't normalised. We should do this before we use it.
 </p>
 
 <textarea cols="82" rows="3">
-vec3 ray_wor = (inverse (view_matrix) * ray_eye).xyz;
+vec3 ray_wor = (inverse(view_matrix) * ray_eye).xyz;
 // don't forget to normalise the vector at some point
-ray_wor = normalise (ray_wor);</textarea>
+ray_wor = normalise(ray_wor);</textarea>
 
 <p>
 This should balance the up-and-down, left-and-right, and forwards components for
