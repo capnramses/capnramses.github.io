@@ -78,3 +78,6 @@ table, td {
 div.widetable table {
 	width: 1024px;
 }
+caption {
+	background-colour: #FFFFFF;
+}
