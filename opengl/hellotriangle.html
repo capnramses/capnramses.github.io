@@ -150,40 +150,40 @@ far, and that your video drivers can support OpenGL 4.
 #include <GLFW/glfw3.h> // GLFW helper library
 #include <stdio.h>
 
-int main () {
+int main() {
   // start GL context and O/S window using the GLFW helper library
-  if (!glfwInit ()) {
-    fprintf (stderr, "ERROR: could not start GLFW3\n");
+  if (!glfwInit()) {
+    fprintf(stderr, "ERROR: could not start GLFW3\n");
     return 1;
   } 
 
   // uncomment these lines if on Apple OS X
-  /*glfwWindowHint (GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint (GLFW_CONTEXT_VERSION_MINOR, 2);
-  glfwWindowHint (GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-  glfwWindowHint (GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);*/
+  /*glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);*/
 
-  GLFWwindow* window = glfwCreateWindow (640, 480, "Hello Triangle", NULL, NULL);
+  GLFWwindow* window = glfwCreateWindow(640, 480, "Hello Triangle", NULL, NULL);
   if (!window) {
-    fprintf (stderr, "ERROR: could not open window with GLFW3\n");
+    fprintf(stderr, "ERROR: could not open window with GLFW3\n");
     glfwTerminate();
     return 1;
   }
-  glfwMakeContextCurrent (window);
+  glfwMakeContextCurrent(window);
                                   
   // start GLEW extension handler
   glewExperimental = GL_TRUE;
-  glewInit ();
+  glewInit();
 
   // get version info
-  const GLubyte* renderer = glGetString (GL_RENDERER); // get renderer string
-  const GLubyte* version = glGetString (GL_VERSION); // version as a string
-  printf ("Renderer: %s\n", renderer);
-  printf ("OpenGL version supported %s\n", version);
+  const GLubyte* renderer = glGetString(GL_RENDERER); // get renderer string
+  const GLubyte* version = glGetString(GL_VERSION); // version as a string
+  printf("Renderer: %s\n", renderer);
+  printf("OpenGL version supported %s\n", version);
 
   // tell GL to only draw onto a pixel if the shape is closer to the viewer
-  glEnable (GL_DEPTH_TEST); // enable depth-testing
-  glDepthFunc (GL_LESS); // depth-testing interprets a smaller value as "closer"
+  glEnable(GL_DEPTH_TEST); // enable depth-testing
+  glDepthFunc(GL_LESS); // depth-testing interprets a smaller value as "closer"
 
   /* OTHER STUFF GOES HERE NEXT */
   
@@ -297,9 +297,9 @@ by "binding", then copy the points into the currently bound buffer:
 
 <pre>
 GLuint vbo = 0;
-glGenBuffers (1, &vbo);
-glBindBuffer (GL_ARRAY_BUFFER, vbo);
-glBufferData (GL_ARRAY_BUFFER, 9 * sizeof (float), points, GL_STATIC_DRAW);
+glGenBuffers(1, &vbo);
+glBindBuffer(GL_ARRAY_BUFFER, vbo);
+glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), points, GL_STATIC_DRAW);
 </pre>
 
 <p>
@@ -320,11 +320,11 @@ then is bind the VAO and draw.
 
 <pre>
 GLuint vao = 0;
-glGenVertexArrays (1, &vao);
-glBindVertexArray (vao);
-glEnableVertexAttribArray (0);
-glBindBuffer (GL_ARRAY_BUFFER, vbo);
-glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+glGenVertexArrays(1, &vao);
+glBindVertexArray(vao);
+glEnableVertexAttribArray(0);
+glBindBuffer(GL_ARRAY_BUFFER, vbo);
+glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 </pre>
 
 <p>
@@ -360,8 +360,8 @@ nicer; I just wanted to save a bit of web real-estate by hard-coding them here.<
 const char* vertex_shader =
 "#version 400\n"
 "in vec3 vp;"
-"void main () {"
-"  gl_Position = vec4 (vp, 1.0);"
+"void main() {"
+"  gl_Position = vec4(vp, 1.0);"
 "}";
 </pre>
 
@@ -381,8 +381,8 @@ all, just added a 1 to the 4th component. The 1 at the end just means "don't cal
 const char* fragment_shader =
 "#version 400\n"
 "out vec4 frag_colour;"
-"void main () {"
-"  frag_colour = vec4 (0.5, 0.0, 0.5, 1.0);"
+"void main() {"
+"  frag_colour = vec4(0.5, 0.0, 0.5, 1.0);"
 "}";
 </pre>
 
@@ -402,12 +402,12 @@ Before using the shaders we have to load the strings into a GL shader, and compi
 </p>
 
 <pre>
-GLuint vs = glCreateShader (GL_VERTEX_SHADER);
-glShaderSource (vs, 1, &vertex_shader, NULL);
-glCompileShader (vs);
-GLuint fs = glCreateShader (GL_FRAGMENT_SHADER);
-glShaderSource (fs, 1, &fragment_shader, NULL);
-glCompileShader (fs);
+GLuint vs = glCreateShader(GL_VERTEX_SHADER);
+glShaderSource(vs, 1, &vertex_shader, NULL);
+glCompileShader(vs);
+GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
+glShaderSource(fs, 1, &fragment_shader, NULL);
+glCompileShader(fs);
 </pre>
 
 <p>
@@ -416,10 +416,10 @@ Now, these compiled shaders must be combined into a single, executable GPU shade
 </p>
 
 <pre>
-GLuint shader_programme = glCreateProgram ();
-glAttachShader (shader_programme, fs);
-glAttachShader (shader_programme, vs);
-glLinkProgram (shader_programme);
+GLuint shader_programme = glCreateProgram();
+glAttachShader(shader_programme, fs);
+glAttachShader(shader_programme, vs);
+glLinkProgram(shader_programme);
 </pre>
 
 <h2>Drawing</h2>
@@ -431,17 +431,17 @@ pressed.
 </p>
 
 <pre>
-while (!glfwWindowShouldClose (window)) {
+while(!glfwWindowShouldClose(window)) {
   // wipe the drawing surface clear
-  glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glUseProgram (shader_programme);
-  glBindVertexArray (vao);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glUseProgram(shader_programme);
+  glBindVertexArray(vao);
   // draw points 0-3 from the currently bound VAO with current in-use shader
-  glDrawArrays (GL_TRIANGLES, 0, 3);
+  glDrawArrays(GL_TRIANGLES, 0, 3);
   // update other events like input handling 
-  glfwPollEvents ();
+  glfwPollEvents();
   // put the stuff we've been drawing onto the display
-  glfwSwapBuffers (window);
+  glfwSwapBuffers(window);
 }
 </pre>
 
@@ -472,7 +472,7 @@ convention is handy).
 Change the colour of the triangle in the fragment shader.
 </li>
 <li>
-Try to move the shape in the vertex shader e.g. <tt>vec4 (vp.x, vp.y + 1.0, vp.z, 1.0);</tt>
+Try to move the shape in the vertex shader e.g. <tt>vec4(vp.x, vp.y + 1.0, vp.z, 1.0);</tt>
 </li>
 <li>
 <b>Be Square!</b> Try to add another triangle to the list of points and make a square shape. You will have to change
@@ -484,7 +484,7 @@ Try drawing with <tt>GL_LINE_STRIP</tt> or <tt>GL_LINES</tt> or <tt>GL_POINTS</t
 Does it put the lines where you expect? How big are the points by default?
 </li>
 <li>
-Try changing the background colour by using <tt>glClearColor ()</tt> before the rendering loop. Something
+Try changing the background colour by using <tt>glClearColor()</tt> before the rendering loop. Something
 grey-ish is usually fairly neutral; 0.6f, 0.6f, 0.8f, 1.0f.
 </li>
 <li>
