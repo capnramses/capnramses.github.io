@@ -4,7 +4,7 @@
 <head>
 <title>Mouse Picking with Ray Casting - Anton's OpenGL 4 Notes</title>
 <link rel="stylesheet" type="text/css" href="greysans.css">
-<link href='https://fonts.googleapis.com/css?family=Arvo:400,700' rel='stylesheet' type='text/css'>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet"> 
 <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
 
 <script type="text/javascript">
@@ -36,7 +36,7 @@
 <body>
 <p><a href="index.html">[index]</a></p>
 <h1>Mouse Picking with Ray Casting</h1>
-<h4>Anton Gerdelan</h4>
+<h4>Anton Gerdelan. Last Updated 2 October 2016</h4>
 
 <h2>Overview</h2>
 
@@ -52,7 +52,7 @@ testing</b>.
 </p>
 
 <div class="centre">
-<img src="images/newtranspipe.png">
+<img src="images/newtranspipe.png" width="512px">
 <br />
 <small><i>Instead of starting with a mesh in local space, we are starting with a
 2d mouse cursor position in viewport space. We work backwards through the
@@ -87,7 +87,7 @@ our ray origin is going to be the world <tt>x,y,z</tt> position of the camera.
 </p>
 
 <div class="centre">
-<img src="images/ray.png" /><br />
+<img src="images/ray.png" width="512px" /><br />
 <small><i>
 This function expresses all the points, <var>t</var>, along an infinite ray
 projected from our camera location, <var>O</var>, in the direction <var>D</var>,
@@ -231,18 +231,18 @@ box in xyz world coordinates.
 </p>
 
 <div class="centre">
-<img src="images/plane.png">
+<img src="images/plane.png" width="512px">
 </div>
 
 <div class="centre">
 <a href="images/rayvsplane.png">
-<img src="images/rayvsplane.png" width=512 />
+<img src="images/rayvsplane.png" width="512px" />
 </a>
 </div>
 
 <div class="centre">
 <a href="images/zones.png">
-<img src="images/zones.png" width="512"/></a><br />
+<img src="images/zones.png" width="512px"/></a><br />
 <small><i>
 I used ray-plane intersection to allow a user to drag out a "zone" on the floor.
 This might be useful in strategy games where you want to select a group of
@@ -264,7 +264,7 @@ smaller objects nearby.
 
 <div class="centre">
 <a href="images/raysphere.png">
-<img src="images/raysphere.png" width=512 /></a><br />
+<img src="images/raysphere.png" width="512px"/></a><br />
 <small><i>
 Here I have an equation for all the points, <var>P</var> on a sphere's surface,
 which says "anything that is radius <var>r</var> distance from centre point
@@ -293,7 +293,7 @@ from in front of or inside of the sphere, so you will need to check that your
 
 <div class="centre">
 <a href="images/raypickingthingyworking.png">
-<img src="images/raypickingthingyworking.png" width=512 /></a>
+<img src="images/raypickingthingyworking.png"  width="512px"/></a>
 <br />
 <small><i>
 Here I have a collection of spheres in 3d space. I generated these in Blender
