@@ -13,6 +13,9 @@
 * teaching page
 * better description with workplace, interests etc
 * projects page?
+* regenerate sitemap-perhaps put into .sh?
+* add new publication(s) to list
+* upload last year's gfx slides
 
 ##OpenGL
 
