@@ -66,10 +66,10 @@ have a big box encase the camera as it moves around. If the box appears to be
 the same distance even when the camera is moving, then we get a <b>parallax</b>
 effect - the illusion of it
 being relatively very far away. We don't rotate it as the camera rotates though
-- this allows us to pan around. If it has been well constructed then we won't
-notice the seams and it will have been projected onto the box so that it appears
-as if we are inside a sphere. We can actually use a dome or a sphere instead of
-a box, but boxes are easier to texture.
+- this allows us to pan around. If the texture has been well constructed then we won't
+notice the seams and it will have been projected onto the box so that it <b>appears
+as if we are inside a sphere</b> when we sample it with our view 3d vector. We can actually
+use a dome or a sphere instead of a box, but boxes are easier to texture map.
 </p>
 
 <p>
@@ -81,9 +81,7 @@ We will <b>draw the box before anything
 else</b>, and turn off <b>depth-masking</b>. Remember that this means that it
 doesn't write anything into the depth buffer - any subsequent draws to the same
 pixel will draw on top of it. Then it is never drawn in front of your scenery,
-even if it is closer to the camera. You don't need to use a cube-map texture
-for a sky box of course; it's just a small short-hand, and only occupies 1
-active texture slot.
+even if it is closer to the camera. 
 </p>
 
 <h3>Make a Big Cube</h3>
@@ -174,7 +172,8 @@ back textures.
 I have a <tt>create_cube_map()</tt> function which takes file names for the 6
 separate image files, and generates the opengl texture. This will call another
 function to load the separate image for each of the 6 sides. Note that each side
-is going to bind to the same texture that we generated - we will pass this as a parameter. Finally we apply some texture filtering to the texture, and the
+is going to bind to the same texture that we generated - we will pass this as a
+parameter. Finally we apply some texture filtering to the texture, and the
 texture handle is passed back as a function parameter.
 </p>
 
@@ -256,7 +255,7 @@ The code is almost identical to creating a single 2d texture in OpenGL, except
 that we bind a texture of type <tt>GL_TEXTURE_CUBE_MAP</tt> instead of
 <tt>GL_TEXTURE_2D</tt>. Then
 <tt><a href="http://www.opengl.org/sdk/docs/man4/xhtml/glTexImage2D.xml">glTexImage2D</a>()</tt>
-is called times, with the macro for each side as the first parameter, rather
+is called 6 times, with the macro for each side as the first parameter, rather
 than <tt>GL_TEXTURE_2D</tt>.
 </p>
 
