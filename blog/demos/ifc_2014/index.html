@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+demo - mouse pick using colour buffers
+</title>
+<style type="text/css">
+canvas {border: 1px dashed black;}
+</style>
+</head>
+<body onload="main ()">
+<h1>
+gpu-efficient ifc rendering test
+</h1>
+<canvas id="glcanvas" width="800" height="800" border="dashed">
+brower does not support HTML5
+</canvas>
+<p>
+Anton Gerdelan <tt>gerdela at scss.tcd.ie</tt>, Trinity College Dublin, 12 March 2014
+</p>
+<p>
+Problems:
+</p>
+<ul>
+<li>Far too much vertex data in original model (rubbish, duplicates)</li>
+<li>Need to pre-process correct winding order and perhaps normals</li>
+<li>JSON format is not quite correct or efficient - try glTF</tt>
+</ul>
+<p>
+Todo:
+</p>
+<ul>
+<li>Put IFC meta-data in JSON</li>
+<li>Click or hover interaction with different groups</li>
+</ul>
+</body>
+</html>
+
+<script src="main.js"></script>
+<script src="initGL.js"></script>
+<script src="webgl-utils.js"></script>
+<script src="webgl-debug.js"></script>
+<script src="Camera.js"></script>
+<script src="gl-matrix.js"></script>
+<script src="ShaderProgramme.js"></script>
+<script src="Renderable.js"></script>

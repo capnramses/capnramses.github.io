@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>three.js 00</title>
+</head>
+<body onLoad="on_load()">
+<center><h1>CACODEMON!</h1></center>
+<div id="container" style="width:95%;height:80%;position:absolute;"></div>
+<div id="prompt" style="width:95%;height:6%;bottom:0;position:absolute;">
+Clicky thingy
+</div>
+</body>
+<script src="three.min.js"></script>
+<script>
+
+var renderer = null, scene = null, camera = null, cube = null;
+
+function on_load () {
+	var container = document.getElementById ("container");
+	renderer = new THREE.WebGLRenderer ({antialias:true});
+	renderer.setSize (container.offsetWidth, container.offsetHeight);
+	renderer.setClearColor( 0xD3EFB8, 1 );
+	container.appendChild (renderer.domElement);
+	scene = new THREE.Scene ();
+	camera = new THREE.PerspectiveCamera (
+		45.0,
+		container.offsetWidth / container.offsetHeight,
+		0.1,
+		1000.0
+	);
+	camera.position.set (0.0, 0.0, 3);
+	//scene.add (camera);
+	var light = new THREE.DirectionalLight (0xffffff, 1.5);
+	light.position.set (0, 0, 1);
+	scene.add (light);
+	var mapUrl = "Cacodemon.png";
+	var map = THREE.ImageUtils.loadTexture (mapUrl);
+	var material = new THREE.MeshPhongMaterial({map: map});
+	var geometry = new THREE.CubeGeometry (1, 1, 1);
+	cube =  new THREE.Mesh (geometry, material);
+	cube.rotation.x = Math.PI / 5;
+	cube.rotation.y = Math.PI / 5;
+	scene.add (cube);
+	addMouseHandler ();
+	run ();
+}
+
+function run () {
+	renderer.render (scene, camera);
+	cube.rotation.y -= 0.01;
+	requestAnimationFrame(run);
+}
+
+function addMouseHandler () {
+	var dom = renderer.domElement;
+	dom.addEventListener ('mouseup', onMouseUp, false);
+}
+
+function onMouseUp (event) {
+	event.preventDefault ();
+	//animating = !animating;
+}
+</script>

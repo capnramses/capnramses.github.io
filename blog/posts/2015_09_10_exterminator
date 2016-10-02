@@ -1,0 +1,277 @@
+<h2>Exterminator - Behold and Despair!</h2>
+
+<div class="centre">
+<a href="images/crongscroll.png">
+<img width="512" src="images/crongscroll.png" /></a><br />
+<small><i>Exterminator in action - debugging my game.</i></small>
+</div>
+
+<p>
+Over the last 7 days I have done perhaps 6 x 11-12 hour days of programming to
+make an (ex)perimental (term)inal-based debugger front-end that runs on
+GNU/Linux - "Exterminator". It sounds like a heavy metal band, so I added a
+suitable album title tag-line. The source code is on github:
+<a href="https://github.com/capnramses/exterminator">https://github.com/capnramses/exterminator</a>
+</p>
+
+<p>
+GNU/Linux is an excellent platform for software development because of the
+wealth of Unix-derived tools, and because of the open-source community nature
+of the platform, which provides a lot of tool and environment choice
+flexibility. It follows then that I find myself working much faster on Linux
+than on Windows, and a little faster than on OS X. There is a catch! <b>There
+is no nice visual debugger for Linux</b>. There are IDEs and stand-alone
+debugging tools, but they all have <b>fatal flaws</b>, which drive most
+developers to Visual Studio on Wintendo to do debugging (barf).
+</p>
+
+<h3>What's Wrong With Linux Debuggers</h3>
+
+<h4>Why GDB Sucks</h4>
+
+<p>
+The most popular debugger on GNU/Linux is the GNU project's GDB. This is very
+powerful but has a clunky text-typing interface that is very laborious to use.
+I only bring it up in emergencies to get a back-trace for segfault-ing
+programmes. It's quicker to just step through your programme on paper or write
+and compile with a sprinkling of <tt>printf()</tt>s - and that's rubbish.
+GDB doesn't have a mature <tt>libGDB</tt> interface, which I suspect is the
+barrier to entry that has reduced the number of front-ends for it to a trickle.
+It has a special "machine interface" output mode to make writing front-ends
+easier - it's not good. It's really quite bad.
+</p>
+
+<div class="centre">
+<img src="images/gdb.png" /><br />
+<small><i>GDB - Yep, this is the actual debugging interface.</i></small>
+</div>
+
+<p>
+The new contender to the throne is LLDB - from the LLVM project. It's to GDB as
+Clang is to GCC. Pretty similar but a bit more advanced. I haven't tried it out
+yet. It does seem to have some more thought being put into library builds.
+</p>
+
+<h4>Why Terminal Front-Ends Suck</h4>
+
+<p>
+GDB has a terminal visual UI that you can start with the <tt>-tui</tt> flag
+but it's not interactive to any sort of useful level - it's designed to fit in
+the old 80x25 character terminals so it's not even a useful display of a source
+file's code segments. A slight improvement is the CGDB front-end which stiches
+on a Vi-based front end where you can scroll through your source code and set
+break-points whilst looking at the actual lines of code - a very slight
+improvement, but now you have two clunky esoteric sets of input commands to
+use. You don't get a stack trace or watch list without a lot of typing into
+consoles so it's still not worth it.
+</p>
+
+<div class="centre">
+<img src="images/cgdb.png" /><br />
+<small><i>CGDB - an improvement, sort-of.</i></small>
+</div>
+
+<h4>Why Windowed Front-Ends Suck</h4>
+
+<!--
+commented out because was installing tracker scripts surreptitiously
+-->
+<div class="centre">
+<iframe width="512" height="288" src="https://www.youtube.com/embed/BX-FMvt83fA?start=49" frameborder="0" allowfullscreen></iframe><br />
+<small><i>Mediocre!</i></small>
+</div>
+
+
+<p>
+The most popular X-based debugging front-end is DDD, but it's dreadful. It's
+written to the old X layer so it looks like crap and has a very tedious set of
+buttons and menus - the user experience, if you like, doesn't cut the mustard.
+It's also unreliable with frequent crashes - you won't use it.
+</p>
+
+<div class="centre">
+<img src="images/ddd.png" /><br />
+<small><i>DDD - Why are there no line numbers?
+Why can't I click a margin to set a break-point? Mediocre!</i></small>
+</div>
+
+<h4>Why IDEs Suck</h4>
+
+<p>
+"Just use X IDE like I do" will say most Linux developers. Buzzzz! Wrong!
+Linux-specific, - and infinitely worse -, cross-platform IDEs are
+dreadful software - they're a security blankey for bad programmers at best.
+Typical transgressions: {take ages to load, giant project files, bat-shit
+insane menu systems for adding libraries and paths, time-wasting "enhancement"
+tools, time-sucking Intellisense-type database building (RTFM!), frequent
+crashes, incredibly slow debugging steps, clunky clicking interface}.
+</p>
+
+<p>
+<b>Eclipse is the worst piece of software ever made, beating Win95-era
+Microsoft Outlook off the top spot</b>. Anything made on the Java Virtual
+Machine is a giant steaming heap of misguided too-smart, second-rate software
+design principles. By writing Java software at all you're willfully choosing
+to ignore how it performs with regard to underlying hardware, and choosing
+unnecessary time-wasting OOP eccentricity over actually solving the problem at
+hand. With a debugger we absolutely need performance-conscious,
+super-efficient software. It has to reduce our development obstacles, and
+<u>run our potentially performance-critical software</u> with minimal
+additional performance obstruction. Eclipse does none of these things, and
+introduces innumerable additional sins and unreliability. <b>Your best bet with
+Eclipse CDT is to say its name backwards three times, in an attempt to banish
+it back to the dimension Y2K</b>.
+
+<p>
+All other IDEs
+available on Linux are terrible with various lesser shades of these
+transgressions, or simply don't provide enough information detail to the
+debugging process to be of value.
+</p>
+
+<h3>Why Modern Software Sucks So Badly</h3>
+
+<p>
+The reason all of the modern choices annoy me, including Visual Studio, is
+because <b>in the early 90s on MS-DOS machines with 7MHz we had an infinitely
+better debugger</b>. On a computer 1000x less powerful we had a faster
+debugger for debugging the exact same software! Something has gone seriously
+wrong in the way we make software. <b>Yes, we've educated a generation of really
+bad programmers</b>. I was certainly one of them for about 10 years. Most modern
+programmers will come up with some argument about abstraction to defend why
+they never even use a debugger or need to have any idea about how their
+software works on the computer's hardware. Yes, it's
+because OOP and middleware philosophies have run away with themselves and the
+solution is just to keep buying more powerful computers - how ridiculous!
+<b>Do re-invent the wheel! Do write specific software! Do not use other
+people's general solutions!</b>
+</p>
+
+<div class="centre">
+<img src="images/td32.png" /><br />
+<small><i>Borland Debugger with TurboVision display - the greatest debugger of
+all time.</i></small>
+</div>
+
+<p>
+It's tempting to create a modern, windowed, application, but as soon as you do
+you engage some abominable colossus of bad software like Qt, and you lose all
+your speed advantages to something which only has the job to render boxes and
+text! The greatest ever debugger was Borland's simple DOS-based thing. The
+TurboVision library for console applications was great. Stepping through code
+was super fast - much faster than now. Why can't we just recreate that? Why
+can't we use Ncurses or something so it even looks similar and runs in a
+terminal, side-stepping all of that awful modern middleware? The terminals can
+all be resized now - no need to constrain to the traditional dimensions. An
+alternative modern plan would be to use a web-browser as a front-end. That has
+some merit for remote stuff, but is certainly not efficient software, so I'll
+leave that as alternative idea - it might suit different motivating principles.
+</p>
+
+<h3>Writing a GDB Front-End</h3>
+
+<h4>NCurses</h4>
+
+<!--
+commented out because was installing tracker scripts surreptitiously
+-->
+<div class="centre">
+<iframe width="420" height="315" src="https://www.youtube.com/embed/aOoRzioO4Tg" frameborder="0" allowfullscreen></iframe><br />
+<small><i>Here's me demonstrating this little achievement on my under-powered Mac Mini.</i></small>
+</div>
+
+<p>
+I'd never written a colourful terminal application, but I'd always wanted to,
+so it was fun trying Ncurses. Ncurses is kind of crummy compared to TurboVision
+ - none of the windowing and panel stuff works reliably, so I just wrote every
+ individual character to absolute positions. Yup. Lame. I've since found out
+that TurboVision has been ported to Linux/open-source so maybe it would
+work. Anyway, <b>I quickly smashed together a scrolling text-file viewer from
+first principles - it could load a 1GB text file in under 5 seconds, and scroll
+text instantly!</b> Good luck doing that in any IDE or any modern text editor!
+I knew I was onto the right philosophy at that point. I tried opening the same
+file in XCode - 5 minutes later it loaded and each line change or scroll caused
+it to hang for several seconds! This crashes most text editors, so XCode was
+probably better than most.
+</p>
+
+<h4>IPC</h4>
+
+<p>
+To interface with GDB you must engage IPC - inter-process communication. I'd
+never done this before. There are several methods, but I used the traditional
+<tt>fork()</tt> to create a child process, and executed GDB from that with an
+<tt>execv()</tt> call - all POSIX <tt>unistd.h</tt> stuff. To communicate with
+GDB your main (parent) process takes the role of the user typing to
+<tt>stdin</tt> and reading from <tt>stdout</tt>. You can set up a set of two
+<tt>pipe()</tt>s to do this. The parent <tt>write()</tt>s strings to a pipe
+that the child redirects to the <tt>stdin</tt> of the exec'd GDB. The child
+hooks up GDB's <tt>stdin</tt> to a pipe that the parent <tt>read()</tt>s from.
+</p>
+
+<p>
+It wasn't terribly hard to set this up, but it was hard to find a decent
+readable instruction on the details (thanks Andrew). The real problem is that
+GDB, even with machine instruction output enabled, doesn't tell you when you
+should stop reading - there's no terminating character or heads-up to the size
+of the message. If you're not very careful you'll end up with reads that hang
+indefinitely. Reads are streamed so you have to loop reading calls until you
+think it might be done - there's no guaranty that any given string will be sent
+in a fixed number of calls. I ended up watching for the <tt>(gdb) </tt> prompt
+that usually finishes a write-out. Some instructions will result in more than
+one such output from GDB! You then have to contextually set up
+reads to match every permutation of instruction that you send - you can't just
+have a generic "watch read output and act appropriately" type of function.
+This makes your front-end extremely brittle - one unexpected read/write more or
+less than you expect and the whole thing hangs! (sad face).
+</p>
+
+<p>
+The good news is, although this took way longer to write than it should have,
+it was <b>incredibly, incredibly fast</b>. When I finally got all the basic
+functionality working <b>I could hold down the "step" button and run my 3d game
+at nearly full speed</b>. Victory was within grasp!
+</p>
+
+<p>
+I spent a few midnight-hour coding sessions writing in some basic debugging
+tools:
+</p>
+
+<ul>
+<li>navigable text display with line numbers</li>
+<li>visually setting break-points</li>
+<li>single-key shortcuts for no-resistance common command execution</li>
+<li>easy-to-use auto-updating watch list</li>
+<li>current line highlight with contextual source file switching</li>
+<li>automatically updated stack trace window</li>
+<li>access to GDB console for more advanced interaction</li>
+</ul>
+
+<a href="images/crongscroll.png">
+<img width="800" src="images/crongscroll.png" /></a>
+<small><i>Exterminator in action - debugging my game.</i></small>
+</div>
+
+<p>
+Now I can actually debug my game quickly to a level that's useful!
+At this point I'm taking a break because I'm a little burned out but I call
+this experiment a success! It's not robust but it's working.
+</p>
+
+<p>
+Will I continue it? Try re-writing it with a different back-end or front-end?
+I'm not sure yet.
+I have a list of more advanced features that I think would be valuable to add:
+</p>
+
+<ul>
+<li>side-by-side asm</li>
+<li>memory inspection</li>
+<li>code clean/malloc sanitation</li>
+<li>more mouse interaction</li>
+<li>file browsing window</li>
+<li>goto-line and search commands</li>
+<li>more stepping commands</li>
+</ul>
+

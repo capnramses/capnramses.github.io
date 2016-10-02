@@ -1,0 +1,8 @@
+<h2>Anton's WebGL Notes</h2>
+<p>
+I'm starting to work with WebGL for my new job at Trinity College. I haven't used Javascript since about 1960 but I'm
+well into 3D programming, so my approach is going to be to slowly build up bits and pieces that replicate the more
+useful bits of my <a href="http://antongerdelan.net/opengl/">OpenGL 4 tutorials</a>, rather than skip steps
+using someone else's pre-canned wrapper. This way I can learn the points of difference between WebGL and OpenGL with C.
+I'll post things that I make/learn/find here. This will be something like a research journal but less formal (read <i>messy</i>).
+</p>
