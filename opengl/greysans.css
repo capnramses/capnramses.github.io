@@ -4,7 +4,7 @@ body {
 	background-image: url(../images/white_bar.png), url(../images/bkrd.png);
 	background-repeat: repeat-y, no-repeat;
 	background-position: center, top;
-	background-size:  800px 8px, 1920px 992px;
+	background-size: 750px 8px, 1920px 992px;
 	width: 600px;
 	margin: auto;
 }
@@ -73,8 +73,8 @@ table {
   background-color: #FFFFFF;
   border: 0;
   position: relative;
-  width: 700px;
-  left: -50px;
+  width: 650px;
+  left: -25px;
 }
 
 td {
