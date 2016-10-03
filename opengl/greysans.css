@@ -45,8 +45,8 @@ pre {
 div.centre {
   display: block;
   width: 100%;
-  margin-left: auto;
-  marin-right: auto;
+  text-align:center;
+  margin: auto;
 }
 div.blog {
 }
