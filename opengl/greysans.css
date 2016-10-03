@@ -69,11 +69,17 @@ div.sidepanel {
 	z-index:2;
 }
 
-table, td {
+table {
   background-color: #FFFFFF;
   border: 0;
   position: relative;
   width: 700px;
+  left: -50px;
+}
+
+td {
+  background-color: #FFFFFF;
+  border: 0;
 }
 
 div.widetable table {
