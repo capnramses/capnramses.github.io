@@ -45,7 +45,8 @@ pre {
 div.centre {
   display: block;
   width: 100%;
-  margin: auto;
+  margin-left: auto;
+  marin-right: auto;
 }
 div.blog {
 }
@@ -73,12 +74,10 @@ table, td {
   border: 0;
   position: relative;
   width: 700px;
-  left: -50px;
 }
 
 div.widetable table {
   background-color: #FFFFFF;
   width: 1024px;
   position: relative;
-  left: -212px;
 }
