@@ -112,7 +112,7 @@ all in parallel. Depending on the number of processors on the GPU, you might
 be able to compute all of your mesh's vertex shaders simultaneously.
 </p>
 
-<table width="512">
+<table>
 <caption><b>Comparison of Selected OpenGL4-Capable GPUs</b></caption>
 <tr>
 <td><b>GPU type</b></td><td><b>GPU cores</b></td>
@@ -186,7 +186,7 @@ shader should start with the simplified version tag:
 The different version tags are:
 </p>
 
-<table width="512">
+<table>
 <caption><b>Version Tags for OpenGL and GLSL Versions</b></caption>
 <tr><td><b>OpenGL Version</b></td><td><b>GLSL Version</b></td><td><b><tt>#version</tt> tag</b></td></tr>
 <tr><td>1.2</td><td>none</td><td>none</td></tr>
@@ -221,7 +221,7 @@ The most commonly used data types in GLSL are in the table below. For a complete
 see any of the <a href="http://www.opengl.org/documentation/glsl/">official reference documents</a>.
 </p>
 
-<table width="768">
+<table>
 <caption><b>Commonly-Used GLSL Data Types</b></caption>
 <tr><td><b>Data Type</b></td><td><b>Description</b></td><td><b>Common Usage</b></td></tr>
 <tr><td><tt>void</tt></td><td>nothing</td><td>Functions that do not return a value</td></tr>
@@ -245,7 +245,7 @@ It is usually convenient to read each shader from a separate plain text file. I
 use a file naming convention like this;
 </p>
 
-<table width=768>
+<table>
 <caption><b>My GLSL File Naming Convention</b></capation>
 <tr><td><tt>texturemap_vs.glsl</tt></td><td>the vertex shader for my texture-mapping shader programme</td></tr>
 <tr><td><tt>texturemap_fs.glsl</tt></td><td>the fragment shader for my texture-mapping shader programme</td></tr>
@@ -409,7 +409,7 @@ For a complete list of OpenGL shader functions see the
 useful functions are tabulated below. We will implement all of these:
 </p>
 
-<table width="768">
+<table>
 <caption><b>OpenGL "Shader" (Separate Shader Code) Functions</b></caption>
 <tr><td><b>Function Name</b></td><td><b>Description</b></td></tr>
 <tr><td><tt>glCreateShader()</tt></td><td>create a variable for storing a shader's code in OpenGL. returns <tt>unsigned int</tt> index to it.</td></tr>
@@ -419,7 +419,8 @@ useful functions are tabulated below. We will implement all of these:
 <tr><td><tt>glGetShaderInfoLog()</tt></td><td>creates a string with any error information</td></tr>
 <tr><td><tt>glDeleteShader()</tt></td><td>free memory used by an OpenGL shader variable</td></tr>
 </table>
-<table width="768">
+<br />
+<table>
 <caption><b>OpenGL "Program" (Combined Shader Programme) Functions</b></caption>
 <tr><td><b>Function Name</b></td><td><b>Description</b></td></tr>
 <tr><td><tt>glCreateProgram()</tt></td><td>create a variable for storing a combined shader programme in OpenGL. returns <tt>unsigned int</tt> index to it.</td></tr>
