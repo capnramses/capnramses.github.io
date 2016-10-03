@@ -18,6 +18,7 @@ for unformatted in *; do
 	
 	##
 	## add disqus message board to footer
+	## TODO -- could add in the page url var here
 	##
 	echo "<div id="disqus_thread"></div>" >> $opf;
 	echo "<script>" >> $opf;
@@ -30,7 +31,7 @@ for unformatted in *; do
 	echo "</script>" >> $opf;
 	echo "<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>" >> $opf;
 
-	<script id="dsq-count-scr" src="//https-capnramses-github-io.disqus.com/count.js" async></script>
+	echo "<script id=\"dsq-count-scr\" src=\"//https-capnramses-github-io.disqus.com/count.js\" async></script>" >> $opf;
 	
 	echo "</body></html>" >> $opf;
 done;
