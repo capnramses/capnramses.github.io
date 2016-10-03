@@ -35,7 +35,7 @@ textarea {
 }
 pre {
 	width: 700px;
-	position: absolute;
+	position: relative;
 	left: -50px;
 	font-family: 'Source Code Pro';
 	background-color: #C8C8C8;
