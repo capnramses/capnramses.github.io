@@ -26,6 +26,7 @@ a {
 textarea {
 	font-family: 'Source Code Pro';
 	width: 800px;
+	position: relative;
 	left: -100px;
 	border: 0px;
 	background-color: #C8C8C8;
