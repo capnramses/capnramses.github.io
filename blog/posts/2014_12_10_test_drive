@@ -9,7 +9,7 @@ because it was fun.
 </p>
 
 <div class="centre">
-<img src="images/original_tdrive.png" /><br />
+<img src="../images/original_tdrive.png" /><br />
 <p><small>
 The original 1987 "Test Drive", CGA version. There was only one repeating
 scenario in the original - driving along cliffs.
@@ -65,7 +65,7 @@ this feature.
 <h2>Road and Cliffs</h2>
 
 <div class="centre">
-<img src="images/tdrive_road.png" /><br />
+<img src="../images/tdrive_road.png" /><br />
 <p><small>
 I started with a basic 3d mesh viewer and put 2 triangles and a texture to
 make a road segment.
@@ -79,7 +79,7 @@ extend the road to many segments. I have a single, simple shader for the road.
 </p>
 
 <div class="centre">
-<img src="images/tdrive_roadloop.png" /><br />
+<img src="../images/tdrive_roadloop.png" /><br />
 <p><small>
 Several road segments, with random X offsets at segment ends. A cliff is added
 to the side of each segment. It has a special shader to do the hatching effect
@@ -124,7 +124,7 @@ segment, so that I can later use this for path-finding and collision-detection.
 <h2>Player's Dashboard</h2>
 
 <div class="centre">
-<img src="images/tdrive_blendering.png" /><br />
+<img src="../images/tdrive_blendering.png" /><br />
 <p><small>
 Creating a car interior in Blender.
 </small></p>
@@ -140,7 +140,7 @@ made a really simple mesh in Blender with box-modelling and extrusion.
 </p>
 
 <div class="centre">
-<img src="images/tdrive_dash.png" /><br />
+<img src="../images/tdrive_dash.png" /><br />
 <p><small>
 The in-game view. I used another cross-hatching shader, similar to the cliffs,
 but with cyan. I darken based on the dot product of the normal with the
@@ -176,7 +176,7 @@ to fit across the mirror.
 </p>
 
 <div class="centre">
-<img src="images/tdrive_mirror.png" /><br />
+<img src="../images/tdrive_mirror.png" /><br />
 <p><small>
 I drew the scene again with a rear-facing camera, and rendered this to a
 texture. When drawing the normal scene I sample that texture onto the mirror.
@@ -194,7 +194,7 @@ horizontal texture coordinate to address this.
 <h3>Steering Wheel</h3>
 
 <div class="centre">
-<img src="images/tdrive_wheel.png" /><br />
+<img src="../images/tdrive_wheel.png" /><br />
 <p><small>
 I rotate my steering wheel with a Z-axis rotation matrix, based on the current
 steering angle. This is very smooth when using analogue thumb-stick controls.
@@ -210,7 +210,7 @@ current steering angle.
 <h3>Tachometer</h3>
 
 <div class="centre">
-<img src="images/tacho_empty.png" width="256"/><img src="images/tacho_full.png" width="256"/><br />
+<img src="../images/tacho_empty.png" width="256"/><img src="../images/tacho_full.png" width="256"/><br />
 <p><small>
 The "emtpy" tachometer image (left), and "full" (right). Depending on my
 current RPM, I'll decide if a fragment should sample from the empty or full
@@ -233,7 +233,7 @@ the empty.
 </p>
 
 <div class="centre">
-<img src="images/tdrive_tacho.png"/><br />
+<img src="../images/tdrive_tacho.png"/><br />
 <p><small>
 The tachometer at about a factor of 0.8. The left 8/10ths of the gauge sample
 from the "full" texture.
@@ -243,7 +243,7 @@ from the "full" texture.
 <h3>Speedometer and Gear Indicator</h3>
 
 <div class="centre">
-<img src="images/tdrive_speedo.png"/><br />
+<img src="../images/tdrive_speedo.png"/><br />
 <p><small>
 The speedometer was easy to do - just a rotating needle mesh over the top of
 texture meter. I got lazy and just switch between numbered textures for the
@@ -404,14 +404,14 @@ Countach on some cliffs and "coloured it in".
 </p>
 
 <div class="centre">
-<img src="images/tdrive_end.png"/><br />
+<img src="../images/tdrive_end.png"/><br />
 <p><small>
 The stylish victory screen with text rendering.
 </small></p>
 </div>
 
 <div class="centre">
-<img src="images/tdrive_font.png"/><br />
+<img src="../images/tdrive_font.png"/><br />
 <p><small>
 The font atlas. I pre-calculate the texture-coordinates to use for each
 character in a string of text and generate geometry for each.

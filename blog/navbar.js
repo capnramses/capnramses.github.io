@@ -1,89 +1,89 @@
 document.write('\
-<ul>\
-<li>2016_09_25_web_hosting</li>\
-<li>2016_06_19_map_editor</li>\
-<li>2016_04_20_texture_manager</li>\
-<li>2016_04_08_game_on_greenlight</li>\
-<li>2016_03_24_game_finished</li>\
-<li>2016_03_04_review_templ</li>\
-<li>2015_12_08_didnt_learn_in_school</li>\
-<li>2015_09_25_unreal_udk</li>\
-<li>2015_09_10_exterminator</li>\
-<li>2015_07_07_broken_opengl</li>\
-<li>2015_06_16_debug_draw</li>\
-<li>2015_06_03_python</li>\
-<li>2015_05_20_skills</li>\
-<li>2015_04_15_libraries</li>\
-<li>2015_03_18_interpolation</li>\
-<li>2015_03_11_webgl_extensions</li>\
-<li>2015_03_03_2d_colour_vis</li>\
-<li>2015_02_26_static_analysis</li>\
-<li>2015_02_25_canvas2dcube</li>\
-<li>2015_02_23_svg_d3</li>\
-<li>2015_02_20_netsoc</li>\
-<li>2015_02_17_canvas2d</li>\
-<li>2015_02_10_bresenham</li>\
-<li>2015_02_09_gpu_mem</li>\
-<li>2015_02_05_text_editors</li>\
-<li>2015_02_03_c99</li>\
-<li>2015_01_12_2015</li>\
-<li>2014_12_10_test_drive</li>\
-<li>2014_09_24_doom_src</li>\
-<li>2014_09_15_webgl_server</li>\
-<li>2014_09_05_compute_raytrace</li>\
-<li>2014_09_03_books_games</li>\
-<li>2014_08_12_acronyms</li>\
-<li>2014_06_04_glmapbufferrange</li>\
-<li>2014_05_21_c_cpp</li>\
-<li>2014_05_20_inline_asm</li>\
-<li>2014_05_14_renderbuffer</li>\
-<li>2014_05_06_binary_mesh</li>\
-<li>2014_04_24_gamma</li>\
-<li>2014_04_15_archicad</li>\
-<li>2014_04_14_gimbal_lock</li>\
-<li>2014_03_25_game_boy</li>\
-<li>2014_03_13_touch_webgl</li>\
-<li>2014_03_12_ifc_webgl</li>\
-<li>2014_03_11_webgl</li>\
-<li>2014_03_10_talks</li>\
-<li>2014_02_16_mesa3d</li>\
-<li>2014_01_24_vbo_layouts</li>\
-<li>2014_01_21_bin_mesh</li>\
-<li>2014_01_13_ifc</li>\
-<li>2014_01_10_ifc_conv</li>\
-<li>2014_01_08_blender_plugin</li>\
-<li>2014_01_07_custom_mesh</li>\
-<li>2014_01_06_php_blog</li>\
-<li>2012_12_14_webgl_fonts</li>\
-<li>2012_09_30_deferred</li>\
-<li>2012_09_08_batching</li>\
-<li>2012_09_03_maths_cheat</li>\
-<li>2012_08_17_cam_plot</li>\
-<li>2012_08_15_madness</li>\
-<li>2012_08_14_vertex_displ2</li>\
-<li>2012_08_13_vertex_displ</li>\
-<li>2012_08_10_omni_cam</li>\
-<li>2012_07_16_multi_pass</li>\
-<li>2012_07_12_webgl</li>\
-<li>2012_07_11_colour_pick</li>\
-<li>2012_07_09_open_source</li>\
-<li>2012_07_05_3d_portfolio</li>\
-<li>2012_07_03_vis_todo</li>\
-<li>2012_06_29_talking_head</li>\
-<li>2012_06_27_3d_picking</li>\
-<li>2012_06_26_blending</li>\
-<li>2012_06_25_rt_shaders</li>\
-<li>2012_06_18_morph_anim</li>\
-<li>2012_06_15_ifc_render</li>\
-<li>2012_06_12_optimisations</li>\
-<li>2012_06_08_js_timers</li>\
-<li>2012_06_06_fps</li>\
-<li>2012_05_31_phong</li>\
-<li>2012_05_30_webgl_textures</li>\
-<li>2012_05_29_json_mesh</li>\
-<li>2012_05_28_webgl_js</li>\
-<li>2012_05_25_javascript</li>\
-<li>2012_05_23_webgl</li>\
-<li>2012_05_22_blog</li>\
-</ul>\
+<div class="sidepanel">\
+<a href="formatted/2016_09_25_web_hosting">2016_09_25_web_hosting</a><br /><br />\
+<a href="formatted/2016_06_19_map_editor">2016_06_19_map_editor</a><br /><br />\
+<a href="formatted/2016_04_20_texture_manager">2016_04_20_texture_manager</a><br /><br />\
+<a href="formatted/2016_04_08_game_on_greenlight">2016_04_08_game_on_greenlight</a><br /><br />\
+<a href="formatted/2016_03_24_game_finished">2016_03_24_game_finished</a><br /><br />\
+<a href="formatted/2016_03_04_review_templ">2016_03_04_review_templ</a><br /><br />\
+<a href="formatted/2015_12_08_didnt_learn_in_school">2015_12_08_didnt_learn_in_school</a><br /><br />\
+<a href="formatted/2015_09_25_unreal_udk">2015_09_25_unreal_udk</a><br /><br />\
+<a href="formatted/2015_09_10_exterminator">2015_09_10_exterminator</a><br /><br />\
+<a href="formatted/2015_07_07_broken_opengl">2015_07_07_broken_opengl</a><br /><br />\
+<a href="formatted/2015_06_16_debug_draw">2015_06_16_debug_draw</a><br /><br />\
+<a href="formatted/2015_06_03_python">2015_06_03_python</a><br /><br />\
+<a href="formatted/2015_05_20_skills">2015_05_20_skills</a><br /><br />\
+<a href="formatted/2015_04_15_libraries">2015_04_15_libraries</a><br /><br />\
+<a href="formatted/2015_03_18_interpolation">2015_03_18_interpolation</a><br /><br />\
+<a href="formatted/2015_03_11_webgl_extensions">2015_03_11_webgl_extensions</a><br /><br />\
+<a href="formatted/2015_03_03_2d_colour_vis">2015_03_03_2d_colour_vis</a><br /><br />\
+<a href="formatted/2015_02_26_static_analysis">2015_02_26_static_analysis</a><br /><br />\
+<a href="formatted/2015_02_25_canvas2dcube">2015_02_25_canvas2dcube</a><br /><br />\
+<a href="formatted/2015_02_23_svg_d3">2015_02_23_svg_d3</a><br /><br />\
+<a href="formatted/2015_02_20_netsoc">2015_02_20_netsoc</a><br /><br />\
+<a href="formatted/2015_02_17_canvas2d">2015_02_17_canvas2d</a><br /><br />\
+<a href="formatted/2015_02_10_bresenham">2015_02_10_bresenham</a><br /><br />\
+<a href="formatted/2015_02_09_gpu_mem">2015_02_09_gpu_mem</a><br /><br />\
+<a href="formatted/2015_02_05_text_editors">2015_02_05_text_editors</a><br /><br />\
+<a href="formatted/2015_02_03_c99">2015_02_03_c99</a><br /><br />\
+<a href="formatted/2015_01_12_2015">2015_01_12_2015</a><br /><br />\
+<a href="formatted/2014_12_10_test_drive">2014_12_10_test_drive</a><br /><br />\
+<a href="formatted/2014_09_24_doom_src">2014_09_24_doom_src</a><br /><br />\
+<a href="formatted/2014_09_15_webgl_server">2014_09_15_webgl_server</a><br /><br />\
+<a href="formatted/2014_09_05_compute_raytrace">2014_09_05_compute_raytrace</a><br /><br />\
+<a href="formatted/2014_09_03_books_games">2014_09_03_books_games</a><br /><br />\
+<a href="formatted/2014_08_12_acronyms">2014_08_12_acronyms</a><br /><br />\
+<a href="formatted/2014_06_04_glmapbufferrange">2014_06_04_glmapbufferrange</a><br /><br />\
+<a href="formatted/2014_05_21_c_cpp">2014_05_21_c_cpp</a><br /><br />\
+<a href="formatted/2014_05_20_inline_asm">2014_05_20_inline_asm</a><br /><br />\
+<a href="formatted/2014_05_14_renderbuffer">2014_05_14_renderbuffer</a><br /><br />\
+<a href="formatted/2014_05_06_binary_mesh">2014_05_06_binary_mesh</a><br /><br />\
+<a href="formatted/2014_04_24_gamma">2014_04_24_gamma</a><br /><br />\
+<a href="formatted/2014_04_15_archicad">2014_04_15_archicad</a><br /><br />\
+<a href="formatted/2014_04_14_gimbal_lock">2014_04_14_gimbal_lock</a><br /><br />\
+<a href="formatted/2014_03_25_game_boy">2014_03_25_game_boy</a><br /><br />\
+<a href="formatted/2014_03_13_touch_webgl">2014_03_13_touch_webgl</a><br /><br />\
+<a href="formatted/2014_03_12_ifc_webgl">2014_03_12_ifc_webgl</a><br /><br />\
+<a href="formatted/2014_03_11_webgl">2014_03_11_webgl</a><br /><br />\
+<a href="formatted/2014_03_10_talks">2014_03_10_talks</a><br /><br />\
+<a href="formatted/2014_02_16_mesa3d">2014_02_16_mesa3d</a><br /><br />\
+<a href="formatted/2014_01_24_vbo_layouts">2014_01_24_vbo_layouts</a><br /><br />\
+<a href="formatted/2014_01_21_bin_mesh">2014_01_21_bin_mesh</a><br /><br />\
+<a href="formatted/2014_01_13_ifc">2014_01_13_ifc</a><br /><br />\
+<a href="formatted/2014_01_10_ifc_conv">2014_01_10_ifc_conv</a><br /><br />\
+<a href="formatted/2014_01_08_blender_plugin">2014_01_08_blender_plugin</a><br /><br />\
+<a href="formatted/2014_01_07_custom_mesh">2014_01_07_custom_mesh</a><br /><br />\
+<a href="formatted/2014_01_06_php_blog">2014_01_06_php_blog</a><br /><br />\
+<a href="formatted/2012_12_14_webgl_fonts">2012_12_14_webgl_fonts</a><br /><br />\
+<a href="formatted/2012_09_30_deferred">2012_09_30_deferred</a><br /><br />\
+<a href="formatted/2012_09_08_batching">2012_09_08_batching</a><br /><br />\
+<a href="formatted/2012_09_03_maths_cheat">2012_09_03_maths_cheat</a><br /><br />\
+<a href="formatted/2012_08_17_cam_plot">2012_08_17_cam_plot</a><br /><br />\
+<a href="formatted/2012_08_15_madness">2012_08_15_madness</a><br /><br />\
+<a href="formatted/2012_08_14_vertex_displ2">2012_08_14_vertex_displ2</a><br /><br />\
+<a href="formatted/2012_08_13_vertex_displ">2012_08_13_vertex_displ</a><br /><br />\
+<a href="formatted/2012_08_10_omni_cam">2012_08_10_omni_cam</a><br /><br />\
+<a href="formatted/2012_07_16_multi_pass">2012_07_16_multi_pass</a><br /><br />\
+<a href="formatted/2012_07_12_webgl">2012_07_12_webgl</a><br /><br />\
+<a href="formatted/2012_07_11_colour_pick">2012_07_11_colour_pick</a><br /><br />\
+<a href="formatted/2012_07_09_open_source">2012_07_09_open_source</a><br /><br />\
+<a href="formatted/2012_07_05_3d_portfolio">2012_07_05_3d_portfolio</a><br /><br />\
+<a href="formatted/2012_07_03_vis_todo">2012_07_03_vis_todo</a><br /><br />\
+<a href="formatted/2012_06_29_talking_head">2012_06_29_talking_head</a><br /><br />\
+<a href="formatted/2012_06_27_3d_picking">2012_06_27_3d_picking</a><br /><br />\
+<a href="formatted/2012_06_26_blending">2012_06_26_blending</a><br /><br />\
+<a href="formatted/2012_06_25_rt_shaders">2012_06_25_rt_shaders</a><br /><br />\
+<a href="formatted/2012_06_18_morph_anim">2012_06_18_morph_anim</a><br /><br />\
+<a href="formatted/2012_06_15_ifc_render">2012_06_15_ifc_render</a><br /><br />\
+<a href="formatted/2012_06_12_optimisations">2012_06_12_optimisations</a><br /><br />\
+<a href="formatted/2012_06_08_js_timers">2012_06_08_js_timers</a><br /><br />\
+<a href="formatted/2012_06_06_fps">2012_06_06_fps</a><br /><br />\
+<a href="formatted/2012_05_31_phong">2012_05_31_phong</a><br /><br />\
+<a href="formatted/2012_05_30_webgl_textures">2012_05_30_webgl_textures</a><br /><br />\
+<a href="formatted/2012_05_29_json_mesh">2012_05_29_json_mesh</a><br /><br />\
+<a href="formatted/2012_05_28_webgl_js">2012_05_28_webgl_js</a><br /><br />\
+<a href="formatted/2012_05_25_javascript">2012_05_25_javascript</a><br /><br />\
+<a href="formatted/2012_05_23_webgl">2012_05_23_webgl</a><br /><br />\
+<a href="formatted/2012_05_22_blog">2012_05_22_blog</a><br /><br />\
+</div>\
 ');

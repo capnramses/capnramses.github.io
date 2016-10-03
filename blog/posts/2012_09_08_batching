@@ -31,8 +31,8 @@ make sure that there was a correct normal for each surface, and wrote a Phong li
 shader. I got it running loads faster.
 </p>
 
-<a href="images/smartvis2.png">
-<img src="images/smartvis2.png" width=512 height=512 />
+<a href="../images/smartvis2.png">
+<img src="../images/smartvis2.png" width=512 height=512 />
 </a>
 
 <p>
@@ -57,9 +57,9 @@ do any kerning or per-glyph spacing. In this case I used the rather classic mono
 Doom font (and text from the game).
 </p>
 
-<img src="images/doomfont.png" width=512 height=512 />
-<a href="images/doomshot.png">
-<img src="images/doomshot.png" width=512 height=512 />
+<img src="../images/doomfont.png" width=512 height=512 />
+<a href="../images/doomshot.png">
+<img src="../images/doomshot.png" width=512 height=512 />
 </a>
 
 <h3>4D Homogeneous Matrix Maths</h3>
@@ -85,7 +85,7 @@ it might also be nice for doing vector art (formal diagrams), 3d illustrations, 
 perhaps 3d models.
 </p>
 
-<img src="http://antongerdelan.net/opengl/images/how_shaders_work.png" />
+<img src="http://antongerdelan.net/opengl/../images/how_shaders_work.png" />
 
 <h3>WebGL and OpenGL Tutorials</h3>
 

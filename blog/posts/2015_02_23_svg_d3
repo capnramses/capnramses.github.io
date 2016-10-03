@@ -10,7 +10,7 @@ a raster drawing interface. It's quite easy and pleasing to use.
 </p>
 
 <div class="centre">
-<img src="images/cnglchart1.png" /><br />
+<img src="../images/cnglchart1.png" /><br />
 <small><i>
 Playing-around with making charts with the 2d canvas interface. Pixel-exact but
 not automatically scalable to different resolutions.
@@ -28,7 +28,7 @@ interface to using SVG (scalable vector graphics) built-in as well.
 <h3>D3.js</h3>
 
 <div class="centre">
-<img src="images/d3.png" /><br />
+<img src="../images/d3.png" /><br />
 <small><i>
 It took way too long to find out how to make D3 do a simple bar plot with my
 own data. Custom interface knowledge required.
@@ -102,7 +102,7 @@ out does not work - it does't render anything.
 </p>
 
 <div class="centre">
-<img src="images/svg.png" /><br />
+<img src="../images/svg.png" /><br />
 <small><i>
 A screenshot of my SVG chart. It wasn't harder to make a bar-chart manually
 with SVG compared to D3.js. The interface sucks, and requires pixel dimensions!

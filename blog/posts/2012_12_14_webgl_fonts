@@ -3,7 +3,7 @@
 <h3>Fonts in WebGL</h3>
 
 <div class="centre">
-<a href="demos/font_rendering/"><img src="images/fonts.png" /></a><br>
+<a href="demos/font_rendering/"><img src="../images/fonts.png" /></a><br>
 <i>Click image for demo</i>
 </div>
 

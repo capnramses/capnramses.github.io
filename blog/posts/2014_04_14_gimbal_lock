@@ -122,7 +122,7 @@ bunch of hokum. I made one, to try it out:
 </p>
 
 <div class="centre">
-<img src="images/gimbals.png" /><br />
+<img src="../images/gimbals.png" /><br />
 <small><i>This kind of "gimbal lock" demo is rubbish: the problem is actually
 that the rotations are in a hierarchy of rotations around global axes - they
 were never around local axes to begin with. Gyroscopes don't work like this in

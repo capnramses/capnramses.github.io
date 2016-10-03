@@ -10,7 +10,7 @@ OpenGL.
 </p>
 
 <div class="centre">
-<img src="images/revit_view1.png"/><br />
+<img src="../images/revit_view1.png"/><br />
 <small><i>The sample project from Revit 2014 viewed in OpenGL. It mostly worked.
 The normals from Revit were all wrong so I recalculated them manually for flat
 shading.</i></small>
@@ -26,7 +26,7 @@ still nice perceptual differentiation of surfaces.
 </p>
 
 <div class="centre">
-<img src="images/revit_view2.png" /><br />
+<img src="../images/revit_view2.png" /><br />
 <small><i>Exterior view of the Revit 2014 sample project, viewed in OpenGL. It's
 several bazillion times faster than Revit's own viewer.</i></small>
 </div>
@@ -45,7 +45,7 @@ wonder if there's a nice way to do that.
 </p>
 
 <div class="centre">
-<img src="images/revit_view3.png" /><br />
+<img src="../images/revit_view3.png" /><br />
 <small><i>
 Colours and transparency worked surprisingly well.
 </i></small>

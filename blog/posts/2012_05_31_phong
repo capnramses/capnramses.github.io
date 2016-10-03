@@ -17,9 +17,9 @@ to put a comma in-between).</li>
 </ol>
 
 <div class="centre">
-<img src = "images/lc_normaltest.png" width="512"/><br />
+<img src = "../images/lc_normaltest.png" width="512"/><br />
 <small><i>Using the local-space normals (the unconverted values from my JSON file) as colours. Seems to be fine! Red = facing right, Green = Up, Blue = Forward</i></small><br />
-<img src = "images/ec_normalsTest.png" width="512"/><br />
+<img src = "../images/ec_normalsTest.png" width="512"/><br />
 <small><i>Testing the normals after converting them to eye-space. (Red=To the view-point's right, Green=Up, blue=towards the view-point). But why does it look washed out? (Sorry ignore that the background colour is different).</i></small>
 </div>
 
@@ -65,7 +65,7 @@ a default blend mode enabled somewhere that was showing the background of the HT
 
 <div class="centre">
 <a href="demos/phong/">
-<img src="images/phong.png" width="512" /></a><br />
+<img src="../images/phong.png" width="512" /></a><br />
 <small><i>It worked out pretty nicely after figuring out the alpha-blend WebGL thing. Click image for demo.</i></small>
 </div>
 
@@ -81,7 +81,7 @@ design around these limitations then you are fine. The event system uses numbere
 </p>
 
 <div class="centre"><a href="demos/virtualcamera/">
-<img src="images/virtualcam.png" width="512" /></a><br />
+<img src="../images/virtualcam.png" width="512" /></a><br />
 <small><i>You can use HTML5's built-in keyboard and mouse event system to easily grab user input for WebGL. Click to run demo.</i></small>
 </div>
 

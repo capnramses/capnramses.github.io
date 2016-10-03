@@ -1,7 +1,7 @@
 <h2>Bresenham's Line-Drawing Algorithm (1962)</h2>
 
 <div class="centre">
-<img src="images/bresenhams_example.png" /><br />
+<img src="../images/bresenhams_example.png" /><br />
 <small><i>It's immediately obvious what one application of this algorithm is
 from my little test programme's output here, but it can also be used for
 determining things like line-of-sight paths through lattice-based environments

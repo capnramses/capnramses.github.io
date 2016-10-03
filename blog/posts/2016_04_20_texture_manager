@@ -233,7 +233,7 @@ curious-looking <tt>_create_default_texture()</tt>.
 <h3>Bullet-Proofing: The Default Texture</h3>
 
 <div class="centre">
-<img src="images/pinkcrong.png" width="512" /><br />
+<img src="../images/pinkcrong.png" width="512" /><br />
 <small><i>The game with the entire textures folder removed - a pink paradise!</i></small>
 </div>
 
@@ -373,7 +373,7 @@ it and store its file name in said array.
 <h3>Re-Filtering Textures</h3>
 
 <div class="centre">
-<img src="images/cronggfxmenu.png" width="512" /><br />
+<img src="../images/cronggfxmenu.png" width="512" /><br />
 <small><i>In Crongdor you can fiddle with all the graphics settings!</i></small>
 </div>
 

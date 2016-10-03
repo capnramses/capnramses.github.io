@@ -51,7 +51,7 @@ on systems that you can't test on.
 </p>
 
 <div class="centre">
-<img src="images/fps_counter.png" /><br />
+<img src="../images/fps_counter.png" /><br />
 <small><i>adding memory use on the GPU to my debug overlay</i></small>
 </div>
 

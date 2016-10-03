@@ -17,7 +17,7 @@ O'Connell street said.
 <h3>MS-DOS Editor - "edit"</h3>
 
 <div class="centre">
-<img src="images/dos_edit.png" /><br />
+<img src="../images/dos_edit.png" /><br />
 <small><i>The MS-DOS text editor - the first editor I used - 1993.</i></small>
 </div>
 
@@ -37,7 +37,7 @@ you what the shortcut keys did. This would influence my future preferences.
 <h3>JFE Editor When Learning C</h3>
 
 <div class="centre">
-<img src="images/jfe.jpg" /><br />
+<img src="../images/jfe.jpg" /><br />
 <small><i>Jens' File Editor - this is how I learned programming in 2003.</i></small>
 </div>
 
@@ -121,7 +121,7 @@ today. Mostly Xubuntu at the moment (the cut-down minimalist version).
 </p>
 
 <div class="centre">
-<img src="images/vim.png" /><br />
+<img src="../images/vim.png" /><br />
 <small><i>Vim - what the heck is "visual mode" and what do I do now and how do
 I quit? It's like being trapped inside King's Quest or Zork or something.</i></small>
 </div>
@@ -136,7 +136,7 @@ document. No way.
 </p>
 
 <div class="centre">
-<img src="images/emacs.png" /><br />
+<img src="../images/emacs.png" /><br />
 <small><i>Emacs in windowed mode - it does have the Amiga look, doesn't it? It
 usually looks considerably worse than this - I think my system has the nice
 anti-aliased fonts package already.</i></small>
@@ -161,7 +161,7 @@ it was made for the 1980s Amiga. Not for me.
 </p>
 
 <div class="centre">
-<img src="images/nano.png" /><br />
+<img src="../images/nano.png" /><br />
 <small><i>Nano is a minimal terminal text editor that has a key reference on
 the bottom. That's all I need.</i></small>
 </div>
@@ -204,7 +204,7 @@ you still have screen space to display a running programme window.
 </p>
 
 <div class="centre">
-<img src="images/gedit.png" /><br />
+<img src="../images/gedit.png" /><br />
 <small><i>gedit is pretty much my most-used graphical text editor.</i></small>
 </div>
 

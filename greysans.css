@@ -62,13 +62,14 @@ div.postcontent {
 	background-color: #F2F1E6;
 }
 div.sidepanel {
-	background-color: #F2F1E6;
-	position:absolute;
-	float:left;
-	left:0;
-	top:100;
-	font-size:66%;
+	background-color: #FFFFFF;
+	position: absolute;
+	float: left;
+	left:0px;
+	top: 100px;
+	font-size:80%;
 	z-index:-2;
+	width:256px;
 }
 
 table, td {

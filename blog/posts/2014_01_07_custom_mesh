@@ -242,7 +242,7 @@ with the "count" of lines, the amount of memory to allocate for storage.
 </p>
 
 <div class="centre">
-<img src="images/customformat.png" /><br />
+<img src="../images/customformat.png" /><br />
 <small><i>Testing an animation after importing from my custom format. The white
 squares indicate bone offset positions, and the different colours indicate
 different bone index numbers to which each part of the mesh is bound.</i></small>

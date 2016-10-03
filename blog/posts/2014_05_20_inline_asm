@@ -66,7 +66,7 @@ describe some of them here. That's it - compile as normal and it works!
 </p>
 
 <div class="centre">
-<img src="images/gdb0.png" /><br />
+<img src="../images/gdb0.png" /><br />
 <small><i>Here I used cgdb (the GNU debugger + a text editor to set breakpoints
 in your files) to debug my in-line assembler.</i></small>
 </div>

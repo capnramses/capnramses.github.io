@@ -1,7 +1,7 @@
 <h2>Making HTML5 Canvas 2d Work Very Hard Indeed</h2>
 
 <div class="centre">
-<img src="images/barycentric.png" /><br />
+<img src="../images/barycentric.png" /><br />
 <small><i>Using a barycentric algorithm to rasterise and fill a triangle into
 pixels, based on 3 input vertices.</i></small>
 </div>
@@ -15,7 +15,7 @@ something new. "Why not make a live on-line one?" I thought - hence, the Canvas
 </p>
 
 <div class="centre">
-<img src="images/canvas2dcube.png" /><br />
+<img src="../images/canvas2dcube.png" /><br />
 <small><i>
 'Canvas 2d? Crom laughs at your 2d. Laughs from his mountain.'
 </i></small>

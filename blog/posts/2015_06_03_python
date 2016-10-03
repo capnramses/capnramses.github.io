@@ -7,7 +7,7 @@
 </p>
 
 <div class="centre">
-<img src="images/dungeo0.png"><br />
+<img src="../images/dungeo0.png"><br />
 <small><i>"!naledreG notnA ,em llik tsum uoy niw oT"</i></small>
 </div>
 
@@ -22,7 +22,7 @@ and Ken's Labyrinth nodded to. Of course WebGL was the medium.
 </p>
 
 <div class="centre">
-<img src="images/dungeo1.png"><br />
+<img src="../images/dungeo1.png"><br />
 <small><i>I drew a pixel-art map in GIMP, with a unique colour for each game
 element.</i></small>
 </div>
@@ -37,7 +37,7 @@ pixel row and column number * 2.0 to get into world co-ordinates.
 </p>
 
 <div class="centre">
-<img src="images/dungeo2.png"><br />
+<img src="../images/dungeo2.png"><br />
 <small><i>
 Secret panels, treasure, keys, weird blue colours instead of black, silver,
 and grey, fenced off areas that make you wonder how to get the goodies behind

@@ -15,7 +15,7 @@ far range has a 5x5 kernel of blur. It seems to work quite well.
 </p>
 
 <div class="centre">
-<img src="images/dof_demo.png" /><br />
+<img src="../images/dof_demo.png" /><br />
 <small><i>The DOF demo with range 150 (about half way into the cube field).</i>
 </small>
 </div>

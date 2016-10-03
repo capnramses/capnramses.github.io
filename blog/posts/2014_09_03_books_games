@@ -35,7 +35,7 @@ I made some grammar mistakes in GLSL that produced some weird graphical offsets
 that had me scratching my head for a while.
 </p>
 
-<img src="images/raytraceshot1.png" />
+<img src="../images/raytraceshot1.png" />
 
 <p>
 This is just a basic 800x800 window generating that many rays. I used simple

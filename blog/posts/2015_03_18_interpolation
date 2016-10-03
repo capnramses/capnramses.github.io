@@ -52,9 +52,9 @@ we would define these things in my mechanics education.
 </p>
 
 <div class="centre">
-<img src="images/linear.png" /><img src="images/accel_sine.png" />
-<img src="images/accel_exp.png" /><img src="images/decel_sine.png" />
-<img src="images/decel_elastic.png" /><img src="images/decel_bounce.png" />
+<img src="../images/linear.png" /><img src="../images/accel_sine.png" />
+<img src="../images/accel_exp.png" /><img src="../images/decel_sine.png" />
+<img src="../images/decel_elastic.png" /><img src="../images/decel_bounce.png" />
 </div>
 
 <p>

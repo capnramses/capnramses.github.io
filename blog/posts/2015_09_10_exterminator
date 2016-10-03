@@ -1,8 +1,8 @@
 <h2>Exterminator - Behold and Despair!</h2>
 
 <div class="centre">
-<a href="images/crongscroll.png">
-<img width="512" src="images/crongscroll.png" /></a><br />
+<a href="../images/crongscroll.png">
+<img width="512" src="../images/crongscroll.png" /></a><br />
 <small><i>Exterminator in action - debugging my game.</i></small>
 </div>
 
@@ -42,7 +42,7 @@ easier - it's not good. It's really quite bad.
 </p>
 
 <div class="centre">
-<img src="images/gdb.png" /><br />
+<img src="../images/gdb.png" /><br />
 <small><i>GDB - Yep, this is the actual debugging interface.</i></small>
 </div>
 
@@ -67,7 +67,7 @@ consoles so it's still not worth it.
 </p>
 
 <div class="centre">
-<img src="images/cgdb.png" /><br />
+<img src="../images/cgdb.png" /><br />
 <small><i>CGDB - an improvement, sort-of.</i></small>
 </div>
 
@@ -90,7 +90,7 @@ It's also unreliable with frequent crashes - you won't use it.
 </p>
 
 <div class="centre">
-<img src="images/ddd.png" /><br />
+<img src="../images/ddd.png" /><br />
 <small><i>DDD - Why are there no line numbers?
 Why can't I click a margin to set a break-point? Mediocre!</i></small>
 </div>
@@ -148,7 +148,7 @@ people's general solutions!</b>
 </p>
 
 <div class="centre">
-<img src="images/td32.png" /><br />
+<img src="../images/td32.png" /><br />
 <small><i>Borland Debugger with TurboVision display - the greatest debugger of
 all time.</i></small>
 </div>
@@ -248,8 +248,8 @@ tools:
 <li>access to GDB console for more advanced interaction</li>
 </ul>
 
-<a href="images/crongscroll.png">
-<img width="800" src="images/crongscroll.png" /></a>
+<a href="../images/crongscroll.png">
+<img width="800" src="../images/crongscroll.png" /></a>
 <small><i>Exterminator in action - debugging my game.</i></small>
 </div>
 

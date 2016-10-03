@@ -16,7 +16,7 @@ shorter on-demand sound samples i.e. generated speech clips.
 </p>
 
 <a href="demos/crazy_as_hell/">
-<img src="images/crazy_as_hell.png" /><br />
+<img src="../images/crazy_as_hell.png" /><br />
 </a>
 <small><i>the background animation was a complete accident - but very amusing. click image for demo.</i></small>
 
@@ -28,7 +28,7 @@ I'll plot the 2nd person from the video as a face - maybe in a different colour 
 </li><li>
 I also need to convert the distance estimate into 3D - but only if the 3d scene will be viewed from above.
 If viewed from the same perspective as the real camera then I can recreate the faces excatly, using the pixel coords
-and pixel area. hmmmmmm...then I can keep using the 2D images/icons.
+and pixel area. hmmmmmm...then I can keep using the 2D ../images/icons.
 </li>
 <li>
 More visualisation tools - I'll need to chat with people and see what other speech/communication research is doing

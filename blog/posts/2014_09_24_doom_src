@@ -12,7 +12,7 @@ machines too!
 </p>
 
 <div class="centre">
-<img src="images/doomhack4.png" /><br />
+<img src="../images/doomhack4.png" /><br />
 <p><small>
 My port of the original DOOM code (which no longer works on desktops) to modern windowed output.
 </small></p>
@@ -201,7 +201,7 @@ fixed that. This is what I got:
 </p>
 
 <div class="centre">
-<img src="images/doomhack0.png" /><br />
+<img src="../images/doomhack0.png" /><br />
 <p><small>
 It's upside-down. It has crap in it. It's repeated 3 times. The colours are wrong. But it <b>clearly says
 "DOOM"</b>. I knew I was in business at this point.
@@ -221,7 +221,7 @@ the display and added keyboard controls for ESCAPE, ENTER and UPARROW. I got wha
 </p>
 
 <div class="centre">
-<img src="images/doomhack1.png" /><br />
+<img src="../images/doomhack1.png" /><br />
 <p><small>
 The ESCAPE and ENTER buttons let me bring up the menu (phew, it worked!), and start E1M1. When UPARROW let
 me actually move in 3d I knew I was about to crack the whole thing. The game loop and movement motion
@@ -244,7 +244,7 @@ display function (what the hell X, what kind of weirdo 1980s display are you?).
 </p>
 
 <div class="centre">
-<img src="images/doomhack2.png" /><br />
+<img src="../images/doomhack2.png" /><br />
 <p><small>
 ULTIMATE VICTORY! I never thought I would get this far with such old code, written by other people.
 I scaled up to 640x400. Because I'm sampling a texture I can resize my viewport to any dimensions and it
@@ -265,7 +265,7 @@ but leaving the filters in <tt>GL_NEAREST</tt> feels right for now.
 </p>
 
 <div class="centre">
-<img src="images/doomhack3.png" /><br />
+<img src="../images/doomhack3.png" /><br />
 <p><small>
 IDBEHOLD the aliasing!
 </small></p>
@@ -294,7 +294,7 @@ my Doom poster! Chatted about Dangerous Dave.
 </p>
 
 <div class="centre">
-<img src="images/antonromero.png" /><br />
+<img src="../images/antonromero.png" /><br />
 <p><small>
 We're not worthy!
 </small></p>

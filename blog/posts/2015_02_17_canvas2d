@@ -21,7 +21,7 @@ the 2d canvas.
 </p>
 
 <div class="centre">
-<img src="images/cnglchart1.png" /><br />
+<img src="../images/cnglchart1.png" /><br />
 <small><i>The raster interface is a nice way to render very pixel-exact charts.</i></small>
 </div>
 

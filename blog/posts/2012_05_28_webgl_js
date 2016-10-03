@@ -25,7 +25,7 @@ but I was used to this from OpenGL so dodged a few early trip-ups.
 
 <div class="centre">
 <a href="demos/basicshader/">
-<img src="images/shadersDemo.png" width="512"/>
+<img src="../images/shadersDemo.png" width="512"/>
 </a>
 <br />
 <small><i>Loading a pair of OpenGL ES 2.0 shaders from separate URLs. I have the Chrome development tool open,

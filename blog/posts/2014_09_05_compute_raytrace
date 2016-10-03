@@ -14,7 +14,7 @@ I'll try to make a tutorial or set of instructions for getting started with a
 minimal demo like this.
 </p>
 
-<img src="images/raytraceshot2.png" />
+<img src="../images/raytraceshot2.png" />
 
 <p>
 The basic idea is that each pixel in my 800x800 display area fires a

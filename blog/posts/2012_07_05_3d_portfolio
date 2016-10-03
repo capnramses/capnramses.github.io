@@ -6,7 +6,7 @@ I wrote a little <a href="../3dmodelviewer/">show-case tool</a> to view differen
 
 <div class="centre">
 <a href="../3dmodelviewer/">
-<img src="images/showcase.png" width="512"><br />
+<img src="../images/showcase.png" width="512"><br />
 </a>
 <small><i>The web page allows you to browse a selection of 3d models, and display some additional information of interest. I will add some sort of animations support.</i></small>
 </div>

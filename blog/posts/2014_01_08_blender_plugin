@@ -25,7 +25,7 @@ I'll try to walk through this first.
 </p>
 
 <div class="centre">
-<img src="images/pyconsole.png" /><br />
+<img src="../images/pyconsole.png" /><br />
 <small><i>The Blender Python console. There is no <tt>faces</tt> variable, but
 there is a <tt>polygons</tt>.</i></small>
 </div>
@@ -73,7 +73,7 @@ bl_info = {
     "category": "Add Mesh"}</textarea>
 
 <div class="centre">
-<img src="images/addonsmenu.png" /><br />
+<img src="../images/addonsmenu.png" /><br />
 <small><i>Imagine my elation when this appeared in the Addons menu! Okay it
 wasn't that exciting.</i></small>
 </div>
@@ -192,7 +192,7 @@ this function inside the export class there.
 </p>
 
 <div class="centre">
-<img src="images/export_plugin.png" /><br />
+<img src="../images/export_plugin.png" /><br />
 <small><i>Basic empty plug-in loading and appears in the correct menu system.</i></small>
 </div>
 

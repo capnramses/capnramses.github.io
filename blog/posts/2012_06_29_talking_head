@@ -57,7 +57,7 @@ The next step is to add in the ray vs sphere code to see if I can click on thing
 </p>
 
 <div class="centre">
-<img src="images/boundingspheres.png" width="512"/><br />
+<img src="../images/boundingspheres.png" width="512"/><br />
 <small><i>I plan to render these blue spheres around each object. They are of unit size, so I should be able to scale each one based on the greatest (absolute) x, y, or z position value from each object's origin. If the spheres are too big and clumsy versus the shape and proximity of the objects, then we can also tell if we need a more precise algorithm</i></small>
 </div>
 

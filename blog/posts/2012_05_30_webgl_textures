@@ -2,7 +2,7 @@
 <h3>Wavefront .obj to JSON Mesh Conversion</h3>
 
 <div class="centre">
-<img src="images/doormeshjson.png" width="256" /><br />
+<img src="../images/doormeshjson.png" width="256" /><br />
 <small><i>On the left is the mesh loaded from a JSON file that I converted from an .obj file.</i></small>
 </div>
 
@@ -16,7 +16,7 @@ Now...textures.
 
 <div class="centre">
 <a href="demos/textures/">
-<img src="images/textures.png" width = "512"/></a><br />
+<img src="../images/textures.png" width = "512"/></a><br />
 <i><small>The main problem was that tutorial content on the web has some mistakes! Unbinding a texture during an 'onload' style callback can interrupt and cause black rendering.</small></i>
 </div>
 

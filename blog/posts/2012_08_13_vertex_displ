@@ -11,7 +11,7 @@ figure out. It will go into the write-up. Anyway, it works well now and is easy 
 
 <div class="centre">
 <a href="demos/vertex_displacement/">
-<img src="images/flag1.png" /><br /></a>
+<img src="../images/flag1.png" /><br /></a>
 <small><i><orange>Click on the image to see the demo. I just used a single sine function to
 modify along the x axis, but it could easily be a more complex set-up.</orange></i></small>
 

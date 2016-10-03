@@ -30,7 +30,7 @@ needed a few minor changes to back-port to the GLSL version used by OpenGL 2.1.
 </ul>
 
 <div class="centre">
-<img src="images/hellotriangle21.png" />
+<img src="../images/hellotriangle21.png" />
 </div>
 
 <p>

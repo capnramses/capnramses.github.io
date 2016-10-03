@@ -19,21 +19,21 @@ way.
 </p>
 
 <div class="centre">
-<img src="images/colourmess.png" /><br />
+<img src="../images/colourmess.png" /><br />
 <small><i>
 Argh my brain! The worst possible scenario for common colour-blindness.
 </i></small>
 </div>
 
 <div class="centre">
-<img src="images/greenmess.png" /><br />
+<img src="../images/greenmess.png" /><br />
 <small><i>
 Shades of a single colour - perhaps! Do we need colour at all?
 </i></small>
 </div>
 
 <div class="centre">
-<img src="images/greymess.png" /><br />
+<img src="../images/greymess.png" /><br />
 <small><i>
 Greyscale - fewer issues, but still very major limitations. The white
 background influences our perception of the black-to-white colour range.

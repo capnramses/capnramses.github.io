@@ -61,5 +61,5 @@ go from a direction vector in the coordinates of the camera into world
 coordinates...
 </p>
 <div class="centre">
-<img src="images/mousepicking0.png" width="512"/>
+<img src="../images/mousepicking0.png" width="512"/>
 </div>

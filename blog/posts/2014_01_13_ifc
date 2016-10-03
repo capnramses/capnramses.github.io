@@ -10,7 +10,7 @@ had the same problem. Curious!
 </p>
 
 <div class="centre">
-<img src="images/ifccustom.png" /><br />
+<img src="../images/ifccustom.png" /><br />
 <small><i>My converter successfully converted an IFC mesh that my viewer could
 draw in OpenGL 4, but some bits were missing.</i></small>
 </div>
@@ -32,7 +32,7 @@ IFC classes.
 </p>
 
 <div class="centre">
-<img src="images/ifcview2.png" /><br />
+<img src="../images/ifcview2.png" /><br />
 <small><i>Manually cleaning up the mesh in Blender, and joining all of the
 vertex groups/sub-meshes together solved the missing triangles problem.</i>
 </small>
@@ -51,7 +51,7 @@ they are facing the other way, and would be visible from inside the house.
 </p>
 
 <div class="centre">
-<img src="images/ifcview2_nocull.png" /><br />
+<img src="../images/ifcview2_nocull.png" /><br />
 <small><i>
 Finally - the entire mesh drawn! I had to disable back-face culling. This shows
 that some of the polygons are erroneously defined in back-to-front 'winding'

@@ -34,7 +34,7 @@ it will also give me something to play with - perhaps an excuse to build some ha
 animation.
 </p>
 
-<img src="images/cam_chart_xy.png" width="256"/><img src="images/cam_chart_xy_lines.png" width="256"/><img src="images/cam_chart_xa.png" width="256"/>
+<img src="../images/cam_chart_xy.png" width="256"/><img src="../images/cam_chart_xy_lines.png" width="256"/><img src="../images/cam_chart_xa.png" width="256"/>
 
 <p>
 The graphs are some rough data-processing plots with very crude person identification. On the left is
@@ -45,7 +45,7 @@ where it lost track of the people in view. I think I might keep these frames, re
 guesses, and show that the guess is losing accuracy over time by making the counter/avatar less opaque.
 </p>
 
-<img src="images/angle_y2.png" />
+<img src="../images/angle_y2.png" />
 
 <p>
 So, with a little jiggery-pokery I manged to convert the pixel position into a y-axis angle from the camera. I didn't convert the height yet (y-axis here is still pixels, not degrees), but once I do that I can guess the distance from

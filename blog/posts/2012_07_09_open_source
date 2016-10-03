@@ -11,7 +11,7 @@ use-able .json format.
 <tr>
 <td>
 <a href="https://github.com/capnramses/webgl-3d-model-viewer">
-<img src="https://a248.e.akamai.net/assets.github.com/images/modules/about_page/github_logo.png" /><br />
+<img src="https://a248.e.akamai.net/assets.github.com/../images/modules/about_page/github_logo.png" /><br />
 <div class="centre">
 webgl-3d-model-viewer
 </div>
@@ -19,7 +19,7 @@ webgl-3d-model-viewer
 </td>
 <td>
 <a href="https://github.com/capnramses/.obj-to-.json-converter">
-<img src="https://a248.e.akamai.net/assets.github.com/images/modules/about_page/octocat.png" /><br />
+<img src="https://a248.e.akamai.net/assets.github.com/../images/modules/about_page/octocat.png" /><br />
 <div class="centre">
 .obj-to-.json-converter
 </div>
@@ -37,7 +37,7 @@ Well, I got this working properly. It was easier than I thought. I should have g
 </p>
 
 <div class="centre">
-<img src="images/raypickingthingyworking.png" width="512" /><br />
+<img src="../images/raypickingthingyworking.png" width="512" /><br />
 <small>
 <i>
 I create a ray from the mouse pointer's x and y pixel coordinates, and project it into world space. Here I am testing it against spheres. All are the same size, but one is farther in the distance - this lets me make sure that the closest sphere is selected if 2 spheres are along the path of the ray. I update a uniform variable that makes the currently selected sphere appear pink. <B><i>EDIT: don't try clicking on this, it's just an image. hahaha</i></b>.

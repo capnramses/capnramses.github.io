@@ -124,7 +124,7 @@ have it were the ones that actually needed it.
 </p>
 
 <div class="centre">
-<img src="images/crong_gfx_menu.png" /><br />
+<img src="../images/crong_gfx_menu.png" /><br />
 <i><small>In-game graphics menu. They greyscale filter is a framebuffer effect.
 Point sprites are visible in the background, running properly on AMD's linux
 driver.</small></i>.

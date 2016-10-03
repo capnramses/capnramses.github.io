@@ -55,7 +55,7 @@ with <tt>editor.cpp</tt>, which you can see if you look at the
 </p>
 
 <div class="centre">
-<img src="images/map_editor_0.png" /><br />
+<img src="../images/map_editor_0.png" /><br />
 <small><i>A section of <tt>e1m1.map</tt> in a text editor.</i></small>
 </div>
 
@@ -71,7 +71,7 @@ manually update.
 <h3>Starting the Editor</h3>
 
 <div class="centre">
-<img src="images/map_editor_1.png" /><br />
+<img src="../images/map_editor_1.png" /><br />
 <small><i>The "Empty_..." maps are blank templates in 2 different sizes.</i></small>
 </div>
 
@@ -86,7 +86,7 @@ down and hit enter. I'll start on a blank map.
 </p>
 
 <div class="centre">
-<img src="images/map_editor_4.png" /><br />
+<img src="../images/map_editor_4.png" /><br />
 <small><i>The map editor is split into modes and has very simple key controls.
 The green sprite shows you the 'current' tile that you'll edit.</i></small>
 </div>
@@ -105,7 +105,7 @@ row!
 </p>
 
 <div class="centre">
-<img src="images/map_editor_5.png" /><br />
+<img src="../images/map_editor_5.png" /><br />
 <small><i>In "tiles" mode W/S raise and lower tiles and X changes type.</i></small>
 </div>
 
@@ -125,7 +125,7 @@ plugged.
 </p>
 
 <div class="centre">
-<img src="images/map_editor_6.png" /><br />
+<img src="../images/map_editor_6.png" /><br />
 <small><i>Each tile can be painted with a set of 4 textures for top and sides.</i></small>
 </div>
 
@@ -141,7 +141,7 @@ snake of tiles in one go.
 </p>
 
 <div class="centre">
-<img src="images/map_editor_7.png" /><br />
+<img src="../images/map_editor_7.png" /><br />
 <small><i>Each tile can be painted with a set of 4 textures for top and sides.</i></small>
 </div>
 
@@ -154,7 +154,7 @@ specular/emissive map (shiny surfaces, with lights stored in the alpha channel).
 </p>
 
 <div class="centre">
-<img src="images/map_editor_8.png" /><br />
+<img src="../images/map_editor_8.png" /><br />
 <small><i>You can have a different set of textures for different maps, as shown
 here by switching to my terrible copy of Doom's textures!</i></small>
 </div>
@@ -174,7 +174,7 @@ can delete a prop, when in Props mode, with the <b>DEL</b> key.
 </p>
 
 <div class="centre">
-<img src="images/map_editor_9.png" /><br />
+<img src="../images/map_editor_9.png" /><br />
 <small><i>Props are pretty easy to place down. You can also rotate them around
 to look a little less uniform.</i></small>
 </div>
@@ -239,7 +239,7 @@ idea of the game.
 </p>
 
 <div class="centre">
-<img src="images/map_editor_10.png" /><br />
+<img src="../images/map_editor_10.png" /><br />
 <small><i>I added a trigger for my windlass (TX = 0) and a stone door that it opens with
 matching (RX = 0).</i></small>
 </div>
@@ -302,14 +302,14 @@ the default description and title, which I would hand-edit in the map file later
 </p>
 
 <div class="centre">
-<img src="images/map_editor_12.png" /><br />
+<img src="../images/map_editor_12.png" /><br />
 <small><i>And it works! With all the lighting and shadows in the game.</i></small>
 </div>
 
 <h3>Final Touches</h3>
 
 <div class="centre">
-<img src="images/map_editor_2.png" /><br />
+<img src="../images/map_editor_2.png" /><br />
 <small><i>You may find it easier to hand-edit text sections.</i></small>
 </div>
 

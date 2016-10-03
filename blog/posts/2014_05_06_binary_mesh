@@ -1,7 +1,7 @@
 <h2>Binary Mesh Files</h2>
 
 <div class="centre">
-<img src="images/binary_opengl_teapot.png" /><br />
+<img src="../images/binary_opengl_teapot.png" /><br />
 <small><i>
 Binary teapot mesh loaded into OpenGL. It was very easy to convert an .obj into
 a .bin. File size was about the same. Parsing time was much quicker, because it
@@ -79,7 +79,7 @@ header.
 <h3>WebGL</h3>
 
 <div class="centre">
-<img src="images/binary_webgl_teapot.png" /><br />
+<img src="../images/binary_webgl_teapot.png" /><br />
 <small><i>
 Binary teapot mesh loaded into WebGL. Parsing is quicker, and the file
 is much smaller than a JSON mesh, but the parsing in JavaScript is very ugly.

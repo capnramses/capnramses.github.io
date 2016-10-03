@@ -72,7 +72,7 @@ processing "press all the buttons" effect - the "Hello Triangle" demo turned int
 swirling colour-phasing wobbly triangles:
 </p>
 
-<img src="images/postprocessing.png" />
+<img src="../images/postprocessing.png" />
 
 <p>
 I'm not really sure where these effects are going to be useful yet, except for making
@@ -87,7 +87,7 @@ Specular exponent needed to be x2 to go from Phong to Blinn. The monkey is my st
 model for the moment.
 </p>
 
-<img src="images/monkey_phong.png" />
+<img src="../images/monkey_phong.png" />
 
 <h3>Maths in C</h3>
 
@@ -109,4 +109,4 @@ tended to give washed-out (greyish) look to the scene, so they might need to be 
 regular texture map as well.
 </p>
 
-<img src="images/ambientocclusionbaking.png" />
+<img src="../images/ambientocclusionbaking.png" />
