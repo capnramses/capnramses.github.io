@@ -16,6 +16,22 @@ for unformatted in *; do
 	
 	cat $unformatted >> $opf;
 	
+	##
+	## add disqus message board to footer
+	##
+	echo "<div id="disqus_thread"></div>" >> $opf;
+	echo "<script>" >> $opf;
+	echo "(function() { // DON'T EDIT BELOW THIS LINE" >> $opf;
+	echo "	  var d = document, s = d.createElement('script');" >> $opf;
+	echo "	  s.src = '//https-capnramses-github-io.disqus.com/embed.js';" >> $opf;
+	echo "	  s.setAttribute('data-timestamp', +new Date());" >> $opf;
+	echo "	  (d.head || d.body).appendChild(s);" >> $opf;
+	echo "})();" >> $opf;
+	echo "</script>" >> $opf;
+	echo "<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>" >> $opf;
+
+	<script id="dsq-count-scr" src="//https-capnramses-github-io.disqus.com/count.js" async></script>
+	
 	echo "</body></html>" >> $opf;
 done;
 cd ..
