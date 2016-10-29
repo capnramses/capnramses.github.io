@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-US">
+<head>
+<meta name="generator" content=
+"HTML Tidy for Linux/x86 (vers 1st November 2003), see www.w3.org" />
+<title>LaTeX</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="duration" content="90" />
+
+<!-- online version 
+<link rel="stylesheet" href="http://www.w3.org/Talks/Tools/Slidy2/styles/slidy.css" type="text/css" />
+<script src="http://www.w3.org/Talks/Tools/Slidy2/scripts/slidy.js" charset="utf-8" type="text/javascript">
+-->
+
+<!-- style -->
+<link rel="stylesheet" href="styles/slidy.css" type="text/css" />
+<link rel="stylesheet" href="styles/burntorange.css" type="text/css" />
+<script src="scripts/slidy.js" charset="utf-8" type="text/javascript">
+
+</script>
+</head>
+<body>
+
+<div class="background" />
+
+<div class="slide">
+<h1>Before we start...</h1>
+<h2>LaTeX Lab</h2>
+<ul>
+<li>everyone at 8-12 Thursday in G311</li>
+<li>play with LaTeX features</li>
+<li>anything I missed from the lecture</li>
+<li>finish assignments?</li>
+</ul>
+</div>
+
+<!-- THE FIRST SLIDE -->
+<div class="slide">
+<h1>LaTeX<small><grey>
+<br/>7 Feb 2012 - Dr Anton Gerdelan - apg@bth.se
+</grey></small>
+</h1>
+<ul>
+<li>formats professional (academic), type-set documents</li>
+<li>can split large documents into chapter files</li>
+<li>many difficult tasks (T.O.C., referencing) are automatic</li>
+<li>usually do not need to fiddle with fonts, styles</li>
+<li>has lots of obscure markup tags (something like HTML or CSS)</li>
+<li>figure placement can be a challenge</li>
+</ul>
+<center>
+MS Word:<br />
+<img src="images/wordeq.png" alt="word equation" /><br />
+LaTeX:<br />
+<img src="images/latexeq.png" alt="latex equation" />
+</center>
+</div>
+
+<div class="slide">
+<h1>Tex</h1>
+<ul>
+<li><b>Tex</b> ["<i>Techshghhhh</i>"] is a type-setting engine by Donald Knuth (1977)
+<ul>
+<li>very high-quality production</li>
+<li>low-level interface</li>
+</ul>
+</li>
+<li><b>LaTeX</b> ["<i>Lah-tek</i>"] is a package of macros for Tex by Leslie Lamport (1st version 1984)</li>
+<li>latest version LaTeX2e</li>
+<li>Lots of styles/packages for LaTeX created to pre-format documents in a specific style</li>
+<li>Publishers usually provide authors with a style or class file that they include;<br />
+<i><a href="http://www.ieee.org/conferences_events/conferences/publishing/templates.html">IEEE</a>,
+<a href="http://www.siggraph.org/publications/instructions/acmsiggraph.zip">acmsiggraph</a>,
+<a href="http://www.bth.se/com/gsil_computergraphics.nsf/attachments/cgtr-latex-template-v1_1_zip/$file/cgtr-latex-template-v1_1.zip">Computer Graphics TRs</a>
+</i></li>
+<li>Authors then just write <b>plain text</b> with some tags and LaTeX compiles document into style</li>
+</ul>
+</div>
+
+<div class="slide">
+<h1>Get LaTeX</h1>
+<ul>
+<li>Windows: MiKTeX <a href="http://www.miktex.org/">http://www.miktex.org/</a></li>
+<li>Linux: usually the <b>texlive-latex-recommended</b> package</li>
+<li>Mac: TeXShop <a href="http://pages.uoregon.edu/koch/texshop/">http://pages.uoregon.edu/koch/texshop/</a></li>
+<li>or run entirely online: <a href="http://scribtex.com">http://scribtex.com</a></li>
+</ul>
+<h2>Get Help</h2>
+<ul>
+<li>screen 1: text editor. screen 2: pdf viewer and web browser</li>
+<li>probably the most useful resource: <a href="http://en.wikibooks.org/wiki/LaTeX/">http://en.wikibooks.org/wiki/LaTeX/</a></li>
+<li>I always forget the markup for mathematical or greek characters:<br />
+<a href="http://web.ift.uib.no/Fysisk/Teori/KURS/WRK/TeX/symALL.html">http://web.ift.uib.no/Fysisk/Teori/KURS/WRK/TeX/symALL.html</a></li>
+<li>accented characters are a pain: <a href="http://en.wikibooks.org/wiki/LaTeX/Accents">http://en.wikibooks.org/wiki/LaTeX/Accents</a></li>
+</ul>
+</div>
+
+<div class="slide">
+<h1>Skeleton</h1>
+<small><i>gnuplotlab.tex</i></small>
+<pre>
+%% gnuplot lab worksheet by Anton Gerdelan apg@bth.se
+\documentclass{article}
+
+% properties of the title
+\author{Anton~Gerdelan}
+\date{\today}
+\title{Visualisation Lab: gnuplot}
+
+\usepackage{graphicx}
+
+\begin{document}
+\maketitle % put the title here
+
+\section{What is gnuplot?}
+gnuplot is a tool for creating graphs and charts.
+
+\end{document}
+</pre>
+<ul>
+<li>preamble, packages, body</li>
+<li>I will now copy, paste, and compile...</li></ul>
+</div>
+
+<div class="slide">
+<h1>LaTeX Programmes</h1>
+<ol>
+<li><tt>latex</tt> .tex -> .dvi <br/>
+<i>uses .eps images natively</i></li>
+<li><tt>pdflatex</tt> .tex -> .pdf <br/>
+<i>.pdf includes fonts in the file but does not support .eps</i></li>
+<li><tt>dvipdfm</tt> .dvi -> .pdf<br />
+<i>handy to get a pdf with eps images</i></li>
+<li><tt>dvi2ps</tt> .dvi -> .ps</li>
+</ol>
+<ul>
+<li>When you run pdflatex it does a <b>single pass</b> over the document.</li>
+<li>Cross-references (e.g. <tt>Figure~\ref{fig:myplot}</tt>) are collected in a separate file</li>
+<li>.pdf will appear with "<i>Figure ???</i>"</li>
+<li>To compile cross references in, run pdflatex again</li>
+<li>When including citations or glossaries, additional passes are needed</li>
+</ul>
+</div>
+
+
+<div class="slide">
+<h1>Macros and Options</h1>
+<b><tt>\documentclass[twocolumn]{article}</tt></b>
+<ul>
+<li>LaTeX macros start with a backslash, then the name of the macro</li>
+<li>most macros can then have optional [options]</li>
+<li>next are curly braces where the parameters to the macro go</li>
+</ul>
+<h2>reserved characters</h2>
+<b># $ % ^ & _ { } ~ \</b>
+<pre>
+\# \$ \% \textasciicircum{} \& \_ \{ \} \~{} \textbackslash{}
+</pre>
+</div>
+
+<div class="slide">
+<h1>Sections</h1>
+<pre>
+\section{Apparatus}
+Just start typing in plain text...
+
+Leave a blank line to start a new paragraph (indented in single-column mode).
+
+\subsection{Instrumentation}
+You can type \textit{italics} (foreign words), \textbf{bold face} for emphasis,
+or \texttt{monospace} for commands.
+
+You can insert algebraic values or mathematics in dollars $n < n^2$.
+
+</pre>
+<center>
+<img src="images/sections2.png" alt="sectionspdf" />
+</center>
+</div>
+
+<div class="slide">
+<h1>Referencing with Bibtex</h1>
+<ol>
+<li>create a .bib file with all your references (books, articles, papers, etc.)</li>
+<li>each .bib entry has a <b>cite_key</b>:</li>
+<pre>
+@article{Gerdelan2012,  % journal article with cite key "Gerdelan2012"
+    author    = "Gerdelan, A. and Klaus, S.",
+    title     = "Downward Facing Dogs",
+    journal   = "{International Journal of Petroleum Studies}",
+    year      = "2012" % no comma after last entry used
+}
+</pre>
+<li>add <tt>\usepackage{cite}</tt> to preamble</li>
+<li>use "<tt>...has shown that dogs can not look up~\cite{Gerdelan2012}</tt>" in the .tex.</li>
+<li>and just before <tt>\end{document}</tt>:
+<pre>
+\bibliographystyle{plain} % style to use in references section
+\bibliography{mydotbibfile} % if using mydotbibfile.bib
+</pre>
+</ol>
+<ul>
+<li>structure of <tt>@book</tt>, <tt>@article</tt>, <tt>@inproceedings</tt>, etc. :<br /> <a href="http://en.wikibooks.org/wiki/LaTeX/Bibliography_Management">http://en.wikibooks.org/wiki/LaTeX/Bibliography_Management</a></li>
+</ul>
+</div>
+
+<div class="slide">
+<h1>...referencing with Bibtex</h1>
+</li>
+Now to build the .pdf with references:
+<pre>
+pdflatex mydoc.tex  % "Warning: There were undefined references.", but makes .aux
+bibtex mydoc.aux
+pdflatex mydoc.tex  % "Warning: Label(s) may have changed. Rerun to get..."
+pdflatex mydoc.tex
+</pre>
+<ul>
+<li><tt>\bibliographystyle{plain}</tt> can also be <tt>abbrv</tt>, <tt>ieeetr</tt>, or <tt>alpha</tt> (try them)</li>
+<li>tip: to cite a website (not usually in a publication):
+<pre>
+@misc{website:fermentas-lambda,
+      author = "Fermentas Inc.",
+      title = "Phage Lambda: description \& restriction map",
+      month = "November",
+      year = 2008,
+      url = "http://www.fermentas.com/techinfo/nucleicacids/maplambda.htm"
+}
+</pre>
+</li>
+<li>tip: before submitting, search the pdf for "?" (missing references)</li>
+<li>tip: read .blg bibtex log</li>
+</ul>
+</div>
+
+<div class="slide">
+<h1>Bullets, Numbering</h1>
+<pre>
+The major advantages of gnuplot are:
+\begin{itemize}
+	\item clean, publication-quality graphs are created
+	\item error bars are easy to display
+	\item input data is easy to format
+	\item data or commands can be piped in from \texttt{stdin}
+	\item you have control over every aspect of the display
+	\item you can output to a variety of pixel and vector formats
+\end{itemize}
+</pre>
+<ul>
+<li>itemize or enumerate</li>
+<li>item tag</li>
+<li>the <tt>\texttt{}</tt> tag produces monospace font (code)</li>
+</ul>
+</div>
+
+<div class="slide">
+<h1>Figures</h1>
+<pre>
+If you want to read about parametric plots you can do something
+like Figure~\ref{fig:3dplot}.
+\begin{figure}
+	\includegraphics[width=1.0\textwidth]{3d.png}
+	\caption{a parametric mode ``splot'' with hidden3d option
+	(depth sorting) disabled \label{fig:3dplot}}
+\end{figure}
+</pre>
+<ul>
+<li>put <tt>\usepackage{graphicx}</tt> above <tt>\begin{document}</tt></li>
+<li>LaTeX puts the figure where <i>it</i> thinks is best (in my case above the text)</li>
+<li>figure options <tt>[h!tbp]</tt>> options (in order of preference):<br />"here", "put it here, you bastard!", "top", "bottom", and on a separate page of figures.</li>
+<li>always refer to each figure in the text. <tt>\ref{LABELNAME}</tt></li>
+<li>tip: writing quotation marks</li>
+</ul>
+</div>
+
+<div class="slide">
+<h1>Tips for Figures</h1>
+<ul>
+<li>in two-column try <tt>\includegraphics[width=1.0<b>\columnwidth</b>]{3d.png}</tt></li>
+<li>use <tt>{figure*}</tt> environment to spread a figure across both columns</li>
+<li>output eps-format with dimensions 0.65", 0.65" for single-column size</li>
+<li>there is a package called sidewaysfigure for doing whole-page figures</li>
+<li>put label tags inside caption tags to avoid a really annoying bug</li>
+<li>to compile with pdflatex and .eps images; <tt>\usepackage{epstopdf}</tt> and:
+<pre>
+pdflatex -shell-escape myfile.tex
+</pre>
+</li>
+</ul>
+</div>
+
+<div class="slide">
+<h1>Equations</h1>
+<ul><li>one of the great advantages of Tex</li></ul>
+<pre>
+\usepackage{amsmath} % put in preamble
+
+\begin{equation} \label{eq:someequation}
+f(x) = ax + \frac{bx^{32t}}{\Delta \epsilon}
+\pi = \sqrt{12}\sum^\infty_{k=0} \frac{(-3)^{-k}}{2k+1}
+\end{equation}
+
+...as described in equation~\ref{eq:someequation}..
+
+</pre>
+<img src="images/eq3.png" alt="eq" />
+</div>
+
+<div class="slide">
+<h1>Tables</h1>
+<ul>
+<li>use the tabular environment</li>
+<li>arguments give left, right, centre justification of columns, and <tt>|</tt> or <tt>||</tt> for dividers</li>
+<li>columns are separated by <tt>&</tt></li>
+<li>to get a new row use <tt>\\</tt></li>
+<li><tt>\hline</tt> draws a line under a row</li>
+</ul>
+<pre>
+\begin{tabular}{ l c r }
+  1 & 2 & 3 \\
+  4 & 5 & 6 \\
+  7 & 8 & 9 \\
+\end{tabular}
+</pre>
+</div>
+
+<div class="slide">
+<h1>Better Tables</h1>
+<ul>
+<ul>
+<li>put tabular inside a table environment for caption and label</li>
+<li>table environment works a lot like figure environment (same <tt>h t b p !</tt> options)</li>
+<pre>
+\begin[h!tbp]{table}
+  \caption{Performance at peak F-measure \label{tab:fmeasure}}
+  \begin{tabular}{| r | r || c | c | c |}
+
+      ...
+
+  \end{tabular}
+\end{table}
+</pre>
+<li>hint: use minimal lines; usually just a bold row of labels is enough</li>
+<li>again: refer to each table in the text with <tt>\ref{LABEL}</tt>, and pdflatex twice</li>
+</ul>
+</div>
+
+<div class="slide">
+<h1>Errors and Warnings</h1>
+<ul>
+<li>type <tt>x</tt> to quit, enter to continue, or q to be quiet and carry on</li>
+<li>usually missing packages; should be auto-installed with MiKTeX</li>
+<li>maths symbols must be inside <tt>$$</tt></li>
+<li>also check the bibtex log to see if there are any mistakes in the .bib or missing references</li>
+<li>descriptions of common errors:<br/>
+<a href="http://en.wikibooks.org/wiki/LaTeX/Errors_and_Warnings">http://en.wikibooks.org/wiki/LaTeX/Errors_and_Warnings</a></li>
+</ul>
+</div>
+
+<div class="slide">
+<h1>Fancy Things</h1>
+<ul>
+<li>Jabref! <a href="http://jabref.sourceforge.net/">http://jabref.sourceforge.net/</a></li>
+<li>splitting a large document into several documents with <tt>\include{chapter2.tex}</tt></li>
+<li>code fragments with "listings" package and algorithms with "algorithmic"</li>
+<li>using gnuplot to embed maths symbols into .eps labels</li>
+<li>"beamer" for presentation slides</li>
+<li>circuit diagrams, music notation, chemistry diagrams...</li>
+<li>changing fonts, styles, and classes</li>
+<li>adding or removing vertical white space</li>
+</ul>
+</div>
+
+<div class="slide">
+<h1>Typical Article Structure</h1>
+<ol>
+<li>title, authors, institute, emails, date</li>
+<li>abstract (siggraph does a banner/teaser image under this)</li>
+<li>introduction<ul>
+ <li>literature review (thesis) or previous works (paper)</li>
+ <li>state of the art, or latest developments in area</li>
+</ul></li>
+<li>theory or hypothesis</li>
+<li>experiment design or method</li>
+<li>results</li>
+<li>discussion, conclusions, future works</li>
+<li>references</li>
+</ol>
+</div>
+
+</body>
+</html>

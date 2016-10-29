@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-US">
+<head>
+<meta name="generator" content=
+"HTML Tidy for Linux/x86 (vers 1st November 2003), see www.w3.org" />
+<title>Data Representation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="duration" content="90" />
+
+<!-- online version
+<link rel="stylesheet" href="http://www.w3.org/Talks/Tools/Slidy2/styles/slidy.css" type="text/css" />
+<script src="http://www.w3.org/Talks/Tools/Slidy2/scripts/slidy.js" charset="utf-8" type="text/javascript">
+-->
+
+<!-- style -->
+<link rel="stylesheet" href="styles/slidy.css" type="text/css" />
+<link rel="stylesheet" href="styles/burntorange.css" type="text/css" />
+<script src="scripts/slidy.js" charset="utf-8" type="text/javascript">
+
+</script>
+</head>
+<body>
+
+<div class="background" />
+
+
+<!-- THE FIRST SLIDE -->
+<div class="handout">
+<h1>Data Processing<small><grey>
+<br/>30 Jan 2012 - Dr Anton Gerdelan - apg@bth.se
+</grey></small>
+</h1>
+<ul>
+<li>pt.1: simulations, models, vis pipeline</li>
+<li>pt.2: assignment 2</li>
+<li>references, links, inspiration</li>
+</ul>
+</div>
+
+<div class="handout">
+<h1>Ken and Chris' Technical Report</h1>
+<ul>
+<li><a href="http://www.massey.ac.nz/~kahawick/cstn/068/cstn-068.html">K.A. Hawick and C.J. Scogings, "Quantifiable Metrics for Complex Emergence...", http://www.massey.ac.nz/~kahawick/cstn/068/cstn-068.html</a></li>
+<li>animats and predator-prey artifical life simulations<ul>
+<li>types of diagrams</li>
+<li>layout of document</li>
+<li>number of runs, statistics used</li>
+<li>rules used</li>
+<li>references</li>
+<li>tables, captions, and highlighted parts</li>
+<li>supporting figures</li>
+<li>some have error bars</li>
+</ul>
+</div>
+
+<div class="handout">
+<h1>"Artificial Unlife"</h1>
+<ul>
+<li>Civilian, soldier, zombie</li>
+<li>Randomise starting conditions</li>
+<li>At each step animat behaviour is based on <i>probabilities</i></li>
+<li>Which means different outcomes at each run</li>
+<li>Lots of different things that can be measured</li>
+</ul>
+</div>
+
+<div class="handout">
+<h1>Output Data From Programme</h1>
+<ul>
+  <li>Programme does a printout at every step</li>
+  <li>I used a script to repeat runs and put output in numbered files</li>
+</ul>
+<small><i>C code</i></small>
+<pre>
+  // end of step printing and logging
+  if (i % printerval == 0) {
+    printf("%i\t%i\n", i, gMaps.survivorCount); // step # and survivors left
+  }
+</pre>
+<small><i>Bash script: runs.sh</i></small>
+<pre>
+for i in {0..10000}; do
+./unlife 1000 100 > result$i.txt
+done
+</pre>
+<i>I used the parameters to mean "run for 1000 steps and print stuff every 100 steps"</i>
+</div>
+
+<div class="handout">
+<h1>Process Data</h1>
+<ul>
+  <li>Compute mean value</li>
+  <li>Compute uncertainty (I used std error)</li>
+  <li>Boil many results files into 1 file with 3 columns</li>
+  <li>I wrote a C programme to do that</li>
+</ul>
+<small><i>C code fragment (after tedious file I/O)</i></small>
+<pre>
+for (int i = 0; i < xvalues.size(); i++) {
+  // work out sum of y values for each x value
+  xvalues[i].calcSum();
+  // work out mean for each x value
+  xvalues[i].calcMean(count);
+  // sum of sq diffs from mean
+  xvalues[i].calcSumOfSqDiffs();
+  // std dev
+  xvalues[i].calcStdDev(count);
+  // write to "stats.txt"
+  fileout << xvalues[i].x << "\t" << xvalues[i].meanOfYValues
+  << "\t" << xvalues[i].standardDev << endl;
+}
+</pre>
+</div>
+
+<div class="handout">
+<h1>Processed Data</h1>
+<ul><li># of points</li>
+<li>x y yerror (in this case)</li>
+<li>sometimes x y xerror yerror, x y z, or just x y</li>
+<small><i>ASCII text file: plot.xy</i></small>
+<pre>
+0	2946.85	47.6766
+100	2897.52	62.899
+200	2680.71	223.157
+300	2337.73	455.38
+400	1972.41	678.273
+500	1593.42	874.454
+600	1234.98	1022.43
+700	961.885	1111.2
+800	786.026	1160.23
+900	692.53	1183.42
+</pre>
+</div>
+
+<div class="handout">
+<h1>Plot Data</h1>
+<ul>
+<li>GNUplot <a href="http://www.gnuplot.info/">http://www.gnuplot.info/</a></li>
+<li>lab sessions on Tuesday will be GNUPlot tutorial and assignment starter</li>
+</ul>
+
+<pre>
+>gnuplot
+>plot "plot.xy" witherrorbars
+</pre>
+<img src="images/second.png" alt="plot" />
+</div>
+
+</body>
+</html>

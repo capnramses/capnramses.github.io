@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-US">
+<head>
+<meta name="generator" content=
+"HTML Tidy for Linux/x86 (vers 1st November 2003), see www.w3.org" />
+<title>Data Representation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="duration" content="90" />
+
+<!-- online version
+<link rel="stylesheet" href="http://www.w3.org/Talks/Tools/Slidy2/styles/slidy.css" type="text/css" />
+<script src="http://www.w3.org/Talks/Tools/Slidy2/scripts/slidy.js" charset="utf-8" type="text/javascript">
+-->
+
+<!-- style -->
+<link rel="stylesheet" href="styles/slidy.css" type="text/css" />
+<link rel="stylesheet" href="styles/burntorange.css" type="text/css" />
+<script src="scripts/slidy.js" charset="utf-8" type="text/javascript">
+
+</script>
+</head>
+<body>
+
+
+
+<!-- THE FIRST handout -->
+<div class="handout">
+<h1>Data Representations<small><grey>
+<br/>23 Jan 2012 - Dr Anton Gerdelan - apg@bth.se
+</grey></small>
+</h1>
+<ul>
+<li>what kinds of data can we extract from games and simulations?</li>
+<li>choosing the right visualisation(s) for a data set</li>
+<li>some common mistakes to avoid</li>
+<li>some tools to consider</li>
+</ul>
+</div>
+
+<div class="handout">
+<h1>Why Visualise?</h1>
+<ul>
+<li>debug complex systems during development:<ul>
+<li>physics middleware: suspension spring compression over race course length</li>
+<li>game AI: why are characters walking into a wall at point X?</li>
+<li>what else?</li>
+</ul>
+</li>
+<li>explain a phenomenon from a simulated experiment:<ul>
+<li>CS AI: at what rate are agents learning compared to previous algorithm/environment?</li>
+<li>how will an epidemic spread through a population?</li>
+</ul></li>
+<li>provide extra interactive information
+<ul>
+<li>medical imaging from scanner-obtained data</li>
+<li>augmented reality (satellite image, HUD)</li>
+</ul>
+</li>
+<li>we need to choose our visualisation pipeline carefully</li>
+<li>data sets to use, visualisation methods, standards, tools</li>
+</ul>
+</div>
+
+<div class="handout">
+<h1>Visualisation Options</h1>
+<ul>
+<li>static graphs or figures
+<ul>
+	<li>suitable for print media (papers, journals, theses)</li>
+	<li>isolate 1 type of data - easy to appreciate</li>
+	<li>illustrate relationships between data sets</li>
+</ul>
+</li>
+<li>interactive visualisation
+<ul>
+	<li>virtual camera</li>
+	<li>explore complex <i>virtual world</i> to observe phenomena from different view-points</li>
+	<li>interrupt to dump interesting data sets or to record stills or video</li>
+</ul>
+</li>
+<li>video and screen captures
+<ul>
+	<li>not valid as scientific results - noise, no error</li>
+	<li>replay interesting phenomena in appreciable way</li>
+	<li>accompany other visualisations</li>
+</ul>
+</li>
+<li>sometimes it's easier to read data in a <b>table</b></li>
+</ul>
+</div>
+
+<div class="handout">
+<h1>How to Select Visualisations</h1>
+<ul>
+  <li>Ask yourself:<br /><br />
+  <i>Does this visualisation communicate information:</i><br /><br />
+  A. <b>more clearly?</b> <br />
+  B. <b>less clearly?</b>
+</li>
+</ul>
+<br />
+<center>
+<img src="images/cleveland.png" alt="clevelands hierarchy" width="512" />
+</center>
+</div>
+
+<div class="handout">
+<h1>How to Select Visualisations</h1>
+<ul>
+<li>start with a table if possible</li>
+<li>then choose the <u>most appropriate</u> graphs to display data using the more clear/less clear question.</li>
+<li>use all scientific standards available to increase quality:<ul>
+<li>error measurements or measurements of uncertainty</li>
+<li>scales, titles, lables, number of points</li>
+<li>control plots, comparisons</li>
+</ul>
+</li>
+<li>then consider interactive displays and video to <u>support</u> the measured results</li>
+</ul>
+</div>
+
+<div class="handout">
+<h1>types of data and graphs</h1>
+<h2>charts</h2>
+<img src="images/typesofchart.png" alt="char types" />
+<h3>safe options</h3>
+<ul>
+<li>line charts</li>
+<li>bar chart</li>
+<li>scatter plot</li>
+<li>keep-it-simple</li>
+<li>reduce clutter</li>
+<li>annotate</li>
+<li>split into two visualisations</li>
+</ul>
+</div>
+
+<div class="handout">
+<h1>trends and continuous quantitative data</h1>
+<ul>
+<li>most of the data that we collect is to investigate trends over time (or the increase of some other property)</li>
+<li>examples from games and simulations?</li>
+</ul>
+<center>
+<img src="images/speedl.jpg" alt="torques at gears" width="512"/><br />
+<small>source: Willys Jeep manual, ~1940</small>
+</center>
+<ul>
+<li>Q. how many data sets are represented here? Q. how could this graph be better?</li>
+</ul>
+</div>
+
+<div class="handout">
+<h1>visualising categories - qualitative data</h1>
+<ul>
+<li>sometimes we want to show results of bands or groups of data</li>
+<li>a pie chart is <u>the absolute worst kind of graph</u><br /><br />
+<i>"Death to pie charts" - William Eddy</i><br /><br />
+<i>"...the only worse design than a pie chart is several of them" - Edward Tufte</i><br />
+</li>
+<li>why? - note: very important point</li>
+<li>avoid 3D graphs</li>
+<li>only use bar charts for qualitative data sets</li>
+</ul>
+</div>
+
+<div class="handout">
+<h1>error measurements and uncertainty</h1>
+<table><td>
+<img src="images/errorbars.jpg" alt="error cartoon" width="100%" height="100%" />
+</td><td>
+<ul>
+<li>scientific measurements are repeated <i>n</i> times</li>
+<li>we must represent uncertainty visually</li>
+<li>use standard error or standard deviation for each point or bar</li>
+<li>remember: sample standard deviation</li>
+<center><img src="images/tex-math-2.gif" alt="stddev" /></center>
+<li>and standard error is std dev divided by square root of n</li>
+<li>.: bigger n &#8594 small standard error</li>
+<li>if an error bar is large: <b>collect more data</b>
+</ul>
+
+</td></table>
+</div>
+
+<div class="handout">
+<h1>standard error and standard deviation</h1>
+<table><td>
+<ul>
+<li>we can plot error bars with SE or SD, but what is the difference?</li>
+<li>normally bars are &#177SD or &#177SE but why might we double the size?</li>
+<li>why is this a valuable visualisation tool?</li>
+<li>we represent this visually on scatter, line, and bar charts with y-axis and sometimes x-axis error bars.</li>
+<li>what text must go in the caption for the error bars to make sense to the reader?
+</ul>
+</td><td>
+<img src="images/stddevnormaldist.gif" alt="normal distribution with std devs" width="400"  /><br /><small>fig: normal distribution with standard deviations</small><br /><br />
+<img src="images/F1.large.jpg" alt="standard error distribution" width="400" /><br /><small>fig: normal distribution with standard error</small>
+</td></table>
+
+</div>
+
+<div class="handout">
+<h1>...</h1>
+<p>half way...</p>
+</div>
+
+<div class="handout">
+<h1>interpreting error bars</h1>
+<table><td>
+<ul>
+
+
+<li>SE bars &#8594 68% confidence that the <b>true mean</b> lies inside the error bars</li>
+<li>2X SD bars are called the <b>95% confidence interval</b></li>
+<li>with SE bars two points are <b>significantly different</b> if there is at least 1/2 bar gap between the error bars.</li>
+<li>95% confidence interval bars are longer. Less than 1/4 bar of overlap corresponds to P < 0.05</li>
+<li>always explain the statistics used in the text or caption
+<ul>
+<li><i>n</i></li>
+<li>if standard deviation or standard error is used</li>
+<li>discuss any unsual points or trends</li>
+</ul>
+</li>
+</ul>
+</td><td>
+<img src="images/belia4.gif" alt="sig diff using std error"/>
+<br /><small>any closer and not significantly different</small>
+</td></table>
+<small>image source: <a href="http://scienceblogs.com/cognitivedaily/2007/03/most_researchers_dont_understa.php">http://scienceblogs.com/cognitivedaily/2007/03/most_researchers_dont_understa.php</a></small>
+</div>
+
+<div class="handout">
+<h1>maps and "snail trails"</h1>
+<ul>
+<li>how can we demonstrate <i>motion</i> without a video?</li>
+<li>why are these kinds of visualisations only <i>supporting</i> results? what is the main drawback of this visualisation?</li>
+</ul>
+<img src="images/slam.jpg" alt="slam motion chart" height="300"/><img src="images/craigscorridors.gif" alt="reynolds' corridors" height="220" /><img src="images/gamemove.jpg" alt="game lines" height="256" /><br />
+<small>Fig (left): a map built by a robot using the SLAM algorithm. location and facings at intervals are shown with red. (Oxford Mobile Robotics Research Group). Fig (centre): 3 simulation runs from Craig Reynolds' - <a href="http://www.red3d.com/cwr/papers/1994/sab94.html">Evolution of Corridor Following Behavior in a Noisy World</a>, 1994. Fig (right): a game character motion path</small>
+</div>
+
+<div class="handout">
+<h1>heat maps</h1>
+<center>
+<img src="images/Picture 3_14.png" alt="heat map traffic noise" /></center>
+</div>
+
+<div class="handout">
+<h1>heat maps</h1>
+<ul>
+<li>illustrate frequency of something happening in geographic regions</li>
+<li>break environment into nodes or grid cells</li>
+<li>when event occurs, add value with large weight to closest node, and smaller weight to nearby nodes</li>
+<li>for real-time, reduce (decay) values over time</li>
+<li>display using colour range or 3D map peaks - what are the drawbacks of each?</li>
+</ul>
+<center>
+<img src="images/peaks3.png" alt="3d heat peaks" height="256" />  <img src="images/heatmap.png" alt="robot heat map" height="256" />
+<img src="images/gameheatmap.jpg" alt="game heat map" height="256" /><br /><small>Fig (left): path-finding with A* algorithm. Fig (centre): regions of undesirability around opponent soccer robot. Fig (right): 3D game activity</small>
+</center>
+</div>
+
+<div class="handout">
+<h1>toolkit requirements</h1>
+<ul>
+<li>collecting data points?</li>
+<li>working out standard error or standard deviation?</li>
+<li>drawing charts?
+  <ul>
+    <li>GNUPlot or other plotting software</li>
+    <li>Spreadsheets?</li>
+    <li>drawn by hand or annotated in publisher software?</li>
+  </ul>
+</li>
+<li>recording, editing, and displaying video?
+  <ul>
+    <li>Adobe Premier Pro (editing), regular render-to-texture?</li>
+  </ul>
+</li>
+<li>running interactive visualisations?
+  <ul>
+    <li>inside game engine...stand-alone OpenGL...2D rendering engine...Matlab, Maple, GNUPlot, TI-89...</li>
+  </ul>
+</li>
+<li>we will talk about doing all this with real-time data in the next lecture</li>
+</ul>
+</div>
+
+<div class="handout">
+<h1>evaluate these charts</h1>
+<ul><li>problems?</li></ul>
+<center>
+<img src="images/phillips1.jpg" alt="philips' bad chart" />
+</center>
+<ul><li>how can we improve this?</li></ul>
+</div>
+
+<div class="handout">
+<h1>evaluate these charts</h1>
+<ul><li>the previous figure as a table</li></ul>
+<center>
+<img src="images/how_to1.gif" alt="how to" />
+</center>
+</div>
+
+<div class="handout">
+<h1>evaluate these charts</h1>
+<ul><li>if the numbers are removed - how long does it take you to rank them all in size order?</li></ul>
+<center>
+<img src="images/explopie2.gif" alt="explopie2bad chart" />
+<img src="images/explopie5.gif" alt="explopie5 bad chart" />
+<img src="images/explopie4.gif" alt="explopie4 bad chart" />
+<img src="images/explopie3.gif" alt="explopie3 bad chart" />
+</center>
+<ul><li>which is the better comparison of two data sets?</li></ul>
+<center>
+<img src="images/twopie.gif" alt="explopie2bad chart" />
+<img src="images/twobar.gif" alt="explopie5 bad chart" />
+</center>
+
+</div>
+
+<div class="handout">
+<h1>a good data representation has</h1>
+<ul>
+<li>axes with consistent scales</li>
+<li>axis labels with units given</li>
+<li>clear plots with control plot or comparison</li>
+<li>no clutter, minimal noise</li>
+<li>supporting caption. explain what the reader is supposed to see. explain any interesting areas.</li>
+<li>error measurements where possible. explain statistics; standard error or deviation or 95% confidence, size of <i>n</i></li>
+<li>key to explain heat map colour ranges</li>
+<li>key to explain what the different data sets are</li>
+<li><b>always provide</b> and explain any formulae used - how is the distance between nodes or the colour calculated?</li>
+</ul>
+<ol>
+<li>can the viewer determine the difference, in units, between data points in your visualisation?</li>
+<li>have you provided enough information so that another scientist can visualise their own data set and compare results with you?</li>
+</ol>
+</div>
+
+<div class="handout">
+<h1>problem?</h1>
+<ul>
+  <li>what should be put in the caption? (hint: at least 6 things)</li>
+</ul>
+<img src="images/bigPictureGraph.png" width="75%" />
+</div>
+
+<div class="handout">
+<h1>further reading</h1>
+<ul>
+<li>any good statistics for science book
+  <ul>
+    <li>standard deviation, standard error</li>
+    <li>linear regression, least-squares</li>
+    <li>probability and normal distributions</li>
+  </ul>
+</li>
+</ul>
+</div>
+
+</body>
+</html>
