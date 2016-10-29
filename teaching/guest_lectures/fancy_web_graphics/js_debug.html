@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<style>
+body {
+font-family:sans,sans-serif;
+font-size: 150%;
+}
+p {
+margin-left:50px;
+margin-right:50px;
+}
+ul {
+margin-left:50px;
+margin-right:50px;
+}
+ol {
+margin-left:50px;
+margin-right:50px;
+}
+h3 {
+margin-left:25px;
+margin-right:25px;
+}
+img {
+margin-left:25px;
+margin-right:25px;
+}
+</style>
+</head>
+<body>
+<h1>Wrestling with JavaScript</h1>
+<p>
+<tt>Dr Anton Gerdelan - Mon 25 Nov 2013. gerdela@scss.tcd.ie</tt>
+</p>
+
+<h2>Consoles</h2>
+
+<script>
+var my_var = 10;
+alert ("The value of my_var is " + my_var);
+</script>
+
+<p>
+<tt>
+var my_var = 10;<br />
+alert ("The value of my_var is " + my_var);
+</tt>
+</p>
+
+<ul>
+<li><tt>alert()</tt> is okay, but can be annoying</li>
+<li>for more information use the browser's console</li>
+</ul>
+
+<h3>Chrome</h3>
+
+<img src="images/console_chrome.png" />
+
+<h3>Firefox</h3>
+
+<img src="images/console_ff.png" />
+<img src="images/console_firebug.png" />
+
+<h3>Internet Explorer</h3>
+
+<ul><li>Developer Tools (F12)?</li></ul>
+
+<h3>Print to Console</h3>
+
+<script>
+var my_var = 10;
+console.log ("The value of my_var is " + my_var);
+</script>
+
+<p>
+<tt>
+var my_var = 10;<br />
+console.log ("The value of my_var is " + my_var);
+</tt>
+</p>
+
+<ul>
+<li>Try this now, on this page. You can click on the link beside the message to
+find out <b>where</b> (in what file and what line) the console log was called
+</li>
+<li>This is even more useful if you are printing an error message</li>
+</ul>
+
+<script>
+function do_something_else (value) {
+	if (value > 10) {
+		console.error ("ERROR: The value is too big!");
+	}
+}
+
+function do_something (value) {
+	do_something_else (value);
+}
+
+var my_var = 11;
+do_something (my_var);
+</script>
+
+<p>
+<tt>
+function do_something_else (value) {<br />
+&nbsp;&nbsp;if (value > 10) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;console.error ("ERROR: The value is too big!");<br />
+&nbsp;&nbsp;}<br />
+}<br />
+<br />
+function do_something (value) {<br />
+&nbsp;&nbsp;do_something_else (value);<br />
+}<br />
+<br />
+var my_var = 11;<br />
+do_something (my_var);<br />
+</tt>
+</p>
+
+<ul>
+<li><tt>console.error()</tt> has a drop-down that tells you the whole trace of
+function calls that lead to the error message, and what line they were called
+from.</li>
+<li>Try this in the console</li>
+</ul>
+
+<h2>Debuggers</h2>
+
+<p>
+I have some code in this page that is supposed to take my first name as a
+parameter, and print my full name here by adding a "Dr" to the front and
+"Gerdelan" to the back. It's not working though - what I get is "Anton" when it
+should say "Dr Anton Gerdelan".
+</p>
+
+<p>My name is: <b id="p_name"></b></p>
+
+<h3>Breakpoints and Stepping Through Code</h3>
+
+<script src="debug_test.js"></script>
+
+<ol>
+<li>Switch from the "console" to the tab that has your web page's files. This
+is called "Sources" on Chrome, and "Scripts" on most of the others. Firefox
+has a "Debugger" tab next to the console.</li>
+<li>Open the <tt>debug_test.js</tt> file inside the source/debugger tab</li>
+<li>You might need to click on one of the side buttons to bring up the list of
+files:</li>
+</ol>
+
+<img src="images/chrome_open_js.png" />
+
+<ol>
+<li>Find the function called <tt>function start_here ()</tt></li>
+<li>Click <b>inside the margin</b> on line 8 (the first line in the function</li>
+<li>This adds a marker called a breakpoint:</li>
+</ol>
+
+<img src="images/breakpoint.png" />
+
+<ol>
+<li>Refresh the page. The execution of the JavaScript code will <b>stop</b> at
+the break-point</li>
+<li>Now you have a few options;
+  <ul>
+    <li><b>step over</b> - execute one more line but speed over any functions calls</li>
+    <li><b>step into</b> - execute one more line and also step through any called functions</li>
+    <li><b>step out</b> - speed through the current function then pause</li>
+    <li><b>continue</b> - un-pause until the next break-point is found</li>
+  </ul>
+</li>
+</ol>
+
+<img src="images/stepping.png" />
+
+<ol>
+<li>Press the <b>step into</b> function until the code finishes</li>
+<li>You can watch the code execute one line of JavaScript at a time</li>
+<li>But how can we spot the error?</li>
+</ol>
+
+<h3>Watch List</h3>
+
+<ol>
+<li>Refresh and step through the code again, but this time wait when it gets to
+line 4 (where it finally puts the name on the page).</li>
+<li>On the right-hand side there is a list of local variables "in scope"</li>
+<li><tt>name</tt> is there and it just contains "Anton"</li>
+<li>But clearly we put my whole name together on line 2?</li>
+<li>Can you see the mistake?</li>
+</ol>
+
+<img src="images/check_variable.png" />
+
+<ul>
+<li>I made a typo and used a capital "N" for "name".</li>
+<li>JavaScript created a new variable called "Name", even though I didn't put
+<tt>var Name</tt>!</li>
+<li>It didn't even warn me!</li>
+<li>If you look in the variable "Scope" on the side of the debugger, you can
+expand the "this" object.</li>
+<li>If you scroll down you'll find the "Name" variable there</li>
+<li>Which means that we have a "name" and a "Name" variable - woops!</li>
+</ul>
+
+<img src="images/this_expanded.png" />
+
+</body>
+</html>
