@@ -1,0 +1,8 @@
+my shader code snippets were #version 400
+* layout (location=x) requires #version 410
+* layout (binding=x) required #version 420
+
+-- better to use 420 (or newer) for everything
+
+* 2d rendering in final slides
+0.25x factor should be 0.5x because only 2 images per side
