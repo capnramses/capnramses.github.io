@@ -94,4 +94,4 @@ echo "</body></html>" >> $opf;
 #
 # fix any relative paths to image folder
 #
-gnu-sed -i s@../images/@images/@g $opf
+gsed -i s@../images/@images/@g $opf
