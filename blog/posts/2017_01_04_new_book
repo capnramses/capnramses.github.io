@@ -1,8 +1,16 @@
 <h2>[Draft] Preface to My New Book</h2>
 
-<p>This book has one goal - to help you pass a computer graphics course at university
-that uses OpenGL for the practical side. We will learn OpenGL, master all your
+<p>This book has one goal - to help you pass a one-term computer graphics course
+at university that uses OpenGL for the practical side. We will learn OpenGL, master all your
 assignments, manage your time, and pass the exam. And no more.</p>
+
+<p>If you're one of these students, perhaps in your final year of a bachelor's degree,
+and seriously concerned about squeezing a very difficult but fun course into a
+overwhelming term then worry not - this, my second OpenGL text, is devoted entirely to you,
+the most under-served and highest potential contributors to computer graphics. I
+assume that the reader is typical of one of my students. If you're not a student,
+you might find that this is, in any case, a nice way to get started from a similar
+background.</p>
 
 <p>My previous book - <em>Anton's OpenGL 4 Tutorials</em> - was a very successful experiment
 with e-book publishing in 2014. At the time there wasn't much to go on for
@@ -15,18 +23,20 @@ because I had to learn it all myself in a huge hurry for teaching during 2011. I
 done graphics programming before, but nothing with shaders. I spent probably several
 hundreds of hours helping students in graphics programming labs, which made me really
 very good at explaining concepts in a sensible way, and how to diagnose problems and
-frustrations with helpful diagrams. Nothing can seem as hopeless to a deadline-loaded
+frustrations with helpful diagrams. All of this extra experience went into the first book
+and I think that's what people appreciated. Nothing can seem as hopeless to a deadline-loaded
 student as the dreaded <strong>Black Screen of Doom</strong>, but there are strategies to fixing all
 of these all-too-common-problems - something other texts never seem to think is
-important to discuss.</p>
+important to discuss.
+</p>
 
-<p>If you're one of these students, perhaps in your final year of a bachelor's degree,
-and seriously concerned about squeezing a very difficult but fun course into a
-single term then worry not - this, my second OpenGL text, is devoted entirely to you,
-the most under-served and highest potential contributors to computer graphics. I
-assume that the reader is typical of one of my students. If you're not a student,
-you might find that this is, in any case, a nice way to get started from a similar
-background.</p>
+<p>
+The first book is a bit older now. We have new tools and new standards to talk about, and I have
+another two years of experience to impart. I think the first book probably tried to cover too much material,
+and too many techniques in one volume. So this book is more concise, focused, and up to date.
+I considered looking at other, newer APIs, but actually it seems like most college courses are still
+based on OpenGL but have shifted to the newer versions, so I think that this topic still has the most traction.
+</p>
 
 <p>I know that a good quarter of any fourth-year engineering or computer science class
 has somehow made it through whilst secretly being terrible at programming. I also
