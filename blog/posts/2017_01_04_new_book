@@ -2,7 +2,26 @@
 
 <p>This book has one goal - to help you pass a one-term computer graphics course
 at university that uses OpenGL for the practical side. We will learn OpenGL, master all your
-assignments, manage your time, and pass the exam. And no more.</p>
+assignments, manage your time, and pass the exam. And no more. Specifically:</p>
+
+<ul>
+<li>Detailed project set-up guides, including linking libraries.</li>
+<li>Clear, simple explanations of typical graphics programming assignment
+concepts; displaying and manipulating a triangle using shaders, calculating
+lighting, virtual cameras, and loading meshes from files.</li>
+<li>Hand-drawn diagrams to explain geometric and linear algebra concepts.</li>
+<li>A 3d maths cheat sheet.</li>
+<li>Clear explanations of confusing interface concepts like VAOs.</li>
+<li>Troubleshooting for common problems, and problem-finding strategies.</li>
+<li>Insights, tips, and suggestions for project structure, to allow you to
+work more efficiently.</li>
+<li>Time management planning for the course to keep you on track and
+stress-free.</li>
+<li>Advice for catching up on programming and mathematics background skills.</li>
+<li>Suggestions for other resources and references to check out.</li>
+<li>Tips for making sure that your program runs on different computers.</li>
+<li>Exam structure break-down and preparation guide.</li>
+</ul>
 
 <p>If you're one of these students, perhaps in your final year of a bachelor's degree,
 and seriously concerned about squeezing a very difficult but fun course into an
@@ -48,8 +67,8 @@ not just going to show you how to learn OpenGL programming and the concepts behi
 it in one hell of a short time budget, but I'm going to show you how to track your
 progress and prioritise your learning to get up to speed over what will be one 
 term only. I'll tell you what the time-sinks are to put on low priority. That great
-black wall of stress where you actually don't know if you have time to keep your
-head above water gets a lot easier when someone who has done it before can help
+black wall of stress where you actually don't know if you have time gets a lot
+easier when someone who has done it before can help
 you plot what needs to be done into a calendar - then you are in control again.</p>
 
 <p>I know students tend to work on a bit of a mix of hardware - official lab machines,

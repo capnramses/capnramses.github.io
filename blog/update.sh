@@ -94,5 +94,5 @@ echo "</body></html>" >> $opf;
 #
 # fix any relative paths to image folder
 # gsed is gnu-sed on mac after installing with brew
-#gsed -i s@../images/@images/@g $opf
-sed -i s@../images/@images/@g $opf
+gsed -i s@../images/@images/@g $opf
+#sed -i s@../images/@images/@g $opf
