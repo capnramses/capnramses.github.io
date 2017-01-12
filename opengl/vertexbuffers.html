@@ -53,8 +53,8 @@ before VBOs, we would define the vertex data in main memory (RAM), and copy
 them one-by-one each time that we draw. With VBOs, we copy the whole lot into a
 buffer <u>before drawing starts</u>, and this sits <b>on the graphics
 hardware memory</b> instead. This is much more efficient for drawing because,
-although the bus between the CPU and the GPU is very wide, a bottle-neck for
-drawing performance is created by stalling drawing operations to send OpenGL
+although the bus between the CPU and the GPU is very wide, a bottleneck for
+drawing performance is created when drawing operations stall to send OpenGL
 commands from the CPU to the GPU. To avoid this we try to keep as much data and
 processing on the graphics hardware as we can.
 </p>
@@ -198,7 +198,7 @@ glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), colours, GL_STATIC_DRAW);
 <p>
 Our object now consists of 2 vertex buffers, which will be input "attribute" variables
 to our vertex shader. We set up the layout of both of these <u>with a single vertex
-attribute object</u> - the VAO represents our complete object, so we no longer need to keep
+array object</u> - the VAO represents our complete object, so we no longer need to keep
 track of the individual VBOs.
 </p>
 
@@ -267,7 +267,7 @@ attribute pointers, earlier.
 
 <p>
 <b><i>A little aside about this...</i></b><br />
-Other GL incarnations don't have vertex attribute objects, and need to
+Other GL incarnations don't have vertex array objects, and need to
 explicitly enable and disable the attributes every time a new type of object is
 drawn, which changes the enabled attributes <u>globally</u> in the state
 machine. We don't need to worry about that in OpenGL 4; <b>the vertex attribute
