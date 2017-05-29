@@ -71,3 +71,10 @@ way you can scan for some named sections in the file, which is a nice hint.
 By the way, never encode anything in a string if it's meant to be kept secret or safe,
 even in a compiled program - these will show up here.
 </p>
+
+[hexedit shot of strings and data here]
+
+<p>
+Explain basic ideas of structuring binary files here.
+Paragraph explaining dictionary/digest at the file footer here.
+</p>
