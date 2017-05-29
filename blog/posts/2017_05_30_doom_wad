@@ -1,0 +1,66 @@
+<h2>Cracking Open Doom .wad Files</h2>
+
+<p>
+A hobby project that has been on my list since about 1994 was to figure out
+Doom's (Id Software, 1993) data file format - the <tt>DOOM.WAD</tt>. My brother
+and I used to enjoy making maps with 3rd-party editing tools around 1994/5,
+which was a nice way to get a grip on the 3D technology involved in the game.
+When I started programming I occasionally looked at the Doom source code to see
+if I was at a level where I could have understood or made some of it. It took me
+many years. I tested my mettle a few years ago porting Doom - see <a href="http://antongerdelan.net/blog/formatted/2014_09_24_doom_src.html"> this blog post</a>, but left figuring out the WAD file for a future code expedition. There it remained.
+<i>But something happened that the WAD did not intend. It was picked up by the
+most unlikely creature imaginable...</i>
+</p>
+
+<p>
+I was coding late one night and thought <i>"Hmm, it would be nice to play the
+original Doom music while I code".</i>. Everything on Youtube is a remastered or
+digitised version - not the original MIDI-like sound. So I thought <i>"Well, I
+have Doom, why don't I just pull the music out of the game data directly?"</i>
+Thus, my tale begins. This will probably be a series of posts. <b>Aside:</b> Look, if you
+don't know me, then what I'm like is I'll intend to do one little thing and then
+I'll get completely obsessed, and binge code on the heavy metal for several days without sleeping
+(record code binge 38 hours, but that's another story), and it will get completely out of hand until a
+friend slaps me back to reality, which happened in this case. Guilty your Honour!
+</p>
+
+<h3>Where <i>is</i> All the Data? (WAD)</h3>
+
+<p>
+The WAD is a binary file with a custom layout that smushes together all of the
+game's data assets - images, sounds, music. There are two types of WAD - the
+main IWAD (Id software WAD I guess), and PWAD - patch WAD. This allows players to
+make a little third-party custom add on like their own map, that overwrites one
+of the game's maps at start-up so that they can play it. We made PWADs of our
+own maps in 1994. I probably still have them on a mouldering floppy disk in New
+Zealand, but I couldn't find them last time I was there, sadly.
+</p>
+
+<h3>Hexin'</h3>
+
+<p>
+Unlike plain-text files, binary files are a little tricky to read because you
+can't just open them in a text editor and see the data. You can open them in a
+hex-editor though and inspect the value of each byte of data. Hex editors display
+each byte as a two-digit hexadecimal number. A byte can store 256 combinations,
+so e.g. the numbers 0-255, or representing an ASCII character from a numbered
+set of 128 characters 'a' (value 97), 'B', etc. Hexadecimal represents 16 values
+per digit, rather than decimal 10 - so 0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F, where
+"F" corresponds to decimal 15. Hex is used because you only need 2
+digits/characters to display each byte of data, thus 255 in decimal is rendered
+as "FF" in hex.
+</p>
+
+<p>
+I use <tt>hexedit</tt>
+on GNU/Linux from the terminal. I wanted to go in cold and see if I could figure
+everything out myself with no starter information. People have done this many
+times over the years, and I didn't want them to spoil the challenge for me
+(horrifying and shameful discovery about this later).
+The first task in inspecting a binary file in a hex-editor is to find some
+strings of ASCII text. Usually you have a column on the right-hand side that
+shows what the ASCII characters are or would be for each byte's value. In this
+way you can scan for some named sections in the file, which is a nice hint.
+By the way, never encode anything in a string if it's meant to be kept secret or safe,
+even in a compiled program.
+</p>
