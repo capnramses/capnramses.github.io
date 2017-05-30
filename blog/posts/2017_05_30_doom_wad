@@ -427,7 +427,7 @@ I wrote some convenience types to represent the RGB colours, and a function to
 look up an RGB from a palette index:
 </p>
 
-<textarea rows=14>
+<textarea rows="14">
 // for convenience
 typedef struct rgb_t { byte_t r, g, b; } rgb_t;
 
@@ -452,7 +452,7 @@ of the WAD. They are pretty easy to write out - we just need to look up the
 RGB value of each pixel from our palette.
 </p>
 
-<textarea rows=28>
+<textarea rows=25>
 	// look up palette RGB for each bytes and draw with stb_image
 	const size_t flat_sz = 4096;
 	byte_t *index_buff = alloca( flat_sz );
