@@ -201,8 +201,7 @@ We can quickly determine the header for the WAD format from hexedit. The very
 left-hand column of hexedit gives you the address or offset of the start of each
 row of bytes. If we note down where the directory starts - the start of the row
 in the image above, where the strings start, is <tt>00 BC C5 C0</tt>. We can look
-for a similar byte near the start of the file we can guess that this indicates
-where to start reading. You can also search for a byte value too, if you tab back to the hex
+for a similar value stored near the start of the file. You can also search for a byte value too, if you tab back to the hex
 section. CTRL+X quits, by the way. You can type <tt>man hexedit</tt> to bring up
 the man pages for hexedit.
 </p>
@@ -227,10 +226,11 @@ to get you to make your code more portable or something by being excessively
 pedantic about this. This is a load of garbage - I actively avoid these websites/<i>besser-wisserer</i>.
 </p>
 
-<pre>
+<textarea>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 char pwad_iwad[5]; // "IWAD" or "PWAD"
 int dir_nentries;
@@ -259,7 +259,7 @@ int main() {
 	
 	return 0;
 }
-</pre>
+</textarea>
 
 <p>
 The above code is my starting snippet.
