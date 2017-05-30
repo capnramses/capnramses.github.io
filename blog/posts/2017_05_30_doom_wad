@@ -284,7 +284,7 @@ I had to binary-up all the music files for licensing reasons. I called these fil
 (volume of music). Yeah...
 </p>
 
-<textarea rows=33>
+<textarea rows="30">
 typedef struct Lump {
 	int location; // integer holding pointer
 	int bytes;
