@@ -452,13 +452,15 @@ of the WAD. They are pretty easy to write out - we just need to look up the
 RGB value of each pixel from our palette.
 </p>
 
-<textarea rows=25>
+<textarea rows=29>
 	// look up palette RGB for each bytes and draw with stb_image
 	const size_t flat_sz = 4096;
 	byte_t *index_buff = alloca( flat_sz );
 	assert( index_buff );
+
 	byte_t *pixel_buff = alloca( flat_sz * 3 ); // rgb
 	assert( pixel_buff );
+
 	int ret = fseek( f, (long)lumps[dir_idx].location, SEEK_SET );
 	assert( ret != -1 );
 	size_t ritems = fread( index_buff, 1, flat_sz, f );
@@ -466,6 +468,7 @@ RGB value of each pixel from our palette.
 		printf( "%s\n", curr_lump_name );
 		assert( 0 );
 	}
+
 	// use pixel in palette[0] (normal view) as o/p pixel RGB
 	for ( int j = 0; j < flat_sz; j++ ) {
 		rgb_t rgb = rgb_from_palette( index_buff[j], PAL_DEFAULT );
@@ -473,6 +476,7 @@ RGB value of each pixel from our palette.
 		pixel_buff[j * 3 + 1] = rgb.g;
 		pixel_buff[j * 3 + 2] = rgb.b;
 	}
+
 	// write image file
 	char fname[1024];
 	sprintf( fname, "%s.png", curr_lump_name );
