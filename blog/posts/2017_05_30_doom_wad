@@ -475,7 +475,7 @@ RGB value of each pixel from our palette.
 	
 <p>
 I used <tt>alloca</tt> rather than <tt>malloc</tt> because it can allocate small
-amounts of memory on the stack that are freed when they go out of scope. Kind of
+amounts of memory on the stack that are freed when the function that called alloca ends. Kind of
 convenient dynamic scratch memory if under a MB or two.
 </p>
 
