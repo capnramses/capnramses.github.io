@@ -122,7 +122,7 @@ These are designed so that you can parse all of the data in the file in one pass
 from top to bottom. Each block of data or variables has a little header separator
 that says how much and what type of data follows, so that the user can allocate
 memory on the fly and just gobble it in without pause.
-Directories store all the little headers in a block. These typically are
+Directories, on the other hand, store all the little headers in a block. These typically are
 structured like this:
 </p>
 
