@@ -216,7 +216,7 @@ to get you to make your code more portable or something by being excessively
 pedantic about this. This is a load of garbage - I actively avoid these websites/<i>besser-wisserer</i>.
 </p>
 
-<textarea rows=33>
+<textarea rows=30>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
