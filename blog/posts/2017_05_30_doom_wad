@@ -216,7 +216,7 @@ to get you to make your code more portable or something by being excessively
 pedantic about this. This is a load of garbage - I actively avoid these websites/<i>besser-wisserer</i>.
 </p>
 
-<textarea rows=30>
+<textarea rows="30">
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -284,7 +284,7 @@ I had to binary-up all the music files for licensing reasons. I called these fil
 (volume of music). Yeah...
 </p>
 
-<textarea rows="30">
+<textarea rows="29">
 typedef struct Lump {
 	int location; // integer holding pointer
 	int bytes;
