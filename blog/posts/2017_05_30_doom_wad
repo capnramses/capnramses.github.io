@@ -96,8 +96,41 @@ year with this approach.
 </p>
 
 <p>
-Explain basic ideas of structuring binary files here.
-Paragraph explaining dictionary/digest at the file footer here.
+Once we've found something to grab onto in the file like strings, we can start
+to determine the structure of the file. You'll note that each string:
+</p>
+
+<ul>
+<li>Actually reads like a section heading or title.</li>
+<li>They all appear in a cluster.</li>
+<li>There are some bytes of non-string data in the same region.</li>
+</ul>
+
+<p>
+There are two nice ways of structuring files; inline section headings, and
+a file directory that is stored in the header or footer of the file.
+I used the inline approach in <a href="https://github.com/capnramses/apg_mesh">my 3D mesh file format</a>.
+These are designed so that you can parse all of the data in the file in one pass
+from top to bottom. Each block of data or variables has a little header separator
+that says how much and what type of data follows, so that the user can allocate
+memory on the fly and just gobble it in without pause.
+Directories store all the little headers in a block. These typically are
+structured like this:
+</p>
+
+<pre>
+DIRECTORY
+ ->entry
+   ->entry name string or type ID
+   ->size of section blocks in bytes
+   ->number or composition of section blocks
+   ->offset into file data where section starts
+</pre>
+
+<p>
+We can tell that Doom used the directory type, except this is stored at the end
+of the file rather than in a header at the start. There are other types of file
+structure but we will not speak of those, lesser, formats here.
 </p>
 
 <h3>Colour Palette</h3>
