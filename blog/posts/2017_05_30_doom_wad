@@ -397,7 +397,7 @@ e.g. PNG - I used <a href="https://github.com/nothings/stb/blob/master/stb_image
 because it's simple. Palettes are in the <tt>PLAYPAL</tt> lump.
 </p>
 
-<textarea row=22>
+<textarea rows="25">
 byte_t *palettes[PAL_MAX];
 
 { // read palettes
