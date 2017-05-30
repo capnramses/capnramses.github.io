@@ -217,7 +217,7 @@ to get you to make your code more portable or something by being excessively
 pedantic about this. This is a load of garbage - I actively avoid these websites/<i>besser-wisserer</i>.
 </p>
 
-<textarea rows="32">
+<textarea rows="34">
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -237,11 +237,13 @@ int main() {
 	{ // READ WAD HEADER (12-bytes)
 		size_t ritems = 0;
 		ritems = fread( pwad_iwad, 1, 4, f );
-		printf( "WAD type = `%s`\n", pwad_iwad );
 		assert( ritems == 4 );
+		printf( "WAD type = `%s`\n", pwad_iwad );
+
 		ritems = fread( &dir_nentries, 4, 1, f );
 		assert( ritems == 1 );
 		printf( "dir entries = %i\n", dir_nentries );
+
 		ritems = fread( &dir_location, 4, 1, f );
 		assert( ritems == 1 );
 		printf( "dir location = %i\n", dir_location );
@@ -255,7 +257,7 @@ int main() {
 The above code is my starting snippet.
 The header is just 3 groups of 4-byte values. We can see the first is the
 string of chars saying what type of file it is (note: no null-terminator
-character here, so I added an extra char at the end of my string of this).
+character here, so I added an extra char at the end of my string for this).
 The third group of 4-bytes is our directory offset. And an educated guess suggests
 that the middle holds the number of items in the directory. I should point out
 that I didn't get this right first time - there was some trial and error and
