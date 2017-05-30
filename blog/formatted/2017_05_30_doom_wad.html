@@ -405,7 +405,7 @@ e.g. PNG - I used <a href="https://github.com/nothings/stb/blob/master/stb_image
 because it's simple. Palettes are in the <tt>PLAYPAL</tt> lump.
 </p>
 
-<textarea rows="25">
+<textarea rows="22">
 byte_t *palettes[PAL_MAX];
 
 { // read palettes
@@ -425,7 +425,6 @@ byte_t *palettes[PAL_MAX];
 			sprintf( fname, "palette%i.png", palette_idx );
 			ret = stbi_write_png( fname, 16, 16, 3, palettes[palette_idx], 0 );
 			assert( ret != 0 );
-			npalettes_extracted++;
 		}
 	}
 }</textarea>
@@ -505,7 +504,14 @@ I won't display these here, because it's probably a bit naughty, but it indeed w
 <p>
 Next time I'll show you the bizarre hurdles I went through to crack into the music
 and sounds - which are in a proprietary format that was never documented anywhere.
-I got it working, of course.
+I got it working, of course. Then - ladies and gentlemen, I will show you how I
+rendered the maps in OpenGL.
+</p>
+
+<h3>Source Code</h3>
+
+<p>
+My rather messy "de-wad" tool with all this code in it is available <a href="https://github.com/capnramses/doom_projects/blob/master/doom_dewad/">on GitHub</a>.
 </p>
 <div id=disqus_thread></div>
 <script>
