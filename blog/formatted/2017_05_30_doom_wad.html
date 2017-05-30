@@ -278,6 +278,7 @@ matches my expectations.
 
 <h3>Reading the Directory</h3>
 
+<p>
 We can add another block to read in the directory into a generic structure 
 before we close the file. We can see that the directory starts a few bytes ahead
 of our first string, but it took a bit of fiddling around, with much the same
@@ -287,6 +288,7 @@ or the various Doom wikis. I should probably mention that I was too lazy to
 verify most of this - so there may be errors in my binary data layout assumptions. 
 I stored each directory entry's meta-data in a struct. I call each block of data
 referred to by the directory entry as a "lump".
+</p>
 
 <textarea rows=33>
 typedef struct Lump {
@@ -314,28 +316,119 @@ Lump *lumps;
 		ritems = fread( lumps[i].name, 1, 8, f );
 		assert( ritems = 8 );
 		lumps[i].name[8] = '\0';
-		//	printf( "%s ", lumps[i].name );
+		printf( "%s ", lumps[i].name );
 	}
 	//	printf( "\n" );
 }</textarea>
 
+<p>
+You can see that I use <tt>fseek</tt> to jump to reading from the directory,
+using the location that we read from the header. I allocate memory so that each
+directory entry has its own struct, and then read them all in in a loop. Now we
+hold the Keys to the Kingdom!
+</p>
+
+<p>
+If you print the lump names as you read them in you can get a pretty good idea
+of what the contents are.
+</p>
+
+<h3>Plopping Out the WAD Contents</h3>
+
+<p>
+If you want to you can extract most lumps from the WAD directly now - you just
+<tt>fseek</tt> to their location, <tt>fread</tt> their number of bytes out into
+a buffer of that size, and <tt>fwrite</tt> them into a new file, using their
+name as the filename. This is where I discovered my first hurdle.
+</p>
+
+<ul>
+<li>The music files are not typical '90s MIDI files.</li>
+<li>The sound files also use a proprietary format.</li>
+<li>Some images are in a custom [slightly] compressed format.</li>
+<li>All of the images use the older, palette-based colour format.</li>
+</ul>
+
+<p>
+At this point I decided that I really needed to extract all the data, not just
+the music files. Of course!
+</p>
+
 <h3>Colour Palette</h3>
 
 <p>
-TODO Explain concept behind colour palettes.
-https://en.wikipedia.org/wiki/8-bit_color
-1-byte colour per pixel in images, and 8-bit colour in VGA 320x200 modes could
-be based on palettes drawn from much larger range of colours. Depends on card.
-Later truecolour modes didn't use a palette.
+I'd actually come across Doom's palette system before in my porting project, so
+I knew how to deal with that already. The walls and floors are all very simple
+N*M pixels of raw data, except that each pixel stores an index into a palette
+instead of an RGB colour. The palette index holds the RGB colour. This allowed
+for smaller image sizes, worked on older <a href="https://en.wikipedia.org/wiki/8-bit_color">VGA 320x200</a>
+devices that didn't have Truecolor (RGB rather than palettes) support yet, and enabled some nifty colour
+shifting special effects because you could just modify the palette being used
+to change the shades of all the colours on screen.
 </p>
 
 <div class="centre">
 <img src="../images/doom_palette.gif" />
 </div>
 
+<p>
+If you printed out the directory entry names you'd see that there are actually
+a series of colour palette stored in the WAD. Only one can nicely be used on
+screen at a time - the others were used for making everything look green whilst
+wearing the radiation suit, there are a series of red shades for producing an
+animated "hurt" effect, based on how much damage the player takes, and some
+flashes for item pickups, etc. The best way to demonstrate this was to write
+them all out as images, and animate the series as a GIF.
+</p>
+
+<p>
+Other games based on the Doom engine (Heretic, Hexen, Strife, Doom II...) also
+had colour palettes, and similar WAD formats. Here I also animate Heretic's
+palettes - you can see the different choice of colours for a different mood.
+</p>
+
 <div class="centre">
 <img src="../images/heretic_palette.gif" />
 </div>
+
+1-byte colour per pixel in images, and 8-bit colour in VGA 320x200 modes could
+be based on palettes drawn from much larger range of colours. Depends on card.
+Later truecolour modes didn't use a palette.
+</p>
+
+<p>
+If your store the palettes (the first one is the default - you really only want
+this) then you can write out the images as raw data files, or convert them to
+e.g. PNG - I used <a href="https://github.com/nothings/stb/blob/master/stb_image_write.h">stb_image_write</a>,
+because it's simple. Palettes are in the <tt>PLAYPAL</tt> lump.
+</p>
+
+<textarea>
+byte_t *palettes[PAL_MAX];
+
+{ // read palettes
+	int ret = fseek( f, (long)lumps[dir_idx].location, SEEK_SET );
+	assert( ret != -1 );
+	// i think we can write them out as images
+	for ( int palette_idx = 0; palette_idx < PAL_MAX; palette_idx++ ) {
+		const size_t palette_sz = 768;
+		palettes[palette_idx] = (byte_t *)malloc( palette_sz );
+		assert( palettes[palette_idx] );
+
+		size_t ritems = fread( palettes[palette_idx], 1, palette_sz, f );
+		assert( ritems == palette_sz );
+
+		if ( dump_palette ) {
+			char fname[1024];
+			sprintf( fname, "palette%i.png", palette_idx );
+			ret = stbi_write_png( fname, 16, 16, 3, palettes[palette_idx], 0 );
+			assert( ret != 0 );
+			npalettes_extracted++;
+		}
+	}
+}
+</textarea>
+
 <div id=disqus_thread></div>
 <script>
 (function() { // DON'T EDIT BELOW THIS LINE
