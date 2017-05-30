@@ -12,8 +12,6 @@
 
 <h2>Cracking Open Doom .wad Files - Part I: Hexin'</h2>
 
-[UNDER CONSTRUCTION - CHECK BACK LATER]
-
 <p>
 A hobby project that has been on my list since about 1994 was to figure out
 Doom's (Id Software, 1993) data file format - the vaunted <tt>DOOM.WAD</tt> file. My brother
@@ -403,7 +401,7 @@ e.g. PNG - I used <a href="https://github.com/nothings/stb/blob/master/stb_image
 because it's simple. Palettes are in the <tt>PLAYPAL</tt> lump.
 </p>
 
-<textarea>
+<textarea row=22>
 byte_t *palettes[PAL_MAX];
 
 { // read palettes
@@ -426,9 +424,84 @@ byte_t *palettes[PAL_MAX];
 			npalettes_extracted++;
 		}
 	}
-}
-</textarea>
+}</textarea>
 
+<p>
+I wrote some convenience types to represent the RGB colours, and a function to
+look up an RGB from a palette index:
+</p>
+
+<textarea rows=14>
+// for convenience
+typedef struct rgb_t { byte_t r, g, b; } rgb_t;
+
+// for convenience/safety
+rgb_t rgb_from_palette( byte_t colour_idx ) {
+	assert( colour_idx < 256 && colour_idx >= 0 );
+
+	rgb_t rgb;
+	rgb.r = palettes[0][colour_idx * 3];
+	rgb.g = palettes[0][colour_idx * 3 + 1];
+	rgb.b = palettes[0][colour_idx * 3 + 2];
+
+	return rgb;
+}</textarea>
+
+<h3>Writing out "Flats"</h3>
+
+<p>
+The floor and ceiling images are called "flats", and stored between lumps named
+<tt>F_START</tt> and <tt>F_END</tt>. Names vary a bit depending on the version
+of the WAD. They are pretty easy to write out - we just need to look up the
+RGB value of each pixel from our palette.
+</p>
+
+<textarea rows=28>
+	// look up palette RGB for each bytes and draw with stb_image
+	const size_t flat_sz = 4096;
+	byte_t *index_buff = alloca( flat_sz );
+	assert( index_buff );
+	byte_t *pixel_buff = alloca( flat_sz * 3 ); // rgb
+	assert( pixel_buff );
+	int ret = fseek( f, (long)lumps[dir_idx].location, SEEK_SET );
+	assert( ret != -1 );
+	size_t ritems = fread( index_buff, 1, flat_sz, f );
+	if ( ritems != lumps[dir_idx].bytes ) {
+		printf( "%s\n", curr_lump_name );
+		assert( 0 );
+	}
+	// use pixel in palette[0] (normal view) as o/p pixel RGB
+	for ( int j = 0; j < flat_sz; j++ ) {
+		rgb_t rgb = rgb_from_palette( index_buff[j], PAL_DEFAULT );
+		pixel_buff[j * 3] = rgb.r;
+		pixel_buff[j * 3 + 1] = rgb.g;
+		pixel_buff[j * 3 + 2] = rgb.b;
+	}
+	// write image file
+	char fname[1024];
+	sprintf( fname, "%s.png", curr_lump_name );
+	ret = stbi_write_png( fname, 64, 64, 3, pixel_buff, 0 );
+	assert( ret != 0 );</textarea>
+	
+<p>
+I used <tt>alloca</tt> rather than <tt>malloc</tt> because it can allocate small
+amounts of memory on the stack that are freed when they go out of scope. Kind of
+convenient dynamic scratch memory if under a MB or two.
+</p>
+
+<p>
+This wrote out almost all of the simple images - well, all of the images that were 64x64
+pixels anyway. There are just a few exceptions. Sprites and images that can have
+transparent bits use a different format, which I'll come back to later.
+</p>
+
+<h3>Next Time</h3>
+
+<p>
+Next time I'll show you the bizarre hurdles I went through to crack into the music
+and sounds - which are in a proprietary format that was never documented anywhere.
+I got it working, of course.
+</p>
 <div id=disqus_thread></div>
 <script>
 (function() { // DON'T EDIT BELOW THIS LINE
