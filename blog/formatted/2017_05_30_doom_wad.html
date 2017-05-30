@@ -285,7 +285,11 @@ layout by looking at some slightly unreliable info in old docs <a href="http://w
 or the various Doom wikis. I should probably mention that I was too lazy to
 verify most of this - so there may be errors in my binary data layout assumptions. 
 I stored each directory entry's meta-data in a struct. I call each block of data
-referred to by the directory entry as a "lump".
+referred to by the directory entry as a "lump". There's a whole blob (binary large object),
+lump, wad... silly naming thing going on in the binary file world. For 
+<a href="http://store.steampowered.com/app/467790/Crongdor_the_Barbarian/">Crongdor</a>
+I had to binary-up all the music files for licensing reasons. I called these files "VOM"
+(volume of music). Yeah...
 </p>
 
 <textarea rows=33>
