@@ -270,7 +270,46 @@ matches my expectations.
 
 <h3>Reading the Directory</h3>
 
+We can add another block to read in the directory into a generic structure 
+before we close the file. We can see that the directory starts a few bytes ahead
+of our first string, but it took a bit of fiddling around, with much the same
+match-and-guess method to get this right. You can sort-of confirm this data
+layout by looking at some slightly unreliable info in old docs <a href="http://www.gamers.org/dhs/helpdocs/dmsp1666.html">from 1994</a>,
+or the various Doom wikis. I should probably mention that I was too lazy to
+verify most of this - so there may be errors in my binary data layout assumptions. 
+I stored each directory entry's meta-data in a struct. I call each block of data
+referred to by the directory entry as a "lump".
 
+<textarea rows=33>
+typedef struct Lump {
+	int location; // integer holding pointer
+	int bytes;
+	char name[9];
+} Lump;
+Lump *lumps;
+
+{ // DIRECTORY (usually this is at end of WAD file)
+	// SEEK_SET is offset from start of file. SEEK_CUR is from current fptr
+	int ret = fseek( f, (long)dir_location, SEEK_SET );
+	assert( ret != -1 );
+
+	lumps = (Lump *)malloc( sizeof( Lump ) * dir_nentries );
+	assert( lumps );
+
+	// printf( "lump names =\n" );
+	size_t ritems = 0;
+	for ( int i = 0; i < dir_nentries; i++ ) {
+		ritems = fread( &lumps[i].location, 4, 1, f );
+		assert( ritems == 1 );
+		ritems = fread( &lumps[i].bytes, 4, 1, f );
+		assert( ritems = 1 );
+		ritems = fread( lumps[i].name, 1, 8, f );
+		assert( ritems = 8 );
+		lumps[i].name[8] = '\0';
+		//	printf( "%s ", lumps[i].name );
+	}
+	//	printf( "\n" );
+}</textarea>
 
 <h3>Colour Palette</h3>
 
