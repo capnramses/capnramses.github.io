@@ -140,7 +140,7 @@ We can tell that Doom used the directory type, except this is stored at the end
 of the file rather than in a header at the start. There are other types of file
 structure but we will not speak of those, lesser, formats here. Reading through
 the directory strings you can get a sense of the structure - certain repeating
-strings in-between each map name indicate bit and pieces of each map. After the
+strings in-between each map name indicate bits and pieces of each map. After the
 maps we see other sections - <tt>D_E1M1</tt> is probably the music track for the
 first map. At this point what we can do is parse the directory in a little
 program. Then we can read whatever we want out...why not spit out all the sounds,
