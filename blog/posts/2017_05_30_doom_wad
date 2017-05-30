@@ -359,7 +359,7 @@ the music files. Of course!
 I'd actually come across Doom's palette system before in my porting project, so
 I knew how to deal with that already. The walls and floors are all very simple
 N*M pixels of raw data, except that each pixel stores an index into a palette
-instead of an RGB colour. The palette index holds the RGB colour. This allowed
+instead of an RGB colour (red-blue-green channels, like the HTML colours). The palette index holds the RGB colour. This allowed
 for smaller image sizes, worked on older <a href="https://en.wikipedia.org/wiki/8-bit_color">VGA 320x200</a>
 devices that didn't have Truecolor (RGB rather than palettes) support yet, and enabled some nifty colour
 shifting special effects because you could just modify the palette being used
