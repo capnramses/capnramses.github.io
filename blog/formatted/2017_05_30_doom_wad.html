@@ -265,8 +265,10 @@ The above code is my starting snippet.
 The header is just 3 groups of 4-byte values. We can see the first is the
 string of chars saying what type of file it is (note: no null-terminator
 character here, so I added an extra char at the end of my string of this).
-The third group of 4-bytes is our directory offset. And it
-follows that the middle holds the number of items in the directory. Note that
+The third group of 4-bytes is our directory offset. And an educated guess suggests
+that the middle holds the number of items in the directory. I should point out
+that I didn't get this right first time - there was some trial and error and
+sailor-language. Note that
 you can use <tt>fread()</tt> to read any number of bytes into any sort of
 variable or array. They don't work so well at reading and writing structs though,
 for various reasons - be warned! It's easy to make mistakes reading from binary
