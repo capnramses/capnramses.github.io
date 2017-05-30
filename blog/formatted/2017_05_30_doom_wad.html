@@ -301,7 +301,7 @@ typedef struct Lump {
 	int bytes;
 	char name[9];
 } Lump;
-Lump *lumps;
+Lump *lumps; // a buffer for all directory entries
 
 { // DIRECTORY (usually this is at end of WAD file)
 	// SEEK_SET is offset from start of file. SEEK_CUR is from current fptr
