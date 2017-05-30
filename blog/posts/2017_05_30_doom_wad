@@ -99,6 +99,13 @@ year with this approach.
 </p>
 
 <p>
+A good string to search for in Doom might be the name of the first map/level:
+"E1M1". To search for strings in hexedit you press TAB to switch over to the
+ASCII column, then press the '/' key and type in the string (case sensitive - try
+upper-case).
+</p>
+
+<p>
 Once we've found something to grab onto in the file like strings, we can start
 to determine the structure of the file. You'll note that each string:
 </p>
@@ -133,8 +140,136 @@ DIRECTORY
 <p>
 We can tell that Doom used the directory type, except this is stored at the end
 of the file rather than in a header at the start. There are other types of file
-structure but we will not speak of those, lesser, formats here.
+structure but we will not speak of those, lesser, formats here. Reading through
+the directory strings you can get a sense of the structure - certain repeating
+strings in-between each map name indicate bit and pieces of each map. After the
+maps we see other sections - <tt>D_E1M1</tt> is probably the music track for the
+first map. At this point what we can do is parse the directory in a little
+program. Then we can read whatever we want out...why not spit out all the sounds,
+music, images, and so on whilst we are at it? Why not recreate all the maps in
+3D...crawl right into the heads of the people who made the game and see how they
+were wired...argh! You can see my problem. But first - how do we jump down to
+where the directory start? There must be a little header at the top of the file
+that tells us where to start reading it from.
 </p>
+
+<h3>Reading The Header</h3>
+
+<p>
+I wrote a little program in C to read the WAD. Most people would lean towards
+a scripting language, but I actually find most of these tend to be a bit too
+high level - I don't care about containers and iterators, I just want direct
+access to the bytes I'm reading. And I'm very, very quick at writing in C
+(I listen to heavy metal remember), so away with your scripts!
+Our basic tools of the trade in reading binary files are:
+</p>
+
+<ul>
+<li><tt>fread()</tt> - read a given amount of binary data into whatever.</li>
+<li><tt>fwrite()</tt> - write a given amount of binary data into whatever.</li>
+<li><tt>fseek()</tt> - jump file pointer to a given offset in a file for future reads.</li>
+<li>String comparison functions like <tt>strncmp()</tt> or <tt>strcmp()</tt>.</li>
+</ul>
+
+<p>
+The file pointer is like a cursor where you are currently reading from. It starts
+at the top of the file, but you can shift it around before calling <tt>fread()</tt>
+again so that it reads from an earlier or later location. If you are on Linux or
+Mac and want to bring up the API manual pages for a particular function from
+the standard headers type into a terminal window:
+</p>
+
+<pre>
+man 3 fread
+</pre>
+
+<p>
+Where `3` indicates that you want to look up a library function name, not a
+command line program of the same name, if both exist.
+</p>
+
+<p>
+We can quickly determine the header for the WAD format from hexedit. The very
+left-hand column of hexedit gives you the address or offset of the start of each
+row of bytes. If we note down where the directory starts - the start of the row
+in the image above, where the strings start, is <tt>00 BC C5 C0</tt>. We can look
+for a similar byte near the start of the file we can guess that this indicates
+where to start reading. You can also search for a byte value too, if you tab back to the hex
+section. CTRL+X quits, by the way. You can type <tt>man hexedit</tt> to bring up
+the man pages for hexedit.
+</p>
+
+<div class="centre">
+<img src="../images/hexeditb.png" width="512" /><br />
+<small>Finding the directory offset in the header (highlighted).</small>
+</div>
+
+<p>
+Near the start of the file we see <tt>C4 C5 BC 00</tt> which is a backwards version
+of our directory row start offset, but just 4 bytes off. Why backwards? Most
+binary data files are stored in "little endian" order - the smallest bytes
+appear first / on the left. Here we have an integer value that spans 4 bytes.
+The "little endian" name is a reference to Gulliver's Travels. Some special
+architectures still prefer big-endian (but most are compatible with little-endian).
+Notably socket programming packets still use big-endian, and you would use a
+set of functions to convert your data to and from this. We don't need to do anything
+here - our <tt>fread</tt> function already knows to expect little-endian. If you
+look up info on binary file reading on "helpful" Q&A websites everybody will try
+to get you to make your code more portable or something by being excessively
+pedantic about this. This is a load of garbage - I actively avoid these websites/<i>besser-wisserer</i>.
+</p>
+
+<pre>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+char pwad_iwad[5]; // "IWAD" or "PWAD"
+int dir_nentries;
+int dir_location; // integer holding pointer
+
+int main() {
+	// open the file in "read binary" mode
+	FILE *f = fopen( "DOOM.WAD", "rb" );
+	if ( !f ) {
+		fprintf( stderr, "ERROR opening `%s`\n", DOOM.WAD );
+		return 1;
+	}
+	{ // READ WAD HEADER (12-bytes)
+		size_t ritems = 0;
+		ritems = fread( pwad_iwad, 1, 4, f );
+		printf( "WAD type = `%s`\n", pwad_iwad );
+		assert( ritems == 4 );
+		ritems = fread( &dir_nentries, 4, 1, f );
+		assert( ritems == 1 );
+		printf( "dir entries = %i\n", dir_nentries );
+		ritems = fread( &dir_location, 4, 1, f );
+		assert( ritems == 1 );
+		printf( "dir location = %i\n", dir_location );
+	}
+	fclose( f ); // close the file
+	
+	return 0;
+}
+</pre>
+
+<p>
+The above code is my starting snippet.
+The header is just 3 groups of 4-byte values. We can see the first is the
+string of chars saying what type of file it is (note: no null-terminator
+character here, so I added an extra char at the end of my string of this).
+The third group of 4-bytes is our directory offset. And it
+follows that the middle holds the number of items in the directory. Note that
+you can use <tt>fread()</tt> to read any number of bytes into any sort of
+variable or array. They don't work so well at reading and writing structs though,
+for various reasons - be warned! It's easy to make mistakes reading from binary
+files, so I always assert that the number of items read (the return values)
+matches my expectations.
+</p>
+
+<h3>Reading the Directory</h3>
+
+
 
 <h3>Colour Palette</h3>
 
