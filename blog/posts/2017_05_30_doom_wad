@@ -79,7 +79,7 @@ even in a compiled program - these will show up here.
 </p>
 
 <div class="centre">
-<img src="../images/hexedit.png" width="800" /><br />
+<img src="../images/hexedit.png" width="512" /><br />
 <small>Finding strings in the DOOM.WAD file with Hexedit.</small>
 </div>
 
