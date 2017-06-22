@@ -1,0 +1,9 @@
+<h2>Cracking into Doom WAD Files - Part ][</h2>
+
+<p>
+A did a short talk about rendering the WAD files from DOOM (1993) in OpenGL.
+The previous blog post discusses extracting the contents of the WAD files with
+some hexedit hackery. The slides should be embedded here:
+</p>
+
+<iframe src="https://www.slideshare.net/AntonGerdelan/slideshelf" width="760px" height="570px" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:none;" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
