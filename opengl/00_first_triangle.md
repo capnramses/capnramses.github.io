@@ -2,7 +2,7 @@
 ## Get Main OpenGL Library
 
 If you are on Microsoft Windows, update your video drivers to automatically install the latest
-library build for OpenGL to your system.
+library build for OpenGL to your system. This is a work in progress - check back later for updates.
 
 If you are on Apple OS X then OpenGL is installed with operating system updates. You can find
 out what version of OpenGL your system supports, as well as all of the OpenGL extensions
