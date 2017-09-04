@@ -20,7 +20,7 @@ GIMP automatically:
 </div>
 
 <p>
-The idea is the have a timer that you express, in the shader, as a sliding value between 0.0
+The idea for animation is that you have a timer that you express, in the shader, as a sliding value between 0.0
 and 1.0. I used the regular texture coordinates for the mesh, and sampled the clouds texture
 behind the scenes, as a second texture in the fragment shader, such that it could replace the
 checkerboard if I wanted. Every time the mesh is drawn, each fragment shader invocation compares
