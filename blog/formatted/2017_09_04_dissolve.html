@@ -13,7 +13,34 @@
 </div>
 
 <p>
-I made a simple dissolve effect in WebGL -> <a href="http://antongerdelan.net/blog/demos/dissolve/main.html">here</a>
+I made a simple dissolve effect in WebGL. The source code is demo number 042 at
+<a href="https://github.com/capnramses/opengl_expmts">https://github.com/capnramses/opengl_expmts</a>.
+You can also view the source of this page.
+The idea was to replicate something like the <i>dematerialisation</i> shader effect you see in
+video games as a way of removing 3D models of dead monsters. A similar effect is used to
+fade-in and fade-out objects in the distance. I originally considered using an arrangement of
+sine waves written into the fragment shader, but ended up using a cloud map that I generated in
+GIMP automatically:
+</p>
+
+<div class="centre>
+<img src="http://antongerdelan.net/blog/demos/dissolve/textures/clouds.png />
+</div>
+
+<p>
+The idea is the have a timer that you express, in the shader, as a sliding value between 0.0
+and 1.0. I used the regular texture coordinates for the mesh, and sampled the clouds texture
+behind the scenes, as a second texture in the fragment shader, such that it could replace the
+checkerboard if I wanted. Every time the mesh is drawn, each fragment shader invocation compares
+the sample it gets from the heightmap - a value between 0.0 and 1.0 - with the value from the
+timer. Any fragments with a difference in values of less than 0.01 are discarded,
+which creates the holes. I added some burning colour around the holes by modifying the colour
+of fragments in the range of 0.1 to 0.01. 
+</p>
+
+<p>
+If you like this sort of thing - Mozilla has great <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Tutorial">WebGL tutorials</a>. You might also check out
+my <a href="http://antongerdelan.net/opengl/">OpenGL tutorials/intro</a>, which are aimed at students.
 </p>
 
 <script id="basic.vert" type="text/glsl">
