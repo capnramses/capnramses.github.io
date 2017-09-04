@@ -1,10 +1,17 @@
-﻿<h2>Dissolve Effect</h2>
+<html>
 
+<head>
+    <title>Dissolve Effect - Anton Gerdelan</title>
+</head>
+
+<body>
     <canvas id="the_canvas"></canvas>
     <p>
         <a href="http://antongerdelan.net/">Anton Gerdelan</a> - 4 Sep 2017
     </p>
+</body>
 
+</html>
 
 <script id="basic.vert" type="text/glsl">
     attribute vec3 vp;
@@ -54,7 +61,7 @@
     }
 </script>
 
-<script src="http://antongerdelan.net/blog/demos/dissolve/apg_maths.js"></script>
+<script src="apg_maths.js"></script>
 <script>
     console.log("starting WebGL");
 
@@ -94,8 +101,8 @@
         return texture;
     }
 
-    var checker_texture = load_texture("http://antongerdelan.net/blog/demos/dissolve/textures/checkerboard.png");
-    var cloud_texture = load_texture("http://antongerdelan.net/blog/demos/dissolve/textures/clouds.png");
+    var checker_texture = load_texture("textures/checkerboard.png");
+    var cloud_texture = load_texture("textures/clouds.png");
 
     var basic_sp = gl.createProgram();
     basic_sp.linked = false;
@@ -241,7 +248,7 @@
         return mesh;
     }
 
-    var cube_mesh = start_loading_obj("http://antongerdelan.net/blog/demos/dissolve/meshes/cube.obj");
+    var cube_mesh = start_loading_obj("meshes/cube.obj");
 
     // ********************** CAMERA ****************************
     var cam_dirty = true;
