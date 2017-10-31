@@ -126,7 +126,7 @@ It's worth getting some practice in a group project:
 <ul>
 <li>Absolutely learn how to use some modern project management software. I really like Trello (it's a Todo list with pictures), and use it for my own projects, as well as consulting work to keep clients in the loop. Most employers use Jira.</li>
 <li>Try some sprints with a team, and daily stand-ups. This has more to do with communicating work than actually being fast. Most people feel good with short milestones - most people will be broken seemingly endless jobs.</li>
-<li>At the very, very least learn and use Git for assignments or projects.</li>
+<li>At the very, very least learn and use Git for assignments or projects (GitHub has free private hosting for students).</li>
 <li>Try a couple of branching strategies and get used to doing pull requests - a GitHub or Bitbucket project is a great way to practice this.</li>
 <li>Do some code reviews.</li>
 <li>Get used to finding bugs and reading others' code.</li>
