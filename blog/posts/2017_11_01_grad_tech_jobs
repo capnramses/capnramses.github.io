@@ -23,7 +23,7 @@ facts, some good news, and finally some suggestions for things to prepare
 <li>Many tech employers are set up to exploit and burn out young grads - beware!</li>
 <li>Doing tech interviews is a new skill you need to learn.</li>
 <li>Writing a tech CV is a new skill you need to learn.</li>
-<li>Several stages of interviews are designed to find out if you are a jerk.<li>
+<li>Several stages of interviews are designed to find out if you are a jerk.</li>
 <li>If you're used to doing work solo, and not explaining details to others, you will do badly.</li>
 <li>Doing a placement or work experience whilst studying is a good idea - make friends and ask for career advice.</li>
 </ul>
@@ -108,7 +108,7 @@ the more demonstrable experience you have on team projects working like this the
 or in a list as you will find in Jira.</li>
 <li>Backlog tasks are prioritised (either by the team or by a manager) and assigned to engineers for the next <b>sprint</b> of work in a planning session.</li>
 <li>Sprints are usually a fixed period of a week or two. Tickets are highly visible to other team members, and you usually collaborate to some degree on each task.</li>
-<li>You constantly communicate the status of each job - when you start, what you're blocked by etc, to the team. Usually in online management software.<li> 
+<li>You constantly communicate the status of each job - when you start, what you're blocked by etc, to the team. Usually in online management software.</li> 
 <li>When you start a coding task you follow your organisation's <b>version control strategy</b> - some places create a branch for each task, smaller places work in main/trunk and use commits per task, etc. There will be rules and a process.</li>
 <li>When you commit work, usually this is tied to <b>continuous integration</b> software/servers that will try to build the software, using your new commit, and report on success/failure.</li>
 <li>Committed work doesn't go straight in to the build - you make a <b>pull request</b>, and then most places now use a <b>code review</b> at this point where other developers will try to spot bugs and comment on your work - usually using a diff of the new and old code, but not always.</li>
