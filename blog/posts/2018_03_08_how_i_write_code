@@ -263,7 +263,8 @@ think small, or drop stuff in to your own source code if it's small utilities or
 I validate all my function parameters, particularly pointers. You can use <tt>assert()</tt> to
 guard any assumptions that you make about acceptable ranges of values. You should do this if eg
 a parameter is going to be used as an index to an array. Strings, parsing functions,
-and indices worth validating.
+and indices worth validating. Usually this catches things like when you add a new function two
+weeks later and inadvertently break some assumptions you made earlier.
 </p>
 
 <pre>
