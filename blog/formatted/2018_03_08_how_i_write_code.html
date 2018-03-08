@@ -124,7 +124,7 @@ int main() {
 
 <p>
 Some functions will tend to be bigger. The "<i>update all the people in the simulation</i>" or "<i>draw all the trees</i>"
-function has several small jobs. That's right, I don't have: <tt>for each tree in trees: tree.draw()</tt>.
+function has several small jobs. That's right, I don't have: <tt>tree.draw()</tt>.
 It's better to loop over arrays - not have separate, encapsulated items. Where possible. It's easier to
 follow the flow of logic, and keep it in your head (I find). The computer hardware is designed to
 be very efficient at iterating over arrays of data in start-to-finish contiguous order. If you force
@@ -143,7 +143,7 @@ functions. Split them up using <tt>{}</tt> blocks.
 void draw_all_the_things() {
   { // --- trees get drawn here
 
-    // set up GPU state etc for drawing trees - use the correct shaders and put uniform variables in etc
+    // set up GPU state etc for drawing trees - use the correct shaders etc
     for ( int i = 0; i < ntrees; i++ ) {
       // do whatever per-tree stuff is required
     }
@@ -156,16 +156,22 @@ void draw_all_the_things() {
     }
 
   } // --- end of trees block
+  
+  
 
   { // this block is something like draw all the rocks
     // similar stuff
   }
+  
+  
 
   { // this block is something like draw the water
     // similar stuff
     // in
     // here
   }
+  
+  
 
   // ...
   
@@ -221,7 +227,8 @@ and want my after-work time to put stuff on the screen, not be whittled away ref
 so I'll just have a floating <tt>load_ply_mesh()</tt> function that doesn't give a monkey's uncle
 about any other structure, and there are no managers or special relationships. This is <b>loose-coupling</b>.
 It's very important to building code that scales to a large size without getting tangled and log-jammed.
-It's efficient to add new features to, and doesn't drive you insane.
+It's efficient to add new features to, and doesn't drive you insane. I spend zip-all time thinking about
+the relationships between objects, which is the opposite of how we were training to make software in college.
 </p>
 
 <p>
@@ -241,7 +248,7 @@ to shuffle it around when it doesn't:
 <li><tt>trees.h</tt> - Headers are gross, but you have to use them. This is your interface or class
 declaration equivalent, and comments/usage instructions. And nothing else.</li>
 
-<li><tt>trees.c</tt> - Source all the functions and relevant data. Globals aren't exposed externally
+<li><tt>trees.c</tt> - All the functions and relevant data go in the source file. Globals aren't exposed externally
 by default - they are therefore like private class attributes. If you want to make one
 public/externally accessible - also declare it in the header with the <tt>extern</tt> keyword.
 Functions are externally linkable in C (which is silly) - use the <tt>static</tt> keyword in front
@@ -262,7 +269,8 @@ think small, or drop stuff in to your own source code if it's small utilities or
 
 <p>
 I validate all my function parameters, particularly pointers. You can use <tt>assert()</tt> to
-guard any assumptions that you make about ranges of acceptable values. Strings, parsing functions,
+guard any assumptions that you make about acceptable ranges of values. You should do this if eg
+a parameter is going to be used as an index to an array. Strings, parsing functions,
 and indices worth validating.
 </p>
 
@@ -299,7 +307,7 @@ array indexing.
 
 <p>
 If you're making small memory allocations, consider <tt>alloca()</tt> (look it up, it's handy for
-fast dynamic scratch memory that auto-frees). I use a big pre-allocated block and index into that
+fast dynamic scratch memory that auto-frees). Otherwise, I use a big pre-allocated block and index into that
 for assets that stay in memory. That way you can free them all in one operation between resets / 
 level loads etc, and don't waste making sure every memory allocation is freed.
 </p>
