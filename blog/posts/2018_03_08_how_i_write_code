@@ -301,7 +301,8 @@ array indexing.
 If you're making small memory allocations, consider <tt>alloca()</tt> (look it up, it's handy for
 fast dynamic scratch memory that auto-frees). Otherwise, I use a big pre-allocated block and index into that
 for assets that stay in memory. That way you can free them all in one operation between resets / 
-level loads etc, and don't waste making sure every memory allocation is freed.
+level loads etc, and don't waste time making sure every memory allocation is freed, or writing accounting code
+to track everything or [shudder] a garbage collector.
 </p>
 
 <h3>Caveats</h3>
