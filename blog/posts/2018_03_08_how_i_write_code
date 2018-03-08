@@ -321,7 +321,7 @@ sink.
 <p>
 Using C with no templates, virtual functions, or complex structures means your build times are super
 fast, which is nice for working quickly on side projects. No boilerplate code or cladding code is
-required - this stuff is very time confusing to write and maintain. No getters, setters, patterns,
+required - this stuff is very time consuming to write and maintain. No getters, setters, patterns,
 etc. Just solve the bite-sized problems that gets your creativity to a visual state. This is very
 motivating. Keep the iteration loop short like this.
 </p>
