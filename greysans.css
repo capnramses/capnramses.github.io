@@ -6,6 +6,7 @@ body {
 	background-repeat: repeat;
 	background-position: center, top;
 	/*background-size:  750px 8px, 1920px 992px;*/
+	background-size:  750px 8px, auto;
 	width: 600px;
 	margin: auto;
 }
