@@ -1,17 +1,14 @@
 body {
-	/* reminder re. backgrounds - there are two. the white column is first. the comma then appends
-	properties for the photo/image back */
 	font-family: 'Ubuntu', sans-serif;
 	background-color: #202020;
-	background-image: url(images/white_bar.png), url(images/checkerboard.png);
-	/*background-repeat: repeat-y, no-repeat;*/
+	background-image: url(../images/white_bar.png), url(../images/checkerboard.png);
 	background-repeat: repeat-y, repeat;
 	background-position: center, top;
-	/*background-size:  750px 8px, 1920px 992px;*/
-	background-size:  750px 8px, contain;
+	background-size: 750px 8px, contain;
 	width: 600px;
 	margin: auto;
 }
+
 h2 {
 	color:#333333;
 }
