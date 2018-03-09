@@ -4,7 +4,7 @@ body {
 	background-image: url(http://antongerdelan.net/images/white_bar.png), url(http://antongerdelan.net/images/checkerboard.png);
 	background-repeat: repeat-y, repeat;
 	background-position: center, top;
-	background-size: 750px 8px, contain;
+	background-size: 750px 8px, auto;
 	width: 600px;
 	margin: auto;
 }
