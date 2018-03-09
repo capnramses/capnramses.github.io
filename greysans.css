@@ -2,9 +2,9 @@ body {
 	font-family: 'Ubuntu', sans-serif;
 	background-color: #202020;
 	background-image: url(images/white_bar.png), url(images/checkerboard.png);
-	/*background-repeat: repeat-y, no-repeat;*/
+	/*background-repeat: repeat-y, no-repeat;
 	background-position: center, top;
-	background-size:  750px 8px, 1920px 992px;
+	background-size:  750px 8px, 1920px 992px;*/
 	width: 600px;
 	margin: auto;
 }
