@@ -3,7 +3,11 @@
  <p>
 I have always been interested in languages. I have been adding multilingual text rendering support
 to my kick-around hobby game project over the last year or so. The project is written in C99 and OpenGL.
-Here's an overview of rendering text and how I support various other languages. In code I refer to
+Here's an overview of rendering text and how I support various other languages.
+</p>
+
+<p>
+ In code I refer to
 all human-readable strings by an enumerated code, rather than hard-code them. These correspond to
 a set of strings loaded from a file. This lets me easily switch languages and fix errors on the fly.
 I store all my strings in a UTF-8 encoded text file, which stores everything, and a small army of
@@ -80,7 +84,8 @@ a unicode encoding method. I use UTF-8, which has the nice property that codepoi
 range are exactly the same char arrays as they were before. In UTF-8 other codepoints require 1-4
 bytes to encode - so it's a form of compression. Other encoding methods are more consistent sizes
 but not compressed. JavaScript uses UTF-16 I believe. Go uses UTF-8.
-You do need a <i>codepoint-to-utf8-char-array</i> encoder and decoder pair of functions though.
+You do need a <i>codepoint-to-utf8-char-array</i> encoder and decoder pair of functions though. Mine
+are <a href="https://github.com/capnramses/lang/blob/master/c/utf8/main.c">here</a>.
 Your best bet is to keep all your strings in memory as UTF-8, and en/decode to whatever you need to
 interface with at the last moment.
 </p>
