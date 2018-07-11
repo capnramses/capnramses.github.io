@@ -155,6 +155,13 @@ displaying it. A string can also contain characters from several languages. You 
 sub-strings first before processing to simplify string-parsing logic.
 </p>
 
+<p>
+The memory order and screen display order of right-to-left languages often creates other complications.
+Word processing software may display the strings right-to-left but highlighting or hovering over string segments
+can flip around to reverse direction if the software has been made in Silicon Valley, which is very frustrating
+for the user's experience! The editor I'm writing this in has this problem.
+</p>
+
 <h3>Arabic Cursive</h3>
 
 <div class="centre">
@@ -172,13 +179,6 @@ Not all codepoints have all of the forms, so you need to convert a string sequen
 neighbouring codepoints and what forms they take, as well as the codepoint in question. But, the
 cursive joins all connect at the same, consistent points, so you can interchange the glyphs and don't
 need to manually draw the cursive connections.
-</p>
-
-<p>
-The memory order and screen display order of right-to-left languages often creates other complications.
-Word processing software may display the strings right-to-left but highlighting or hovering over string segments
-can flip around to reverse direction if the software has been made in Silicon Valley, which is very frustrating
-for the user's experience! The editor I'm writing this in has this problem.
 </p>
 
 <div class="centre">
