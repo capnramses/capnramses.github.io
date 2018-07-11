@@ -18,9 +18,9 @@ Here's an overview of rendering text and how I support various other languages.
  In code I refer to
 all human-readable strings by an enumerated code, rather than hard-code them. These correspond to
 a set of strings loaded from a file. This lets me easily switch languages and fix errors on the fly.
-I store all my strings in a UTF-8 encoded text file, which stores everything, and a small army of
+I store all my strings in a UTF-8 encoded text file, which can store any language's string. A small army of
 helpful friends and people from the Internet provided a
-<a href="https://gist.github.com/capnramses/a6e81a05738e7b813cf1cd0213c517a3">list of UI button translations</a> to try.
+<a href="https://gist.github.com/capnramses/a6e81a05738e7b813cf1cd0213c517a3">list of UI button translations</a> to use.
 </p>
 
 <div class="centre">
@@ -62,7 +62,7 @@ so that your shader can pick the corresponding sub-images out when rendering eac
 <p>
 If you want to render multi-lingual characters then you need to have a font that contains the
 character images (glyphs) for them. Most fonts are split into a few files - Chinese-Japanese-Korean (CJK),
-Thai, and Arabic may are often separate files. The font you want to use may not have wide multi-lingual
+Thai, and Arabic may are often separate files. The font you want to use may not have full multi-lingual
 support. Your may also need to maintain a consistent look between alphabets. This is trickier than it
 sounds. Most fonts rendering Arabic characters or Chinese ideograms look a bit thin or light compared
 to the Latin characters. This may require some additional weighting to look consistent or mix-and-matching
