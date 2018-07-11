@@ -121,7 +121,7 @@ but it's probably not that useful to do.
 
 <div class="centre">
 <img src = "../images/thai.png" width="512"/><br />
-<small>Thai (above) stores the small modifier glyphs separately, and it can be tricky to place them over other glyphs correctly.</small>
+<small>Thai (above) stores the small modifier codepoints separately, and it can be tricky to place them over other glyphs correctly.</small>
 </div>
 
 
