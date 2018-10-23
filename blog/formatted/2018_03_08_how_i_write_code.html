@@ -243,11 +243,10 @@ to shuffle it around when it doesn't:
 <li><tt>trees.h</tt> - Headers are gross, but you have to use them. This is your interface or class
 declaration equivalent, and comments/usage instructions. And nothing else.</li>
 
-<li><tt>trees.c</tt> - All the functions and relevant data go in the source file. Globals aren't exposed externally
-by default - they are therefore like private class attributes. If you want to make one
-public/externally accessible - also declare it in the header with the <tt>extern</tt> keyword.
+<li><tt>trees.c</tt> - All the functions and relevant data go in the source file. Globals are like class attributes.
+If you want to make one public/externally accessible - also declare it in the header with the <tt>extern</tt> keyword.
 Functions are externally linkable in C (which is silly) - use the <tt>static</tt> keyword in front
-of a function to say "private method".</li>
+of a function or global to say "private" (prevents linking clashes).</li>
 </ul>
 
 <h3>Build Systems</h3>
