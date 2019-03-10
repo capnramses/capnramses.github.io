@@ -64,7 +64,7 @@ Here are common conventions:
 <li><i>Curmudgeon style</i> - modules have a <tt>mymodule.c</tt> files. There is only one header file for all external declarations, and probably a rude comment at the top saying <i>"This header is only here because C/C++ still requires header files in 2019"</i>.</li>
 <li><i>Typical industry shitshow</i> - there is absolutely no consistently followed convention. Headers include other headers that include other headers, that include the original headers.
 Tiny code compiles take forever. You lose your sanity trying to follow it. Function code is also in headers. Showing-off-my-skills templated classes creating complex inter-dependencies are everywhere.
-You can't change or tidy anything, because other seemingly-unrelated pieces fall off the other side of the project when you do.
+You can't change or tidy anything, because other, seemingly-unrelated, pieces fall off the other side of the project when you do.
 </li>
 </ul>
 
