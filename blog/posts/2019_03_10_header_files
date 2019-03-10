@@ -94,7 +94,7 @@ of the file and calling some of your functions) then you'll also find it easy to
 <p>Here's a `types` header snippet from one of my projects, and a header that uses the types.</p>
 <tt>types.h</tt>
 <pre>
-// Copyright Anton Gerdelan <antongdl@protonmail.com>. 2019
+// Copyright Anton Gerdelan antonofnote@gmail.com. 2019
 #pragma once
 #include <stdbool.h>
 #include <stdint.h>
@@ -140,7 +140,7 @@ typedef struct voxel_coords_t {
 <div>
 <tt>types.h</tt>
 <pre>
-// Copyright Anton Gerdelan <antongdl@protonmail.com>. 2019
+// Copyright Anton Gerdelan antonofnote@gmail.com. 2019
 #pragma once
 #include "types.h"
 
