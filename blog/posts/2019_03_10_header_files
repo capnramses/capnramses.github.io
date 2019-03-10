@@ -79,7 +79,7 @@ Your headers may include <tt>types.h</tt> in addition the the above.</li>
 </ul>
 
 <p>
-You'll find that this will significantly reduce the complexity of growing projects. Try to stick to a single <tt>types.h</tt> file, rather than one per module, or it will be difficult to manage.
+You'll find that this will significantly reduce the complexity of growing projects. Try to stick to a single <tt>types.h</tt> file as long as you can, rather than one per module, or it will be more difficult to manage.
 If you could draw a diagram of relationships between files it would be quite a lot simpler now, yes?
 If you're just using a single header file for everything then this isn't a concern,
 but I don't think that's everyone's favourite on team projects. I think you can drop most developer guidelines or rules, but this keep-the-headers-stand-alone one should be helpful to keep and gently enforce.
