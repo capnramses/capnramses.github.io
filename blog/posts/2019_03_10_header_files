@@ -59,10 +59,10 @@ Here are common conventions:
 </p>
 
 <ul>
-<li>Java-ish style - every class has a <tt>myclass.c</tt>, and a corresponding <tt>myclass.h</tt> for the interface and API documentation.</li>
-<li>C modules style - groups of related functions or classes sit in a <tt>mymodule.c</tt>, and these have a <tt>mymodule.h</tt> for externally-visible function declarations and variables (again, the interface).</tt>
-<li>Curmudgeon style - modules have a <tt>mymodule.c</tt> files. There is only one header file for all external declarations, and probably a rude comment at the top saying <i>"This header is only here because C/C++ still requires header files in 2019"</i>.</li>
-<li>Typical industry shitshow - there is absolutely no convention followed. Headers include other headers that include other headers, that include the original headers. Tiny code compiles take forever. You lose your sanity trying to follow it. Function code is also in headers. Showing-off-my-skills templated classes creating complex inter-dependencies are everywhere.</li>
+<li><i>Java-ish style</i> - every class has a <tt>myclass.c</tt>, and a corresponding <tt>myclass.h</tt> for the interface and API documentation.</li>
+<li><i>C modules style</i> - groups of related functions or classes sit in a <tt>mymodule.c</tt>, and these have a <tt>mymodule.h</tt> for externally-visible function declarations and variables (again, the interface).</tt>
+<li><i>Curmudgeon style</i> - modules have a <tt>mymodule.c</tt> files. There is only one header file for all external declarations, and probably a rude comment at the top saying <i>"This header is only here because C/C++ still requires header files in 2019"</i>.</li>
+<li><i>Typical industry shitshow</i> - there is absolutely no consistently followed convention. Headers include other headers that include other headers, that include the original headers. Tiny code compiles take forever. You lose your sanity trying to follow it. Function code is also in headers. Showing-off-my-skills templated classes creating complex inter-dependencies are everywhere.</li>
 </ul>
 
 <p>
