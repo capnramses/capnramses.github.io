@@ -29,12 +29,17 @@ the project in a consistent way. Refactoring was left for a very, very rainy day
 </ul>
 
 <p>
+<img src="https://external-preview.redd.it/1XuftAfkSNyK2nypxkAZRyR0H2aHnUyBIxFVZ59pj08.png?auto=webp&s=b06753c948d6c0c0513798fe986a6132d94e5172" /><br />
+<small><i>This could probably be titled "A typical project: Day 1, Day 365."</i></small>
+</p>
+
+<p>
 A real conundrum with contemporary software development is that software projects are never 'finished'.
 We do 'software as a service' or agile continuous delivery. The requirements change frequently, which mean design must be flexible to change.
 But many of our tools and techniques were designed assuming the entire project had been fully specced out in advance.
 As an industry-standard OOP project evolves it quickly collapses into a birds nest of everything-includes-everything else.
 Eventually you reach a log-jam state where there is no nice way to structure things, and you either have to scrap it,
-spend a good team of time and money re-thinking structure, or do what most programmers do, and just write in shortcuts/pointers/friend
+spend a good deal of time and money re-thinking structure, or do what most programmers do, and just write in shortcuts/pointers/friend
 relationships to cross around their own object structure. Most people in tech don't actually work on a project, or at a company, for more
 than a year or two, so can conveniently avoid ever dealing with this and then move to the next start-up!
 </p>
