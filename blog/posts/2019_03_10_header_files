@@ -75,7 +75,7 @@ Some sort of convention is useful to reduce the cognitive overhead of anyone wor
 <ul>
 <li>Header files do not include any other header files, except for <tt>stdint.h</tt> for C and C++ and <tt>stdbool.h</tt> for C.</li>
 <li>"But what about my custom types in <tt>graphics.h</tt>?" - create a <tt>types.h</tt> for your project, and put all the typedefs and structs used in your interfaces (in header files) in here.
-Your headers may include <tt>types.h</tt> in addition the the above.</li> 
+Your headers may include <tt>types.h</tt> in addition to the above.</li> 
 </ul>
 
 <p>
