@@ -231,6 +231,18 @@ struct shader_program_t {
   char fragment_shader_filename[1024];
 };</pre>
 
+  <h2>Suggestions</h2>
+
+  <p>
+    Add some additional inputs to your shaders - uniforms such as the time, additional vertex shader inputs such as texture
+    coordinates, a noise texture, etc.
+    Then you have plenty of ingredients to play with for interesting animated effects. Combining the current time as a float,
+    with the position of a frament on a surface,
+    with a sine or consine wave, gives you a huge amount of potential to live-edit to create interesting effects, or
+    modify
+    other shader effects.
+  </p>
+
   <h2>Can I Reload Meshes and Textures Too?</h2>
 
   <p>
