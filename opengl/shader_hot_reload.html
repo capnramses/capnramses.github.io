@@ -66,7 +66,7 @@
   </p>
 
   <pre>
-GLint create_shader_program_from_strings(
+GLuint create_shader_program_from_strings(
   const char* vertex_shader_str,
   const char* fragment_shader_str );</pre>
 
@@ -85,7 +85,7 @@ GLint create_shader_program_from_strings(
   </p>
 
   <pre>
-GLint create_shader_program_from_files(
+GLuint create_shader_program_from_files(
   const char* vertex_shader_filename,
   const char* fragment_shader_filename );</pre>
 
@@ -98,7 +98,7 @@ GLint create_shader_program_from_files(
   </p>
 
   <pre>
-GLint create_shader_program_from_files(
+GLuint create_shader_program_from_files(
   const char* vertex_shader_filename,
   const char* fragment_shader_filename ) {
   
@@ -287,7 +287,7 @@ struct shader_program_t {
 // fragment_shader_str - a null-terminated string of text containing a fragment shader
 // returns a new, valid shader program handle, or 0 if there was a problem
 // asserts on NULL parameters
-GLint create_shader_program_from_strings(
+GLuint create_shader_program_from_strings(
   const char* vertex_shader_str,
   const char* fragment_shader_str ) {
 
@@ -384,7 +384,7 @@ GLint create_shader_program_from_strings(
 // set a max limit on shader length to avoid dynamic memory allocation
 #define MAX_SHADER_SZ 100000
 
-GLint create_shader_program_from_files(
+GLuint create_shader_program_from_files(
   const char* vertex_shader_filename
   const char* fragment_shader_filename ) {
 
