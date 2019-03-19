@@ -261,6 +261,12 @@ struct shader_program_t {
 
   <ul>
     <li>
+      Linking and compiling - you should be able to re-use the libraries and build settings from a working OpenGL
+      Hello Triangle project. It requires only OpenGL, GLEW, and GLFW. I wrote my program for this article on a
+      Windows machine and compiled it with MinGW-w64.
+      They compilation instruction I used is at the top of the file's source code. There is also a Makefile.
+    </li>
+    <li>
       <i>"[MS Visual Studio] program can't find my shader files!"</i> - As with other data files, Visual Studio projects
       may set a different <b>current working directory</b> than what you might expect, when running the program from
       within the editor. Look in your project settings for your working directory path. It's usually set to in some
@@ -268,16 +274,11 @@ struct shader_program_t {
     </li>
     <li>
       <i>"It worked on my computer!" - File reading and operating system issues.</i> Be careful with any file reading
-      operations that copy the entire file into a buffer. If you are not reading the file in binary mode, then different
-      characters are appended to the ends of lines and buffers on different operating systems, which may alter the end
-      result and size of the final buffer. I used the rather verbose <tt>fgets()</tt> so I didn't need to worry about
-      that. Read the manual pages of the functions that you are using for more details.
-    </li>
-    <li>
-      <tt>strnlen()</tt> - It would have been safer to use a size-limited version of <tt>strlen()</tt> in my line
-      reading, as I did for other functions. The reason for this is that <tt>strnlen()</tt> is not available consistenly
-      on all platforms. I usually write my own function for getting the length of a string. You can do that and
-      substitute it in if you want a more robust implementation.
+      operations that copy the entire file into a dynamically allocated buffer. If you are not reading the file in
+      binary mode, then different characters are appended to the ends of lines and buffers on different operating systems,
+      which may mean your program's buffer needs to be larger than the file it is reading from. I used a large fixed-size
+      big arrays, so I didn't need to worry about that. Read the manual pages of the functions that you are using for more
+      details.
     </li>
   </ul>
 
@@ -400,46 +401,28 @@ GLuint create_shader_program_from_files(
   char vs_shader_str[MAX_SHADER_SZ];
   char fs_shader_str[MAX_SHADER_SZ];
   vs_shader_str[0] = fs_shader_str[0] = '\0';
-  {
+  { // read vertex shader file into a buffer
     FILE* fp = fopen( vertex_shader_filename, "r" );
     if ( !fp ) {
       fprintf( stderr, "ERROR: could not open vertex shader file `%s`\n",
         vertex_shader_filename );
       return 0;
     }
-    char line[1024];
-    line[0]                = '\0';
-    int num_bytes_appended = 0;
-    while ( fgets( line, 1024, fp ) ) {
-      int len = strlen( line );
-      if ( ( len + num_bytes_appended ) > ( MAX_SHADER_SZ - 1 ) ) {
-        fprintf( stderr, "ERROR: shader is too long for buffer\n" );
-        return 0;
-      }
-      strncat( vs_shader_str, line, MAX_SHADER_SZ - num_bytes_appended - 1 );
-      num_bytes_appended += len;
-    }
+    size_t count = fread( vs_shader_str, 1, MAX_SHADER_SZ - 1, fp );
+    assert( count < MAX_SHADER_SZ - 1 ); // file was too long
+    vs_shader_str[count] = '\0';
     fclose( fp );
   }
-  {
+  { // read fragment shader file into a buffer
     FILE* fp = fopen( fragment_shader_filename, "r" );
     if ( !fp ) {
       fprintf( stderr, "ERROR: could not open fragment shader file `%s`\n",
         fragment_shader_filename );
       return 0;
     }
-    char line[1024];
-    line[0]                = '\0';
-    int num_bytes_appended = 0;
-    while ( fgets( line, 1024, fp ) ) {
-      int len = strlen( line );
-      if ( ( len + num_bytes_appended ) > ( MAX_SHADER_SZ - 1 ) ) {
-        fprintf( stderr, "ERROR: shader is too long for buffer\n" );
-        return 0;
-      }
-      strncat( fs_shader_str, line, MAX_SHADER_SZ - num_bytes_appended - 1 );
-      num_bytes_appended += len;
-    }
+    size_t count = fread( fs_shader_str, 1, MAX_SHADER_SZ - 1, fp );
+    assert( count < MAX_SHADER_SZ - 1 ); // file was too long
+    fs_shader_str[count] = '\0';
     fclose( fp );
   }
 
