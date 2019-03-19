@@ -197,7 +197,7 @@ if ( glfwGetKey( window, GLFW_KEY_R ) ) {
     basic concept is to
     ask the sytem to watch your shader files, or directory containing shader files, ask it if anything has changed every
     now and again, and then
-    call your reload function on shaders with modified files.
+    call your reload function on shader programs that have had one or both of their source files modified.
   </p>
 
   <ul>
@@ -214,7 +214,7 @@ if ( glfwGetKey( window, GLFW_KEY_R ) ) {
   </p>
 
   <p>
-    You may also use libraries such os Qt or Boost, but beware these will add very significant complexity to your
+    You may also use libraries such as Qt or Boost, but beware these will add very significant complexity to your
     project, which you can avoid by writing your own small utility.
   </p>
 
@@ -234,13 +234,13 @@ struct shader_program_t {
   <h2>Suggestions</h2>
 
   <p>
-    Add some additional inputs to your shaders - uniforms such as the time, additional vertex shader inputs such as texture
+    Add some additional inputs to your shaders - uniforms such as the time (you can use the value returned by <tt>glfwGetTime()</tt>),
+    additional vertex shader inputs such as texture
     coordinates, a noise texture, etc.
     Then you have plenty of ingredients to play with for interesting animated effects. Combining the current time as a float,
     with the position of a frament on a surface,
-    with a sine or consine wave, gives you a huge amount of potential to live-edit to create interesting effects, or
-    modify
-    other shader effects.
+    with a <tt>sin()</tt> or cosine wave, gives you a huge amount of potential to live-edit to create interesting effects, or
+    modify other shader effects. Shadertoy even combines shaders with audio waveforms. There are plenty of ideas in Shadertoy demos.
   </p>
 
   <h2>Can I Reload Meshes and Textures Too?</h2>
