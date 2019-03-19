@@ -234,13 +234,17 @@ struct shader_program_t {
   <h2>Suggestions</h2>
 
   <p>
-    Add some additional inputs to your shaders - uniforms such as the time (you can use the value returned by <tt>glfwGetTime()</tt>),
+    Add some additional inputs to your shaders - uniforms such as the time (you can use the value returned by
+    <tt>glfwGetTime()</tt>),
     additional vertex shader inputs such as texture
     coordinates, a noise texture, etc.
-    Then you have plenty of ingredients to play with for interesting animated effects. Combining the current time as a float,
+    Then you have plenty of ingredients to play with for interesting animated effects. Combining the current time as a
+    float,
     with the position of a frament on a surface,
-    with a <tt>sin()</tt> or cosine wave, gives you a huge amount of potential to live-edit to create interesting effects, or
-    modify other shader effects. Shadertoy even combines shaders with audio waveforms. There are plenty of ideas in Shadertoy demos.
+    with a <tt>sin()</tt> or cosine wave, gives you a huge amount of potential to live-edit to create interesting
+    effects, or
+    modify other shader effects. Shadertoy even combines shaders with audio waveforms. There are plenty of ideas in
+    Shadertoy demos.
   </p>
 
   <h2>Can I Reload Meshes and Textures Too?</h2>
@@ -442,6 +446,30 @@ GLuint create_shader_program_from_files(
   return create_shader_program_from_strings( vs_shader_str, fs_shader_str );
 }
   </pre>
+
+  <div id="disqus_thread"></div>
+  <script>
+
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables */
+    /*
+    var disqus_config = function () {
+        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function () { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = '//https-capnramses-github-io.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by
+      Disqus.</a></noscript>
+
+  <script id="dsq-count-scr" src="//https-capnramses-github-io.disqus.com/count.js" async></script>
 
 </body>
 
