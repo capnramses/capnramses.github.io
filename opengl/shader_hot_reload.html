@@ -26,7 +26,7 @@
 <body>
   <a href="index.html">[index]</a>
   <h1>Hot Reloading Shaders</h1>
-  <h4>Anton Gerdelan. Last edited: 19 March 2019</h4>
+  <h4>Anton Gerdelan. Last edited: 20 March 2019</h4>
 
   <p>
     Being able to edit your shader code and see what visually changes, live, without restarting your program, is really
@@ -39,7 +39,7 @@
   <p>
     You do not need it to follow this tutorial, but for reference
     my finished example code is available in <a
-      href="https://github.com/capnramses/antons_opengl_tutorials_book/tree/master/41_shader_hot_reload">the Github
+      href="https://github.com/capnramses/antons_opengl_tutorials_book/tree/master/41_shader_hot_reload">the GitHub
       repository for my OpenGL tutorials book</a>.
   </p>
 
@@ -177,7 +177,7 @@ if ( glfwGetKey( window, GLFW_KEY_R ) ) {
 
   <p>
     Now try changing the output colour in your fragment shader file, and hit 'R' with your program's window focused.
-    When you have this working you are already in a signficantly better place to edit shaders on the fly! You can
+    When you have this working you are already in a significantly better place to edit shaders on the fly! You can
     see that it would be a much nicer workflow to add lighting and shading to. Any shader errors should print to the
     console. You could stop here - this is usually enough for most of my projects.
   </p>
@@ -195,7 +195,7 @@ if ( glfwGetKey( window, GLFW_KEY_R ) ) {
   <p>
     I may add some code to do this in the future to the source code example, but will not add it here for brevity. The
     basic concept is to
-    ask the sytem to watch your shader files, or directory containing shader files, ask it if anything has changed every
+    ask the system to watch your shader files, or directory containing shader files, ask it if anything has changed every
     now and again, and then
     call your reload function on shader programs that have had one or both of their source files modified.
   </p>
@@ -240,7 +240,7 @@ struct shader_program_t {
     coordinates, a noise texture, etc.
     Then you have plenty of ingredients to play with for interesting animated effects. Combining the current time as a
     float,
-    with the position of a frament on a surface,
+    with the position of a fragment on a surface,
     with a <tt>sin()</tt> or cosine wave, gives you a huge amount of potential to live-edit to create interesting
     effects, or
     modify other shader effects. Shadertoy even combines shaders with audio waveforms. There are plenty of ideas in
@@ -252,9 +252,9 @@ struct shader_program_t {
   <p>
     You might have been wondering if the same process can be used to improve your workflow with other asset files.
     The answer is yes! I do this in my projects to reload textures and meshes, so I can modify them and see how they
-    interact with the rest of the scene - how they are affected by scale, lighting, and shaders. Remember than our
+    interact with the rest of the scene - how they are affected by scale, lighting, and shaders. Remember that our
     perception of colour is affected by the surrounding colours, so you can get a different impression of your images
-    edited with a white editor backround, to how they look in the final scene.
+    edited with a white editor background, to how they look in the final scene.
   </p>
 
   <h2 id="problems">Common Problems</h2>
