@@ -16,6 +16,7 @@ mouse_state.clicks = 0;
 mouse_state.second_since_click = 0.0;
 mouse_state.x = 0;
 mouse_state.y = 0;
+var cube_loaded = 0;
 
 function create_cube_side_texture_from_file(side, url) {
 	console.log("loading image " + url + "...");
@@ -26,6 +27,7 @@ function create_cube_side_texture_from_file(side, url) {
 		//	gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 		gl.texImage2D(side, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
 		console.log("texture loaded from " + url);
+		cube_loaded++;
 	}
 	image.src = url;
 }
@@ -149,13 +151,15 @@ function main_loop() {
 		gl.uniformMatrix4fv(cube_program_R_loc, gl.FALSE, new Float32Array(R));
 		gl.enableVertexAttribArray(0);
 		gl.activeTexture(gl.TEXTURE0);
-		gl.bindTexture(gl.TEXTURE_CUBE_MAP, cube_texture);
-		gl.bindBuffer(gl.ARRAY_BUFFER, cube_vp_vbo);
-		gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0);
+		if ( cube_loaded > 5 ) {
+			gl.bindTexture(gl.TEXTURE_CUBE_MAP, cube_texture);
+			gl.bindBuffer(gl.ARRAY_BUFFER, cube_vp_vbo);
+			gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0);
 
-		gl.drawArrays(gl.TRIANGLES, 0, cube_nverts);
+			gl.drawArrays(gl.TRIANGLES, 0, cube_nverts);
+	
+		}
 	}
-
 	// this function is from webgl-utils
 	window.requestAnimFrame(main_loop, canvas);
 }
