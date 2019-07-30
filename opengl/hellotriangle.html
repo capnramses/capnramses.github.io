@@ -93,9 +93,10 @@
     the header if we are going to use the dynamic version of the library:
   </p>
 
-  <textarea rows="2">
+  <pre>
 #define GLFW_DLL
-#include <GLFW/glfw3.h></textarea>
+#include <GLFW/glfw3.h>
+</pre>
 
   <p>
     There's a library called <a href="http://glew.sourceforge.net/">GLEW </a>
@@ -110,10 +111,10 @@
 
   <p>Include GLEW <u>before</u> GLFW to use the latest GL libraries:</p>
 
-  <textarea rows="3">
+  <pre>
 #include <GL/glew.h>
 #define GLFW_DLL
-#include <GLFW/glfw3.h></textarea>
+#include <GLFW/glfw3.h></pre>
 
   <p>
     I've uploaded my Windows builds of both for MinGW's GCC compilers here:
@@ -135,7 +136,7 @@
     far, and that your video drivers can support OpenGL 4.
   </p>
 
-  <textarea rows=20>
+  <pre>
 #include <GL/glew.h> // include GLEW and new version of GL on Windows
 #include <GLFW/glfw3.h> // GLFW helper library
 #include <stdio.h>
@@ -181,7 +182,7 @@ int main() {
   glfwTerminate();
   return 0;
 }
-</textarea>
+</pre>
 
   <p>
     There are 4 lines in the above code that you should uncomment if you're on

@@ -131,7 +131,7 @@
   </p>
 
   <p>
-    <textarea rows=12>
+    <pre>
 <html>
 <head></head>
 <body>
@@ -143,7 +143,7 @@ A model from a recent Ludum Dare game jam.
 You can view the source code of the page to see how I display this.
 </i></small>
 </body>
-</html></textarea>
+</html></pre>
   </p>
 
   <p>
@@ -191,7 +191,7 @@ You can view the source code of the page to see how I display this.
     You can add this script block to your page:
   </p>
 
-  <textarea rows="16">
+  <pre>
 <script>
   console.log("starting WebGL");
 
@@ -207,7 +207,7 @@ You can view the source code of the page to see how I display this.
   gl.frontFace(gl.CCW);
   gl.enable(gl.CULL_FACE);
   gl.enable(gl.DEPTH_TEST);
-</script></textarea>
+</script></pre>
 
   <p>
     I introduce a few new concepts here. The first instruction is the JavaScript
@@ -254,11 +254,11 @@ You can view the source code of the page to see how I display this.
     object, which is then our interface to the VAO extension's subset of functions:
   </p>
 
-  <textarea rows=4>
+  <pre>
 var vao_ext = gl.getExtension ("OES_vertex_array_object");
 if (!vao_ext) {
   console.error ("ERROR: Your browser does not support WebGL VAO extension");
-}</textarea>
+}</pre>
 
   <p>
     If it isn't supported by the user's browser/system then we can use the error
@@ -276,7 +276,7 @@ if (!vao_ext) {
     created some time later in your code after you provide the image URL.
   </p>
 
-  <textarea rows=16>
+  <pre>
 var texture = gl.createTexture();
 texture.is_loaded = false;
 var image = new Image();
@@ -292,7 +292,7 @@ image.onload = function () {
   texture.is_loaded = true;
   console.log ("texture loaded ");
 }
-image.src = "webgl_starter/heckler.png";</textarea>
+image.src = "webgl_starter/heckler.png";</pre>
 
   <p>
     That's it! Note that I did something really unusual, and set an
@@ -311,14 +311,14 @@ image.src = "webgl_starter/heckler.png";</textarea>
     set-up like this:
   </p>
 
-  <textarea rows=7>
+  <pre>
 start_loading_shader ();
 start_loading_texture ();
 start_loading_mesh ();
 while (!everything_has_loaded ()) {
   sleep ();
 }
-// end of loading function</textarea>
+// end of loading function</pre>
 
   <p>
     We are not allowed to have a thread-hogging wait loop in JavaScript, so the
@@ -326,7 +326,7 @@ while (!everything_has_loaded ()) {
     try to draw before all the required assets are loaded. For example:
   </p>
 
-  <textarea rows=8>
+  <pre>
 if (texture.is_loaded) {
   gl.activeTexture (gl.TEXTURE0);
   gl.bindTexture (gl.TEXTURE_2D, texture);
@@ -334,7 +334,7 @@ if (texture.is_loaded) {
   // draw with the texture
 }
 ...
-// rest of drawing code</textarea>
+// rest of drawing code</pre>
 
   <p>
     You can see why it's useful to inject some state attributes, and where the
@@ -361,7 +361,7 @@ if (texture.is_loaded) {
     in its own script block above my other scripts:
   </p>
 
-  <textarea rows=16>
+  <pre>
 <script id="heckler.vert" type="text/glsl">
 attribute vec3 vp;
 attribute vec2 vt;
@@ -377,7 +377,7 @@ void main () {
   n = vec3 (PV * M * vec4 (vn, 0.0));
   gl_Position = PV * M * vec4 (vp, 1.0);
 }
-</script></textarea>
+</script></pre>
 
   <p>
     I set the <tt>type</tt> attribute to something appropriate-looking so that the
@@ -388,7 +388,7 @@ void main () {
     fragment shader in a script block:
   </p>
 
-  <textarea rows=19>
+  <pre>
 <script id="heckler.frag" type="text/glsl">
 precision mediump float;
 
@@ -407,7 +407,7 @@ void main () {
   gl_FragColor.rgb = gl_FragColor.rgb * dot (nn, fwd) * 0.7
     + 0.3 * gl_FragColor.rgb;
 }
-</script></textarea>
+</script></pre>
 
   <p>
     We also have <tt>varying</tt> instead of <tt>in</tt> here, and the built-in
@@ -420,11 +420,11 @@ void main () {
     loading the mesh:
   </p>
 
-  <textarea rows=4>
+  <pre>
 var el = document.getElementById ("heckler.vert");
 var vs_str = el.innerHTML;
 el = document.getElementById ("heckler.frag");
-var fs_str = el.innerHTML</textarea>
+var fs_str = el.innerHTML</pre>
 
   <p>
     I just use the DOM again to fetch the strings. Instead of a script block, you
@@ -441,7 +441,7 @@ var fs_str = el.innerHTML</textarea>
     coordinates, and normals, respectively.
   </p>
 
-  <textarea rows=31>
+  <pre>
 var vs = gl.createShader (gl.VERTEX_SHADER);
 var fs = gl.createShader (gl.FRAGMENT_SHADER);
 gl.shaderSource (vs, vs_str);
@@ -472,7 +472,7 @@ if (!gl.getProgramParameter(sp, gl.VALIDATE_STATUS)) {
     gl.getProgramInfoLog (sp));
 }
 var heckler_PV_loc = gl.getUniformLocation (sp, "PV");
-var heckler_M_loc = gl.getUniformLocation (sp, "M");</textarea>
+var heckler_M_loc = gl.getUniformLocation (sp, "M");</pre>
 
   <p>
     "PV" is my combined projection and view matrix, and "M" is my model matrix.
@@ -494,7 +494,7 @@ var heckler_M_loc = gl.getUniformLocation (sp, "M");</textarea>
     that, which works like this:
   </p>
 
-  <textarea rows=10>
+  <pre>
 var xmlhttp = new XMLHttpRequest();
 xmlhttp.open ("GET", "OUR_URL_STRING_HERE", true);
 xmlhttp.onload = function (e) {
@@ -504,7 +504,7 @@ xmlhttp.onload = function (e) {
     //...parsing code goes here...
   }
 }
-xmlhttp.send ();</textarea>
+xmlhttp.send ();</pre>
 
   <p>
     First, we get an interface to a new XMLHTTPRequest (AJAX' real name). We tell
@@ -522,7 +522,7 @@ xmlhttp.send ();</textarea>
       and rendered with some other texture:
     </p>
 
-    <textarea rows=8>
+    <pre>
 var my_vao = start_loading_obj ("meshes/my_mesh.obj");
 ...
 // _inside the main drawing loop_
@@ -530,7 +530,7 @@ if (my_vao.is_loaded && texture.is_loaded) {
   vao_ext.bindVertexArrayOES (my_vao);
   ...
   // draw stuff that requires the VAO
-}</textarea>
+}</pre>
 
     <p>
       I won't paste the 50-lines or so for .obj parsing here, but you can view it at
@@ -544,7 +544,7 @@ if (my_vao.is_loaded && texture.is_loaded) {
       working code.
     </p>
 
-    <textarea rows=25>
+    <pre>
 function start_loading_obj (url) {
   // first create an empty VAO
   var vao = vao_ext.createVertexArrayOES ();
@@ -569,7 +569,7 @@ function start_loading_obj (url) {
   xmlhttp.send ();
   // return the empty VAO
   return vao;
-}</textarea>
+}</pre>
 
     <p>
       Note that, similar to the texture creation, the first step is to <u>create a
@@ -596,9 +596,9 @@ function start_loading_obj (url) {
           block, and specify the <tt>src="path_to_file.js"</tt> attribute.
     </p>
 
-    <textarea rows=2>
+    <pre>
 <script src="webgl_starter/obj_parser.js">
-</script></textarea>
+</script></pre>
 
     <p>
       I have a relative path to my file here. Note that <b>you must have a closing
@@ -650,13 +650,13 @@ function start_loading_obj (url) {
       and projection matrices with familiar-looking functions:
     </p>
 
-    <textarea rows=6>
+    <pre>
 var cam_dirty = true;
 var V = look_at ([0.0, 0.4, 1.0], [0.0, 0.4, 0.0],
   normalise_vec3 ([0.0, 1.0, 0.0]));
 var aspect = canvas.clientWidth / canvas.clientHeight;
 var P = perspective (67.0, aspect, 0.1, 100.0);
-var PV = mult_mat4_mat4 (P, V);</textarea>
+var PV = mult_mat4_mat4 (P, V);</pre>
 
     <p>
       <b>Very important JavaScript note:</b> my canvas dimensions are integers, but
@@ -678,7 +678,7 @@ var PV = mult_mat4_mat4 (P, V);</textarea>
       encapsulate that in a cross-browser function:
     </p>
 
-    <textarea rows=10>
+    <pre>
 window.requestAnimFrame = (function() {
 return window.requestAnimationFrame ||
   window.webkitRequestAnimationFrame ||
@@ -688,7 +688,7 @@ return window.requestAnimationFrame ||
   function(callback, element) {
     return window.setTimeout (callback, 1000 / 60);
   };
-})();</textarea>
+})();</pre>
 
     <p>
       If you put that somewhere in your script blocks we can call it. We will also
@@ -696,7 +696,7 @@ return window.requestAnimationFrame ||
       start-up code if you like:
     </p>
 
-    <textarea rows=26>
+    <pre>
 var previous_millis;
 
 function main_loop () {
@@ -722,7 +722,7 @@ function main_loop () {
   
   // "automatically re-call this function please"
   window.requestAnimFrame (main_loop, canvas);
-}</textarea>
+}</pre>
 
     <p>
       I like to have some timers in my loop so I can do animations, and measure
@@ -743,9 +743,9 @@ function main_loop () {
     </p>
 
 
-    <textarea rows=2>
+    <pre>
 previous_millis = performance.now();
-main_loop ();</textarea>
+main_loop ();</pre>
 
     <p>
       Those are the basics of WebGL, which should be enough to get started if you've

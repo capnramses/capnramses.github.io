@@ -161,7 +161,7 @@
     a factor for each morph target, where all the factors add up to 1. I just used
     a stock-standard weighted-average to work out my mixed pose.</p>
 
-  <textarea rows=31>
+  <pre>
 // vertex positions for targets
 in vec3 neutral_vp;
 in vec3 happy_vp;
@@ -192,7 +192,7 @@ void main () {
   /* normal stuff goes here */
 
   gl_Position = P * V * M * vec4 (pos, 1.0);
-}</textarea>
+}</pre>
 
   <p>
     I have a demo of this in WebGL: <a href="http://antongerdelan.net/blog/demos/talkinghead/">talking head</a>.

@@ -74,17 +74,17 @@
     Dynamic libraries on 64-bit GNU/Linux with C99:
   </p>
 
-  <textarea rows=2>
+  <pre>
 DYN_LIBS = -lGL -lX11 -lXxf86vm -lXrandr -lpthread -lXi -lXinerama -lXcursor \
--ldl -lrt -lm</textarea>
+-ldl -lrt -lm</pre>
 
   <p>
     Frameworks on OS X:
   </p>
 
-  <textarea rows=2>
+  <pre>
 FRAMEWORKS = -framework Cocoa -framework OpenGL -framework IOKit \
--framework CoreVideo</textarea>
+-framework CoreVideo</pre>
 
   <h3>7 August 2015</h3>
 
@@ -239,7 +239,7 @@ FRAMEWORKS = -framework Cocoa -framework OpenGL -framework IOKit \
     for the OS libraries, as well as for OpenGL itself:
   </p>
 
-  <textarea rows=14>
+  <pre>
 BIN = hellot
 CC = gcc
 FLAGS = -Wall -pedantic -mmacosx-version-min=10.5 -arch x86_64 \
@@ -252,7 +252,7 @@ SRC = main.c
 
 all:
   @echo ~~~~~~~~~~~~~~~~~~~~~~Building OS/X 64-bit~~~~~~~~~~~~~~~~~~~~~~~~~
-  ${CC} ${FLAGS} ${FRAMEWORKS} -o ${BIN} ${SRC} ${INC} ${LOC_LIB}</textarea>
+  ${CC} ${FLAGS} ${FRAMEWORKS} -o ${BIN} ${SRC} ${INC} ${LOC_LIB}</pre>
 
   <h2>Fixes and Updates Made to e-book</h2>
 

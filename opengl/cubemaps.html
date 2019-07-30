@@ -84,7 +84,7 @@
     that's cheating.
   </p>
 
-  <textarea rows=20>
+  <pre>
 float points[] = {
   -10.0f,  10.0f, -10.0f,
   -10.0f, -10.0f, -10.0f,
@@ -138,7 +138,7 @@ glGenVertexArrays(1, &vao);
 glBindVertexArray(vao);
 glEnableVertexAttribArray(0);
 glBindBuffer(GL_ARRAY_BUFFER, vbo);
-glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);</textarea>
+glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);</pre>
 
   <h3>Create a Cube-Map Texture</h3>
 
@@ -167,7 +167,7 @@ glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);</textarea>
     texture handle is passed back as a function parameter.
   </p>
 
-  <textarea rows=20>
+  <pre>
 void create_cube_map(
   const char* front,
   const char* back,
@@ -193,7 +193,7 @@ void create_cube_map(
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-}</textarea>
+}</pre>
 
   <p>
     The texture filtering parameters are interesting. Make sure that you set
@@ -205,7 +205,7 @@ void create_cube_map(
     image loader (stb_image):
   </p>
 
-  <textarea rows=20>
+  <pre>
 bool load_cube_map_side(
   GLuint texture, GLenum side_target, const char* file_name) {
   glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
@@ -238,7 +238,7 @@ bool load_cube_map_side(
     image_data);
   free(image_data);
   return true;
-}</textarea>
+}</pre>
 
   <p>
     The code is almost identical to creating a single 2d texture in OpenGL, except
@@ -275,7 +275,7 @@ bool load_cube_map_side(
     loop.
   </p>
 
-  <textarea rows=10>
+  <pre>
 #version 400
 
 in vec3 vp;
@@ -285,7 +285,7 @@ out vec3 texcoords;
 void main() {
   texcoords = vp;
   gl_Position = P * V * vec4(vp, 1.0);
-}</textarea>
+}</pre>
 
   <p>
     The <var>P</var> and <var>V</var> matrices are my camera's projection, and view
@@ -299,12 +299,12 @@ void main() {
     different maths library then you will have different matrix functions here.
   </p>
 
-  <textarea rows=5>
+  <pre>
 if (cam_moved) {
   mat4 R = rotate_y_deg(identity_mat4(), -cam_heading);
   glUseProgram(shader_programme);
   glUniformMatrix4fv(V_loc, 1, GL_FALSE, R.m);
-}</textarea>
+}</pre>
 
   <p>
     The fragment shader uses a special sampler; <tt>samplerCube</tt> which accepts
@@ -313,7 +313,7 @@ if (cam_moved) {
     may prefer <tt>textureCube()</tt>.
   </p>
 
-  <textarea rows=9>
+  <pre>
 #version 400
 
 in vec3 texcoords;
@@ -322,7 +322,7 @@ out vec4 frag_colour;
 
 void main() {
   frag_colour = texture(cube_texture, texcoords);
-}</textarea>
+}</pre>
 
   <h3>Rendering</h3>
 
@@ -334,14 +334,14 @@ void main() {
     be in front of the sky box.
   </p>
 
-  <textarea rows=7>
+  <pre>
 glDepthMask(GL_FALSE);
 glUseProgram(shader_programme);
 glActiveTexture(GL_TEXTURE0);
 glBindTexture(GL_TEXTURE_CUBE_MAP, tex_cube);
 glBindVertexArray(vao);
 glDrawArrays(GL_TRIANGLES, 0, 36);
-glDepthMask(GL_TRUE);</textarea>
+glDepthMask(GL_TRUE);</pre>
 
   <div class="centre">
     <img src="images/cubemap0.png" width="512px" />
@@ -403,7 +403,7 @@ glDepthMask(GL_TRUE);</textarea>
     for it. I calculate the vertex positions and normals in eye space.
   </p>
 
-  <textarea rows=13>
+  <pre>
 #version 400
 
 in vec3 vp; // positions from mesh
@@ -416,7 +416,7 @@ void main() {
   pos_eye = vec3(V * M * vec4(vp, 1.0));
   n_eye = vec3(V * M * vec4(vn, 0.0));
   gl_Position = P * V * M * vec4(vp, 1.0);
-}</textarea>
+}</pre>
 
   <p>
     The fragment shader calculates the direction
@@ -427,7 +427,7 @@ void main() {
     world space and used as the texture coordinates.
   </p>
 
-  <textarea rows=19>
+  <pre>
 #version 400
 
 in vec3 pos_eye;
@@ -446,7 +446,7 @@ void main() {
   reflected = vec3(inverse(V) * vec4(reflected, 0.0));
 
   frag_colour = texture(cube_texture, reflected);
-}</textarea>
+}</pre>
 
   <p>
     You can reduce the number of instructions in the shader if you compute the
@@ -497,10 +497,10 @@ void main() {
       of <tt>vec3 reflected</tt>:</p>
     </p>
 
-    <textarea rows=3>
+    <pre>
 float ratio = 1.0 /1.3333;
 vec3 refracted = refract(incident_eye, normal, ratio);
-refracted = vec3(inverse(V) * vec4(refracted, 0.0));</textarea>
+refracted = vec3(inverse(V) * vec4(refracted, 0.0));</pre>
 
     <p>
       Where the <tt>ratio</tt> is the ratio between the <b>refractive index</b> of the

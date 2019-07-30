@@ -54,7 +54,7 @@
     take a variable number of arguments; <tt>#include &lt;stdarg.h&gt;</tt>.
   </p>
 
-  <textarea rows="18">
+  <pre>
 #include <time.h>
 #include <stdarg.h>
 #define GL_LOG_FILE "gl.log"
@@ -72,7 +72,7 @@ bool restart_gl_log() {
   fprintf(file, "GL_LOG_FILE log. local time %s\n", date);
   fclose(file);
   return true;
-}</textarea>
+}</pre>
 
   <p>
     This first function just opens the log file and prints the date and time at the
