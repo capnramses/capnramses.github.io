@@ -120,7 +120,7 @@
 
   <p>
     The basic concept with WebGL software is that we write a normal web-page, and
-    use the new HTML5 <tt>canvas</tt> tag to define an area of the page (a blank
+    use the new HTML5 <code>canvas</code> tag to define an area of the page (a blank
     rectangle) that our rendering will draw to. You can use any of HTML's forms,
     text areas, and other elements to interact with your visualisation - we can
     say that we get a user interface library built-in.
@@ -131,7 +131,7 @@
   </p>
 
   <p>
-    <pre>
+    <textarea rows="12">
 <html>
 <head></head>
 <body>
@@ -143,7 +143,7 @@ A model from a recent Ludum Dare game jam.
 You can view the source code of the page to see how I display this.
 </i></small>
 </body>
-</html></pre>
+</html></textarea>
   </p>
 
   <p>
@@ -155,7 +155,7 @@ You can view the source code of the page to see how I display this.
   <div class="centre">
     <img src="webgl_images/canvas2.png" /><br />
     <small><i>In our HTML, the canvas is a simple tag with a DOM id as a code hook.
-        We can also provide <tt>width</tt> and <tt>height</tt> attributes to specify
+        We can also provide <code>width</code> and <code>height</code> attributes to specify
         the actual size of the canvas on the page.
       </i></small>
   </div>
@@ -163,7 +163,7 @@ You can view the source code of the page to see how I display this.
   <p>
     We leverage the DOM
     (document object model) to access web page elements from our JavaScript code.
-    This is as simple as giving each element's HTML tag an <tt>id="my_thingy"</tt>
+    This is as simple as giving each element's HTML tag an <code>id="my_thingy"</code>
     attribute. The browser also has a BOM (browser object model) which
     provides built-in functions to handle user interaction <i>via</i> mouse,
     gamepad, or keyboard.
@@ -184,14 +184,14 @@ You can view the source code of the page to see how I display this.
   </p>
 
   <p>
-    We can add JavaScript inside <tt>script</tt> tags anywhere in the HTML
+    We can add JavaScript inside <code>script</code> tags anywhere in the HTML
     file, put I prefer to put them all at the end, after my HTML content. Scripts
-    support various languages through the <tt>type=</tt> attribute, but JavaScript
+    support various languages through the <code>type=</code> attribute, but JavaScript
     is the default, and JavaScript blocks will execute automatically.
     You can add this script block to your page:
   </p>
 
-  <pre>
+  <textarea rows=16>
 <script>
   console.log("starting WebGL");
 
@@ -200,18 +200,18 @@ You can view the source code of the page to see how I display this.
   canvas.height = 256;
   var gl = canvas.getContext("webgl");
 
-  gl.clearColor(0.9, 0.85, 0.8, 1.0);
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  gl.clearColor( 0.85, 0.85, 0.85, 1.0 );
+  gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );
   // set some GL states that I want to use for rendering
-  gl.cullFace(gl.BACK);
-  gl.frontFace(gl.CCW);
-  gl.enable(gl.CULL_FACE);
-  gl.enable(gl.DEPTH_TEST);
-</script></pre>
+  gl.cullFace( gl.BACK );
+  gl.frontFace( gl.CCW );
+  gl.enable( gl.CULL_FACE );
+  gl.enable (gl.DEPTH_TEST );
+</script></textarea>
 
   <p>
     I introduce a few new concepts here. The first instruction is the JavaScript
-    equivalent of <tt>printf()</tt>. If you go to your browser's developer menu
+    equivalent of <code>printf()</code>. If you go to your browser's developer menu
     you can open the JavaScript console, and you should see the message. It's good
     to have this open whenever you refresh or reload your page, as it will give
     you quite good error information that you may not otherwise be aware of as the
@@ -220,7 +220,7 @@ You can view the source code of the page to see how I display this.
 
   <p>
     I use the DOM to fetch my canvas element as a JavaScript object. Note that
-    JavaScript does not use strong typing - everything is a <tt>var</tt> object,
+    JavaScript does not use strong typing - everything is a <code>var</code> object,
     which I can tell you causes far more problems than it solves. In any case,
     my first action is to modify the canvas' width and height attributes from
     JavaScript, which should change its size on the page.
@@ -228,14 +228,14 @@ You can view the source code of the page to see how I display this.
 
   <p>
     Next, I ask the canvas to set itself up with a new WebGL context, and keep
-    track of this as an object called <tt>gl</tt>. This object will be our
+    track of this as an object called <code>gl</code>. This object will be our
     interface to all of the WebGL functions.
   </p>
 
   <p>
-    My final instructions use the <tt>gl</tt> object to call GL functions.
+    My final instructions use the <code>gl</code> object to call GL functions.
     They are almost identical to OpenGL function names and constants,
-    except that <tt>gl</tt> and <tt>GL_</tt> are removed, and we access each
+    except that <code>gl</code> and <code>GL_</code> are removed, and we access each
     through our new object. You can set the aplha channel here to 0.0 if
     you want to background to be transparent and the page background to show
     through. If you refresh the web page you should see the canvas bigger, and
@@ -254,11 +254,11 @@ You can view the source code of the page to see how I display this.
     object, which is then our interface to the VAO extension's subset of functions:
   </p>
 
-  <pre>
+  <textarea rows="4">
 var vao_ext = gl.getExtension ("OES_vertex_array_object");
 if (!vao_ext) {
   console.error ("ERROR: Your browser does not support WebGL VAO extension");
-}</pre>
+}</textarea>
 
   <p>
     If it isn't supported by the user's browser/system then we can use the error
@@ -276,7 +276,7 @@ if (!vao_ext) {
     created some time later in your code after you provide the image URL.
   </p>
 
-  <pre>
+  <textarea rows="16">
 var texture = gl.createTexture();
 texture.is_loaded = false;
 var image = new Image();
@@ -292,11 +292,11 @@ image.onload = function () {
   texture.is_loaded = true;
   console.log ("texture loaded ");
 }
-image.src = "webgl_starter/heckler.png";</pre>
+image.src = "webgl_starter/heckler.png";</textarea>
 
   <p>
     That's it! Note that I did something really unusual, and set an
-    <tt>is_loaded</tt> attribute <u>inside the texture</u>. We know that OpenGL
+    <code>is_loaded</code> attribute <u>inside the texture</u>. We know that OpenGL
     textures aren't even objects - they certainly don't have attributes! In
     JavaScript we can <b>dynamically add new attributes to extant objects</b>.
   </p>
@@ -304,21 +304,21 @@ image.src = "webgl_starter/heckler.png";</pre>
   <p>
     Because the modern web uses an asynchronous download model <b>we can never be
       sure when a resource will actually be downloaded</b>. On a bad connection the
-    <tt>onload</tt> function may not even execute for a minute after your main loop
+    <code>onload</code> function may not even execute for a minute after your main loop
     starts. In the mean-time we will at least have a valid, but empty, texture with
     a flag to check against. In a C programme that was
     sophisticated enough to load files asynchronously, we would have a little
     set-up like this:
   </p>
 
-  <pre>
-start_loading_shader ();
-start_loading_texture ();
-start_loading_mesh ();
-while (!everything_has_loaded ()) {
-  sleep ();
+  <textarea rows="7">
+start_loading_shader();
+start_loading_texture();
+start_loading_mesh();
+while ( !everything_has_loaded() ) {
+  sleep();
 }
-// end of loading function</pre>
+// end of loading function</textarea>
 
   <p>
     We are not allowed to have a thread-hogging wait loop in JavaScript, so the
@@ -326,7 +326,7 @@ while (!everything_has_loaded ()) {
     try to draw before all the required assets are loaded. For example:
   </p>
 
-  <pre>
+  <textarea rows="8">
 if (texture.is_loaded) {
   gl.activeTexture (gl.TEXTURE0);
   gl.bindTexture (gl.TEXTURE_2D, texture);
@@ -334,7 +334,7 @@ if (texture.is_loaded) {
   // draw with the texture
 }
 ...
-// rest of drawing code</pre>
+// rest of drawing code</textarea>
 
   <p>
     You can see why it's useful to inject some state attributes, and where the
@@ -361,7 +361,7 @@ if (texture.is_loaded) {
     in its own script block above my other scripts:
   </p>
 
-  <pre>
+  <textarea rows="16">
 <script id="heckler.vert" type="text/glsl">
 attribute vec3 vp;
 attribute vec2 vt;
@@ -377,18 +377,18 @@ void main () {
   n = vec3 (PV * M * vec4 (vn, 0.0));
   gl_Position = PV * M * vec4 (vp, 1.0);
 }
-</script></pre>
+</script></textarea>
 
   <p>
-    I set the <tt>type</tt> attribute to something appropriate-looking so that the
+    I set the <code>type</code> attribute to something appropriate-looking so that the
     browser doesn't think that it's JavaScript that should be exectuted. I set the
-    <tt>id</tt> attribute so that I can fetch it later. The GLSL for WebGL 1.0 uses
-    the <tt>attribute</tt> and <tt>varying</tt> keywords of older OpenGL 2.1 and
-    OpenGL ES rather than newer <tt>in</tt> and <tt>out</tt>. Similarly, I have a
+    <code>id</code> attribute so that I can fetch it later. The GLSL for WebGL 1.0 uses
+    the <code>acoderibute</code> and <code>varying</code> keywords of older OpenGL 2.1 and
+    OpenGL ES rather than newer <code>in</code> and <code>out</code>. Similarly, I have a
     fragment shader in a script block:
   </p>
 
-  <pre>
+  <textarea rows="19">
 <script id="heckler.frag" type="text/glsl">
 precision mediump float;
 
@@ -407,11 +407,11 @@ void main () {
   gl_FragColor.rgb = gl_FragColor.rgb * dot (nn, fwd) * 0.7
     + 0.3 * gl_FragColor.rgb;
 }
-</script></pre>
+</script></textarea>
 
   <p>
-    We also have <tt>varying</tt> instead of <tt>in</tt> here, and the built-in
-    <tt>gl_FragColor</tt> instead of an output variable. WebGL fragment shaders
+    We also have <code>varying</code> instead of <code>in</code> here, and the built-in
+    <code>gl_FragColor</code> instead of an output variable. WebGL fragment shaders
     are required to have that exact precision statement at the top.
   </p>
 
@@ -428,8 +428,8 @@ var fs_str = el.innerHTML</pre>
 
   <p>
     I just use the DOM again to fetch the strings. Instead of a script block, you
-    could just as well put your shaders in a visible <tt>textarea</tt>, and live
-    edit them. Web elements have a range of <tt>.on....()</tt> functions
+    could just as well put your shaders in a visible <code>textarea</code>, and live
+    edit them. Web elements have a range of <code>.on....()</code> functions
     that you can define. When a user clicks on something, or text is changed a
     callback function will fire - your function could recompile the shaders.
   </p>
@@ -480,7 +480,7 @@ var heckler_M_loc = gl.getUniformLocation (sp, "M");</pre>
     a little bit easier to deal with. If you refresh the browser and look in the
     console you should get an error message (including shader and linker logs) if
     that didn't work. If you want to be sure that the shader code loaded, you can
-    use <tt>alert (vs_str);</tt> to throw up an alert box with the vertex shader
+    use <code>alert (vs_str);</code> to throw up an alert box with the vertex shader
     string.
   </p>
 
@@ -512,12 +512,12 @@ xmlhttp.send ();</pre>
     we will give it as a string. Finally, it prefers to work asynchronously, which
     can be quite tricky to set up in JavaScript, but is worth doing to get the best
     loading time. If you prefer to skip this extra fuss you can set the third
-    parameter of the <tt>open()</tt> function to <tt>false</tt>, but the browser
+    parameter of the <code>open()</code> function to <code>false</code>, but the browser
     will complain to you in the console.
 
     <p>
       We can handle our asynchronous download with AJAX in the same way as we handled
-      the texture - adding an <tt>is_loaded</tt> attribute. I'll also check that the
+      the texture - adding an <code>is_loaded</code> attribute. I'll also check that the
       texture was loaded, because it would look terrible if the VAO loaded first,
       and rendered with some other texture:
     </p>
@@ -576,9 +576,9 @@ function start_loading_obj (url) {
         valid, but empty, VAO</u>. This will be returned to the function caller whilst
       the download starts. That means that even if the download has not finished, our
       main programme still has a valid handle to the eventual VAO, and can check its
-      state. The <tt>send</tt> function starts the HTTP
+      state. The <code>send</code> function starts the HTTP
       handshaking. When the file has actually downloaded to the client the
-      <tt>onload</tt> callback function will start - some-time after the original
+      <code>onload</code> callback function will start - some-time after the original
       function call returned. It's very easy to make a mistake here when testing. On
       a local network the download won't have a delay. From another continent, with a
       large mesh, the delay could take some time - <b>when testing asynchronous
@@ -588,22 +588,24 @@ function start_loading_obj (url) {
     </p>
 
     <p>
-      In your parsing code you can use the <tt>str.split ('\n');</tt> command to
+      In your parsing code you can use the <code>str.split ('\n');</code> command to
       return an array of strings; one for each line in the file, and parse that in a
-      loop with <tt>for (var i = 0; i < lines.length; i++) {</tt>. Note that JavaScript uses dynamic arrays (basically
-          C++ vectors), and they always know their own length. </p> <p>
-          To include an external JavaScript file, we just add another <tt>script</tt>
-          block, and specify the <tt>src="path_to_file.js"</tt> attribute.
+      loop with <code>for (var i = 0; i < lines.length; i++) {</code>. Note that JavaScript uses dynamic arrays
+      (basically
+      C++ vectors), and they always know their own length. </p>
+    <p>
+      To include an external JavaScript file, we just add another <code>script</code>
+      block, and specify the <code>src="path_to_file.js"</code> attribute.
     </p>
 
-    <pre>
+    <textarea rows="2">
 <script src="webgl_starter/obj_parser.js">
-</script></pre>
+</script></textarea>
 
     <p>
       I have a relative path to my file here. Note that <b>you must have a closing
         script tag</b> - you cannot have a single, self-closing
-      <tt>&lt;script /&gt;</tt> tag, as you can with other types of HTML element. This new
+      <code>&lt;script /&gt;</code> tag, as you can with other types of HTML element. This new
       script block should really appear before our other block, so that the browser
       parses it before it is used. If you don't do this it will still work, but the
       browser might warn you that it has been forced to load the script
@@ -616,7 +618,7 @@ function start_loading_obj (url) {
       If you're loading your web page from your desktop AJAX may complain and refuse to
       load files as it violates security policy. You can put your content on a local
       web-server - there are many light-weight servers available. You can start
-      Chrome with the <tt>--disable-web-security</tt> command-line flag to ignore
+      Chrome with the <code>--disable-web-security</code> command-line flag to ignore
       this precaution, or you can just use Firefox, which should ignore this problem
       entirely and load your files.
     </p>
@@ -637,12 +639,12 @@ function start_loading_obj (url) {
       It's worth having a look at the source code of a
       JavaScript maths library to see how functions, parameters, and arrays work in
       JavaScript. Functions do not have declarations - just a definition. They are
-      all prefixed with the <tt>function</tt> keyword instead of a data-type, and can
+      all prefixed with the <code>function</code> keyword instead of a data-type, and can
       return or not return a value. Parameters are just given name, and do not
-      require a <tt>var</tt> prefix. Currying and more advanced functional
+      require a <code>var</code> prefix. Currying and more advanced functional
       programming is possible. Arrays are given as comma-separated lists of values
       inside square brackets. An empty array is created with either
-      <tt>var my_array = []</tt> or <tt>var my_array = new Array ()</tt>.
+      <code>var my_array = []</code> or <code>var my_array = new Array ()</code>.
     </p>
 
     <p>
@@ -674,7 +676,7 @@ var PV = mult_mat4_mat4 (P, V);</pre>
       put the code to be looped inside, and notify the browser that you want to call
       this function again when it finishes. Unfortunately, the actual function to
       request a repeat call does not seem to have been standardised over all the
-      browsers. I took a snippet from Google's <tt>webgl-utils.js</tt> file to
+      browsers. I took a snippet from Google's <code>webgl-utils.js</code> file to
       encapsulate that in a cross-browser function:
     </p>
 
@@ -726,7 +728,7 @@ function main_loop () {
 
     <p>
       I like to have some timers in my loop so I can do animations, and measure
-      frame rate and so on. You can use the browser's <tt>performance.now()</tt>
+      frame rate and so on. You can use the browser's <code>performance.now()</code>
       function to do this, which gives you milliseconds since the page loaded, with
       your system's maximum precision up to nanoseconds - much more reliable than
       JavaScript's data and time functions. After this I start my drawing code. I
@@ -735,7 +737,7 @@ function main_loop () {
       matrices. The transposition argument must be set to false in WebGL - it won't
       do a transposition for you. It's a good idea to force the matrix' array to take
       a 32-bit float data type, and you can do that by creating a new
-      <tt>Float32Array</tt> object. Right at the end of the function I call the
+      <code>Float32Array</code> object. Right at the end of the function I call the
       request-to-call-again function. Buffer swapping and the
       actual drawing of the final image to the canvas are handled automatically.
       Right at the end of the script block we can actually call this
@@ -874,20 +876,20 @@ this file is the code for my .obj mesh loader -->
 the default script language -->
 <script>
   // write to the browser console like this
-  console.log("starting WebGL");
+  console.log( "starting WebGL" );
 
   // used the DOM to grab the html canvas element as a javascript object
-  var canvas = document.getElementById("mycanvas");
+  var canvas = document.getElementById( "mycanvas" );
   // resize the canvas (default size is 300 × 150 pixels)
   canvas.width = 256;
   canvas.height = 256;
   // use the browser's webgl interface to start a 'context' and hook it up to
   // the canvas
-  var gl = canvas.getContext("webgl");
+  var gl = canvas.getContext( "webgl" );
 
   // use the webgl interface to set the background 'clear' colour, and then
   // clear the background to that colour
-  gl.clearColor(0.9, 0.85, 0.8, 0.0);
+  gl.clearColor(0.85, 0.85, 0.85, 1.0);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
   // get an interface to the VAO extension, so we can use VAOs

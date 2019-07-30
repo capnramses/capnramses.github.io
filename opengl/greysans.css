@@ -27,9 +27,19 @@ a {
 }
 textarea {
 	font-family: 'Source Code Pro';
-	border: 0px;
 	background-color: rgb(238, 238, 238);
+	border: 1px solid #ddd;
+	border-left: 3px solid #383838;
 	tab-size: 2;
+	width: 100%;
+	min-height: 50px;
+	max-height: 1024px;
+	page-break-inside: avoid;
+	max-width: 100%;
+	overflow: auto;
+	display: block;
+	word-wrap: break-word;
+	padding-left: 2px;
 }
 tt {
 	font-family: 'Source Code Pro';
@@ -37,6 +47,7 @@ tt {
 	background-color: rgb(238, 238, 238);
 }
 code {
+	font-family: 'Source Code Pro';
 	background-color: rgb(238, 238, 238);
 }
 pre {
@@ -79,16 +90,9 @@ div.sidepanel {
 }
 
 table {
-  background-color: #FFFFFF;
-  border: 0;
-  position: relative;
-  width: 650px;
-  left: -25px;
 }
 
 td {
-  background-color: #FFFFFF;
-  border: 0;
 }
 
 div.widetable table {

@@ -195,7 +195,8 @@ if ( glfwGetKey( window, GLFW_KEY_R ) ) {
   <p>
     I may add some code to do this in the future to the source code example, but will not add it here for brevity. The
     basic concept is to
-    ask the system to watch your shader files, or directory containing shader files, ask it if anything has changed every
+    ask the system to watch your shader files, or directory containing shader files, ask it if anything has changed
+    every
     now and again, and then
     call your reload function on shader programs that have had one or both of their source files modified.
   </p>
@@ -275,7 +276,8 @@ struct shader_program_t {
     <li>
       <i>"It worked on my computer!" - File reading and operating system issues.</i> Be careful with any file reading
       operations that copy the entire file into a dynamically allocated buffer. If you are not reading the file in
-      binary mode, then different characters are appended to the ends of lines and buffers on different operating systems,
+      binary mode, then different characters are appended to the ends of lines and buffers on different operating
+      systems,
       which may mean your program's buffer needs to be larger than the file it is reading from. I used large fixed-size
       arrays, so I didn't need to worry about that. Read the manual pages of the functions that you are using for more
       details.
