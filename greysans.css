@@ -6,7 +6,7 @@ body {
 	background-repeat: repeat-y, repeat;
 	background-position: center, top;
 	background-size: 750px 8px, 256px 256px;
-	width: 600px;
+	width: 700px;
 	margin: auto;
 }
 
@@ -27,23 +27,35 @@ a {
 }
 textarea {
 	font-family: 'Source Code Pro';
-	width: 700px;
-	position: relative;
-	left: -50px;
 	border: 0px;
-	background-color: #C8C8C8;
-	font-size: 80%;
+	background-color: rgb(238, 238, 238);
 	tab-size: 2;
+}
+tt {
+	font-family: 'Source Code Pro';
+	color: rgb(22,128,22);
+	background-color: rgb(238, 238, 238);
+}
+code {
+	background-color: rgb(238, 238, 238);
 }
 pre {
-	width: 700px;
-	position: relative;
-	left: -50px;
 	font-family: 'Source Code Pro';
-	background-color: #C8C8C8;
-	font-size: 80%;
+	background-color: rgb(238, 238, 238);
+	border: 1px solid #ddd;
+	border-left: 3px solid #383838;
 	tab-size: 2;
+	page-break-inside: avoid;
+	max-width: 100%;
+	overflow: auto;
+	display: block;
+	word-wrap: break-word;
+	padding-left: 2px;
 }
+img {
+	max-width: 100%;
+}
+
 div.centre {
   display: block;
   width: 100%;
@@ -51,11 +63,6 @@ div.centre {
   margin: auto;
 }
 div.blog {
-}
-tt {
-	font-family: 'Source Code Pro';
-	font-size: 100%;
-	font-weight:bold;
 }
 
 div.whitecolumn {
