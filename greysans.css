@@ -90,6 +90,8 @@ div.sidepanel {
 }
 
 table {
+	min-width: 50%;
+	max-width: 100%;
 }
 
 td {
