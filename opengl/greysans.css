@@ -50,6 +50,7 @@ code {
 	font-family: 'Source Code Pro';
 	background-color: rgb(238, 238, 238);
 }
+code span.co { color: #0b8a00; font-style: italic; } /* Comment */
 pre {
 	font-family: 'Source Code Pro';
 	background-color: rgb(238, 238, 238);
