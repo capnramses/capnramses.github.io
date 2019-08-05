@@ -5,7 +5,7 @@
 <link rel='stylesheet' type='text/css' href='greysans.css'>
 <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
 <body>
-<h1 id="coding-assertively-with-assertions">‘Coding Assertively (With Assertions)’</h1>
+<h1 id="coding-assertively-with-assertions">Coding Assertively (With Assertions)</h1>
 <p>By Anton Gerdelan</p>
 <h2 id="what-are-assertions">What Are Assertions</h2>
 <p>Assertions are a basic run-time test for program state correctness, and can save you a lot of time. If given an expression that resolves to <code>false</code>, an assertion prints the file name and line number of the failing call, and raises <code>SIGABRT</code>. This deliberately crashes the program. If the expression resolves to <code>true</code> then it does nothing.</p>
@@ -48,7 +48,7 @@
 <span id="cb2-7"><a href="#cb2-7"></a><span class="co">str - must be a string of length 10 and cannot be a NULL pointer</span></span>
 <span id="cb2-8"><a href="#cb2-8"></a><span class="co">str_index - must be between 0 and 9, inclusive */</span></span>
 <span id="cb2-9"><a href="#cb2-9"></a><span class="dt">void</span> my_str_truncate( <span class="dt">char</span>* str, <span class="dt">int</span> str_index ) {</span>
-<span id="cb2-10"><a href="#cb2-10"></a>  <span class="co">// crash is str was NULL and then check the length is not too long</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a>  <span class="co">// crash if str was NULL and then check the length is not too long</span></span>
 <span id="cb2-11"><a href="#cb2-11"></a>  assert( str &amp;&amp; strlen( str ) &lt; <span class="dv">10</span> );</span>
 <span id="cb2-12"><a href="#cb2-12"></a>  <span class="co">// crash if value was outside of allowed range</span></span>
 <span id="cb2-13"><a href="#cb2-13"></a>  assert( str_index &gt;= <span class="dv">0</span> &amp;&amp; str_index &lt; <span class="dv">10</span> );</span>
