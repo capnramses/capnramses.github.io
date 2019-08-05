@@ -54,7 +54,7 @@ code {
 	line-height: 1.2;
 	background-color: rgb(238, 238, 238);
 }
-code span.co { color: #0b8a00; font-style: italic; } /* Comment */
+code span.co { color: #0b8a00; } /* Comment */
 pre {
 	font-family: 'Ubuntu Mono', monospace;
 	line-height: 1.2;
