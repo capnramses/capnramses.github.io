@@ -26,7 +26,7 @@ a {
 	color:#000060;
 }
 textarea {
-	font-family: 'Source Code Pro';
+	font-family: 'Source Code Pro', monospace;
 	background-color: rgb(238, 238, 238);
 	border: 1px solid #ddd;
 	border-left: 3px solid #383838;
@@ -42,17 +42,17 @@ textarea {
 	padding-left: 2px;
 }
 tt {
-	font-family: 'Source Code Pro';
+	font-family: 'Source Code Pro', monospace;
 	color: rgb(22,128,22);
 	background-color: rgb(238, 238, 238);
 }
 code {
-	font-family: 'Source Code Pro';
+	font-family: 'Source Code Pro', monospace;
 	background-color: rgb(238, 238, 238);
 }
 code span.co { color: #0b8a00; font-style: italic; } /* Comment */
 pre {
-	font-family: 'Source Code Pro';
+	font-family: 'Source Code Pro', monospace;
 	background-color: rgb(238, 238, 238);
 	border: 1px solid #ddd;
 	border-left: 3px solid #383838;
@@ -74,8 +74,6 @@ div.centre {
   text-align:center;
   margin: auto;
 }
-div.blog {
-}
 
 div.whitecolumn {
 	background-color:#f9f9f9;
@@ -93,9 +91,6 @@ div.sidepanel {
 table {
 	min-width: 50%;
 	max-width: 100%;
-}
-
-td {
 }
 
 div.widetable table {
