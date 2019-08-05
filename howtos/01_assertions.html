@@ -8,7 +8,7 @@
 <h1 id="coding-assertively-with-assertions">‘Coding Assertively (With Assertions)’</h1>
 <p>By Anton Gerdelan</p>
 <h2 id="what-are-assertions">What Are Assertions</h2>
-<p>Assertions are a basic run-time test for code correctness, and can save you a lot of time. If given an expression that resolves to <code>false</code>, an assertion prints the file name and line number of the failing call, and raises <code>SIGABRT</code>. This deliberately crashes the program. If the expression resolves to <code>true</code> then it does nothing.</p>
+<p>Assertions are a basic run-time test for program state correctness, and can save you a lot of time. If given an expression that resolves to <code>false</code>, an assertion prints the file name and line number of the failing call, and raises <code>SIGABRT</code>. This deliberately crashes the program. If the expression resolves to <code>true</code> then it does nothing.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1"></a><span class="dt">int</span> counter = <span class="dv">100</span>;</span>
 <span id="cb1-2"><a href="#cb1-2"></a>assert( counter &lt; <span class="dv">100</span> ); <span class="co">// this will resolve to false and fail</span></span>
 <span id="cb1-3"><a href="#cb1-3"></a><span class="dt">bool</span> return_success = some_function();</span>
