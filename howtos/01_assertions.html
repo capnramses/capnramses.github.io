@@ -3,10 +3,12 @@
 <head>
 <title>01_assertions</title>
 <link rel='stylesheet' type='text/css' href='greysans.css'>
-<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
+</head>
 <body>
 <h1 id="coding-assertively-with-assertions">Coding Assertively (With Assertions)</h1>
-<p>By Anton Gerdelan</p>
+<p>By <span class="smallcaps">Anton Gerdelan</span></p>
 <h2 id="what-are-assertions">What Are Assertions</h2>
 <p>Assertions are a basic run-time test for program state correctness, and can save you a lot of time. If given an expression that resolves to <code>false</code>, an assertion prints the file name and line number of the failing call, and raises <code>SIGABRT</code>. This deliberately crashes the program. If the expression resolves to <code>true</code> then it does nothing.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1"></a><span class="dt">int</span> counter = <span class="dv">100</span>;</span>
@@ -15,19 +17,18 @@
 <span id="cb1-4"><a href="#cb1-4"></a>assert( return_success );</span></code></pre></div>
 <ul>
 <li>Usually available as a standard language feature.</li>
-<li>Most <strong>unit testing</strong> frameworks (such as Google Test) provide assertions as their core functions, but also collect statistics.</li>
+<li>Most <strong>unit testing</strong> frameworks (such as Google Test) provide non-crashing checks or assertions as their core functions, but also collect statistics.</li>
 <li>On Unix systems type <code>man 3 assert</code> to retrieve the manual for C assertions.</li>
 </ul>
 <h2 id="why-use-assertions">Why Use Assertions</h2>
 <ul>
 <li>Test your logical assumptions when writing code, and catch incorrect or unexpected state.</li>
-<li>If the program crashes it forces you to get the problem fixed right away, which is always a good habit for quality of work.</li>
-<li><em>Crashing is good</em> - continuing a program with incorrect state can lead to very complex bugs later in execution, that take longer to diagnose.</li>
-<li>Force the program to stop if a user of your function didn’t read the usage instructions!</li>
-<li>They are especially helpful when learning, for testing your assumptions about how things actually work.</li>
+<li>In-code assertions are very time-effective and flexible to write during coding.</li>
+<li>If the program crashes it forces you to get the problem fixed right away. Fixing bugs before writing more code is always a good habit for quality of work.</li>
+<li>Continuing a program with out-of-control state can lead to very complex bugs later in execution, that take longer to diagnose.</li>
+<li>They are especially helpful when learning, for testing your assumptions about how things actually work, getting each concept right before moving on.</li>
 <li>Can be removed from release builds. In C or C++ define <code>NDEBUG</code> to remove all the assertions from a build.</li>
 <li>Can catch unexpected changes elsewhere in the code that break your code at a later time.</li>
-<li>In-code assertions are very time-effective and flexible to write during coding.</li>
 <li>Often used as an alternative technique to formal test programs and test-driven development (TDD).</li>
 </ul>
 <h2 id="how-and-when-we-can-use-assertions">How And When We Can Use Assertions</h2>
@@ -82,6 +83,7 @@
 <span id="cb3-15"><a href="#cb3-15"></a>  }</span>
 <span id="cb3-16"><a href="#cb3-16"></a>}</span></code></pre></div>
 <h2 id="tips-and-common-mistakes">Tips and Common Mistakes</h2>
+<p>For best effect assertions should be used in combination with other testing and debugging tools. When combined with an interactive debugger, a back-trace, and logging and printing of errors and warnings, a programmer can very rapidly diagnose, follow, and reason about problems in even very complex code with many people contributing to it.</p>
 <ul>
 <li>For small projects assertions may be all you need, but for production code, assertions should not be your only code tests. It is common to see studios pair heavy use of in-code assertions with an automated <em>“smoke &amp; build”</em> test, or semi-automated fuzz testing.</li>
 <li>When an assertion fails it also prints the expression that failed. You can exploit this to add a string of text to the output: <code>assert( name != NULL &amp;&amp; "name parameter was NULL" );</code>.</li>
@@ -94,18 +96,7 @@
 <li>Many IDEs will recognise the printed output of <code>assert()</code> and let you click on it to jump to the file and line.</li>
 <li>Most <strong>fuzz testing</strong> tools will count assertions as crashes to fix. In this case you need to gracefully handle any invalid inputs without crashing.</li>
 <li>CMake builds can quietly enable <code>NDEBUG</code> on release builds without you asking for it. If your assertions aren’t working, maybe that’s why.</li>
+<li>Some languages have a “static” version of assertions for compile-time checks. C11 and C++ have <code>static_assert()</code>. These assertions are useful for ensuring the size of different types or the values of enumerated types.</li>
 </ul>
-<div id='disqus_thread'></div>
- 	<script>
-     (function () {
- 			// DON'T EDIT BELOW THIS LINE
-       var d = document, s = d.createElement('script');
-       s.src = '//https-capnramses-github-io.disqus.com/embed.js';
-       s.setAttribute('data-timestamp', +new Date());
-       (d.head || d.body).appendChild(s);
-     })();
-   </script>
-   <noscript>Please enable JavaScript to view the <a href='https://disqus.com/?ref_noscript'>comments powered by Disqus.</a></noscript>
-   <script id='dsq-count-scr' src='//https-capnramses-github-io.disqus.com/count.js' async></script>
 </body>
 </html>

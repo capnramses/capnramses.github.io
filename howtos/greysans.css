@@ -1,5 +1,6 @@
 body {
 	font-family: 'Ubuntu', sans-serif;
+	line-height: 1.4;
 	background-color: #202020;
 	/*background-image: url(http://antongerdelan.net/images/white_bar.png), url(http://antongerdelan.net/images/checkerboard_dark.png);*/
 	background-image: url(http://antongerdelan.net/images/white_bar.png);
@@ -9,24 +10,28 @@ body {
 	width: 700px;
 	margin: auto;
 }
-
-h2 {
-	color:#333333;
+h1 {
+	margin-bottom: 0;
 }
-h3 {
+h2, h3, h4 {
 	color:#333333;
-}
-h4 {
-	color:#333333;
+	margin-top: 1.8em;
+	margin-bottom: 0.6em;
 }
 p {
 	color:#333333;
+}
+p + p { margin-top: 0.4em; }
+h1 + p {
+	margin-top: 0.3em;
+	font-style: italic;
 }
 a {
 	color:#000060;
 }
 textarea {
-	font-family: 'Source Code Pro', monospace;
+	font-family: 'Ubuntu Mono', monospace;
+	line-height: 1.2;
 	background-color: rgb(238, 238, 238);
 	border: 1px solid #ddd;
 	border-left: 3px solid #383838;
@@ -42,17 +47,20 @@ textarea {
 	padding-left: 2px;
 }
 tt {
-	font-family: 'Source Code Pro', monospace;
+	font-family: 'Ubuntu Mono', monospace;
+	line-height: 1.2;
 	color: rgb(22,128,22);
 	background-color: rgb(238, 238, 238);
 }
 code {
-	font-family: 'Source Code Pro', monospace;
+	font-family: 'Ubuntu Mono', monospace;
+	line-height: 1.2;
 	background-color: rgb(238, 238, 238);
 }
 code span.co { color: #0b8a00; font-style: italic; } /* Comment */
 pre {
-	font-family: 'Source Code Pro', monospace;
+	font-family: 'Ubuntu Mono', monospace;
+	line-height: 1.2;
 	background-color: rgb(238, 238, 238);
 	border: 1px solid #ddd;
 	border-left: 3px solid #383838;
@@ -62,7 +70,7 @@ pre {
 	overflow: auto;
 	display: block;
 	word-wrap: break-word;
-	padding-left: 2px;
+	padding: 0.3em 0.3em 0.3em 0.1em;
 }
 img {
 	max-width: 100%;
@@ -97,4 +105,18 @@ div.widetable table {
   background-color: #FFFFFF;
   width: 1024px;
   position: relative;
+}
+
+ul, ol {
+    padding: 0;
+    margin: 1.2em 0 1.2em 1.2em;
+}
+ 
+ul > li > ul, ul > li > ol, ol > li > ul, ol > li > ol {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+ 
+span.smallcaps {
+    font-variant: small-caps;
 }
