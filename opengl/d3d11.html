@@ -447,7 +447,7 @@ assert( SUCCEEDED( hr ) );</pre>
     Note that any following inputs in the vertex buffer must say how they are laid out. If we add colours, we may have a
     typical <b>interleaved</b>
     layout: XYZRGBXYZRGBXYZRGB. In this case we would specify that the colour element starts on the fourth float.
-    We can put this value, but he element structs also have a handy macro <tt>D3D11_APPEND_ALIGNED_ELEMENT</tt> that
+    We can put this value, but the element structs also have a handy macro <tt>D3D11_APPEND_ALIGNED_ELEMENT</tt> that
     means <i>"starts after the previous element"</i> for an interleaved layout.
   </p>
 
