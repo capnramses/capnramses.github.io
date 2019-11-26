@@ -31,6 +31,20 @@
     For clarity no structure or framework is used or introduced.
   </p>
 
+  <p>The triangle will be defined by 3 XYZ vertex points. A vertex shader will set the final position
+    of each vertex in <b>homogeneous clip space</b>. We won't transform our original vertex values,
+    so we will define them in the visible range for clip space. For Direct3D that is a horizontal X
+    range between -1 and 1 (left to right), a vertical Y range between -1 and 1 (bottom to top),
+    and a depth range between 0 to 1 (into the screen). Direct3D considers by default a <b>clockwise</b>
+    winding order of vertices to be the front face. D3D will also by default cull (remove) the back face.
+    We therefore need to make sure that we define a triangle so that it's visible and the front is facing us.
+    It helps to draw this on paper first.
+  </p>
+
+  <div class="centre">
+  <img width=50% src="images/vertex_buffer.png" alt="vertex values for a triangle" /><br />
+  <b>TODO(Anton) the z values here are 0, but that's just outside the visible range. Change to 0.5.</b>
+</div>
   <h2>Tools Set-Up</h2>
   <ul>
     <li>Direct3D 11 comes in the Windows SDK. You no longer need to download any separate D3D libraries.</li>
@@ -119,9 +133,8 @@ while ( !should_close ) {
 
   <p>
     We need to include the Direct3D library. We can also make the Windows header smaller
-    by defining <tt>WIN32_LEAN_AND_MEAN</tt> before we include it, to exclude some extra utilities. You
-    may also find it helpful to include the DirectXMath library, which has some built in matrix and vector
-    data types and functions. All of these headers should already be on your system path from the Windows SDK.
+    by defining <tt>WIN32_LEAN_AND_MEAN</tt> before we include it, to exclude some extra utilities.
+    All of these headers should already be on your system path from the Windows SDK.
     We also need to link these libraries. You can add these in the library list under project settings,
     but it's easier to just add a <tt>pragma</tt> statement to the source code, under the headers.
   </p>
@@ -132,7 +145,6 @@ while ( !should_close ) {
 #include &lt;d3d11.h&gt;       // D3D interface
 #include &lt;dxgi.h&gt;        // DirectX driver interface
 #include &lt;d3dcompiler.h&gt; // shader compiler
-#include &lt;directxmath.h&gt; // a maths library
 
 #pragma comment( lib, "user32" )          // link against the win32 library
 #pragma comment( lib, "d3d11.lib" )       // direct3D library
@@ -140,9 +152,7 @@ while ( !should_close ) {
 #pragma comment( lib, "d3dcompiler.lib" ) // shader compiler</pre>
 
   <p>Remove the <tt>WM_PAINT</tt> case from your window message callback - we will do this manually instead.
-    You can also remove the <tt>ShowWindow()</tt> call - this will be done by Direct3D anyway. It is also no harm to
-    leave it
-    in.</p>
+    You can also remove the <tt>ShowWindow()</tt> call - this will be done by Direct3D anyway.</p>
 
   <h2>Coding Tips for Direct3D</h2>
 
@@ -159,7 +169,7 @@ while ( !should_close ) {
 
   <p>
     You can reduce the amount of time required to fill out struct parameters by setting their memory to 0, then
-    only setting the parameters to values that should not be zero. You can use <tt>memset()</tt>, <tt><a
+    only setting the parameters which required values that are not zero. You can use <tt>memset()</tt>, <tt><a
         href="https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/aa366920(v%3Dvs.85)">ZeroMemory()</a></tt>,
     or the pattern <tt>SOME_STRUCT_TYPE my_struct = { 0 };</tt> to achieve this most of the time.
   </p>
