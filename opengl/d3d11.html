@@ -385,7 +385,8 @@ UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
   <p>
     Check if this builds and runs. If not - perhaps the relative path between to your
     shader file is wrong? Otherwise check the Output sub-window for a detailed error report.
-    This isn't enough - we need to call <tt>CreateVertexShader</tt> with our shader blobs to get
+    This isn't enough - we need to call <a href="https://docs.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11device-createvertexshader"><tt>CreateVertexShader</tt></a>
+    and <a href="https://docs.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11device-createpixelshader"><tt>CreatePixelShader</tt></a> with our shader blobs to get
     pointers that let us use the shaders for drawing.
   </p>
 
