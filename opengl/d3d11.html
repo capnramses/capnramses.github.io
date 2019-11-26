@@ -31,20 +31,6 @@
     For clarity no structure or framework is used or introduced.
   </p>
 
-  <p>The triangle will be defined by 3 XYZ vertex points. A vertex shader will set the final position
-    of each vertex in <b>homogeneous clip space</b>. We won't transform our original vertex values,
-    so we will define them in the visible range for clip space. For Direct3D that is a horizontal X
-    range between -1 and 1 (left to right), a vertical Y range between -1 and 1 (bottom to top),
-    and a depth range between 0 to 1 (into the screen). Direct3D considers by default a <b>clockwise</b>
-    winding order of vertices to be the front face. D3D will also by default cull (remove) the back face.
-    We therefore need to make sure that we define a triangle so that it's visible and the front is facing us.
-    It helps to draw this on paper first.
-  </p>
-
-  <div class="centre">
-  <img width=50% src="images/vertex_buffer.png" alt="vertex values for a triangle" /><br />
-  <b>TODO(Anton) the z values here are 0, but that's just outside the visible range. Change to 0.5.</b>
-</div>
   <h2>Tools Set-Up</h2>
   <ul>
     <li>Direct3D 11 comes in the Windows SDK. You no longer need to download any separate D3D libraries.</li>
@@ -476,6 +462,21 @@ After building our shaders, and before the main loop we can define an array of v
 These are our 3 XYZ values for the 3 points of our triangle. The values must be in the range -1:1 on X and Y, and 0:1 on Z to be visible.
 Don't put the Z values at 0, or they will be out of the visible range.
 </p>
+
+<p>The triangle will be defined by 3 XYZ vertex points. A vertex shader will set the final position
+  of each vertex in <b>homogeneous clip space</b>. We won't transform our original vertex values,
+  so we will define them in the visible range for clip space. For Direct3D that is a horizontal X
+  range between -1 and 1 (left to right), a vertical Y range between -1 and 1 (bottom to top),
+  and a depth range between 0 to 1 (into the screen). Direct3D considers by default a <b>clockwise</b>
+  winding order of vertices to be the front face. D3D will also by default cull (remove) the back face.
+  We therefore need to make sure that we define a triangle so that it's visible and the front is facing us.
+  It helps to draw this on paper first.
+</p>
+
+<div class="centre">
+<img width=50% src="images/vertex_buffer.png" alt="vertex values for a triangle" /><br />
+<b>TODO(Anton) the z values here are 0, but that's just outside the visible range. Change to 0.5.</b>
+</div>
 
 <pre>
 float vertex_data_array[] = {
