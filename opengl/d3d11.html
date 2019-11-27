@@ -162,10 +162,10 @@ while ( !should_close ) {
     You can reduce the amount of time required to fill out struct parameters by setting their memory to 0, then
     only setting the parameters which required values that are not zero. You can use <tt>memset()</tt>, <tt><a
         href="https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/aa366920(v%3Dvs.85)">ZeroMemory()</a></tt>,
-    or the pattern <tt>SOME_STRUCT_TYPE my_struct = { 0 };</tt> to achieve this most of the time.
+    or the pattern <tt>SOME_STRUCT_TYPE my_struct = {};</tt> to achieve this most of the time.
   </p>
 
-  <p>Direct3D functions typically return an <tt>HRESULT</tt> value.
+  <p>Direct3D device functions typically return an <tt>HRESULT</tt> value.
     It is a good idea to check every one of these for errors whilst building your first program.
     You can use the <tt>SUCCEEDED()</tt> function to check if there were no errors.
     You can use the <tt>assert()</tt> function to deliberately halt and crash the program if an expression is
@@ -275,7 +275,7 @@ assert( S_OK == hr && swap_chain_ptr && device_ptr && device_context_ptr );</pre
   <p>Here I have added extra debug output to the function <tt>flags</tt> when the program is built in debug mode.
     If all went well, you should be able to now compile and run it, without an assertion triggering.
     Otherwise check the parameter values carefully. The output images from Direct3D are called
-    <i>Render Targets</i>. We can get a view pointer ours now, by fetching it from our swap chain.
+    <i>Render Targets</i>. We can get a view pointer to ours now, by fetching it from our swap chain. 
   </p>
 
   <pre>
@@ -528,8 +528,9 @@ ID3D11Buffer* vertex_buffer_ptr = NULL;
 
   <p>
     There are many options for the <tt>Usage</tt> parameter to help the driver optimisation,
-    based on how often the buffer values will change. We don't need to update our so I've just set
-    <tt>D3D11_USAGE_DEFAULT</tt>.
+    based on how often the buffer values will change. I've just set
+    <tt>D3D11_USAGE_DEFAULT</tt>, but since we don't need to update our vertex buffer (yet) it could be set to <tt>D3D11_USAGE_IMMUTABLE</tt>
+    for optimal usage.
     Be aware that different usage values require struct fields to be set or not set - check debug output for clashes.
     We are binding a buffer of type <tt>D3D11_BIND_VERTEX_BUFFER</tt> here to the <tt>BindFlags</tt>. Don't set another
     type by accident!
@@ -624,7 +625,7 @@ device_context_ptr->Draw( vertex_count, 0 );</pre>
   <h3>Present the Frame (Swap the Buffers)</h3>
 
   <p>At the very end of our drawing loop we need to swap the buffers.
-    Direct3D calls this <a
+    DXGI calls this <a
       href="https://docs.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-present"><tt>Present()</tt></a>
     This should be after all of our <tt>Draw()</tt> calls. We only have 1 so far.
     The swap chain commands use the DXGI interface.
