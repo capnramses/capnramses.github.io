@@ -26,6 +26,10 @@
 <body>
   <h1><i>Hello Triangle</i><br />Direct3D 11 Up and Running</h1>
   <h4>Anton Gerdelan. Last Updated 26 November 2019</h4>
+
+
+  <img src="images/d3d_triangle.png" alt="hello triangle!" />
+
   <p>
     This tutorial aims to get you set up with a minimal Direct3D 11 program that displays 1 triangle.
     For clarity no structure or framework is used or introduced.
@@ -137,8 +141,7 @@ while ( !should_close ) {
 #pragma comment( lib, "dxgi.lib" )        // directx graphics interface
 #pragma comment( lib, "d3dcompiler.lib" ) // shader compiler</pre>
 
-  <p>Remove the <tt>WM_PAINT</tt> case from your window message callback - we will do this manually instead.
-    You can also remove the <tt>ShowWindow()</tt> call - this will be done by Direct3D anyway.</p>
+  <p>Remove the <tt>WM_PAINT</tt> case from your window message callback - we will do this manually instead.</p>
 
   <h2>Coding Tips for Direct3D</h2>
 
@@ -164,7 +167,7 @@ while ( !should_close ) {
     It is a good idea to check every one of these for errors whilst building your first program.
     You can use the <tt>SUCCEEDED()</tt> function to check if there were no errors.
     You can use the <tt>assert()</tt> function to deliberately halt and crash the program if an expression is
-    <tt>0/false/NULL</tt>.
+    <tt>0/false/NULL</tt>. To use <tt>assert()</tt> you will need to <tt>#include&lt;assert.h&gt;</tt>
     This gives us a pattern as follows.
   </p>
 
@@ -241,7 +244,8 @@ swap_chain_descr.Windowed           = true;
     We are not enabling multisampling anti-aliasing yet, so <tt>SampleDesc</tt> parameters are set to defaults.
     <b>Note: I'm not clear if <tt>BufferCount</tt> should be set to 1 or 2 for depth-testing</b>. We don't need a depth
     map yet, so 1 is fine.</b>
-    We want to tie our output buffers to the window, so use your win32 handle for <tt>OutputWindow</tt>.
+    We want to tie our output buffers to the window, so use your win32 handle, returned by <tt>CreateWindow()</tt>, for
+    <tt>OutputWindow</tt>.
     Next we can give our struct to the function.
   </P>
 
@@ -385,8 +389,11 @@ UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
   <p>
     Check if this builds and runs. If not - perhaps the relative path between to your
     shader file is wrong? Otherwise check the Output sub-window for a detailed error report.
-    This isn't enough - we need to call <a href="https://docs.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11device-createvertexshader"><tt>CreateVertexShader()</tt></a>
-    and <a href="https://docs.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11device-createpixelshader"><tt>CreatePixelShader()</tt></a> with our shader blobs to get
+    This isn't enough - we need to call <a
+      href="https://docs.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11device-createvertexshader"><tt>CreateVertexShader()</tt></a>
+    and <a
+      href="https://docs.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11device-createpixelshader"><tt>CreatePixelShader()</tt></a>
+    with our shader blobs to get
     pointers that let us use the shaders for drawing.
   </p>
 
@@ -452,34 +459,37 @@ assert( SUCCEEDED( hr ) );</pre>
   </p>
 
   <p>
-    Check if this compiles and runs - if there is any mismatch between your input layout and the vertex shader inputs then you should
+    Check if this compiles and runs - if there is any mismatch between your input layout and the vertex shader inputs
+    then you should
     get a helpful error message.
   </p>
 
-<h2>Create a Vertex Buffer</h2>
+  <h2>Create a Vertex Buffer</h2>
 
-<p>
-After building our shaders, and before the main loop we can define an array of vertex points and load it into a <b>vertex buffer</b>.
-These are our 3 XYZ values for the 3 points of our triangle. The values must be in the range -1:1 on X and Y, and 0:1 on Z to be visible.
-Don't put the Z values at 0, or they will be out of the visible range.
-</p>
+  <p>
+    After building our shaders, and before the main loop we can define an array of vertex points and load it into a
+    <b>vertex buffer</b>.
+    These are our 3 XYZ values for the 3 points of our triangle. The values must be in the range -1:1 on X and Y, and
+    0:1 on Z to be visible.
+    Don't put the Z values at 0, or they will be out of the visible range.
+  </p>
 
-<p>The triangle will be defined by 3 XYZ vertex points. A vertex shader will set the final position
-  of each vertex in <b>homogeneous clip space</b>. We won't transform our original vertex values,
-  so we will define them in the visible range for clip space. For Direct3D that is a horizontal X
-  range between -1 and 1 (left to right), a vertical Y range between -1 and 1 (bottom to top),
-  and a depth range between 0 to 1 (into the screen). Direct3D considers by default a <b>clockwise</b>
-  winding order of vertices to be the front face. D3D will also by default cull (remove) the back face.
-  We therefore need to make sure that we define a triangle so that it's visible and the front is facing us.
-  It helps to draw this on paper first.
-</p>
+  <p>The triangle will be defined by 3 XYZ vertex points. A vertex shader will set the final position
+    of each vertex in <b>homogeneous clip space</b>. We won't transform our original vertex values,
+    so we will define them in the visible range for clip space. For Direct3D that is a horizontal X
+    range between -1 and 1 (left to right), a vertical Y range between -1 and 1 (bottom to top),
+    and a depth range between 0 to 1 (into the screen). Direct3D considers by default a <b>clockwise</b>
+    winding order of vertices to be the front face. D3D will also by default cull (remove) the back face.
+    We therefore need to make sure that we define a triangle so that it's visible and the front is facing us.
+    It helps to draw this on paper first.
+  </p>
 
-<div class="centre">
-<img width=50% src="images/vertex_buffer.png" alt="vertex values for a triangle" /><br />
-<b>TODO(Anton) the z values here are 0, but that's just outside the visible range. Change to 0.5.</b>
-</div>
+  <div class="centre">
+    <img width=50% src="images/vertex_buffer.png" alt="vertex values for a triangle" /><br />
+    <b>TODO(Anton) the z values here are 0, but that's just outside the visible range. Change to 0.5.</b>
+  </div>
 
-<pre>
+  <pre>
 float vertex_data_array[] = {
   0.0f, 0.5f, 0.5f,   // point at top
   0.5f, -0.5f, 0.5f,  // point at bottom-right
@@ -489,15 +499,18 @@ UINT vertex_stride              = 3 * sizeof( float );
 UINT vertex_offset              = 0;
 UINT vertex_count               = 3;</pre>
 
-<p>
-We call <a href="https://docs.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11device-createbuffer"><tt>CreateBuffer()</tt></a> to load our array into a vertex buffer. It also requires a
-struct of type <tt>D3D11_BUFFER_DESC</tt> with parameters, and a struct <tt>D3D11_SUBRESOURCE_DATA</tt> which points to the actual vertex array data.
-The stride, offset, and count values
-describe the bytes between each vertex (XYZ so 3 floats), the offset into the buffer to start reading (0),
-and the number of vertices (3). We will use these later.
-</p>
+  <p>
+    We call <a
+      href="https://docs.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11device-createbuffer"><tt>CreateBuffer()</tt></a>
+    to load our array into a vertex buffer. It also requires a
+    struct of type <tt>D3D11_BUFFER_DESC</tt> with parameters, and a struct <tt>D3D11_SUBRESOURCE_DATA</tt> which points
+    to the actual vertex array data.
+    The stride, offset, and count values
+    describe the bytes between each vertex (XYZ so 3 floats), the offset into the buffer to start reading (0),
+    and the number of vertices (3). We will use these later.
+  </p>
 
-<pre>
+  <pre>
 ID3D11Buffer* vertex_buffer_ptr = NULL;
 { /*** load mesh data into vertex buffer **/
   D3D11_BUFFER_DESC vertex_buff_descr     = {};
@@ -513,107 +526,115 @@ ID3D11Buffer* vertex_buffer_ptr = NULL;
   assert( SUCCEEDED( hr ) );
 }</pre>
 
-<p>
-There are many options for the <tt>Usage</tt> parameter to help the driver optimisation,
-based on how often the buffer values will change. We don't need to update our so I've just set <tt>D3D11_USAGE_DEFAULT</tt>.
-Be aware that different usage values require struct fields to be set or not set - check debug output for clashes. 
-We are binding a buffer of type <tt>D3D11_BIND_VERTEX_BUFFER</tt> here to the <tt>BindFlags</tt>. Don't set another type by accident!
-The <tt>D3D11_SUBRESOURCE_DATA</tt> struct points to our array of floats. Finally <tt>CreateBuffer()</tt>
-gives us a pointer to a vertex buffer. We'll use this for drawing our triangle mesh.
-</p>
+  <p>
+    There are many options for the <tt>Usage</tt> parameter to help the driver optimisation,
+    based on how often the buffer values will change. We don't need to update our so I've just set
+    <tt>D3D11_USAGE_DEFAULT</tt>.
+    Be aware that different usage values require struct fields to be set or not set - check debug output for clashes.
+    We are binding a buffer of type <tt>D3D11_BIND_VERTEX_BUFFER</tt> here to the <tt>BindFlags</tt>. Don't set another
+    type by accident!
+    The <tt>D3D11_SUBRESOURCE_DATA</tt> struct points to our array of floats. Finally <tt>CreateBuffer()</tt>
+    gives us a pointer to a vertex buffer. We'll use this for drawing our triangle mesh.
+  </p>
 
-<h2>Drawing Each Frame</h2>
+  <h2>Drawing Each Frame</h2>
 
-<p>
-We can now add in drawing code to our main loop.
-The following code should go after the window message handling,
-replacing the line where we had <tt>/*** TODO: RENDER A FRAME HERE WITH DIRECT3D ***/</tt>.  
-</p>
+  <p>
+    We can now add in drawing code to our main loop.
+    The following code should go after the window message handling,
+    replacing the line where we had <tt>/*** TODO: RENDER A FRAME HERE WITH DIRECT3D ***/</tt>.
+  </p>
 
-<h3>Clear the Backbuffer and Set the Viewport</h3>
+  <h3>Clear the Backbuffer and Set the Viewport</h3>
 
-<pre>
+  <pre>
 /* clear the back buffer to cornflower blue for the new frame */
 float background_colour[4] = { 0x64 / 255.0f, 0x95 / 255.0f, 0xED / 255.0f, 1.0f };
 device_context_ptr->ClearRenderTargetView( render_target_view_ptr, background_colour );</pre>
 
-<p>
-We use our render target view pointer to access the back buffer and clear it to an RGBA colour of our choice
-(values between 0 and 1). It's a good idea to use grey or a neutral colour, so if your shape is black you still see something.
-If you add a <b>depth buffer</b> later you will also clear that here with <tt>ClearDepthStencilView()</tt>.
-We need to set the valid drawing area - the <i>viewport</i>, within our window, or nothing will draw.
-</p>
+  <p>
+    We use our render target view pointer to access the back buffer and clear it to an RGBA colour of our choice
+    (values between 0 and 1). It's a good idea to use grey or a neutral colour, so if your shape is black you still see
+    something.
+    If you add a <b>depth buffer</b> later you will also clear that here with <tt>ClearDepthStencilView()</tt>.
+    We need to set the valid drawing area - the <i>viewport</i>, within our window, or nothing will draw.
+  </p>
 
-<pre>
+  <pre>
 RECT winRect;
 GetClientRect( hwnd, &winRect );
 D3D11_VIEWPORT viewport = { 0.0f, 0.0f, ( FLOAT )( winRect.right - winRect.left ), ( FLOAT )( winRect.bottom - winRect.top ), 0.0f, 1.0f };
 device_context_ptr->RSSetViewports( 1, &viewport );</pre>
 
-<p>We fetch the drawing surface rectangle from our win32 window handle, and use the width and height from this
-as our viewport dimensions in the struct <tt>D3D11_VIEWPORT</tt>, which we give to the rasteriser state function
-<a href="https://docs.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-rssetviewports"><tt>RSSetViewports()</tt></a>.
-</p>
+  <p>We fetch the drawing surface rectangle from our win32 window handle, and use the width and height from this
+    as our viewport dimensions in the struct <tt>D3D11_VIEWPORT</tt>, which we give to the rasteriser state function
+    <a
+      href="https://docs.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-rssetviewports"><tt>RSSetViewports()</tt></a>.
+  </p>
 
-<h3>Set the Output Merger</h3>
+  <h3>Set the Output Merger</h3>
 
-<p>
-We need to tell the Output Merger to use our render target. If you add depth testing
-later you would do that here too with <tt>OMSetDepthStencilState()</tt>.
-</p>
+  <p>
+    We need to tell the Output Merger to use our render target. If you add depth testing
+    later you would do that here too with <tt>OMSetDepthStencilState()</tt>.
+  </p>
 
-<pre>
+  <pre>
 device_context_ptr->OMSetRenderTargets( 1, &render_target_view_ptr, NULL );</pre>
 
-<h3>Set the Input Assembler</h3>
+  <h3>Set the Input Assembler</h3>
 
-<p>
-Before drawing, we can update the Input Assembler with the vertex buffer to draw,
-and the memory layout, so it knows how to feed vertex data from the vertex buffer to vertex shaders.
-</p>
+  <p>
+    Before drawing, we can update the Input Assembler with the vertex buffer to draw,
+    and the memory layout, so it knows how to feed vertex data from the vertex buffer to vertex shaders.
+  </p>
 
-<pre>
+  <pre>
 device_context_ptr->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 device_context_ptr->IASetInputLayout( input_layout_ptr );
 device_context_ptr->IASetVertexBuffers( 0, 1, &vertex_buffer_ptr, &vertex_stride, &vertex_offset );</pre>
 
-<p>We tell it here to expect vertices to correspond to <tt>D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST</tt>,
-which means every 3 vertices should form a separate triangle. We give it our input layout, that we created earlier
-with our vertex element, and finally tell it to use our vertex buffer with <a href="https://docs.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-iasetvertexbuffers"><tt>IASetVertexBuffers()</tt></a>,
-where we also give it the vertex memory stride and offset that we determined when we made our array of floats.
-</p>
+  <p>We tell it here to expect vertices to correspond to <tt>D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST</tt>,
+    which means every 3 vertices should form a separate triangle. We give it our input layout, that we created earlier
+    with our vertex element, and finally tell it to use our vertex buffer with <a
+      href="https://docs.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-iasetvertexbuffers"><tt>IASetVertexBuffers()</tt></a>,
+    where we also give it the vertex memory stride and offset that we determined when we made our array of floats.
+  </p>
 
-<h3>Set the Shaders</h3>
+  <h3>Set the Shaders</h3>
 
-<p>Before drawing, we also need to tell the pipeline which shaders to use next.</p>
+  <p>Before drawing, we also need to tell the pipeline which shaders to use next.</p>
 
-<pre>
+  <pre>
 device_context_ptr->VSSetShader( vertex_shader_ptr, NULL, 0 );
 device_context_ptr->PSSetShader( pixel_shader_ptr, NULL, 0 );</pre>
 
-<h3>Draw Our Triangle</h3>
+  <h3>Draw Our Triangle</h3>
 
-<p>When we call <a href="https://docs.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-draw"><tt>Draw()</tt></a> the pipeline will use all the states
-we just set, the vertex buffer and the shaders. We just need to tell it
-how many vertices to draw from our vertex buffer - 3 for 1 triangle. We
-stored this in a variable when we created our float array.</p>
+  <p>When we call <a
+      href="https://docs.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-draw"><tt>Draw()</tt></a>
+    the pipeline will use all the states
+    we just set, the vertex buffer and the shaders. We just need to tell it
+    how many vertices to draw from our vertex buffer - 3 for 1 triangle. We
+    stored this in a variable when we created our float array.</p>
 
-<pre>
+  <pre>
 device_context_ptr->Draw( vertex_count, 0 );</pre>
 
-<h3>Present the Frame (Swap the Buffers)</h3>
+  <h3>Present the Frame (Swap the Buffers)</h3>
 
-<p>At the very end of our drawing loop we need to swap the buffers.
-Direct3D calls this <a href="https://docs.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-present"><tt>Present()</tt></a>
-This should be after all of our <tt>Draw()</tt> calls. We only have 1 so far.
-The swap chain commands use the DXGI interface.
-</p>
+  <p>At the very end of our drawing loop we need to swap the buffers.
+    Direct3D calls this <a
+      href="https://docs.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-present"><tt>Present()</tt></a>
+    This should be after all of our <tt>Draw()</tt> calls. We only have 1 so far.
+    The swap chain commands use the DXGI interface.
+  </p>
 
-<pre>swap_chain_ptr->Present( 1, 0 );</pre>
+  <pre>swap_chain_ptr->Present( 1, 0 );</pre>
 
-<p>Our main loop should now look something like the following.</p>
+  <p>Our main loop should now look something like the following.</p>
 
-<pre>
+  <pre>
 MSG msg           = {};
 bool should_close = false;
 while ( !should_close ) {
@@ -656,16 +677,41 @@ while ( !should_close ) {
 } // end of main loop
 </pre>
 
-<h2>Next Steps / TODO</h2>
+  <img src="images/d3d_triangle.png" alt="hello triangle!" />
 
-<ul>
-  <li>Include a maths library and create a transformation matrix (and transpose it).</li>
-  <li>Create a constant buffer and explain layout requirements.</li>
-  <li>Animate the triangle using a matrix and a precision timer.</li>
-  <li>Add a depth buffer and stencil to enable depth testing.</li>
-  <li>Add a section of helpful links.</li>
-</ul>
+  <h2>Closing Remarks</h2>
+  <h3>Next Steps</h3>
 
+  <ul>
+    <li>Change the position of your triangle by modifying the position values in the vertex shader.</li>
+    <li>Turn your triangle into a rectangle - add 3 more vertex points to your vertex buffer and change the positions.
+    </li>
+    <li>Add an RGB colour element to each vertex. Input to your vertex shader and output to the pixel shader to use as
+      the colour.
+      This tests interpolation and that you know how to send variables through the pipeline. You'll have to update your
+      input layout,
+      shaders, and vertex buffer.</li>
+    <li>Include a maths library and create a transformation matrix (and transpose it). You'll need to create a constant
+      buffer to send the
+      matrix to your vertex shader. These have special memory layout rules.
+    </li>
+    <li>Animate the triangle using a matrix and a precision timer.</li>
+    <li>Add a depth buffer and stencil to enable depth testing.</li>
+  </ul>
+
+  <h3>TODO</h3>
+
+  <ul>
+    <li>Add a section of helpful links.</li>
+    <li>Troubleshooting Q&A.</li>
+  </ul>
+
+  <h3>Acknowledgements</h3>
+
+  <p>Thanks to Stefan Petersson at BTH Sweden for getting me started on Direct3D 11, students at BTH for letting me know
+    what is confusing with
+    learning D3D so I could add those clarifications here, and Don Williamson for D3D corrections and guides.
+  </p>
 </body>
 
 </html>
