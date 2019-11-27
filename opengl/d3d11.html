@@ -473,7 +473,6 @@ assert( SUCCEEDED( hr ) );</pre>
     <b>vertex buffer</b>.
     These are our 3 XYZ values for the 3 points of our triangle. The values must be in the range -1:1 on X and Y, and
     0:1 on Z to be visible.
-    Don't put the Z values at 0, or they will be out of the visible range.
   </p>
 
   <p>The triangle will be defined by 3 XYZ vertex points. A vertex shader will set the final position
@@ -488,14 +487,13 @@ assert( SUCCEEDED( hr ) );</pre>
 
   <div class="centre">
     <img width=50% src="images/vertex_buffer.png" alt="vertex values for a triangle" /><br />
-    <b>TODO(Anton) the z values here are 0, but that's just outside the visible range. Change to 0.5.</b>
   </div>
 
   <pre>
 float vertex_data_array[] = {
-  0.0f, 0.5f, 0.5f,   // point at top
-  0.5f, -0.5f, 0.5f,  // point at bottom-right
-  -0.5f, -0.5f, 0.5f, // point at bottom-left
+   0.0f,  0.5f,  0.0f, // point at top
+   0.5f, -0.5f,  0.0f, // point at bottom-right
+  -0.5f, -0.5f,  0.0f, // point at bottom-left
 };
 UINT vertex_stride              = 3 * sizeof( float );
 UINT vertex_offset              = 0;
