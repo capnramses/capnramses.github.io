@@ -552,8 +552,10 @@ ID3D11Buffer* vertex_buffer_ptr = NULL;
 
   <pre>
 /* clear the back buffer to cornflower blue for the new frame */
-float background_colour[4] = { 0x64 / 255.0f, 0x95 / 255.0f, 0xED / 255.0f, 1.0f };
-device_context_ptr->ClearRenderTargetView( render_target_view_ptr, background_colour );</pre>
+float background_colour[4] = {
+  0x64 / 255.0f, 0x95 / 255.0f, 0xED / 255.0f, 1.0f };
+device_context_ptr->ClearRenderTargetView(
+  render_target_view_ptr, background_colour );</pre>
 
   <p>
     We use our render target view pointer to access the back buffer and clear it to an RGBA colour of our choice
@@ -566,7 +568,13 @@ device_context_ptr->ClearRenderTargetView( render_target_view_ptr, background_co
   <pre>
 RECT winRect;
 GetClientRect( hwnd, &winRect );
-D3D11_VIEWPORT viewport = { 0.0f, 0.0f, ( FLOAT )( winRect.right - winRect.left ), ( FLOAT )( winRect.bottom - winRect.top ), 0.0f, 1.0f };
+D3D11_VIEWPORT viewport = {
+  0.0f,
+  0.0f,
+  ( FLOAT )( winRect.right - winRect.left ),
+  ( FLOAT )( winRect.bottom - winRect.top ),
+  0.0f,
+  1.0f };
 device_context_ptr->RSSetViewports( 1, &viewport );</pre>
 
   <p>We fetch the drawing surface rectangle from our win32 window handle, and use the width and height from this
@@ -593,9 +601,15 @@ device_context_ptr->OMSetRenderTargets( 1, &render_target_view_ptr, NULL );</pre
   </p>
 
   <pre>
-device_context_ptr->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
+device_context_ptr->IASetPrimitiveTopology(
+  D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 device_context_ptr->IASetInputLayout( input_layout_ptr );
-device_context_ptr->IASetVertexBuffers( 0, 1, &vertex_buffer_ptr, &vertex_stride, &vertex_offset );</pre>
+device_context_ptr->IASetVertexBuffers(
+  0,
+  1,
+  &vertex_buffer_ptr,
+  &vertex_stride,
+  &vertex_offset );</pre>
 
   <p>We tell it here to expect vertices to correspond to <tt>D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST</tt>,
     which means every 3 vertices should form a separate triangle. We give it our input layout, that we created earlier
