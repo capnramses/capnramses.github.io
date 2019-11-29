@@ -26,7 +26,7 @@
 <body>
   <p><a href="index.html">[index]</a></p>
   <h1><i>Hello Triangle</i><br />Direct3D 11 Up and Running</h1>
-  <h4>Anton Gerdelan. Last Updated 27 November 2019</h4>
+  <h4>Anton Gerdelan. Last Updated 29 November 2019</h4>
 
 
   <img src="images/d3d_triangle.png" alt="hello triangle!" />
@@ -244,9 +244,10 @@ swap_chain_descr.Windowed           = true;
     <tt>DXGI_FORMAT_B8G8R8A8_UNORM</tt> is a reasonable default colour output, but does not have gamma correction. We
     could use <tt>DXGI_FORMAT_B8G8R8A8_UNORM_SRGB</tt> for that.
     We are not enabling multisampling anti-aliasing yet, so <tt>SampleDesc</tt> parameters are set to defaults.
-    <b>Note: I'm not clear if <tt>BufferCount</tt> should be set to 1 or 2 for depth-testing</b>. We don't need a depth
-    map yet, so 1 is fine.</b>
-    We want to tie our output buffers to the window, so use your win32 handle, returned by <tt>CreateWindow()</tt>, for
+    <tt>BufferCount</tt> is the count of back buffers to add to the swap chain.
+    So, in windowed mode, for a typical double-buffering set-up with 1 front buffer and 1 back buffer, we can set this
+    to 1.
+    We want to tie our output buffers to the window, so use your Win32 handle, returned by <tt>CreateWindow()</tt>, for
     <tt>OutputWindow</tt>.
     Next we can give our struct to the function.
   </P>
@@ -275,7 +276,7 @@ assert( S_OK == hr && swap_chain_ptr && device_ptr && device_context_ptr );</pre
   <p>Here I have added extra debug output to the function <tt>flags</tt> when the program is built in debug mode.
     If all went well, you should be able to now compile and run it, without an assertion triggering.
     Otherwise check the parameter values carefully. The output images from Direct3D are called
-    <i>Render Targets</i>. We can get a view pointer to ours now, by fetching it from our swap chain. 
+    <i>Render Targets</i>. We can get a view pointer to ours now, by fetching it from our swap chain.
   </p>
 
   <pre>
@@ -310,7 +311,7 @@ struct vs_out {
 };
 
 vs_out vs_main(vs_in input) {
-  vs_out output;
+  vs_out output = (vs_out)0; // zero the memory first
   output.position_clip = float4(input.position_local, 1.0);
   return output;
 }
@@ -529,7 +530,8 @@ ID3D11Buffer* vertex_buffer_ptr = NULL;
   <p>
     There are many options for the <tt>Usage</tt> parameter to help the driver optimisation,
     based on how often the buffer values will change. I've just set
-    <tt>D3D11_USAGE_DEFAULT</tt>, but since we don't need to update our vertex buffer (yet) it could be set to <tt>D3D11_USAGE_IMMUTABLE</tt>
+    <tt>D3D11_USAGE_DEFAULT</tt>, but since we don't need to update our vertex buffer (yet) it could be set to
+    <tt>D3D11_USAGE_IMMUTABLE</tt>
     for optimal usage.
     Be aware that different usage values require struct fields to be set or not set - check debug output for clashes.
     We are binding a buffer of type <tt>D3D11_BIND_VERTEX_BUFFER</tt> here to the <tt>BindFlags</tt>. Don't set another
@@ -699,27 +701,39 @@ while ( !should_close ) {
     <li>Animate the triangle using a matrix and a precision timer.</li>
   </ul>
 
-  <h3>TODO</h3>
+  <h3>Notes</h3>
+  <ul>
+    <li>See Usage Notes in <tt>D3D11CreateDeviceAndSwapChain()</tt> documentation for updated swap chain functions.</li>
+    <li>When setting shaders before drawing - <tt>VSSetShader()</tt> etc., it can be useful to set all of the unused
+      shader stages to <tt>NULL</tt>. This avoids inadvertently using any previously bound geometry or tessellation
+      shaders, for example.</li>
+  </ul>
+
+  <h3>To-Do</h3>
 
   <ul>
-    <li>Add a section of helpful links.</li>
-    <li>Troubleshooting Q&A.</li>
-    <li>Add a depth buffer and stencil to enable depth testing.</li>
+    <li>Troubleshooting Q&A based on any feedback.</li>
+    <li>Add a depth buffer and stencil to enable depth testing (maybe a part 2?).</li>
   </ul>
 
   <h3>Code Reference Links</h3>
 
   <ul>
-    <li><a href="https://gist.github.com/d7samurai/261c69490cce0620d0bfc93003cd1052">code.cpp</a> - Single file demo with D3D init, lighting, textures, depth map (<a href="https://youtu.be/XR7zPheek2Q">video</a>). <a href="https://twitter.com/d7samurai">Martin Wardener</a>. </li>
-    <li><a href="https://github.com/kevinmoran/BeginnerDirect3D11">Beginner Direct3D</a> - Series of demos by <a href="https://twitter.com/GamedevKevin">Kevin Moran</a> .</li>
-    <li><a href="https://gist.github.com/floooh/b280b428114eb4fd5331f21f1ce843b5">SOKOL D3D11 Essentials</a> - Breakdown of D3D11 topics as used in SOKOL framework. By <a href="https://twitter.com/FlohOfWoe">Andre Weissflog</a>.</li>
+    <li><a href="https://gist.github.com/d7samurai/261c69490cce0620d0bfc93003cd1052">code.cpp</a> - Single file demo
+      with D3D init, lighting, textures, depth map (<a href="https://youtu.be/XR7zPheek2Q">video</a>). <a
+        href="https://twitter.com/d7samurai">Martin Wardener</a>. </li>
+    <li><a href="https://github.com/kevinmoran/BeginnerDirect3D11">Beginner Direct3D</a> - Series of demos by <a
+        href="https://twitter.com/GamedevKevin">Kevin Moran</a> .</li>
+    <li><a href="https://gist.github.com/floooh/b280b428114eb4fd5331f21f1ce843b5">SOKOL D3D11 Essentials</a> - Breakdown
+      of D3D11 topics as used in SOKOL framework. By <a href="https://twitter.com/FlohOfWoe">Andre Weissflog</a>.</li>
   </ul>
 
   <h3>Acknowledgements</h3>
 
-  <p>Thanks to Stefan Petersson at BTH Sweden for getting me started on Direct3D 11, students at BTH for letting me know
-    what is confusing with
-    learning D3D so I could add those clarifications here, and <a href="https://twitter.com/Donzanoid">Don Williamson</a> for D3D corrections and guides.
+  <p>Thanks to Stefan Petersson and <a href="https://twitter.com/francholi">Fracisco Lopez Luro</a> at BTH Sweden for
+    getting me started on Direct3D 11 and coding advice, students at BTH for letting me know
+    what is confusing with learning D3D so I could add those clarifications here, and <a href="https://twitter.com/Donzanoid">Don
+      Williamson</a> for D3D corrections and guides.
   </p>
 </body>
 
