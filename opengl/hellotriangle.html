@@ -95,8 +95,7 @@
 
   <pre>
 #define GLFW_DLL
-#include <GLFW/glfw3.h>
-</pre>
+#include &lt;GLFW/glfw3.h&gt;</pre>
 
   <p>
     There's a library called <a href="http://glew.sourceforge.net/">GLEW </a>
@@ -112,9 +111,9 @@
   <p>Include GLEW <u>before</u> GLFW to use the latest GL libraries:</p>
 
   <pre>
-#include <GL/glew.h>
+#include &lt;GL/glew.h&gt;
 #define GLFW_DLL
-#include <GLFW/glfw3.h></pre>
+#include &lt;GLFW/glfw3.h&gt;</pre>
 
   <p>
     I've uploaded my Windows builds of both for MinGW's GCC compilers here:
@@ -137,9 +136,9 @@
   </p>
 
   <pre>
-#include <GL/glew.h> // include GLEW and new version of GL on Windows
-#include <GLFW/glfw3.h> // GLFW helper library
-#include <stdio.h>
+#include &lt;GL/glew.h&gt; // include GLEW and new version of GL on Windows
+#include &lt;GLFW/glfw3.h&gt; // GLFW helper library
+#include &lt;stdio.h&gt;
 
 int main() {
   // start GL context and O/S window using the GLFW helper library
