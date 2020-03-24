@@ -43,7 +43,7 @@ I was able to set up licence options for my mini-libraries that made them easy t
 
 <p>
 Google requires all its work to be fuzzed. It's a good idea to do this with any software that loads user-provided content, such as an image loader. I have recently been educated on fuzzers by my friend Saija, who is a security professional who has worked for some
-pretty major companies. Fuzzers are programs take a set of inputs you provide and generate pseudo-random permutations of those, trying to find invalid files that make your program crash or become unstable. It doesn't take very long to generate a huge folder of
+pretty major companies. Fuzzers are programs that take a set of inputs you provide and generate pseudo-random permutations of those, trying to find invalid files that make your program crash or become unstable. It doesn't take very long to generate a huge folder of
 images that blow up your program in interesting ways. Saija fuzzed <tt>apg_bmp</tt> with AFL, which let me easily reproduce issues and fix a huge number of surprising bugs. After fixing and re-fuzzing, if it reports no issues you can try seeding it with a new test
 set. You can be pretty confident then that your software has been hardened to handle both invalid or corrupted source images, as well as deliberately malicious files. It's like having the most persistent and evil QA tester ever working around the clock ruining your day!
 Most image loaders are not fuzzed, which kind of left me in a nice position of being a kind of winner-by-default for use in security-conscious applications. I tried the previous crashing results on popular image loaders (libraries and software). Almost all of them
