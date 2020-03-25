@@ -9,13 +9,13 @@ Other requested topics are an intro to 3D programming with OpenGL, some bits rel
 <p>Here is a tentative schedule. I'll update it here as I work out a clearer plan and find a nice regular time that works for people for Q&A discussion. I want to keep streams short if possible.</p>
 
 <ul>
-<li>Thu 19 March 9:30pm GMT - Intro to Computer Programming Part 1. - Installing a compiler, using a terminal, "Hello, world!", discussion. - <a href="https://www.youtube.com/embed/8AH2OYe5qN0">youtube</a></li>
-<li>Wed 25 March 3:00pm GMT - Building a minecraft-style voxel game Part 1. - Sticking projects together.</li>
-<li>Thu 26 March 6:00pm GMT - Intro to Computer Programming Part 2 - Arithmetic, variables, and functions.</li>
-<li>Fri 27 March 3:00pm GMT - Building a minecraft-style voxel game Part 2. - TBD.</li>
-<li>TBD - Intro to Computer Programming Part 3 - Arrays, and loops.</li>
-<li>TBD - Intro to Computer Programming Part 4 - Pointers, memory, and file I/O.</li>
-<li>TBD - How to use a fuzzer to bulletproof your code. - How-to guide and intro.</li>
+<li>Thu 19 March 9:30pm GMT - Intro to Computer Programming Part 1.<br/>Installing a compiler, using a terminal, "Hello, world!", discussion. - <a href="https://www.youtube.com/embed/8AH2OYe5qN0">youtube</a></li>
+<li>Wed 25 March 3:00pm GMT - Building a minecraft-style voxel game Part 1.<br/>Sticking projects together.</li>
+<li>Thu 26 March 6:00pm GMT - Intro to Computer Programming Part 2<br/>Arithmetic, variables, and functions.</li>
+<li>Fri 27 March 3:00pm GMT - Building a minecraft-style voxel game Part 2.<br/>TBD.</li>
+<li>TBD - Intro to Computer Programming Part 3<br/>Arrays, and loops.</li>
+<li>TBD - Intro to Computer Programming Part 4<br/>Pointers, memory, and file I/O.</li>
+<li>TBD - How to use a fuzzer to bulletproof your code.<br/>How-to guide and intro.</li>
 </ul>
 
 <h3>Live Stream Link</h3>
