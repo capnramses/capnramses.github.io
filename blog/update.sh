@@ -87,12 +87,12 @@ cd ..
 #	fi
 #	echo "<a href="formatted/$filename">$filename</a><br /><br />" >> $opf
 #done;
-cd ..;
-opf="index.html";
-echo "</body></html>" >> $opf;
+#cd ..;
+#opf="index.html";
+#echo "</body></html>" >> $opf;
 
 #
 # fix any relative paths to image folder
 # gsed is gnu-sed on mac after installing with brew
 #gsed -i s@../images/@images/@g $opf
-sed -i s@../images/@images/@g $opf
+#sed -i s@../images/@images/@g $opf
