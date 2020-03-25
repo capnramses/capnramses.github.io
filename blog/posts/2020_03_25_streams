@@ -3,13 +3,14 @@
 <p>During virus lock-in I'm doing some streaming of educational/hobby coding. My warm-up was an introduction to computer programming using the C programming language.
 Other requested topics are an intro to 3D programming with OpenGL, some bits relevant to a book I'm working on - especially how to use <b>fuzzers</b> - and just me coding some 3D game stuff.</p>
 
+<div class="centre">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/8AH2OYe5qN0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
+</div>
 <p>Here is a tentative schedule. I'll update it here as I work out a clearer plan and find a nice regular time that works for people for Q&A discussion. I want to keep streams short if possible.</p>
 
 <table>
 <tr><th>Date and time</th><th>Title</th><th>Contents</th><td>Recording Link</td></tr>
-<tr><td>Thu 19 March 9:30pm GMT</td><td>Intro to Computer Programming Part 1.</td><td>Installing a compiler, using a terminal, "Hello, world!", discussion.</td><td>https://www.youtube.com/embed/8AH2OYe5qN0</td></tr>
+<tr><td>Thu 19 March 9:30pm GMT</td><td>Intro to Computer Programming Part 1.</td><td>Installing a compiler, using a terminal, "Hello, world!", discussion.</td><td><a href="https://www.youtube.com/embed/8AH2OYe5qN0">youtube</a></td></tr>
 <tr><td>Wed 25 March 3:00pm GMT</td><td>Building a minecraft-style voxel game Part 1.</td><td>Sticking projects together.</td></tr>
 <tr><td>Thu 26 March 6:00pm GMT</td><td>Intro to Computer Programming Part 2</td><td>Arithmetic, variables, and functions.</td></tr>
 <tr><td>Fri 27 March 3:00pm GMT</td><td>Building a minecraft-style voxel game Part 2.</td><td>TBD.</td></tr>
@@ -19,9 +20,9 @@ Other requested topics are an intro to 3D programming with OpenGL, some bits rel
 </table>
 
 <h3>Live Stream Link</h3>
-
+<div class="centre">
 <iframe src="https://player.twitch.tv/?channel=capnramses" frameborder="0" allowfullscreen="true" scrolling="no" height="378" width="620"></iframe><a href="https://www.twitch.tv/capnramses?tt_content=text_link&tt_medium=live_embed" style="padding:2px 0px 4px; display:block; width:345px; font-weight:normal; font-size:10px; text-decoration:underline;">Watch live video from capnramses on www.twitch.tv</a>
-
+</div>
 <h3>Video Recordings Link</h3>
 
 <ul>
