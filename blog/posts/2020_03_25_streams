@@ -3,26 +3,101 @@
 <p>During virus lock-in I'm doing some streaming of educational/hobby coding. My warm-up was an introduction to computer programming using the C programming language.
 Other requested topics are an intro to 3D programming with OpenGL, some bits relevant to a book I'm working on - especially how to use <b>fuzzers</b> - and just me coding some 3D game stuff.</p>
 
-<p><b>Update:</b>From 30 March I'll be streaming regularly at 6pm GMT on weekdays.</p>
-
 <div class="centre">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/8AH2OYe5qN0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </div>
 <p>Here is a tentative schedule. I'll update it here as I work out a clearer plan and find a nice regular time that works for people for Q&A discussion. I want to keep streams short if possible.</p>
 
-<ul>
-<li>Thu 19 March 9:30pm GMT - Tutorial: Intro to Computer Programming Part 1.<br/>Installing a compiler, using a terminal, "Hello, world!", discussion. - <a href="https://www.youtube.com/embed/8AH2OYe5qN0">youtube</a></li>
-<li>Wed 25 March 3:00pm GMT - Non-tutorial: Building a minecraft-style voxel game Part 1.<br/>Adding a drop-down in-game console to new voxel world generator. Interacting with things from the console. - <a href="https://youtu.be/IW6O4A1RSt8">youtube</a></li>
-<li>Thu 26 March 2:00pm GMT - Non-tutorial: Building a minecraft-style voxel game Part 2. <br/>Animating the console, Q&A. - <a href="https://youtu.be/7ryoMMQRM14">youtube</a></li>
-<li>Thu 26 March 6:00pm GMT - Tutorial: Intro to Computer Programming. Part II<br/>Functions/Variables/Maths. Using C. - <a href="https://youtu.be/AIj4SXAnJ_c">youtube</a></li>
-<li>Fri 27 March 3:00pm GMT - Non-tutorial: Building a minecraft-style voxel game Part 3.<br/>TBD.</li>
-<li>Mon 30 March 6:00pm GMT - Tutorial: Intro to Computer Programming Part 3<br/>Arrays, and loops.</li>
-<li>Tue 31 March 6:00pm GMT - Tutorial: Intro to 3D Programming with OpenGL<br/>"Hello Triangle".</li>
-<li>Wed 01 April 6:00pm GMT - Non-tutorial: Working on voxel game Part 3.</li>
-<li>Thu 02 April 6:00pm GMT - Tutorial: Intro to Computer Programming Part 4<br/>Memory allocation. Writing out an image.</li>
-<li>Fri 03 April 6:00pm GMT - TBD.</li>
-<li>Later topics:<br />Tools: Debugging, hex-editors, and how to use a fuzzer to bulletproof your code.</li>
-</ul>
+<table class="compact">
+<thead>
+<tr>
+<th>Stream Time</th>
+<th>Title</th>
+<th>Contents</th>
+<th>Video URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TBD</td>
+<td>Later topics</td>
+<td>How to use a fuzzer to bulletproof your code</td>
+<td></td>
+</tr>
+<tr>
+<td>Thu 02 April 6:00pm GMT</td>
+<td>Tutorial: Intro to Computer Programming Part 4. Using C</td>
+<td>Pointers, memory allocation. Writing out an image.</td>
+<td></td>
+</tr>
+<tr>
+<td>Wed 01 April 6:00pm GMT</td>
+<td>Non-tutorial: Working on voxel game Part 3</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Tue 31 March 6:00pm GMT</td>
+<td>Tutorial: Intro to 3D Programming with OpenGL</td>
+<td>Setting up libraries with Visual Studio. "Hello Triangle".</td>
+<td><a href="https://youtu.be/AIj4SXAnJ_c">youtube</a></td>
+</tr>
+<tr>
+<td>Tue 31 March 6:00pm GMT</td>
+<td>Tutorial: Intro to 3D Programming with OpenGL</td>
+<td>Setting up libraries with Visual Studio. "Hello Triangle".</td>
+<td><a href="https://youtu.be/AIj4SXAnJ_c">youtube</a></td>
+</tr>
+<tr>
+<td>Tue 31 March 6:00pm GMT</td>
+<td>Tutorial: Intro to 3D Programming with OpenGL</td>
+<td>Setting up libraries with Visual Studio. "Hello Triangle".</td>
+<td><a href="https://youtu.be/AIj4SXAnJ_c">youtube</a></td>
+</tr>
+<tr>
+<td>Mon 30 March 6:00pm GMT</td>
+<td>Tutorial: Intro to Computer Programming Part 3. Using C</td>
+<td>Arrays and loops.</td>
+<td>TBD</td>
+</tr>
+<tr>
+<td>Fri 27 March 3:00pm GMT</td>
+<td>Non-tutorial: Building a minecraft-style voxel game Part 3.</td>
+<td></td>
+<td>TBD</td>
+</tr>
+<tr>
+<td>Thu 26 March 6:00pm GMT</td>
+<td>Tutorial: Intro to Computer Programming Part 2. Using C</td>
+<td>Functions/Variables/Maths.</td>
+<td><a href="https://youtu.be/AIj4SXAnJ_c">youtube</a></td>
+</tr>
+<tr>
+<td>Thu 26 March 6:00pm GMT</td>
+<td>Tutorial: Intro to Computer Programming Part 2. Using C</td>
+<td>Functions/Variables/Maths.</td>
+<td><a href="https://youtu.be/AIj4SXAnJ_c">youtube</a></td>
+</tr>
+<tr>
+<td>Thu 26 March 2:00pm GMT</td>
+<td>Non-tutorial: Building a minecraft-style voxel game Part 2</td>
+<td>Animating the console, Q&A.</td>
+<td><a href="https://youtu.be/7ryoMMQRM14">youtube</a></td>
+</tr>
+<tr>
+<td>Wed 25 March 3:00pm GMT</td>
+<td>Non-tutorial: Building a minecraft-style voxel game Part 1</td>
+<td>Adding a drop-down in-game console to new voxel world generator.</td>
+<td><a href="https://youtu.be/IW6O4A1RSt8">youtube</a></td>
+</tr>
+<tr>
+<td>Thu 19 March 9:30pm GMT</td>
+<td>Tutorial: Intro to Computer Programming Part 1. Using C</td>
+<td>Installing a compiler, terminals, "Hello, world!", discussion.</td>
+<td><a href="https://www.youtube.com/embed/8AH2OYe5qN0">youtube</a></td>
+</tr>
+</tbody>
+</table>
 
 <h3>Live Stream Link</h3>
 <div class="centre">
