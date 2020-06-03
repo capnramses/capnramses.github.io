@@ -6,7 +6,7 @@
 
 <p>
 I made a simple dissolve effect in WebGL. The source code is demo number 042 at
-<a href="https://github.com/capnramses/opengl_expmts">https://github.com/capnramses/opengl_expmts</a>.
+<a href="https://github.com/capnramses/gfx_expmts">https://github.com/capnramses/gfx_expmts</a>.
 You can also view the source of this page.
 The idea was to replicate something like the <i>dematerialisation</i> shader effect you see in
 video games as a way of removing 3D models of dead monsters. A similar effect is used to
