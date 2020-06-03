@@ -16,7 +16,7 @@ GIMP automatically:
 </p>
 
 <div class="centre">
-<img src="http://antongerdelan.net/blog/demos/dissolve/textures/clouds.png" />
+<img src="http://antongerdelan.net/demos/dissolve/textures/clouds.png" />
 </div>
 
 <p>
@@ -88,7 +88,7 @@ Dublin, Ireland.
     }
 </script>
 
-<script src="http://antongerdelan.net/blog/demos/dissolve/apg_maths.js"></script>
+<script src="http://antongerdelan.net/demos/dissolve/apg_maths.js"></script>
 <script>
     console.log("starting WebGL");
 
@@ -128,8 +128,8 @@ Dublin, Ireland.
         return texture;
     }
 
-    var checker_texture = load_texture("http://antongerdelan.net/blog/demos/dissolve/textures/checkerboard.png");
-    var cloud_texture = load_texture("http://antongerdelan.net/blog/demos/dissolve/textures/clouds.png");
+    var checker_texture = load_texture("http://antongerdelan.net/demos/dissolve/textures/checkerboard.png");
+    var cloud_texture = load_texture("http://antongerdelan.net/demos/dissolve/textures/clouds.png");
 
     var basic_sp = gl.createProgram();
     basic_sp.linked = false;
@@ -275,7 +275,7 @@ Dublin, Ireland.
         return mesh;
     }
 
-    var cube_mesh = start_loading_obj("http://antongerdelan.net/blog/demos/dissolve/meshes/cube.obj");
+    var cube_mesh = start_loading_obj("http://antongerdelan.net/demos/dissolve/meshes/cube.obj");
 
     // ********************** CAMERA ****************************
     var cam_dirty = true;

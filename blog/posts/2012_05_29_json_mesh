@@ -23,7 +23,7 @@ I got a mesh loading from a JSON file:
 </p>
 
 <div class="centre">
-<a href="demos/jsonmesh/"><img src="../images/cubejsonmesh.png" width="512"/></a><br />
+<a href="https://antongerdelan.net/demos/jsonmesh/"><img src="../images/cubejsonmesh.png" width="512"/></a><br />
 <small><i>
 this is a rotating box-oid that I loaded from a file in JSON format. all points are in one huge array so it plugs right into the gl data operation [x y z x y z x y.. ]etc..
 </i></small>

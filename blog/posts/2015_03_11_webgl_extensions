@@ -6,7 +6,7 @@ popular camera focus effect that basically blurs stuff out increasingly as it's
 farther away from some point of interest. The basic version renders the depth
 map out, and then a post-processing shader reads this, and uses the depth value
 to decide how much blur to apply. I did a
-<a href="http://antongerdelan.net/blog/demos/webgl_depth_of_field/">WebGL
+<a href="http://antongerdelan.net/demos/webgl_depth_of_field/">WebGL
 depth-of-field demo</a>
 of this yesterday. You can dial in a depth value to use as the "in-focus" range
 from the camera. The shader splits depths either side of this into a "far" and

@@ -1,6 +1,0 @@
-{
-"mDebugging" : true,
-"mWithLogging" : true,
-"mTimeStepSizeSeconds" : 0.10,
-"mBackgroundColour" : {"r":0.2, "g":0.2, "b":0.2}
-}

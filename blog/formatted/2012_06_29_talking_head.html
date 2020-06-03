@@ -9,7 +9,7 @@
 <h2 id="29june2012">29 June 2012</h2>
 <h3>Talking Head Weighted Average</h3>
 <p>
-After doing some reading about complicated interpolation methods for morph target animations, I thought "Ah for goodness sake - this is going nowhere!" and wrote a very simple weighted average function. That fixed it. I had 2 targets as well as a kind of default shape that I was unconsciously intending to show up as the sum of the other targets was < 1.0. This was my hitch. I threw in a little <tt>clamp</tt> function to turn this into a sensible value, and tested it in my very handy <a href="demos/editshaders/">shader editing demo</a>. That worked:
+After doing some reading about complicated interpolation methods for morph target animations, I thought "Ah for goodness sake - this is going nowhere!" and wrote a very simple weighted average function. That fixed it. I had 2 targets as well as a kind of default shape that I was unconsciously intending to show up as the sum of the other targets was < 1.0. This was my hitch. I threw in a little <tt>clamp</tt> function to turn this into a sensible value, and tested it in my very handy <a href="https://antongerdelan.net/demos/editshaders/">shader editing demo</a>. That worked:
 </p>
 
 <small><b>Generic GLSL code</b></small>
@@ -27,7 +27,7 @@ localPos = mix (localPos, mtarget_loc, angryfactor);
 </textarea>
 </form>
 
-<p>I updated my <a href="demos/talkinghead/">talking head demo</a> with the new shader.</p>
+<p>I updated my <a href="https://antongerdelan.net/demos/talkinghead/">talking head demo</a> with the new shader.</p>
 
 <h3>3D Picking with Rays</h3>
 

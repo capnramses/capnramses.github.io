@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+demo - mouse pick using colour buffers
+</title>
+<style type="text/css">
+canvas {border: 1px dashed orange;}
+</style>
+</head>
+<body onload="main ()">
+<p>
+<small>
+<a href="../">
+[home]
+</a>
+</small>
+</p>
+<h1>
+demo - mouse pick using colour buffers
+</h1>
+<table>
+<tr>
+<td>
+<canvas id="glcanvas" width="256" height="256" border="dashed">
+brower does not support HTML5
+</canvas>
+</td>
+<td>
+<img src="trollface.jpg" width="256" height="256" id="debugBuffer" />
+</td>
+</tr>
+</table>
+<form>
+<input type="radio" name="drawRadio" value="regular" onClick="radio(this)" checked /> draw default frame buffer
+<input type="radio" name="drawRadio" value="debug" onClick="radio(this)" /> draw what the picker sees (intermediate buffer)
+<br />
+<textarea id="glterm" cols="55" rows="22">
+</textarea>
+</form>
+</body>
+</html>
+
+<script src="main.js"></script>
+<script src="initGL.js"></script>
+<script src="webgl-utils.js"></script>
+<script src="webgl-debug.js"></script>
+<script src="Camera.js"></script>
+<script src="gl-matrix.js"></script>
+<script src="ShaderProgramme.js"></script>
+<script src="Renderable.js"></script>
