@@ -1,0 +1,20 @@
+<html>
+
+<head>
+  <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+</head>
+
+<body>
+  <a-scene>
+    <a-sky color="#ECECEC"></a-sky>
+
+    <a-assets>
+      <a-asset-item id="tower" src="tower.glb"></a-asset-item>
+      <a-asset-item id="archive" src="archive.glb"></a-asset-item>
+    </a-assets>
+
+    <a-entity gltf-model="#archive"></a-entity>
+  </a-scene>
+</body>
+
+</html>
