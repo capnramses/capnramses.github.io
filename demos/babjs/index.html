@@ -6,6 +6,7 @@
 	<title>Babylon - Getting Started</title>
 	<!--- Link to the last version of BabylonJS --->
 	<script src="https://cdn.babylonjs.com/babylon.js"></script>
+	<script src="https://cdn.babylonjs.com/loaders/babylon.glTFFileLoader.js"></script>
 	<style>
 		html,
 		body {
@@ -59,6 +60,17 @@
 
 				// create a built-in "ground" shape;
 				var ground = BABYLON.Mesh.CreateGround('ground1', 6, 6, 2, scene);
+
+				/* ARCHIVE MODEL APPEND TO SCENE */
+				// Append glTF model to scene.
+				BABYLON.SceneLoader.Append("./", "archive.glb", scene, function (scene) {
+					// Create a default arc rotate camera and light.
+					scene.createDefaultCameraOrLight(true, true, true);
+
+					// The default camera looks at the back of the asset.
+					// Rotate the camera by 180 degrees to the front of the asset.
+					scene.activeCamera.alpha += Math.PI;
+				});
 
 				// return the created scene
 				return scene;
