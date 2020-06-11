@@ -59,7 +59,7 @@
 				sphere.position.y = 1;
 
 				// create a built-in "ground" shape;
-				var ground = BABYLON.Mesh.CreateGround('ground1', 6, 6, 2, scene);
+			//	var ground = BABYLON.Mesh.CreateGround('ground1', 6, 6, 2, scene);
 
 				/* ARCHIVE MODEL APPEND TO SCENE */
 				// Append glTF model to scene.
@@ -80,7 +80,7 @@
 				var vrHelper = scene.createDefaultVRExperience({
 					//createDeviceOrientationCamera: false,
 					//useXR: true, // This will enable XR if supported
-					//floorMeshes: [scene.ground]
+					floorMeshes: [scene.ground]
 				});
 
 				// return the created scene
