@@ -58,16 +58,6 @@
 				// move the sphere upward 1/2 of its height
 				sphere.position.y = 1;
 
-				// add XR to scene
-				// const xr = scene.createDefaultXRExperienceAsync();
-
-				// Enable VR, use XR when possible
-				var vrHelper = scene.createDefaultVRExperience({
-					createDeviceOrientationCamera: false,
-					useXR: true, // This will enable XR if supported
-					floorMeshes: [scene.ground]
-				});
-
 				// create a built-in "ground" shape;
 				var ground = BABYLON.Mesh.CreateGround('ground1', 6, 6, 2, scene);
 
@@ -80,6 +70,17 @@
 					// The default camera looks at the back of the asset.
 					// Rotate the camera by 180 degrees to the front of the asset.
 					scene.activeCamera.alpha += Math.PI;
+				});
+
+				
+				// add XR to scene
+				// const xr = scene.createDefaultXRExperienceAsync();
+
+				// Enable VR, use XR when possible
+				var vrHelper = scene.createDefaultVRExperience({
+					createDeviceOrientationCamera: false,
+					useXR: true, // This will enable XR if supported
+					floorMeshes: [scene.ground]
 				});
 
 				// return the created scene
