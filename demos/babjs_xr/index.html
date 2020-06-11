@@ -39,7 +39,7 @@
 			var createScene = function () {
 				// create a basic BJS Scene object
 				var scene = new BABYLON.Scene(engine);
-				const env = scene.createDefaultEnvironment(); // for eg ground used in VR bit
+			//	const env = scene.createDefaultEnvironment(); // for eg ground used in VR bit
 
 				// create a FreeCamera, and set its position to (x:0, y:5, z:-10)
 				var camera = new BABYLON.FreeCamera('camera1', new BABYLON.Vector3(0, 5, -10), scene);
@@ -81,7 +81,7 @@
 				var vrHelper = scene.createDefaultVRExperience({
 					//createDeviceOrientationCamera: false,
 					//useXR: true, // This will enable XR if supported
-					floorMeshes: [env.ground]
+					//floorMeshes: [env.ground]
 				});
 
 				// return the created scene
