@@ -39,8 +39,8 @@
 			var createScene = function () {
 				// create a basic BJS Scene object
 				var scene = new BABYLON.Scene(engine);
-			//	const env = scene.createDefaultEnvironment(); // for eg ground used in VR bit
-			scene.ambientColor = new BABYLON.Color3(0.3, 0.3, 0.3);
+				//	const env = scene.createDefaultEnvironment(); // for eg ground used in VR bit
+				scene.ambientColor = new BABYLON.Color3(0.3, 0.3, 0.3);
 
 				// create a FreeCamera, and set its position to (x:0, y:5, z:-10)
 				var camera = new BABYLON.FreeCamera('camera1', new BABYLON.Vector3(0, 5, -10), scene);
@@ -50,6 +50,9 @@
 
 				// attach the camera to the canvas
 				camera.attachControl(canvas, false);
+
+				// default HDR environment map -- required to make PBR meshes not be dark
+				scene.createDefaultEnvironment();
 
 				// create a basic light, aiming 0,1,0 - meaning, to the sky
 				var light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), scene);
