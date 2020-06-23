@@ -51,5 +51,5 @@ function drawScene (gl) {
 	// draw test VBO ( no VAOs oddly )
 	gl.bindTexture(glContext.TEXTURE_2D, texture);
   //gl.drawArrays(gl.TRIANGLE_STRIP, 0, myMesh.mVertexPoints.length / 3);
-	gl.drawArrays(gl.TRIANGLES, 0, myMesh.mVertexPoints.length / 3);
-	
+	gl.drawArrays(gl.TRIANGLES, 0, myMesh.mVertexPoints.length / 3);	
+}
