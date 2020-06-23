@@ -2,8 +2,8 @@ body {
 	font-family: 'Ubuntu', sans-serif;
 	line-height: 1.4;
 	background-color: #131926;
-	/*background-image: url(http://antongerdelan.net/images/white_bar.png), url(http://antongerdelan.net/images/checkerboard_dark.png);*/
-	background-image: url(http://antongerdelan.net/images/white_bar.png);
+	/*background-image: url(https://antongerdelan.net/images/white_bar.png), url(https://antongerdelan.net/images/checkerboard_dark.png);*/
+	background-image: url(https://antongerdelan.net/images/white_bar.png);
 	background-repeat: repeat-y, repeat;
 	background-position: center, top;
 	background-size: 750px 8px, 256px 256px;

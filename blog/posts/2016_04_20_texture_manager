@@ -8,7 +8,7 @@ video game, which I made with OpenGL. Crongdor the Barbarian has 152 textures.
 <h3>The Limitation of Tutorials</h3>
 
 <p>
-Readers of my <a href="http://antongerdelan.net/opengl/">OpenGL tutorials e-book</a>
+Readers of my <a href="https://antongerdelan.net/opengl/">OpenGL tutorials e-book</a>
 often ask me how to <u>manage</u> large collections of assets; shaders,
 textures, 3d meshes, in larger projects. This is a very valid problem that
 tutorials usually don't talk about. It's pretty common for students to master

@@ -40,7 +40,7 @@ Interestingly, the per-pixel shading works on a computer with no graphics
 adaptor (I think), which I guess is mesa doing a fine job of emulating things.
 I wasn't able to do anything with shaders on previous PCs, even though they
 had early Nvidia adapters. I just checked, and I can also run
-<a href="http://antongerdelan.net/dolphin_rescue/">http://antongerdelan.net/dolphin_rescue/</a>
+<a href="https://antongerdelan.net/dolphin_rescue/">https://antongerdelan.net/dolphin_rescue/</a>
 on this laptop, which is all shader-based. Interesting. I probably would have
 gotten away with making my full-on OpenGL game in OpenGL 2.1 - none of the
 advanced shader techniques are at all reliable anyway, but it's probably a lot

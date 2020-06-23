@@ -39,7 +39,7 @@ about it on Twitter</a> this morning.
 Apparently the 'renderbuffer' name is a throw-back to support for an earlier
 implementation of MSAA (multi-sample anti-aliasing). As suggested I have tried
 it. I took a simple framebuffer switching demo
-<a href="http://antongerdelan.net/opengl/framebuffers.html">as described here</a>
+<a href="https://antongerdelan.net/opengl/framebuffers.html">as described here</a>
 and put an <tt>if</tt> statement in to try both options, right after where I
 build my secondary framebuffer:
 </p>

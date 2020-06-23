@@ -286,7 +286,7 @@ clang can find GLFW's files. Note that the OpenGL library is a "framework" on OS
 
 If you are using Visual Studio and are not very familiar with the project settings menus you may find it helpful
 to watch the video listed on this book's web page ( TODO - work in progress ). I believe a video will work better than static images here, and they are easier
-to update when software changes. You will find this on [antongerdelan.net/opengl/](http://antongerdelan.net/opengl/). The summary is that
+to update when software changes. You will find this on [antongerdelan.net/opengl/](https://antongerdelan.net/opengl/). The summary is that
 you need to be careful to use the versions of GLFW's `.lib` and `.dll` files matching your compiler and build (32-bit or 64-bit), add your search paths to the right
 menus, add `glfw3.lib` and `opengl32.lib` to the project's linking field (yes, the library is called `opengl32`, even on 64-bit builds),
 and move the `.dll` file to the correct working directly when you run your `.exe`.
@@ -794,7 +794,7 @@ shaders.
 * Change the fourth parameter to `gl_Position` to `0.5` and `2.0`. What happens? We will discuss this in the next chapter.
 * Changing the colour of the triangle in the fragment shader. If you want a
 colour picker that write to that range of numbers I have one on my website
-[antongerdelan.net/colour/](http://antongerdelan.net/colour).
+[antongerdelan.net/colour/](https://antongerdelan.net/colour).
 * Change the background clear colour. Hint: search for a function starting with
 `glClear...` in docs.gl.
 * Try rendering with points and lines modes instead of triangles.

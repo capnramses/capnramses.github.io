@@ -76,7 +76,7 @@ anywhere.
 <h2>Prototypes</h2>
 
 <p>
-I made <a href="http://antongerdelan.net/2015_03_20_page_icon_vis/">another mock-up</a> of a page of text with analytics for my visualisation
+I made <a href="https://antongerdelan.net/2015_03_20_page_icon_vis/">another mock-up</a> of a page of text with analytics for my visualisation
 project. WebGL was far superior to SVG, D3, and canvas2d in terms of
 performance, so I wanted to try a 2d vector graphics display with some nice
 bars, and some pointless but eye-catchy interpolated animations, using my
