@@ -36,7 +36,7 @@ https://github.com/KhronosGroup/glTF-Sample-Models
   <h1>Babylon.js Warmup 02 - GLTF - Archive</h1>
   <canvas id="my_canvas" touch-action="none" width="800" height="800"></canvas>
   <!-- Note: lots more sliding window options from https://doc.babylonjs.com/api/classes/babylon.performancemonitor -->
-  
+  <p>PGUP/PGDN,cursor keys</p>
 </body>
 
 </html>
@@ -49,6 +49,10 @@ https://github.com/KhronosGroup/glTF-Sample-Models
     var scene = new BABYLON.Scene(engine);
     var camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2, 2, new BABYLON.Vector3(0, 0, 5), scene);
     camera.attachControl(canvas, true);
+    // default HDR environment map -- required to make PBR meshes not be dark
+    var env = scene.createDefaultEnvironment({
+      createSkybox: false // stops big blue box
+    });
     var light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 0), scene);
     var light2 = new BABYLON.PointLight("light2", new BABYLON.Vector3(0, 1, -1), scene);
     var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 2 }, scene);
@@ -59,9 +63,20 @@ https://github.com/KhronosGroup/glTF-Sample-Models
     // OR just get the assets LoadAssetContainer(), ImportAnimations()...
     // ALSO there are async versions of each function: AppendAsync()
     // For assistance when load multiple assets the AssetsManager class can be used. See https://doc.babylonjs.com/how_to/how_to_use_assetsmanager
-    BABYLON.SceneLoader.Append("../assets/meshes/archive/", "archive.glb", scene, function (scene) {
+    var mesh = BABYLON.SceneLoader.Append("../assets/meshes/archive/", "archive.glb", scene, function (scene) {
       // do something with the scene
     });
+    var shadowGenerator = new BABYLON.ShadowGenerator(1024, light2);
+    shadowGenerator.getShadowMap().renderList.push(sphere);
+    env.ground.receiveShadows = true;
+
+    // Enable VR, use XR when possible
+    var vrHelper = scene.createDefaultVRExperience({
+      //createDeviceOrientationCamera: false,
+      useXR: true, // This will enable XR if supported
+      //floorMeshes: [env.ground]
+    });
+
     scene.debugLayer.show();
     return scene;
   };
