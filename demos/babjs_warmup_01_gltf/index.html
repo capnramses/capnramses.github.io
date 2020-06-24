@@ -45,6 +45,9 @@ https://github.com/KhronosGroup/glTF-Sample-Models
   let divFps = document.getElementById("fps");
   var canvas = document.getElementById("my_canvas");
   var engine = new BABYLON.Engine(canvas, true);
+  canvas.addEventListener("click", function () { // Going fullscreen can only be done on an user request:
+    engine.switchFullscreen(true);
+  });
   var createScene = function () {
     var scene = new BABYLON.Scene(engine);
     var camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2, 2, new BABYLON.Vector3(0, 0, 5), scene);
