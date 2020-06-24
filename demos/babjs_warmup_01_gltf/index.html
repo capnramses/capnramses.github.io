@@ -21,7 +21,7 @@ https://github.com/KhronosGroup/glTF-Sample-Models
   <h1>Babylon.js Warmup 01 - GLTF - Sponza</h1>
   <canvas id="my_canvas" touch-action="none" width="1920" height="1080"></canvas>
   <!-- Note: lots more sliding window options from https://doc.babylonjs.com/api/classes/babylon.performancemonitor -->
-  <p>Hold LMB-rotate camera, hold RMB-move camera</p>
+  <p>PGUP/PGDN,cursor keys</p>
 </body>
 
 </html>
@@ -38,7 +38,10 @@ https://github.com/KhronosGroup/glTF-Sample-Models
     camera.attachControl(canvas, true);
     var light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 0), scene);
     var light2 = new BABYLON.PointLight("light2", new BABYLON.Vector3(0, 1, -1), scene);
-    var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 2 }, scene);
+
+    // sphere useful for testing lights
+   // var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 2 }, scene);
+
     // Loads all babylon assets from the file and appends them to the scene
     // WARNING: do not apply a rotation since a quaternion may already be applied
     // NOTE(Anton) you can also use .Load(): Loads all babylon assets from the file and creates a new scene
