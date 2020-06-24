@@ -49,6 +49,14 @@ https://github.com/KhronosGroup/glTF-Sample-Models
     BABYLON.SceneLoader.Append("../assets/meshes/Sponza/glTF/", "Sponza.gltf", scene, function (scene) {
       // do something with the scene
     });
+
+    // Enable VR, use XR when possible
+    var vrHelper = scene.createDefaultVRExperience({
+      //createDeviceOrientationCamera: false,
+      useXR: true, // This will enable XR if supported
+      //floorMeshes: [env.ground]
+    });
+
     scene.debugLayer.show();
     return scene;
   };
