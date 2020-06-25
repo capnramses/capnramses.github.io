@@ -57,7 +57,24 @@ resize it if the browser is ever resized.
 
     // Add and manipulate meshes in the scene
     //var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 2 }, scene);
-    var myPlane = BABYLON.MeshBuilder.CreatePlane("myPlane", {width: 5, height: 2}, scene);
+
+    { // get Loris image for texture
+      // i just do this to get img w and h
+      var my_img = new Image();//document.getElementById("my_img");
+      var query_str = "https://beyond2022.ie/loris/1882_DKPRI14__(7).jpg/full/full/0/default.jpg";
+      my_img.src = query_str;
+
+      var myMaterial = new BABYLON.StandardMaterial("myMaterial", scene);
+      myMaterial.diffuseTexture = new BABYLON.Texture(query_str, scene);
+      myMaterial.specularTexture = new BABYLON.Texture(query_str, scene);
+      myMaterial.emissiveTexture = new BABYLON.Texture(query_str, scene);
+      myMaterial.ambientTexture = new BABYLON.Texture(query_str, scene);
+
+      var myPlane = BABYLON.MeshBuilder.CreatePlane("myPlane", { width: my_img.width, height: my_img.height }, scene);
+
+      myPlane.material = myMaterial;
+      //myPlane.material.diffuseTexture = new BABYLON.Texture(query_str, scene);
+    }
 
     return scene;
   };
