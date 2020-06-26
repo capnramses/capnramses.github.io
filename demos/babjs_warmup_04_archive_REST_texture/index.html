@@ -73,9 +73,13 @@ https://github.com/KhronosGroup/glTF-Sample-Models
       */
 
       var myPlane = BABYLON.MeshBuilder.CreatePlane("myPlane", { width: my_img.width, height: my_img.height }, scene);
-
       myPlane.material = myMaterial;
       //myPlane.material.diffuseTexture = new BABYLON.Texture(query_str, scene);
+      // "Position and Rotation" https://doc.babylonjs.com/babylon101/position
+      //myPlane.position = new BABYLON.Vector3(0, 10, 0);    
+      myPlane.position.y += 3;
+      myPlane.rotation.y = 1.57;  //rotation around y axis IN RADIANS
+      myPlane.scaling   = new BABYLON.Vector3( 2, 2, 2);
     }
 
     // Enable VR, use XR when possible
