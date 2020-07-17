@@ -1,0 +1,102 @@
+{
+	"hotspots": [
+		{
+			"name": "Outside the Record House, Front Portico",
+			"location": "exterior",
+			"text": "Something about the building opening in 1867. Picture of 'The Searchers'",
+			"position_xyz": "-56.82 2 -1.39",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "Stairwell",
+			"location": "exterior",
+			"text": "something about the social history of the building / Picture of the Plans from OPW showing the virtual model being made.  'The rooms round this central hall [Search Room] were given up to searchers, officials and clerks, together with a library, whilst some of the top rooms and all the basement were allocated to the fore and and office keeper for a residence.'",
+			"position_xyz": "-38.30 10.81 0.75",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "Stairwell",
+			"location": "exterior",
+			"text": "Old Photo of Wood and Chart / Description of what it was like in 1922 / 3-D photo of modern Court of Appeal",
+			"position_xyz": "-34.88 4.53 0.07",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "Reading Room, Archivist's Desk",
+			"location": "exterior",
+			"text": "Caricature from NAI",
+			"position_xyz": "-41.72 5.42 8.12",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "Strong-Room",
+			"location": "exterior",
+			"text": "Why things survived (example from NAI salved image) when building was evacuated",
+			"position_xyz": "-12.78 3.11 1.69",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "Firebreak",
+			"location": "exterior",
+			"text": "how it worked, but in reverse",
+			"position_xyz": "-30.17 3.53 25.28",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "Schematic",
+			"location": "Desk Space: Green Dolls-House",
+			"text": "19th-Century Schematic in 21st-Century Version",
+			"position_xyz": "-41.88 5.08 5.03",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "Wood's Guide",
+			"location": "Desk Space: Green Dolls-House",
+			"text": "Wood's Guide",
+			"position_xyz": "-43.56 4.77 -5.80",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "List of Items",
+			"location": "Desk Space: Green Dolls-House",
+			"text": "List of the 4 items that can be located",
+			"position_xyz": "-33.51 4.84 -5.22",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "item 1",
+			"location": "Record Treasury",
+			"text": "map",
+			"position_xyz": "-7.58 12.68 -3.48",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "item 2",
+			"location": "Record Treasury",
+			"text": "book",
+			"position_xyz": "21.32 18.93 0.81",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "item 3",
+			"location": "Record Treasury",
+			"text": "Printed Names 1766",
+			"position_xyz": "2.82 3.0 9.55",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "item 4",
+			"location": "Record Treasury",
+			"text": "roll",
+			"position_xyz": "-23.62 12.27 -2.25",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "Transport to Desk",
+			"location": "Desk Space",
+			"text": "Engage with materials: you will be able to search etc.",
+			"position_xyz": "-40.39 5.30 2.72",
+			"rotation_y_deg": "0"
+		}
+	]
+}
