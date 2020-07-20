@@ -140,11 +140,25 @@
 		<!-- this section pre-loads these assets before displaying anything -->
 		<a-assets>
 			<a-asset-item id="treasury" src="archive.glb"></a-asset-item>
-		</a-assets>
 
-		<!--"By specifying just hand-controls, we have something that works well with both Vive and Rift. The component gives extra events and handles hand animations and poses".-->
-		<a-entity id="leftHand" hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
-		<a-entity id="rightHand" hand-controls="hand: right; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
+
+			<!-- NOTE(Anton) skies wouldn't load without the crossorigin tag 
+			<a-cubemap id="sky">
+				<img src="posx.jpg">
+				<img src="negx.jpg">
+				<img src="posy.jpg">
+				<img src="negy.jpg">
+				<img src="posz.jpg">
+				<img src="negz.jpg">
+			</a-cubemap>
+
+			<img id="sky" src="https://img.gs/bbdkhfbzkk/2048x2048,stretch/http://i.imgur.com/WqlqEkq.jpg"
+				crossorigin="anonymous" />
+			<img id="skyTexture" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/sechelt.jpg"
+				crossorigin="anonymous">
+			-->
+
+		</a-assets>
 
 		<a-entity id="rig">
 			<!-- "When moving or rotating the camera relative to the scene, use a camera rig. By doing so, the camera’s height offset can be updated by roomscale devices, while still allowing the tracked area to be moved independently around the scene." -->
