@@ -7,11 +7,15 @@
 <body>
 	<script>
 
-		// NOTE(Gary) FYI, this URI is subject to change, but should be good enough for now:
-		var manifest_query_str = "https://beyond2022.ie/iiif/published-source/350/manifest";
+		// NOTE(Gary) FYI, this URI is subject to change, but should be good enough for now: "https://beyond2022.ie/iiif/published-source/350/manifest";
+		// NOTE(Anton) to avoid CORS problems i have downloaded a local copy of the manifest. when project is on B2022 server we can instead fetch dynamically.
+		var manifest_query_str = "manifest.json";
 
-		function query_manifest(img, canvas_index) {
-			let img_el = document.getElementById("turn-back-texture");
+		function query_manifest(page_el_id, manifest_page_index) {
+			var page_el = document.getElementById(page_el_id);
+			//console.log(page_el);
+
+			var img_new = new Image();
 
 			// REST API query
 			var xmlhttp = new XMLHttpRequest();
@@ -20,13 +24,12 @@
 			xmlhttp.onload = function (e) {
 				var str = xmlhttp.responseText;
 				var manifest = JSON.parse(str);
+				var url = manifest.sequences[0].canvases[manifest_page_index].images[0].resource["@id"];
 
-				// TOOD(Anton) get static first then dynamically
-				var id = manifest.sequences[0].canvases[canvas_index].images[0].resource["@id"];
-				console.log(id);
-				img_el.src = id;
-				console.log("image updated");
-				// TODO(Anton) set left or right image and corresponding texture
+				var texture = new THREE.TextureLoader().load(url);
+				// immediately use the texture for material creation
+				var material = new THREE.MeshBasicMaterial({ map: texture });
+				page_el.object3DMap.mesh.material = material;
 			}
 			xmlhttp.send();
 		}
@@ -42,7 +45,7 @@
 					console.log('I was clicked at: ', evt.detail.intersection.point);
 
 					// TODO(Anton) make sensible
-					query_manifest("turn-back-texture", 0);
+					query_manifest("left-page-el", 10);
 				});
 			}
 		});
@@ -72,14 +75,17 @@
 		</a-entity>
 
 
-		<a-box position="-1 0 -3" rotation="0 45 0" scale="2 3 0.2" color="#4CC3D9" material="src: #my-texture">
+		<a-box id="left-page-el" position="-1 0 -3" rotation="0 45 0" scale="2 3 0.2" color="#4CC3D9"
+			material="src: #my-texture">
 		</a-box>
-		<a-box position="1 0 -3" rotation="0 -45 0" scale="2 3 0.2" color="#4CC3D9" material="src: #my-texture">
+		<a-box id="right-page-el" position="1 0 -3" rotation="0 -45 0" scale="2 3 0.2" color="#4CC3D9"
+			material="src: #my-texture">
 		</a-box>
-		<a-box class="clickable" position="-1.75 -0.5 -2" scale="0.4 0.4 0.01" color="#4CC3D9"
-			material="src: #turn-back-texture" cursor-listener></a-box>
-		<a-box class="clickable" position="1.75 -0.5 -2" scale="0.4 0.4 0.01" color="#4CC3D9"
-			material="src: #turn-forwards-texture" cursor-listener></a-box>
+
+		<a-box id="turn-back-el" position="-1.75 -0.5 -2" scale="0.4 0.4 0.01" color="#4CC3D9"
+			material="src: #turn-back-texture" class="clickable" cursor-listener></a-box>
+		<a-box position="1.75 -0.5 -2" scale="0.4 0.4 0.01" color="#4CC3D9" material="src: #turn-forwards-texture"
+			class="clickable" cursor-listener></a-box>
 
 		<a-sky color="#ECECEC"></a-sky>
 	</a-scene>
