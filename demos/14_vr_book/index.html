@@ -1,0 +1,88 @@
+<html>
+
+<head>
+	<script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+</head>
+
+<body>
+	<script>
+
+		// NOTE(Gary) FYI, this URI is subject to change, but should be good enough for now:
+		var manifest_query_str = "https://beyond2022.ie/iiif/published-source/350/manifest";
+
+		function query_manifest(img, canvas_index) {
+			let img_el = document.getElementById("turn-back-texture");
+
+			// REST API query
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.open("GET", manifest_query_str, true);
+			// or onreadystatechange?
+			xmlhttp.onload = function (e) {
+				var str = xmlhttp.responseText;
+				var manifest = JSON.parse(str);
+
+				// TOOD(Anton) get static first then dynamically
+				var id = manifest.sequences[0].canvases[canvas_index].images[0].resource["@id"];
+				console.log(id);
+				img_el.src = id;
+				console.log("image updated");
+				// TODO(Anton) set left or right image and corresponding texture
+			}
+			xmlhttp.send();
+		}
+
+		// Component to change to a sequential color on click.
+		AFRAME.registerComponent('cursor-listener', {
+			init: function () {
+				var lastIndex = -1;
+				var COLORS = ['red', 'green', 'blue'];
+				this.el.addEventListener('click', function (evt) {
+					lastIndex = (lastIndex + 1) % COLORS.length;
+					this.setAttribute('material', 'color', COLORS[lastIndex]);
+					console.log('I was clicked at: ', evt.detail.intersection.point);
+
+					// TODO(Anton) make sensible
+					query_manifest("turn-back-texture", 0);
+				});
+			}
+		});
+	</script>
+	<a-scene>
+		<a-assets>
+			<img id="my-texture" src="default.jpg">
+			<img id="turn-back-texture" src="turn_back.png">
+			<img id="turn-forwards-texture" src="turn_forwards.png">
+		</a-assets>
+
+		<!-- camera with cursor for clicking/interacting. note the raycaster="objects: .clickable" whitelist for perf -->
+		<a-entity camera look-controls>
+			<!-- reticle version for VR headsets
+
+			<a-entity raycaster="objects: .clickable" cursor="fuse: true; fuseTimeout: 500;" position="0 0 -1"
+				geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03" material="color: #00FF00; shader: flat"
+				animation__click="property: scale; startEvents: click; easing: easeInCubic; dur: 150; from: 0.1 0.1 0.1; to: 1 1 1"
+				animation__fusing="property: scale; startEvents: fusing; easing: easeInCubic; dur: 1500; from: 1 1 1; to: 0.1 0.1 0.1"
+				animation__mouseleave="property: scale; startEvents: mouseleave; easing: easeInCubic; dur: 500; to: 1 1 1">
+			</a-entity>
+ -->
+			<!-- mouse version -->
+			<a-entity raycaster="objects: .clickable" cursor="fuse: true; fuseTimeout: 500; rayOrigin:mouse"
+				position="0 0 -1">
+			</a-entity>
+		</a-entity>
+
+
+		<a-box position="-1 0 -3" rotation="0 45 0" scale="2 3 0.2" color="#4CC3D9" material="src: #my-texture">
+		</a-box>
+		<a-box position="1 0 -3" rotation="0 -45 0" scale="2 3 0.2" color="#4CC3D9" material="src: #my-texture">
+		</a-box>
+		<a-box class="clickable" position="-1.75 -0.5 -2" scale="0.4 0.4 0.01" color="#4CC3D9"
+			material="src: #turn-back-texture" cursor-listener></a-box>
+		<a-box class="clickable" position="1.75 -0.5 -2" scale="0.4 0.4 0.01" color="#4CC3D9"
+			material="src: #turn-forwards-texture" cursor-listener></a-box>
+
+		<a-sky color="#ECECEC"></a-sky>
+	</a-scene>
+</body>
+
+</html>
