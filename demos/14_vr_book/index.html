@@ -75,6 +75,8 @@
 				right_page_el.object3DMap.mesh.material = new THREE.MeshBasicMaterial({ map: texture_right });
 			}
 			xmlhttp.send();
+			var entity = document.querySelector('[sound]');
+			entity.components.sound.playSound();
 		}
 
 		// Component to change to a sequential color on click.
@@ -123,6 +125,7 @@
 			<img id="my-texture" src="default.jpg">
 			<img id="turn-back-texture" src="turn_back.png">
 			<img id="turn-forwards-texture" src="turn_forwards.png">
+			<a-sound id="pageturn-sound" src="src: url(Page_Turn-Mark_DiAngelo-1304638748.wav)" autoplay="false"></a-sound>
 		</a-assets>
 
 		<!-- camera with cursor for clicking/interacting. note the raycaster="objects: .clickable" whitelist for perf -->
@@ -141,6 +144,8 @@
 				position="0 0 -0.1">
 			</a-entity>
 		</a-entity>
+
+		<a-entity sound="src: #pageturn-sound"></a-entity>
 
 
 		<a-box id="left-page-el" position="-1 0 -2" rotation="0 10 0" scale="2 3 0.2" color="#4CC3D9"
