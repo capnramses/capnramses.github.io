@@ -1,39 +1,39 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8">
-<title>Anton's Research Ramblings - 2012_08_13_vertex_displ</title>
-<link rel="stylesheet" type=text/css href="..\..\greysans.css">
-<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet"> 
-<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
-</head><body>
-<a href="../index.html">[index]</a>
-<h1>Anton's Research Ramblings</h1>
-<h2 id="13aug2012">13 August 2012</h2>
-<h3>Vertex Displacement Animation</h3>
+<!DOCTYPE html>
+<html>
 
-<p>
-I'm getting closer to plotting something clever from this 360 degree camera data. As an
-intermediary step (hitting 3 birds with one stone) I made of WebGL version of the vertex displacement animation
-that I'm using in OpenGL4. I uncovered lots of pain-in-the-butt parts of
-WebGL this time - had some problems with texture compression or internal format that was hard to
-figure out. It will go into the write-up. Anyway, it works well now and is easy to modify.
-</p>
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2012_08_13_vertex_displ</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
 
-<div class="centre">
-<a href="https://antongerdelan.net/demos/vertex_displacement/">
-<img src="../images/flag1.png" /><br /></a>
-<small><i><orange>Click on the image to see the demo. I just used a single sine function to
-modify along the x axis, but it could easily be a more complex set-up.</orange></i></small>
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2 id="13aug2012">13 August 2012</h2>
+	<h3>Vertex Displacement Animation</h3>
 
-</div>
+	<p>
+		I'm getting closer to plotting something clever from this 360 degree camera data. As an
+		intermediary step (hitting 3 birds with one stone) I made of WebGL version of the vertex displacement animation
+		that I'm using in OpenGL4. I uncovered lots of pain-in-the-butt parts of
+		WebGL this time - had some problems with texture compression or internal format that was hard to
+		figure out. It will go into the write-up. Anyway, it works well now and is easy to modify.
+	</p>
 
-<div id=disqus_thread></div>
-<script>
-(function() { // DON'T EDIT BELOW THIS LINE
-	  var d = document, s = d.createElement('script');
-	  s.src = '//https-capnramses-github-io.disqus.com/embed.js';
-	  s.setAttribute('data-timestamp', +new Date());
-	  (d.head || d.body).appendChild(s);
-})();
-</script>
-<noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript>
-<script id="dsq-count-scr" src="//https-capnramses-github-io.disqus.com/count.js" async></script>
-</body></html>
+	<div class="centre">
+		<a href="https://antongerdelan.net/demos/vertex_displacement/">
+			<img src="../images/flag1.png" /><br /></a>
+		<small><i>
+				<orange>Click on the image to see the demo. I just used a single sine function to
+					modify along the x axis, but it could easily be a more complex set-up.</orange>
+			</i></small>
+
+	</div>
+
+
+</body>
+
+</html>

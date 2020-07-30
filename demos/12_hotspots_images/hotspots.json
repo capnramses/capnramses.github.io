@@ -1,0 +1,79 @@
+{
+	"hotspots": [
+		{
+			"name": "Outside the Record House",
+			"location": "exterior",
+			"text": "Front Portico>Something about the building opening in 1867. Picture of 'The Searchers'"
+		},
+		{
+			"name": "Stairwell",
+			"location": "exterior",
+			"text": "something about the social history of the building / Picture of the Plans from OPW showing the virtual model being made.  'The rooms round this central hall [Search Room] were given up to searchers, officials and clerks, together with a library, whilst some of the top rooms and all the basement were allocated to the fore and and office keeper for a residence.'  "
+		},
+		{
+			"name": "Reading Room",
+			"location": "exterior",
+			"text": "Old Photo of Wood and Chart / Description of what it was like in 1922 / 3-D photo of modern Court of Appeal"
+		},
+		{
+			"name": "Archivist's Desk",
+			"location": "exterior",
+			"text": "Caricature from NAI"
+		},
+		{
+			"name": "Strong-Room",
+			"location": "exterior",
+			"text": "Why things survived (example from NAI salved image) when building was evacuated"
+		},
+		{
+			"name": "Firebreak",
+			"location": "exterior",
+			"text": "how it worked, but in reverse"
+		},
+		{
+			"name": "Schematic",
+			"location": "Desk Space: Green Dolls-House",
+			"text": "19th-Century Schematic in 21st-Century Version"
+		},
+		{
+			"name": "Schematic",
+			"location": "Desk Space: Green Dolls-House",
+			"text": "19th-Century Schematic in 21st-Century Version"
+		},
+		{
+			"name": "Wood's Guide",
+			"location": "Desk Space: Green Dolls-House",
+			"text": ""
+		},
+		{
+			"name": "Search Items",
+			"location": "Desk Space: Green Dolls-House",
+			"text": "List of the 4 items that can be located"
+		},
+		{
+			"name": "map",
+			"location": "Record Treasury",
+			"text": "Item 1 (map)"
+		},
+		{
+			"name": "book",
+			"location": "Record Treasury",
+			"text": "Item 2 (book)"
+		},
+		{
+			"name": "Printed Names 1766",
+			"location": "Record Treasury",
+			"text": "Item 3 (Printed Names 1766)"
+		},
+		{
+			"name": "roll",
+			"location": "Record Treasury",
+			"text": "Item 4 (roll)"
+		},
+		{
+			"name": "Transport to Desk",
+			"location": "Record Treasury",
+			"text": "Engage with materials: you will be able to search etc."
+		}
+	]
+}

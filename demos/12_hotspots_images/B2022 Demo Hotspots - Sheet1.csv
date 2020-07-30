@@ -1,0 +1,21 @@
+Name,Hotspot Type,Location,Title,Caption,Audio,Picture ,Position XYZ,Y Rotation (degrees)
+"Outside the Record House, Front Portico",Explore,Outside the Front Protico,The Record House,"Welcome to the Public Record Office of Ireland, which opened its doors in 1867. ",,08 31a_PROI Exterior,-56.82 2 -1.39,0
+Stairwell,Explore,Inside the Front Door,The Stairwell,"The rooms round this central hall [Search Room] were given up to searchers, officials and clerks, together with a library, whilst some of the top rooms and all the basement were allocated to the fore and and office keeper for a residence.'",,04 NAI OPW 5HC 1 106_8 - Copy,-38.30 10.81 0.75,0
+Stairwell,Explore,The Search Room,The Search Room ,Old Photo of Wood and Chart / Description of what it was like in 1922 / 3-D photo of modern Court of Appeal,"The rooms round this central hall [Search Room] were given up to searchers, officials and clerks, together with a library, whilst some of the top rooms and all the basement were allocated to the fore and and office keeper for a residence.'",09 32a_PROI Reading Room,-34.88 4.53 0.07,0
+"Reading Room, Archivist's Desk",Explore,The Search Room,The Archivist's Desk,"Herbert Wood, Deputy Keeper of the Records in 1922, described the collection in his care as the 'great untilled field' of Irish history.",,NAI Caricature,-41.72 5.42 8.12,0
+Strong-Room,Explore,The Search Room,The Strong Room,"Some records survived the blaze because they wre held overnight in the Strong Room, which had iron bars across the windows for added security. ",,,-12.78 3.11 1.69,0
+Firebreak,Explore,The Search Room,The Firebreak ,An isolation space separated the Search Room from the Record Treasury. This worked as a firebreak and it saved the front of the building from destruction in 1922.,,13 Irish Architectural Archive 010_035_X_005 - Copy,-30.17 3.53 25.28,0
+,Explore,The Record Treasury,The Record Treasury,This six-storey building held the accumulated public records dating back to 1174.,,10 33a_ PROI_Interior of the Treasury,2 4 2,0
+Wood's Guide,Locate,Search Room: Archivist's Desk,Herbert Wood's Guide to the Public Records (1919),Wood's Guide,,,-43.56 4.77 -5.80,0
+ Green Dolls-House,Locate,Search Room: Archivist's Desk,The Dolls House,19th-Century Schematic in 21st-Century Version,,,-41.88 5.08 5.03,0
+,Locate,Search Room: Archivist's Desk,Cross-Section of the Record Treasury,List of the 4 items that can be located,,,-33.51 4.84 -5.22,0
+Transport to Location in Repository,Teleport,"From Desk to Repository (Location 1, 2, 3, 4)",,,,,,
+Summary of Source 1,Connect,Record Treasury Location 1,,map,,,-7.58 12.68 -3.48,0
+Summary of Source 2,Connect,Record Treasury Location 2,,book,,,21.32 18.93 0.81,0
+Summary of Source 3,Connect,Record Treasury Location 3,,Printed Names 1766,,,2.82 3.0 9.55,0
+Summary of Source 4,Connect,Record Treasury Location 4,,roll,,,-23.62 12.27 -2.25,0
+Transport to Desk,Navigation: Teleport,Desk Space,,Engage with materials: you will be able to search etc.,,,-40.39 5.30 2.72,0
+Read Source 1,Discover,Back at reader's desk 1,"PRONI, D 207/10/19. 'Observations on utility of Act of Union' by [Jn. Foster?], e.g.",c.1800. '[it] depends on the completion of the expected benefits expressed in Parliament previous to the passing that Act'. Reproduced courtesy of the Deputy Keeper of the Records and Viscount Massereene.,,PRONI D207/10/19,-7.58 12.68 -3.48,0
+Read Source 2,Discover,Back at reader's desk  2,,book,,,21.32 18.93 0.81,0
+Read Source 3,Discover,Back at reader's desk 3,,Printed Names 1766,,,2.82 3.0 9.55,0
+Read Source 4,Discover,Back at reader's desk  4,,roll,,,-23.62 12.27 -2.25,0
