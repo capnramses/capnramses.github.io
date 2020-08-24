@@ -100,7 +100,7 @@
 		// OR just get the assets LoadAssetContainer(), ImportAnimations()...
 		// ALSO there are async versions of each function: AppendAsync()
 		// For assistance when load multiple assets the AssetsManager class can be used. See https://doc.babylonjs.com/how_to/how_to_use_assetsmanager
-		let treasury_mesh = BABYLON.SceneLoader.Append("./mesh/", "Treasury.glb", scene, function (scene) {
+		let treasury_mesh = BABYLON.SceneLoader.Append("./mesh/", "treasury_draco.glb", scene, function (scene) {
 			bookStand002Node = scene.getNodeByID("Reading Stand 01");//"Book Stand002");
 			if (bookStand002Node) {
 				console.log("Reading Stand 01 (plinth for Woods' Guide) found");
