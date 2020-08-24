@@ -12,8 +12,8 @@
 </head>
 
 <body>
-	<h1>Beyond 2022 - PRONI Interactive Demonstration</h1>
-	<canvas id="my_canvas" touch-action="none" width="1024" height="768"></canvas>
+
+	<canvas id="my_canvas" touch-action="none" width="800" height="800"></canvas>
 	<!-- Note: lots more sliding window options from https://doc.babylonjs.com/api/classes/babylon.performancemonitor -->
 </body>
 
@@ -39,6 +39,8 @@
 	var bookStand002Node;
 
 	var canvas = document.getElementById("my_canvas");
+	canvas.width = window.innerWidth - 32;
+	canvas.height = window.innerHeight - 32;
 	var engine = new BABYLON.Engine(canvas, true);
 	var scene;
 	/* canvas.addEventListener("click", function () { // Going fullscreen can only be done on an user request:
@@ -46,16 +48,13 @@
 	 }); doesn't work well with XR mode switch*/
 	var createScene = function () {
 		scene = new BABYLON.Scene(engine);
-		//var camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2, 2, new BABYLON.Vector3(0, 0, 5), scene);
+		var camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2, 2, new BABYLON.Vector3(0, 0, 5), scene);
 		// universal camera should work with gamepad + touch swipes + mouse/kb
-		var camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(0, 0, 5), scene);
+		//var camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(0, 0, 5), scene);
 		camera.setTarget(BABYLON.Vector3.Zero());
 		camera.attachControl(canvas, true);
-
-		scene.activeCamera.speed = 0.1;
 		scene.activeCamera.minZ = 0.01;
 		scene.activeCamera.maxZ = 150.0;
-		console.log("SET CAMERA SPEED TO SLOW");
 		/*
 				// mouse and touchscreen controlled by this
 				scene.onPointerObservable.add((pointerInfo) => {
@@ -139,15 +138,21 @@
 			//floorMeshes: [env.ground]
 		});
 
-		scene.debugLayer.show();
+		// type this into web console to get the inspector:
+		//	scene.debugLayer.show();
+
 		return scene;
 	};
 	var scene = createScene();
 	engine.runRenderLoop(function () {
 
+		//engine.enterFullscreen(false);
+		scene.activeCamera.speed = 0.1;
 		scene.render();
 	});
 	window.addEventListener("resize", function () {
+		canvas.width = window.innerWidth - 32;
+		canvas.height = window.innerHeight - 32;
 		engine.resize();
 	});
 	window.addEventListener("click", function () {
