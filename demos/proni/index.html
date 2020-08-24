@@ -19,13 +19,10 @@
 
 </html>
 
+<script src="js/woods_guide.js"></script>
 <script>
 
 	function apply_image_url_to_mesh(query_str, meshname) {
-		// get Loris image for texture
-		// i just do this to get img w and h
-		let img = new Image();//document.getElementById("my_img");
-		img.src = query_str;
 		let material = new BABYLON.StandardMaterial("material", scene);
 		material.diffuseTexture = new BABYLON.Texture(query_str, scene);
 		material.specularTexture = new BABYLON.Texture(query_str, scene);
@@ -39,43 +36,6 @@
 		mesh.material = material;
 	}
 
-	var manifest_query_str = "manifest.json";
-	var current_left_page_number = 3;
-	// set the page in the Woods' Guide book
-	function query_manifest(manifest_page_index) {
-		// REST API query
-		var xmlhttp = new XMLHttpRequest();
-		console.log(" querying " + manifest_query_str);
-		xmlhttp.open("GET", manifest_query_str, true);
-		// or onreadystatechange?
-		xmlhttp.onload = function (e) {
-			let str = xmlhttp.responseText;
-			let manifest = JSON.parse(str);
-			//	console.log(manifest);
-			let page_count = manifest.sequences[0].canvases.length;
-			console.log("page_count =" + page_count);
-			manifest_page_index = manifest_page_index < page_count - 2 ? manifest_page_index : page_count - 2;
-			console.log("left page index=" + manifest_page_index);
-			let url = "https://beyond2022.ie/loris/";
-			let url_left = url + manifest.sequences[0].canvases[manifest_page_index].label;
-			let url_right = url + manifest.sequences[0].canvases[manifest_page_index + 1].label;
-			// ^!w,h	The extracted region is scaled so that the width and height of the returned image are not greater than w and h,
-			// while maintaining the aspect ratio. The returned image must be as large as possible but not larger than w, h, or server-imposed limits.
-			let width = 2048; // NOTE(Anton) Three.js will resize the image to max dims and square 2048x2048
-			let height = 2048;
-			url_left += "/full/!" + width + "," + height + "/0/default.jpg";
-			url_right += "/full/!" + width + "," + height + "/0/default.jpg";
-			console.log("url_left: " + url_left);
-			console.log("url_right: " + url_right);
-
-			apply_image_url_to_mesh(url_left, "Book_Left_primitive1");
-			apply_image_url_to_mesh(url_right, "Book_right_primitive1");
-		}
-		xmlhttp.send();
-		//var entity = document.querySelector('[sound]');
-		//	entity.components.sound.playSound();
-	}
-
 	var bookStand002Node;
 
 	var canvas = document.getElementById("my_canvas");
@@ -86,8 +46,43 @@
 	 }); doesn't work well with XR mode switch*/
 	var createScene = function () {
 		scene = new BABYLON.Scene(engine);
-		var camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2, 2, new BABYLON.Vector3(0, 0, 5), scene);
+		//var camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2, 2, new BABYLON.Vector3(0, 0, 5), scene);
+		// universal camera should work with gamepad + touch swipes + mouse/kb
+		var camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(0, 0, 5), scene);
+		camera.setTarget(BABYLON.Vector3.Zero());
 		camera.attachControl(canvas, true);
+		camera.speed = 0.1;
+		camera.minZ = 0.01;
+		camera.maxZ = 150.0;
+		/*
+				// mouse and touchscreen controlled by this
+				scene.onPointerObservable.add((pointerInfo) => {
+					switch (pointerInfo.type) {
+						
+						case BABYLON.PointerEventTypes.POINTERDOWN:
+							//	console.log("POINTER DOWN");
+							break;
+						case BABYLON.PointerEventTypes.POINTERUP:
+							//	console.log("POINTER UP");
+							break;
+						case BABYLON.PointerEventTypes.POINTERMOVE:
+							//	console.log("POINTER MOVE");
+							break;
+						case BABYLON.PointerEventTypes.POINTERWHEEL:
+							//	console.log("POINTER WHEEL");
+							break;
+						case BABYLON.PointerEventTypes.POINTERPICK:
+							//	console.log("POINTER PICK");
+							break;
+						case BABYLON.PointerEventTypes.POINTERTAP:
+							//console.log("POINTER TAP");
+							break;
+						case BABYLON.PointerEventTypes.POINTERDOUBLETAP:
+							//	console.log("POINTER DOUBLE-TAP");
+							break;
+					}
+				});
+		*/
 		// default HDR environment map -- required to make PBR meshes not be dark
 		var env = scene.createDefaultEnvironment({
 			createSkybox: false // stops big blue box
@@ -116,7 +111,7 @@
 					node.scaling = new BABYLON.Vector3(-2.0, 2.0, 2.0);
 					node.rotation = new BABYLON.Vector3(1.382999, -1.57 + 3.141593, 0.0); // radians (27.7 degrees)
 					console.log("querying manifest for book...");
-					query_manifest(3);
+					woods_guide_query_manifest(woods_guide_first_page_number);
 				});
 			} else {
 				console.error("Couldn't find plinth for Woods' Guide - `Reading Stand 01`");
@@ -152,5 +147,13 @@
 	});
 	window.addEventListener("resize", function () {
 		engine.resize();
+	});
+	window.addEventListener("click", function () {
+		var pickResult = scene.pick(scene.pointerX, scene.pointerY);
+		if (pickResult.pickedMesh) {
+			console.log("picked mesh " + pickResult.pickedMesh.id);
+
+			woods_guide_handle_clicks(pickResult.pickedMesh.id);
+		}
 	});
 </script>
