@@ -48,10 +48,11 @@
 	 }); doesn't work well with XR mode switch*/
 	var createScene = function () {
 		scene = new BABYLON.Scene(engine);
-		var camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2, 2, new BABYLON.Vector3(0, 0, 5), scene);
+		var camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2, 2, new BABYLON.Vector3(61.9, 3.28, 1.61), scene);
+		camera.rotation = new BABYLON.Vector3(-0.21221571990816868, -1.8587109269995403, 0);
 		// universal camera should work with gamepad + touch swipes + mouse/kb
 		//var camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(0, 0, 5), scene);
-		camera.setTarget(BABYLON.Vector3.Zero());
+		//camera.setTarget(BABYLON.Vector3.Zero());
 		camera.attachControl(canvas, true);
 		scene.activeCamera.minZ = 0.01;
 		scene.activeCamera.maxZ = 150.0;
