@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Beyond 2022 - PRONI Interactive Demonstration</title>
+
+
+	<script src="https://cdn.babylonjs.com/babylon.js"></script>
+	<script src="https://cdn.babylonjs.com/loaders/babylon.glTFFileLoader.js"></script>
+	<script src="https://code.jquery.com/pep/0.4.3/pep.js"></script> <!-- touchscreen support -->
+</head>
+
+<body>
+	<h1>Beyond 2022 - PRONI Interactive Demonstration</h1>
+	<canvas id="my_canvas" touch-action="none" width="1024" height="768"></canvas>
+	<!-- Note: lots more sliding window options from https://doc.babylonjs.com/api/classes/babylon.performancemonitor -->
+</body>
+
+</html>
+
+<script>
+
+	function apply_image_url_to_mesh(query_str, meshname) {
+		// get Loris image for texture
+		// i just do this to get img w and h
+		let img = new Image();//document.getElementById("my_img");
+		img.src = query_str;
+		let material = new BABYLON.StandardMaterial("material", scene);
+		material.diffuseTexture = new BABYLON.Texture(query_str, scene);
+		material.specularTexture = new BABYLON.Texture(query_str, scene);
+		material.emissiveTexture = new BABYLON.Texture(query_str, scene);
+		material.ambientTexture = new BABYLON.Texture(query_str, scene);
+		let mesh = scene.getNodeByID(meshname);
+		if (!mesh) {
+			console.error("can't find mesh called " + meshname);
+			return;
+		}
+		mesh.material = material;
+	}
+
+	var manifest_query_str = "manifest.json";
+	var current_left_page_number = 3;
+	// set the page in the Woods' Guide book
+	function query_manifest(manifest_page_index) {
+		// REST API query
+		var xmlhttp = new XMLHttpRequest();
+		console.log(" querying " + manifest_query_str);
+		xmlhttp.open("GET", manifest_query_str, true);
+		// or onreadystatechange?
+		xmlhttp.onload = function (e) {
+			let str = xmlhttp.responseText;
+			let manifest = JSON.parse(str);
+			//	console.log(manifest);
+			let page_count = manifest.sequences[0].canvases.length;
+			console.log("page_count =" + page_count);
+			manifest_page_index = manifest_page_index < page_count - 2 ? manifest_page_index : page_count - 2;
+			console.log("left page index=" + manifest_page_index);
+			let url = "https://beyond2022.ie/loris/";
+			let url_left = url + manifest.sequences[0].canvases[manifest_page_index].label;
+			let url_right = url + manifest.sequences[0].canvases[manifest_page_index + 1].label;
+			// ^!w,h	The extracted region is scaled so that the width and height of the returned image are not greater than w and h,
+			// while maintaining the aspect ratio. The returned image must be as large as possible but not larger than w, h, or server-imposed limits.
+			let width = 2048; // NOTE(Anton) Three.js will resize the image to max dims and square 2048x2048
+			let height = 2048;
+			url_left += "/full/!" + width + "," + height + "/0/default.jpg";
+			url_right += "/full/!" + width + "," + height + "/0/default.jpg";
+			console.log("url_left: " + url_left);
+			console.log("url_right: " + url_right);
+
+			apply_image_url_to_mesh(url_left, "Book_Left_primitive1");
+			apply_image_url_to_mesh(url_right, "Book_right_primitive1");
+		}
+		xmlhttp.send();
+		//var entity = document.querySelector('[sound]');
+		//	entity.components.sound.playSound();
+	}
+
+	var bookStand002Node;
+
+	var canvas = document.getElementById("my_canvas");
+	var engine = new BABYLON.Engine(canvas, true);
+	var scene;
+	/* canvas.addEventListener("click", function () { // Going fullscreen can only be done on an user request:
+		 engine.switchFullscreen(true);
+	 }); doesn't work well with XR mode switch*/
+	var createScene = function () {
+		scene = new BABYLON.Scene(engine);
+		var camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2, 2, new BABYLON.Vector3(0, 0, 5), scene);
+		camera.attachControl(canvas, true);
+		// default HDR environment map -- required to make PBR meshes not be dark
+		var env = scene.createDefaultEnvironment({
+			createSkybox: false // stops big blue box
+		});
+
+		// Loads all babylon assets from the file and appends them to the scene
+		// WARNING: do not apply a rotation since a quaternion may already be applied
+		// NOTE(Anton) you can also use .Load(): Loads all babylon assets from the file and creates a new scene
+		// OR .ImportMesh() Loads the meshes from the file and appends them to the scene https://doc.babylonjs.com/how_to/load_from_any_file_type
+		// OR just get the assets LoadAssetContainer(), ImportAnimations()...
+		// ALSO there are async versions of each function: AppendAsync()
+		// For assistance when load multiple assets the AssetsManager class can be used. See https://doc.babylonjs.com/how_to/how_to_use_assetsmanager
+		let treasury_mesh = BABYLON.SceneLoader.Append("./mesh/", "Treasury.glb", scene, function (scene) {
+			bookStand002Node = scene.getNodeByID("Reading Stand 01");//"Book Stand002");
+			if (bookStand002Node) {
+				console.log("Reading Stand 01 (plinth for Woods' Guide) found");
+				let pos = bookStand002Node.position;
+				let rot = bookStand002Node.rotation;
+				let scale = bookStand002Node.scale;
+				//console.log(pos);
+
+				// put the book so it sits on the plinth's position with an offset rotation and position to centre it on the top of the plinth
+				let book_mesh = BABYLON.SceneLoader.Append("./mesh/", "book_reexport.glb", scene, function (scene) {
+					let node = scene.getNodeByID("Book");//"Book Stand002");
+					node.position = new BABYLON.Vector3(-38.2, 3.48, 3.19);
+					node.scaling = new BABYLON.Vector3(-2.0, 2.0, 2.0);
+					node.rotation = new BABYLON.Vector3(1.382999, -1.57 + 3.141593, 0.0); // radians (27.7 degrees)
+					console.log("querying manifest for book...");
+					query_manifest(3);
+				});
+			} else {
+				console.error("Couldn't find plinth for Woods' Guide - `Reading Stand 01`");
+			}
+
+		});
+
+		{
+
+			let query_str = "https://beyond2022.ie/loris/1882_DKPRI14__(7).jpg/full/full/0/default.jpg";
+
+			var myPlane = BABYLON.MeshBuilder.CreatePlane("myPlane", { width: 10, height: 10 }, scene);
+			apply_image_url_to_mesh(query_str, "myPlane");
+			myPlane.position.y += 3;
+			myPlane.rotation.y = 1.57;  //rotation around y axis IN RADIANS
+			myPlane.scaling = new BABYLON.Vector3(1, 1, 1);
+		}
+
+		// Enable VR, use XR when possible
+		var vrHelper = scene.createDefaultVRExperience({
+			//createDeviceOrientationCamera: false,
+			useXR: true, // This will enable XR if supported
+			//floorMeshes: [env.ground]
+		});
+
+		scene.debugLayer.show();
+		return scene;
+	};
+	var scene = createScene();
+	engine.runRenderLoop(function () {
+
+		scene.render();
+	});
+	window.addEventListener("resize", function () {
+		engine.resize();
+	});
+</script>
