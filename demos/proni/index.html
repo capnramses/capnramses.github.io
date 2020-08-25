@@ -36,8 +36,6 @@
 		mesh.material = material;
 	}
 
-	var bookStand002Node;
-
 	var canvas = document.getElementById("my_canvas");
 	canvas.width = window.innerWidth - 32;
 	canvas.height = window.innerHeight - 32;
@@ -49,62 +47,23 @@
 	var createScene = function () {
 		scene = new BABYLON.Scene(engine);
 		// universal camera should work with gamepad + touch swipes + mouse/kb
-		var camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(38.78, 3.88, 3.47), scene);
+		var camera = new BABYLON.UniversalCamera("camera0", new BABYLON.Vector3(38.78, 3.88, 3.47), scene);
 		//camera.setTarget(BABYLON.Vector3.Zero());
 		camera.rotation = new BABYLON.Vector3(0.5629945740373503, -8.082323395011569, 0.0);
 		camera.attachControl(canvas, true);
 		scene.activeCamera.minZ = 0.01;
 		scene.activeCamera.maxZ = 150.0;
-		/*
-				// mouse and touchscreen controlled by this
-				scene.onPointerObservable.add((pointerInfo) => {
-					switch (pointerInfo.type) {
-						
-						case BABYLON.PointerEventTypes.POINTERDOWN:
-							//	console.log("POINTER DOWN");
-							break;
-						case BABYLON.PointerEventTypes.POINTERUP:
-							//	console.log("POINTER UP");
-							break;
-						case BABYLON.PointerEventTypes.POINTERMOVE:
-							//	console.log("POINTER MOVE");
-							break;
-						case BABYLON.PointerEventTypes.POINTERWHEEL:
-							//	console.log("POINTER WHEEL");
-							break;
-						case BABYLON.PointerEventTypes.POINTERPICK:
-							//	console.log("POINTER PICK");
-							break;
-						case BABYLON.PointerEventTypes.POINTERTAP:
-							//console.log("POINTER TAP");
-							break;
-						case BABYLON.PointerEventTypes.POINTERDOUBLETAP:
-							//	console.log("POINTER DOUBLE-TAP");
-							break;
-					}
-				});
-		*/
+
 		// default HDR environment map -- required to make PBR meshes not be dark
 		var env = scene.createDefaultEnvironment({
 			createSkybox: false // stops big blue box
 		});
 
 		// Loads all babylon assets from the file and appends them to the scene
-		// WARNING: do not apply a rotation since a quaternion may already be applied
-		// NOTE(Anton) you can also use .Load(): Loads all babylon assets from the file and creates a new scene
-		// OR .ImportMesh() Loads the meshes from the file and appends them to the scene https://doc.babylonjs.com/how_to/load_from_any_file_type
-		// OR just get the assets LoadAssetContainer(), ImportAnimations()...
-		// ALSO there are async versions of each function: AppendAsync()
-		// For assistance when load multiple assets the AssetsManager class can be used. See https://doc.babylonjs.com/how_to/how_to_use_assetsmanager
 		let treasury_mesh = BABYLON.SceneLoader.Append("./mesh/", "treasury_draco.glb", scene, function (scene) {
-			bookStand002Node = scene.getNodeByID("Reading Stand 01");//"Book Stand002");
+			var bookStand002Node = scene.getNodeByID("Reading Stand 01");//"Book Stand002");
 			if (bookStand002Node) {
 				console.log("Reading Stand 01 (plinth for Woods' Guide) found");
-				let pos = bookStand002Node.position;
-				let rot = bookStand002Node.rotation;
-				let scale = bookStand002Node.scale;
-				//console.log(pos);
-
 				// put the book so it sits on the plinth's position with an offset rotation and position to centre it on the top of the plinth
 				let book_mesh = BABYLON.SceneLoader.Append("./mesh/", "book_reexport.glb", scene, function (scene) {
 					let node = scene.getNodeByID("Book");//"Book Stand002");
@@ -113,48 +72,41 @@
 					node.rotation = new BABYLON.Vector3(1.382999, -1.57 + 3.141593, 0.0); // radians (27.7 degrees)
 					console.log("querying manifest for book...");
 					woods_guide_query_manifest(woods_guide_first_page_number);
-				});
+				}); // endfunc Append() woods' guide book
 			} else {
 				console.error("Couldn't find plinth for Woods' Guide - `Reading Stand 01`");
 			}
+		}); // endfunc Append() treasury_mesh
 
-		});
 
-		{
-
-			let query_str = "https://beyond2022.ie/loris/1882_DKPRI14__(7).jpg/full/full/0/default.jpg";
-
-			var myPlane = BABYLON.MeshBuilder.CreatePlane("myPlane", { width: 10, height: 10 }, scene);
-			apply_image_url_to_mesh(query_str, "myPlane");
-			myPlane.position.y += 3;
-			myPlane.rotation.y = 1.57;  //rotation around y axis IN RADIANS
-			myPlane.scaling = new BABYLON.Vector3(1, 1, 1);
-		}
-
-		// Enable VR, use XR when possible
+		// Enable VR. Lots of options here: https://doc.babylonjs.com/api/interfaces/babylon.vrexperiencehelperoptions
 		var vrHelper = scene.createDefaultVRExperience({
-			//createDeviceOrientationCamera: false,
+			createDeviceOrientationCamera: false, // don't replace my non-VR camera as well
 			useXR: true, // This will enable XR if supported
+			// TODO(Anton) "A list of meshes to be used as the teleportation floor. If specified, teleportation will be enabled (default: undefined)"
 			//floorMeshes: [env.ground]
-		});
+			// Sets the scale of the vrDevice in babylon space. (default: 1)
+			// positionScale: number    -- there are a few options related to scaling of bits
+		} );
 
 		// type this into web console to get the inspector:
-		//	scene.debugLayer.show();
-
+		// scene.debugLayer.show();
 		return scene;
-	};
+	}; // endfunc createScene()
+
 	var scene = createScene();
 	engine.runRenderLoop(function () {
-
 		//engine.enterFullscreen(false);
 		scene.activeCamera.speed = 0.1;
 		scene.render();
 	});
+
 	window.addEventListener("resize", function () {
 		canvas.width = window.innerWidth - 32;
 		canvas.height = window.innerHeight - 32;
 		engine.resize();
 	});
+
 	window.addEventListener("click", function () {
 		var pickResult = scene.pick(scene.pointerX, scene.pointerY);
 		if (pickResult.pickedMesh) {
@@ -163,4 +115,5 @@
 			woods_guide_handle_clicks(pickResult.pickedMesh.id);
 		}
 	});
+
 </script>
