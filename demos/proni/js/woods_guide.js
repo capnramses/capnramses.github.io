@@ -43,6 +43,7 @@ function woods_guide_query_manifest(manifest_page_index) {
 		console.log("url_left: " + url_left);
 		console.log("url_right: " + url_right);
 
+		// use a helper function to switch texture to one from a url. if not using Babylon then just create the equivalent helper function with the same name!
 		apply_image_url_to_mesh(url_left, "Book_Left_primitive1");
 		apply_image_url_to_mesh(url_right, "Book_right_primitive1");
 	}

@@ -1,27 +1,36 @@
+<!--
+Beyond 2022 - PRONI Interactive Demonstration
+Copyright:   Beyond 2022
+Licence:     TBD
+Language:    HTML, JavaScript
+History:
+2020 Aug 24: First version. Anton Gerdelan
+-->
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>Beyond 2022 - PRONI Interactive Demonstration</title>
-
-
-	<script src="https://cdn.babylonjs.com/babylon.js"></script>
-	<script src="https://cdn.babylonjs.com/loaders/babylon.glTFFileLoader.js"></script>
+	<title>Beyond 2022 - PRONI VR Demonstration</title>
+	<script src="https://cdn.babylonjs.com/babylon.js"></script> <!-- latest stable release of Babylon.js framework -->
+	<script src="https://cdn.babylonjs.com/loaders/babylon.glTFFileLoader.js"></script> <!-- loading GLTF models -->
 	<script src="https://code.jquery.com/pep/0.4.3/pep.js"></script> <!-- touchscreen support -->
 </head>
 
 <body>
-
 	<canvas id="my_canvas" touch-action="none" width="800" height="800"></canvas>
 	<!-- Note: lots more sliding window options from https://doc.babylonjs.com/api/classes/babylon.performancemonitor -->
 </body>
 
 </html>
 
+<!-- functions for parsing Woods' Guide book that don't depend on Babylon.js -->
 <script src="js/woods_guide.js"></script>
-<script>
 
+<!-- set up the Babylon.js scene rendering and start the program -->
+<script>
+	// helper function to change the texture on an existing mesh. e.g to turn book pages.
 	function apply_image_url_to_mesh(query_str, meshname) {
 		let material = new BABYLON.StandardMaterial("material", scene);
 		material.diffuseTexture = new BABYLON.Texture(query_str, scene);
@@ -39,15 +48,15 @@
 	// the chains on lamps in the reading room are supposed to render as double-sided but will not be by default so call this
 	function chain_lamps_disable_backface_culling() {
 		var chainLinkMaterial = scene.getMaterialByID("ChainLink");
-		if ( chainLinkMaterial ) {
+		if (chainLinkMaterial) {
 			chainLinkMaterial.backFaceCulling = false;
 			console.log("Disabled backface culling on lamp chain material.");
 		} else {
-			console.error("Couldn't find chain link material ChainLink to disable backface culling." );
+			console.error("Couldn't find chain link material ChainLink to disable backface culling.");
 		}
 	}
 
-	// set up interactive Woods' Guide on the appropriate plinth in the model
+	// set up interactive Woods' Guide model in Babylon to sit on the appropriate plinth in the model. call after main Treasury mesh has finished loading.
 	function woods_guide_init() {
 		var bookStand002Node = scene.getNodeByID("Reading Stand 01");//"Book Stand002");
 		if (bookStand002Node) {
@@ -56,6 +65,7 @@
 			let book_mesh = BABYLON.SceneLoader.Append("./mesh/", "book_reexport.glb", scene, function (scene) {
 				let node = scene.getNodeByID("Book");//"Book Stand002");
 				node.position = new BABYLON.Vector3(-38.2, 3.48, 3.19);
+				// the -ve scale is because the Loris images were loading upside-down. can also y-invert the images as a texture loader {option}. also affects rotation.
 				node.scaling = new BABYLON.Vector3(-2.0, 2.0, 2.0);
 				node.rotation = new BABYLON.Vector3(1.382999, -1.57 + 3.141593, 0.0); // radians (27.7 degrees)
 				console.log("querying manifest for book...");
@@ -66,14 +76,7 @@
 		}
 	}
 
-	var canvas = document.getElementById("my_canvas");
-	canvas.width = window.innerWidth - 32;
-	canvas.height = window.innerHeight - 32;
-	var engine = new BABYLON.Engine(canvas, true);
-	var scene;
-	/* canvas.addEventListener("click", function () { // Going fullscreen can only be done on an user request:
-		 engine.switchFullscreen(true);
-	 }); doesn't work well with XR mode switch*/
+	// set up the scene (load models etc).
 	var createScene = function () {
 		scene = new BABYLON.Scene(engine);
 		// universal camera should work with gamepad + touch swipes + mouse/kb
@@ -109,26 +112,27 @@
 			//floorMeshes: [env.ground]
 			// Sets the scale of the vrDevice in babylon space. (default: 1)
 			// positionScale: number    -- there are a few options related to scaling of bits
-		} );
+		});
 
 		// type this into web console to get the inspector:
 		// scene.debugLayer.show();
 		return scene;
 	}; // endfunc createScene()
 
+	var canvas = document.getElementById("my_canvas");
+	canvas.width = window.innerWidth - 32;
+	canvas.height = window.innerHeight - 32;
+	var engine = new BABYLON.Engine(canvas, true);
 	var scene = createScene();
-	engine.runRenderLoop(function () {
-		//engine.enterFullscreen(false);
-		scene.activeCamera.speed = 0.1;
-		scene.render();
-	});
 
+	// resize the canvas and the rendering whenever browser window resizes
 	window.addEventListener("resize", function () {
 		canvas.width = window.innerWidth - 32;
 		canvas.height = window.innerHeight - 32;
 		engine.resize();
 	});
 
+	// check if the user clicked on an interactive item.
 	window.addEventListener("click", function () {
 		var pickResult = scene.pick(scene.pointerX, scene.pointerY);
 		if (pickResult.pickedMesh) {
@@ -138,4 +142,10 @@
 		}
 	});
 
+	// Start the party!
+	engine.runRenderLoop(function () {
+		//engine.enterFullscreen(false);
+		scene.activeCamera.speed = 0.1;
+		scene.render();
+	});
 </script>
