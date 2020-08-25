@@ -101,17 +101,56 @@ History:
 		let treasury_mesh = BABYLON.SceneLoader.Append("./mesh/", "treasury_draco.glb", scene, function (scene) {
 			chain_lamps_disable_backface_culling();
 			woods_guide_init();
+
+			{ // hide the 'zones' from ZoneBoxes
+				// NB when feeling clever could grab the ZoneBoxes parent node and iterate children to find all these
+				var zoneBoxesNode = scene.getNodeByID("ZoneBoxes");
+				if (!zoneBoxesNode) {
+					console.error("Couldn't find zone boxes head node `ZoneBoxes`");
+				} else {
+					var zoneBoxes = zoneBoxesNode.getChildren();
+					for (var i = 0; i < zoneBoxes.length; i++) {
+						console.log("Found zone box " + zoneBoxes[i].id);
+						zoneBoxes[i].isVisible = false;
+					}
+				}
+			}
+
+			// default all meshes to not pickable
+			for (var i = 0; i < scene.meshes.length; i++) {
+				scene.meshes[i].isPickable = false;
+			}
+
+			{ // start VR stuff
+				var navMeshes = [];
+				{
+					var navMeshesNode = scene.getNodeByID("NavMeshes");
+					if (!navMeshesNode) {
+						console.error("Couldn't find nav meshes head node `NavMeshes`");
+					} else {
+						navMeshes = navMeshesNode.getChildren();
+						for (var i = 0; i < navMeshes.length; i++) {
+							console.log("Found nav mesh " + navMeshes[i].id);
+							navMeshes[i].visibility = 0; // navmesh has to be visible to be pickable so isVisible=true but visibility=0!
+							navMeshes[i].isPickable = true; // whitelist for picking
+						}
+					}
+				}
+				// Enable VR. Lots of options here: https://doc.babylonjs.com/api/interfaces/babylon.vrexperiencehelperoptions
+				var vrHelper = scene.createDefaultVRExperience({
+					createDeviceOrientationCamera: false, // don't replace my non-VR camera as well
+					useXR: true, // This will enable XR if supported
+					// "A list of meshes to be used as the teleportation floor. If specified, teleportation will be enabled (default: undefined)"
+					floorMeshes: navMeshes, // teleportation is only enabled if meshes are put here
+					// Sets the scale of the vrDevice in babylon space. (default: 1)
+					// positionScale: number    -- there are a few options related to scaling of bits
+					positionScale: 0.85
+				});
+			} // endblock VR stuff
 		}); // endfunc Append() treasury_mesh
 
-
-		// Enable VR. Lots of options here: https://doc.babylonjs.com/api/interfaces/babylon.vrexperiencehelperoptions
-		var vrHelper = scene.createDefaultVRExperience({
-			createDeviceOrientationCamera: false, // don't replace my non-VR camera as well
-			useXR: true, // This will enable XR if supported
-			// TODO(Anton) "A list of meshes to be used as the teleportation floor. If specified, teleportation will be enabled (default: undefined)"
-			//floorMeshes: [env.ground]
-			// Sets the scale of the vrDevice in babylon space. (default: 1)
-			// positionScale: number    -- there are a few options related to scaling of bits
+		scene.gamepadManager.onGamepadConnectedObservable.add(function () {
+			console.log("new gamepad connected!");
 		});
 
 		// type this into web console to get the inspector:
@@ -123,6 +162,7 @@ History:
 	canvas.width = window.innerWidth - 32;
 	canvas.height = window.innerHeight - 32;
 	var engine = new BABYLON.Engine(canvas, true);
+	//engine.enterFullscreen(false); // note: also possible to request fullscreen on a click event (see original version of this file)
 	var scene = createScene();
 
 	// resize the canvas and the rendering whenever browser window resizes
@@ -144,7 +184,6 @@ History:
 
 	// Start the party!
 	engine.runRenderLoop(function () {
-		//engine.enterFullscreen(false);
 		scene.activeCamera.speed = 0.1;
 		scene.render();
 	});
