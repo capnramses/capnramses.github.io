@@ -49,14 +49,19 @@
 		// universal camera should work with gamepad + touch swipes + mouse/kb
 		var camera = new BABYLON.UniversalCamera("camera0", new BABYLON.Vector3(38.78, 3.88, 3.47), scene);
 		//camera.setTarget(BABYLON.Vector3.Zero());
-		camera.rotation = new BABYLON.Vector3(0.5629945740373503, -8.082323395011569, 0.0);
+		//camera.rotation = new BABYLON.Vector3(0.5629945740373503, -8.082323395011569, 0.0);
 		camera.attachControl(canvas, true);
 		scene.activeCamera.minZ = 0.01;
 		scene.activeCamera.maxZ = 150.0;
 
-		// default HDR environment map -- required to make PBR meshes not be dark
+		// default HDR environment map -- required to make PBR meshes not be dark. options https://doc.babylonjs.com/api/interfaces/babylon.ienvironmenthelperoptions
 		var env = scene.createDefaultEnvironment({
-			createSkybox: false // stops big blue box
+			// createGround: false, //Specifies whether or not to create a ground. True by default.
+			// TODO environmentTexture: string | BaseTexture, //  The texture used as your environment texture in the scene. Comes from the BabylonJS CDN by default and in use if setupImageProcessing is true.
+			createSkybox: false, // stops big blue box
+			//skyboxSize: 150, //number, // 20 by default
+			// skyboxTexture: string | BaseTexture, The texture used on the skybox for the main color. Comes from the BabylonJS CDN by default. Can be texture or url.
+			// toneMappingEnabled
 		});
 
 		// Loads all babylon assets from the file and appends them to the scene
