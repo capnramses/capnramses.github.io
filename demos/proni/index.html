@@ -136,7 +136,8 @@ History:
 						}
 					}
 				}
-				// Enable VR. Lots of options here: https://doc.babylonjs.com/api/interfaces/babylon.vrexperiencehelperoptions
+				// Enable VR. Docs here https://doc.babylonjs.com/how_to/webvr_helper
+				// Lots of options here: https://doc.babylonjs.com/api/interfaces/babylon.vrexperiencehelperoptions
 				var vrHelper = scene.createDefaultVRExperience({
 					createDeviceOrientationCamera: false, // don't replace my non-VR camera as well
 					useXR: true, // This will enable XR if supported
@@ -146,12 +147,23 @@ History:
 					// positionScale: number    -- there are a few options related to scaling of bits
 					positionScale: 0.9
 				});
+				// enable ray interaction from gaze or controllers
+				vrHelper.enableInteractions();
+				vrHelper.onNewMeshPicked.add(pickingInfo => {
+					//console.log("mesh VR picked " + pickingInfo.pickedMesh.id);
+					woods_guide_handle_clicks(pickingInfo.pickedMesh.id);
+				});
 			} // endblock VR stuff
 		}); // endfunc Append() treasury_mesh
 
-		scene.gamepadManager.onGamepadConnectedObservable.add(function () {
-			console.log("new gamepad connected!");
-		});
+		/* TODO(anton) trying to figure out how to make sure VR controllers only 'pick' when a trigger is held
+		scene.gamepadManager.onGamepadConnectedObservable.add(function (gamepad) {
+			console.log("new gamepad connected: " + gamepad.id);
+			gamepad.onTriggerStateChangedObservable.add(function (stateObject) {
+				let value = stateObject.value;
+				console.log(value);
+			});
+		});*/
 
 		// type this into web console to get the inspector:
 		// scene.debugLayer.show();
