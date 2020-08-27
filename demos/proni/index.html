@@ -25,11 +25,15 @@ History:
 
 </html>
 
-<!-- functions for parsing Woods' Guide book that don't depend on Babylon.js -->
+<script src="js/firebreak.js"></script>
 <script src="js/woods_guide.js"></script>
+<script src="js/zones.js"></script>
 
 <!-- set up the Babylon.js scene rendering and start the program -->
 <script>
+	let mesh_loaded = false;
+	// Start the party!
+
 	// helper function to change the texture on an existing mesh. e.g to turn book pages.
 	function apply_image_url_to_mesh(query_str, meshname) {
 		let material = new BABYLON.StandardMaterial("material", scene);
@@ -53,26 +57,6 @@ History:
 			console.log("Disabled backface culling on lamp chain material.");
 		} else {
 			console.error("Couldn't find chain link material ChainLink to disable backface culling.");
-		}
-	}
-
-	// set up interactive Woods' Guide model in Babylon to sit on the appropriate plinth in the model. call after main Treasury mesh has finished loading.
-	function woods_guide_init() {
-		var bookStand002Node = scene.getNodeByID("Reading Stand 01");//"Book Stand002");
-		if (bookStand002Node) {
-			console.log("Reading Stand 01 (plinth for Woods' Guide) found");
-			// put the book so it sits on the plinth's position with an offset rotation and position to centre it on the top of the plinth
-			let book_mesh = BABYLON.SceneLoader.Append("./mesh/", "book_reexport.glb", scene, function (scene) {
-				let node = scene.getNodeByID("Book");//"Book Stand002");
-				node.position = new BABYLON.Vector3(-38.2, 3.48, 3.19);
-				// the -ve scale is because the Loris images were loading upside-down. can also y-invert the images as a texture loader {option}. also affects rotation.
-				node.scaling = new BABYLON.Vector3(-2.0, 2.0, 2.0);
-				node.rotation = new BABYLON.Vector3(1.382999, -1.57 + 3.141593, 0.0); // radians (27.7 degrees)
-				console.log("querying manifest for book...");
-				woods_guide_query_manifest(woods_guide_first_page_number);
-			}); // endfunc Append() woods' guide book
-		} else {
-			console.error("Couldn't find plinth for Woods' Guide - `Reading Stand 01`");
 		}
 	}
 
@@ -101,20 +85,8 @@ History:
 		let treasury_mesh = BABYLON.SceneLoader.Append("./mesh/", "treasury_draco.glb", scene, function (scene) {
 			chain_lamps_disable_backface_culling();
 			woods_guide_init();
-
-			{ // hide the 'zones' from ZoneBoxes
-				// NB when feeling clever could grab the ZoneBoxes parent node and iterate children to find all these
-				var zoneBoxesNode = scene.getNodeByID("ZoneBoxes");
-				if (!zoneBoxesNode) {
-					console.error("Couldn't find zone boxes head node `ZoneBoxes`");
-				} else {
-					var zoneBoxes = zoneBoxesNode.getChildren();
-					for (var i = 0; i < zoneBoxes.length; i++) {
-						console.log("Found zone box " + zoneBoxes[i].id);
-						zoneBoxes[i].isVisible = false;
-					}
-				}
-			}
+			zones_init();
+			firebreak_init();
 
 			// default all meshes to not pickable
 			for (var i = 0; i < scene.meshes.length; i++) {
@@ -130,7 +102,7 @@ History:
 					} else {
 						navMeshes = navMeshesNode.getChildren();
 						for (var i = 0; i < navMeshes.length; i++) {
-							console.log("Found nav mesh " + navMeshes[i].id);
+							// console.log("Found nav mesh " + navMeshes[i].id);
 							navMeshes[i].visibility = 0; // navmesh has to be visible to be pickable so isVisible=true but visibility=0!
 							navMeshes[i].isPickable = true; // whitelist for picking
 						}
@@ -145,7 +117,7 @@ History:
 					floorMeshes: navMeshes, // teleportation is only enabled if meshes are put here
 					// Sets the scale of the vrDevice in babylon space. (default: 1)
 					// positionScale: number    -- there are a few options related to scaling of bits
-					positionScale: 0.9
+					positionScale: 1.0
 				});
 				// enable ray interaction from gaze or controllers
 				vrHelper.enableInteractions();
@@ -194,9 +166,17 @@ History:
 		}
 	});
 
-	// Start the party!
+	var prev_ms = performance.now();
+
 	engine.runRenderLoop(function () {
+		var curr_ms = performance.now();
+		var elapsed_ms = curr_ms - prev_ms;
+		prev_ms = curr_ms;
+		var elapsed_s = elapsed_ms / 1000.0;
+
 		scene.activeCamera.speed = 0.1;
+	  zones_update();
+		firebreak_update(elapsed_s);
 		scene.render();
 	});
 </script>

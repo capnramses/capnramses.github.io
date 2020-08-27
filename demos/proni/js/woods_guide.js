@@ -13,6 +13,26 @@ var woods_guide_right_page_id = "Book_right_primitive1"; // NOTE capitalisation 
 var woods_guide_first_page_number = 3;
 var woods_guide_current_page_number = woods_guide_first_page_number;
 
+// set up interactive Woods' Guide model in Babylon to sit on the appropriate plinth in the model. call after main Treasury mesh has finished loading.
+function woods_guide_init() {
+	var bookStand002Node = scene.getNodeByID("Reading Stand 01");//"Book Stand002");
+	if (bookStand002Node) {
+		console.log("Reading Stand 01 (plinth for Woods' Guide) found");
+		// put the book so it sits on the plinth's position with an offset rotation and position to centre it on the top of the plinth
+		let book_mesh = BABYLON.SceneLoader.Append("./mesh/", "book_reexport.glb", scene, function (scene) {
+			let node = scene.getNodeByID("Book");//"Book Stand002");
+			node.position = new BABYLON.Vector3(-38.2, 3.48, 3.19);
+			// the -ve scale is because the Loris images were loading upside-down. can also y-invert the images as a texture loader {option}. also affects rotation.
+			node.scaling = new BABYLON.Vector3(-2.0, 2.0, 2.0);
+			node.rotation = new BABYLON.Vector3(1.382999, -1.57 + 3.141593, 0.0); // radians (27.7 degrees)
+			console.log("querying manifest for book...");
+			woods_guide_query_manifest(woods_guide_first_page_number);
+		}); // endfunc Append() woods' guide book
+	} else {
+		console.error("Couldn't find plinth for Woods' Guide - `Reading Stand 01`");
+	}
+}
+
 // set the page in the Woods' Guide book
 function woods_guide_query_manifest(manifest_page_index) {
 	woods_guide_current_page_number = manifest_page_index;
