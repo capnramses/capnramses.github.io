@@ -92,17 +92,17 @@ let firebreak_state = 0;
 let firebreak_states_period_s = [
   1.0, // 0 all closed
   5.0, // 1 rr opening as user approached fb from rr
-  1.0, // 2 rr open and waiting for user to enter fb
-  1.0, // 3 rr closing
+  5.0, // 2 rr open and waiting for user to enter fb
+  0.5, // 3 rr closing
   5.0, // 4 tr opening
   1.0, // 5 tr open and waiting for user to exit fb
-  1.0, // 6 tr closing and reset to 0
+  0.5, // 6 tr closing and reset to 0
   3.0, // 7 tr opening as user approached fb from tr
-  1.0, // 8 tr open and waiting for user to enter fb
-  1.0, // 9 tr closing
+  5.0, // 8 tr open and waiting for user to enter fb
+  0.5, // 9 tr closing
   3.0, // 10 rr opening
   1.0, // 11 rr open and waiting for user to exit fb
-  1.0 // 12 rr closing
+  0.5 // 12 rr closing
 ];
 
 let firebreak_state_time_s = 0.0;
@@ -157,9 +157,15 @@ function firebreak_update(elapsed_s) {
 
     // rr open and waiting for user to enter
     case 2:
+      firebreak_state_time_s += elapsed_s;
       if (in_firebreak) {
         firebreak_state_time_s = 0.0;
         firebreak_state++;
+        return;
+      }
+      if (firebreak_state_time_s > firebreak_states_period_s[firebreak_state]) {
+        firebreak_state_time_s = 0.0;
+        firebreak_state = 12; // go to closing before closed
         return;
       }
       break;
@@ -225,9 +231,15 @@ function firebreak_update(elapsed_s) {
 
     // tr open and waiting for user to enter firebreak
     case 8:
+      firebreak_state_time_s += elapsed_s;
       if (in_firebreak) {
         firebreak_state_time_s = 0.0;
         firebreak_state++;
+        return;
+      }
+      if (firebreak_state_time_s > firebreak_states_period_s[firebreak_state]) {
+        firebreak_state_time_s = 0.0;
+        firebreak_state = 6; // go to closing before closed
         return;
       }
       break;
