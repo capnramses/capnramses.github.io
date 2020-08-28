@@ -58,6 +58,17 @@ function zones_init() {
       }
     }
   }
+  { // hide the Cross Section divider meshes
+    var crossSectionNode = scene.getNodeByID("Cross Section");
+    if (!crossSectionNode) {
+      console.error("Couldn't find zone boxes head node `Cross Section`");
+    } else {
+      var meshes = crossSectionNode.getChildren();
+      for (var i = 0; i < meshes.length; i++) {
+        meshes[i].isVisible = false;
+      }
+    }
+  }
   // find individual zones we need to fiddle with and make a variable for each
   zone_firebreak_mesh = scene.getNodeByID(zone_firebreak_id);
   if (!zone_firebreak_mesh) {
