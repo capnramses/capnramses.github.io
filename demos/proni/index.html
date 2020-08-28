@@ -112,7 +112,7 @@ History:
 				// Lots of options here: https://doc.babylonjs.com/api/interfaces/babylon.vrexperiencehelperoptions
 				var vrHelper = scene.createDefaultVRExperience({
 					createDeviceOrientationCamera: false, // don't replace my non-VR camera as well
-					useXR: false, // This will enable XR if supported -- has issues on every browser
+					useXR: true, // This will enable XR if supported
 					// "A list of meshes to be used as the teleportation floor. If specified, teleportation will be enabled (default: undefined)"
 					floorMeshes: navMeshes, // teleportation is only enabled if meshes are put here
 					// Sets the scale of the vrDevice in babylon space. (default: 1)
