@@ -25,6 +25,7 @@ History:
 
 </html>
 
+<script src="js/camera.js"></script>
 <script src="js/firebreak.js"></script>
 <script src="js/woods_guide.js"></script>
 <script src="js/zones.js"></script>
@@ -32,6 +33,7 @@ History:
 <!-- set up the Babylon.js scene rendering and start the program -->
 <script>
 	let mesh_loaded = false;
+	var navMeshes = [];
 	// Start the party!
 
 	// helper function to change the texture on an existing mesh. e.g to turn book pages.
@@ -64,12 +66,7 @@ History:
 	var createScene = function () {
 		scene = new BABYLON.Scene(engine);
 		// universal camera should work with gamepad + touch swipes + mouse/kb
-		var camera = new BABYLON.UniversalCamera("camera0", new BABYLON.Vector3(39.6, 3.88, 3.33), scene);
-		//camera.setTarget(BABYLON.Vector3.Zero());
-		camera.rotation = new BABYLON.Vector3(0.0, -1.5, 0.0);
-		camera.attachControl(canvas, true);
-		scene.activeCamera.minZ = 0.01;
-		scene.activeCamera.maxZ = 150.0;
+		camera_init();
 
 		// default HDR environment map -- required to make PBR meshes not be dark. options https://doc.babylonjs.com/api/interfaces/babylon.ienvironmenthelperoptions
 		var env = scene.createDefaultEnvironment({
@@ -94,7 +91,6 @@ History:
 			}
 
 			{ // start VR stuff
-				var navMeshes = [];
 				{
 					var navMeshesNode = scene.getNodeByID("NavMeshes");
 					if (!navMeshesNode) {
@@ -105,6 +101,7 @@ History:
 							// console.log("Found nav mesh " + navMeshes[i].id);
 							navMeshes[i].visibility = 0; // navmesh has to be visible to be pickable so isVisible=true but visibility=0!
 							navMeshes[i].isPickable = true; // whitelist for picking
+							navMeshes[i].checkCollisions = true;
 						}
 					}
 				}
@@ -126,6 +123,8 @@ History:
 					woods_guide_handle_clicks(pickingInfo.pickedMesh.id);
 				});
 			} // endblock VR stuff
+
+			mesh_loaded = true;
 		}); // endfunc Append() treasury_mesh
 
 		/* TODO(anton) trying to figure out how to make sure VR controllers only 'pick' when a trigger is held
@@ -158,6 +157,7 @@ History:
 
 	// check if the user clicked on an interactive item.
 	window.addEventListener("click", function () {
+		// add book to picking
 		var pickResult = scene.pick(scene.pointerX, scene.pointerY);
 		if (pickResult.pickedMesh) {
 			console.log("picked mesh " + pickResult.pickedMesh.id);
@@ -175,7 +175,12 @@ History:
 		var elapsed_s = elapsed_ms / 1000.0;
 
 		scene.activeCamera.speed = 0.1;
-	  zones_update();
+
+		if (mesh_loaded && navMeshes.length > 0) {
+			camera_follow_ground(navMeshes);
+		}
+
+		zones_update();
 		firebreak_update(elapsed_s);
 		scene.render();
 	});
