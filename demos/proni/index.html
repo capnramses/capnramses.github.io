@@ -39,14 +39,15 @@ History:
 	// helper function to change the texture on an existing mesh. e.g to turn book pages.
 	function apply_image_url_to_mesh(query_str, meshname) {
 		let material = new BABYLON.StandardMaterial("material", scene);
-		material.diffuseTexture = new BABYLON.Texture(query_str, scene);
-		material.specularTexture = new BABYLON.Texture(query_str, scene);
-		material.emissiveTexture = new BABYLON.Texture(query_str, scene);
-		material.ambientTexture = new BABYLON.Texture(query_str, scene);
+		material.diffuseTexture = material.specularTexture = material.emissiveTexture = material.ambientTexture = new BABYLON.Texture(query_str, scene);
 		let mesh = scene.getNodeByID(meshname);
 		if (!mesh) {
 			console.error("can't find mesh called " + meshname);
 			return;
+		}
+		if (mesh.material) {
+			//console.log("disposing old material...");
+			mesh.material.dispose(true, true, true);
 		}
 		mesh.material = material;
 	}
