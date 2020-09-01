@@ -31,7 +31,7 @@ function camera_follow_ground(ground_meshes_list) {
 	// determine if a valid ground mesh is under the camera
 	let ray_origin = scene.activeCamera.position;
 	let ray_direction = new BABYLON.Vector3(0, -1, 0);
-	let ray_length = 10;
+	let ray_length = 2.5;
 	let ray = new BABYLON.Ray(ray_origin, ray_direction, ray_length);
 	let picking_info = scene.pickWithRay(
 		ray,
@@ -60,7 +60,7 @@ function camera_follow_ground(ground_meshes_list) {
 
 	// TODO(Anton) if fallen below world for some reason pop back up
 	ray_direction = new BABYLON.Vector3(0, 1, 0);
-	ray_length = 1000;
+	ray_length = 4.0; // 4m above camera + amount camera would be offset above that
 	ray = new BABYLON.Ray(ray_origin, ray_direction, ray_length);
 	picking_info = scene.pickWithRay(
 		ray,
@@ -73,12 +73,14 @@ function camera_follow_ground(ground_meshes_list) {
 	);
 	if (picking_info.hit) {
 		var diffY = scene.activeCamera.position.y - (picking_info.pickedPoint.y + 1.75);
-		//	console.log("camera was " + diffY + " under the nav mesh, so popping back up");
-		scene.activeCamera.position.y = picking_info.pickedPoint.y + 1.75;
-		prev_cam_pos.x = scene.activeCamera.position.x;
-		prev_cam_pos.y = scene.activeCamera.position.y;
-		prev_cam_pos.z = scene.activeCamera.position.z;
-		return;
+		if (Math.abs(diffY) < 3.0) {
+			console.log("camera was " + diffY + " under the nav mesh, so popping back up");
+			scene.activeCamera.position.y = picking_info.pickedPoint.y + 1.75;
+			prev_cam_pos.x = scene.activeCamera.position.x;
+			prev_cam_pos.y = scene.activeCamera.position.y;
+			prev_cam_pos.z = scene.activeCamera.position.z;
+			return;
+		}
 	}
 
 	// if there was no nav mesh below / or / above
