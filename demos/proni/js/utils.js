@@ -27,7 +27,7 @@ function apply_image_url_to_mesh(query_str, meshname, invert_y, backface_culling
     console.log("texture loaded!");
   }
   var no_mipmap = false;
-  material.diffuseTexture = new BABYLON.Texture(query_str, scene, no_mipmap, invert_y, BABYLON.Texture.LINEAR_NEAREST_MIPLINEAR, _on_load, null, null, true);
+  material.diffuseTexture = new BABYLON.Texture(query_str, scene, no_mipmap, invert_y, BABYLON.Texture.LINEAR_LINEAR_MIPLINEAR, _on_load, null, null, true);
   material.emissiveColor = material.specularColor = material.ambientColor = new BABYLON.Color3(1, 1, 1);
   material.backFaceCulling = backface_culling;
 }
