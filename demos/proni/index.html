@@ -27,6 +27,8 @@ History:
 
 <script src="js/camera.js"></script>
 <script src="js/firebreak.js"></script>
+<script src="js/hotspots.js"></script>
+<script src="js/utils.js"></script>
 <script src="js/woods_guide.js"></script>
 <script src="js/zones.js"></script>
 
@@ -35,22 +37,6 @@ History:
 	let mesh_loaded = false;
 	var navMeshes = [];
 	// Start the party!
-
-	// helper function to change the texture on an existing mesh. e.g to turn book pages.
-	function apply_image_url_to_mesh(query_str, meshname) {
-		let material = new BABYLON.StandardMaterial("material", scene);
-		material.diffuseTexture = material.specularTexture = material.emissiveTexture = material.ambientTexture = new BABYLON.Texture(query_str, scene);
-		let mesh = scene.getNodeByID(meshname);
-		if (!mesh) {
-			console.error("can't find mesh called " + meshname);
-			return;
-		}
-		if (mesh.material) {
-			//console.log("disposing old material...");
-			mesh.material.dispose(true, true, true);
-		}
-		mesh.material = material;
-	}
 
 	// the chains on lamps in the reading room are supposed to render as double-sided but will not be by default so call this
 	function chain_lamps_disable_backface_culling() {
@@ -79,53 +65,59 @@ History:
 			// toneMappingEnabled
 		});
 
+		hotspots_init();
+
 		// Loads all babylon assets from the file and appends them to the scene
-		let treasury_mesh = BABYLON.SceneLoader.Append("./mesh/", "treasury_draco.glb", scene, function (scene) {
-			chain_lamps_disable_backface_culling();
-			woods_guide_init();
-			zones_init();
-			firebreak_init();
+		//let treasury_mesh = BABYLON.SceneLoader.Append("./mesh/", "treasury_draco.glb", scene, function (scene) {
+		BABYLON.SceneLoader.ImportMesh(["Ground", "House", "Shelves", "Treasury"], "./mesh/", "treasury_draco.glb", scene, function (meshes, particleSystems, skeletons) {
+			BABYLON.SceneLoader.ImportMesh(["Locations", "ZoneBoxes", "NavMeshes"], "./mesh/", "Utilities.glb", scene, function (meshes, particleSystems, skeletons) {
+				console.log("Loaded Utilities.glb");
+				chain_lamps_disable_backface_culling();
+				woods_guide_init();
+				zones_init();
+				firebreak_init();
 
-			// default all meshes to not pickable
-			for (var i = 0; i < scene.meshes.length; i++) {
-				scene.meshes[i].isPickable = false;
-			}
+				// default all meshes to not pickable
+				for (var i = 0; i < scene.meshes.length; i++) {
+					scene.meshes[i].isPickable = false;
+				}
 
-			{ // start VR stuff
-				{
-					var navMeshesNode = scene.getNodeByID("NavMeshes");
-					if (!navMeshesNode) {
-						console.error("Couldn't find nav meshes head node `NavMeshes`");
-					} else {
-						navMeshes = navMeshesNode.getChildren();
-						for (var i = 0; i < navMeshes.length; i++) {
-							// console.log("Found nav mesh " + navMeshes[i].id);
-							navMeshes[i].visibility = 0; // navmesh has to be visible to be pickable so isVisible=true but visibility=0!
-							navMeshes[i].isPickable = true; // whitelist for picking
-							navMeshes[i].checkCollisions = true;
+				{ // start VR stuff
+					{
+						var navMeshesNode = scene.getNodeByID("NavMeshes");
+						if (!navMeshesNode) {
+							console.error("Couldn't find nav meshes head node `NavMeshes`");
+						} else {
+							navMeshes = navMeshesNode.getChildren();
+							for (var i = 0; i < navMeshes.length; i++) {
+								// console.log("Found nav mesh " + navMeshes[i].id);
+								navMeshes[i].visibility = 0; // navmesh has to be visible to be pickable so isVisible=true but visibility=0!
+								navMeshes[i].isPickable = true; // whitelist for picking
+								navMeshes[i].checkCollisions = true;
+							}
 						}
 					}
-				}
-				// Enable VR. Docs here https://doc.babylonjs.com/how_to/webvr_helper
-				// Lots of options here: https://doc.babylonjs.com/api/interfaces/babylon.vrexperiencehelperoptions
-				var vrHelper = scene.createDefaultVRExperience({
-					createDeviceOrientationCamera: false, // don't replace my non-VR camera as well
-					useXR: true, // This will enable XR if supported
-					// "A list of meshes to be used as the teleportation floor. If specified, teleportation will be enabled (default: undefined)"
-					floorMeshes: navMeshes, // teleportation is only enabled if meshes are put here
-					// Sets the scale of the vrDevice in babylon space. (default: 1)
-					// positionScale: number    -- there are a few options related to scaling of bits
-					positionScale: 1.0
-				});
-				// enable ray interaction from gaze or controllers
-				vrHelper.enableInteractions();
-				vrHelper.onNewMeshPicked.add(pickingInfo => {
-					//console.log("mesh VR picked " + pickingInfo.pickedMesh.id);
-					woods_guide_handle_clicks(pickingInfo.pickedMesh.id);
-				});
-			} // endblock VR stuff
+					// Enable VR. Docs here https://doc.babylonjs.com/how_to/webvr_helper
+					// Lots of options here: https://doc.babylonjs.com/api/interfaces/babylon.vrexperiencehelperoptions
+					var vrHelper = scene.createDefaultVRExperience({
+						createDeviceOrientationCamera: false, // don't replace my non-VR camera as well
+						useXR: true, // This will enable XR if supported
+						// "A list of meshes to be used as the teleportation floor. If specified, teleportation will be enabled (default: undefined)"
+						floorMeshes: navMeshes, // teleportation is only enabled if meshes are put here
+						// Sets the scale of the vrDevice in babylon space. (default: 1)
+						// positionScale: number    -- there are a few options related to scaling of bits
+						positionScale: 1.0
+					});
+					// enable ray interaction from gaze or controllers
+					vrHelper.enableInteractions();
+					vrHelper.onNewMeshPicked.add(pickingInfo => {
+						//console.log("mesh VR picked " + pickingInfo.pickedMesh.id);
+						woods_guide_handle_clicks(pickingInfo.pickedMesh.id);
+					});
+				} // endblock VR stuff
 
-			mesh_loaded = true;
+				mesh_loaded = true;
+			});
 		}); // endfunc Append() treasury_mesh
 
 		/* TODO(anton) trying to figure out how to make sure VR controllers only 'pick' when a trigger is held

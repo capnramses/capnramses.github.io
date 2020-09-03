@@ -22,9 +22,8 @@ function woods_guide_init() {
 		let book_mesh = BABYLON.SceneLoader.Append("./mesh/", "book_reexport.glb", scene, function (scene) {
 			let node = scene.getNodeByID("Book");//"Book Stand002");
 			node.position = new BABYLON.Vector3(-38.2, 3.48, 3.19);
-			// the -ve scale is because the Loris images were loading upside-down. can also y-invert the images as a texture loader {option}. also affects rotation.
-			node.scaling = new BABYLON.Vector3(-2.0, 2.0, 2.0);
-			node.rotation = new BABYLON.Vector3(1.382999, -1.57 + 3.141593, 0.0); // radians (27.7 degrees)
+			node.scaling = new BABYLON.Vector3(2.0, 2.0, 2.0);
+			node.rotation = new BABYLON.Vector3(-1.382999 + 3.141593, -1.57, 0.0); // radians (27.7 degrees)
 			console.log("querying manifest for book...");
 			woods_guide_query_manifest(woods_guide_first_page_number);
 		}); // endfunc Append() woods' guide book
@@ -54,18 +53,22 @@ function woods_guide_query_manifest(manifest_page_index) {
 		let url = "https://beyond2022.ie/loris/";
 		let url_left = url + manifest.sequences[0].canvases[woods_guide_current_page_number].label;
 		let url_right = url + manifest.sequences[0].canvases[woods_guide_current_page_number + 1].label;
+
+		// NB(Anton) reduce the resolution from crisp 2048 to 1024 because memory usage was shooting up many MB per click.
+
 		// ^!w,h	The extracted region is scaled so that the width and height of the returned image are not greater than w and h,
 		// while maintaining the aspect ratio. The returned image must be as large as possible but not larger than w, h, or server-imposed limits.
-		let width = 2048; // NOTE(Anton) Three.js will resize the image to max dims and square 2048x2048
-		let height = 2048;
+		let width = 1024;  // note 2048 is crisp but is like 10MB per image that isnt cleaned up well by browser
+		let height = 1024;
 		url_left += "/full/!" + width + "," + height + "/0/default.jpg";
 		url_right += "/full/!" + width + "," + height + "/0/default.jpg";
 		console.log("url_left: " + url_left);
 		console.log("url_right: " + url_right);
 
 		// use a helper function to switch texture to one from a url. if not using Babylon then just create the equivalent helper function with the same name!
-		apply_image_url_to_mesh(url_left, "Book_Left_primitive1");
-		apply_image_url_to_mesh(url_right, "Book_right_primitive1");
+		var y_invert = false;
+		apply_image_url_to_mesh(url_left, "Book_Left_primitive1", y_invert, true);
+		apply_image_url_to_mesh(url_right, "Book_right_primitive1", y_invert, true);
 	}
 	xmlhttp.send();
 	//var entity = document.querySelector('[sound]');

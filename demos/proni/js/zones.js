@@ -163,25 +163,25 @@ function zones_update() {
   // the setEnabled() functions seem to be expensive so i avoid calling them every frame with an extra variable:
 
   // switch ground on/off
-  if (zone_gr_enable && !zone_gr_was_enabled){
+  if (zone_gr_enable && !zone_gr_was_enabled) {
     zone_ground_root_node.setEnabled(true);
-  } else if (!zone_gr_enable && zone_gr_was_enabled){
+  } else if (!zone_gr_enable && zone_gr_was_enabled) {
     zone_ground_root_node.setEnabled(false);
   }
 
   // switch reading room on/off
-  if (zone_rr_enable && !zone_rr_was_enabled){
+  if (zone_rr_enable && !zone_rr_was_enabled) {
     zone_reading_room_root_node.setEnabled(true);
-  } else if (!zone_rr_enable && zone_rr_was_enabled){
+  } else if (!zone_rr_enable && zone_rr_was_enabled) {
     zone_reading_room_root_node.setEnabled(false);
   }
 
   // switch treasurey on/off
-  if (zone_tr_enable && !zone_tr_was_enabled){
+  if (zone_tr_enable && !zone_tr_was_enabled) {
     zone_treasury_root_node.setEnabled(true);
     zone_treasury_b_root_node.setEnabled(true);
     zone_shelves_root_node.setEnabled(true);
-  } else if (!zone_tr_enable && zone_tr_was_enabled){
+  } else if (!zone_tr_enable && zone_tr_was_enabled) {
     zone_treasury_root_node.setEnabled(false);
     zone_treasury_b_root_node.setEnabled(false);
     zone_shelves_root_node.setEnabled(false);
