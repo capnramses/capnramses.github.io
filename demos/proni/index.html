@@ -90,7 +90,7 @@ History:
 						} else {
 							navMeshes = navMeshesNode.getChildren();
 							for (var i = 0; i < navMeshes.length; i++) {
-								// console.log("Found nav mesh " + navMeshes[i].id);
+								console.log("Found nav mesh " + navMeshes[i].id);
 								navMeshes[i].visibility = 0; // navmesh has to be visible to be pickable so isVisible=true but visibility=0!
 								navMeshes[i].isPickable = true; // whitelist for picking
 								navMeshes[i].checkCollisions = true;
@@ -169,8 +169,11 @@ History:
 
 		scene.activeCamera.speed = 0.1;
 
-		if (mesh_loaded && navMeshes.length > 0) {
-			camera_follow_ground(navMeshes);
+		// only do this when not in VR teleport mode
+		if (scene.activeCamera.id != "WebVRHelper") {
+			if (mesh_loaded && navMeshes.length > 0) {
+				camera_follow_ground(navMeshes);
+			}
 		}
 
 		zones_update();
