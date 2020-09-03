@@ -58,8 +58,8 @@ function woods_guide_query_manifest(manifest_page_index) {
 
 		// ^!w,h	The extracted region is scaled so that the width and height of the returned image are not greater than w and h,
 		// while maintaining the aspect ratio. The returned image must be as large as possible but not larger than w, h, or server-imposed limits.
-		let width = 1024;  // note 2048 is crisp but is like 10MB per image that isnt cleaned up well by browser
-		let height = 1024;
+		let width = 2048;  // note 2048 is crisp but is like 10MB per image that isnt cleaned up well by browser
+		let height = 2048;
 		url_left += "/full/!" + width + "," + height + "/0/default.jpg";
 		url_right += "/full/!" + width + "," + height + "/0/default.jpg";
 		console.log("url_left: " + url_left);
