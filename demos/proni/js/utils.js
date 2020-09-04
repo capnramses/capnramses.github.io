@@ -7,8 +7,11 @@ History:
 2020 Sep 2: First version. Anton Gerdelan
 */
 
+// multiply a value in degrees by this number to turn it into radians
+var one_deg_in_rad = 0.01745329;
+
 // helper function to change the texture on an existing mesh. e.g to turn book pages.
-function apply_image_url_to_mesh(query_str, meshname, invert_y, backface_culling, on_load_cb ) {
+function apply_image_url_to_mesh(query_str, meshname, invert_y, backface_culling, on_load_cb) {
   let material = new BABYLON.StandardMaterial(meshname + "_material", scene);
   function _on_load() {
     let mesh = scene.getNodeByID(meshname);
@@ -23,7 +26,7 @@ function apply_image_url_to_mesh(query_str, meshname, invert_y, backface_culling
       mesh.material.dispose(true, true, true);
     }
     mesh.material = material;
-    if ( on_load_cb ) { on_load_cb(meshname); }
+    if (on_load_cb) { on_load_cb(meshname); }
     console.log("texture loaded!");
   }
   var no_mipmap = false;

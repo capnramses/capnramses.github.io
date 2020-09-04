@@ -1,5 +1,5 @@
 /*
-Functions for querying Woods' Guide and changing page textures to turn the page.
+Functions for querying Wood's Guide and changing page textures to turn the page.
 Copyright:   Beyond 2022
 Licence:     TBD
 Language:    JavaScript
@@ -28,7 +28,7 @@ function woods_guide_init() {
 			woods_guide_query_manifest(woods_guide_first_page_number);
 		}); // endfunc Append() woods' guide book
 	} else {
-		console.error("Couldn't find plinth for Woods' Guide - `Reading Stand 01`");
+		console.error("Couldn't find plinth for Wood's Guide - `Reading Stand 01`");
 	}
 }
 

@@ -89,20 +89,22 @@ function firebreak_rotate_meshes(rr_l, rr_r, tr_l, tr_r) {
 }
 
 let firebreak_state = 0;
+let firebreak_opening_time_s = 2.5; // was 5.0 originally
+let firebreak_closing_time_s = 0.5; // was 0.5 originally
 let firebreak_states_period_s = [
   1.0, // 0 all closed
-  5.0, // 1 rr opening as user approached fb from rr
-  5.0, // 2 rr open and waiting for user to enter fb
-  0.5, // 3 rr closing
-  5.0, // 4 tr opening
+  firebreak_opening_time_s, // 1 rr opening as user approached fb from rr
+  firebreak_opening_time_s, // 2 rr open and waiting for user to enter fb
+  firebreak_closing_time_s, // 3 rr closing
+  firebreak_opening_time_s, // 4 tr opening
   1.0, // 5 tr open and waiting for user to exit fb
-  0.5, // 6 tr closing and reset to 0
-  3.0, // 7 tr opening as user approached fb from tr
-  5.0, // 8 tr open and waiting for user to enter fb
-  0.5, // 9 tr closing
-  3.0, // 10 rr opening
+  firebreak_closing_time_s, // 6 tr closing and reset to 0
+  firebreak_opening_time_s, // 7 tr opening as user approached fb from tr
+  firebreak_opening_time_s, // 8 tr open and waiting for user to enter fb
+  firebreak_closing_time_s, // 9 tr closing
+  firebreak_opening_time_s, // 10 rr opening
   1.0, // 11 rr open and waiting for user to exit fb
-  0.5 // 12 rr closing
+  firebreak_closing_time_s // 12 rr closing
 ];
 
 let firebreak_state_time_s = 0.0;

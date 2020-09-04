@@ -10,9 +10,39 @@ History:
 var hotspots_json_url = "hotspots.json";
 var hotspots_image_dir = "images/";
 var hotspots_image_format = ".jpg";
-var hotspots_scale = 2.0;
+var hotspots_scale = 1.0;
+var hotspot_text_scale = 0.5;
+var hotspot_text_vert_offset = 1.0;
+var hotspot_image_additional_vert_offset = 0.75;
 
 function hotspots_init() {
+  // HACK(Anton) the locations are not 180 degrees aligned with model's 180 degree rotation so doing this here
+  var rotation_matrix = BABYLON.Matrix.RotationY(Math.PI);
+
+  let material = new BABYLON.StandardMaterial("hotspot_icon_mat", scene);
+  material.diffuseColor = material.emissiveColor = material.specularColor = material.ambientColor = new BABYLON.Color3(0, 1, 0);
+  material.alpha = 0.57;
+
+  let locations_node = scene.getNodeByID("Locations");
+  if (locations_node) {
+    let children = locations_node.getChildren();
+    console.log("found " + children.length + " locations: ");
+    for (var i = 0; i < children.length; i++) {
+      console.log("location: " + children[i].id);
+      // add a 'hotspot' sphere -- colour-coded to match video windows
+      let sphere_mesh = BABYLON.MeshBuilder.CreateSphere(children[i].id + "_icon_mesh", { diameter: 1, segments: 32 }, scene);
+      sphere_mesh.material = material;
+
+      sphere_mesh.position = children[i].position;
+      //sphere_mesh.scaling.x = -sphere_mesh.scaling.x;
+      //sphere_mesh.scaling.z = -sphere_mesh.scaling.z;
+
+      let global_position = BABYLON.Vector3.TransformCoordinates(sphere_mesh.position, rotation_matrix);
+      sphere_mesh.position = global_position;
+      console.log("created sphere for " + children[i].id + " at " + sphere_mesh.position);
+    }
+  }
+
   var xmlhttp = new XMLHttpRequest();
   console.log(" loading hotspots from " + hotspots_json_url);
   xmlhttp.open("GET", hotspots_json_url, true);
@@ -22,27 +52,75 @@ function hotspots_init() {
 
     console.log("number of hotspots: " + loaded_json.hotspots.length);
     for (var i = 0; i < loaded_json.hotspots.length; i++) {
-      var mesh_name = "hotspot" + i;
-      var mesh = BABYLON.MeshBuilder.CreatePlane(mesh_name, { height: 1 }, scene);
-      var pos_split = loaded_json.hotspots[i].position_xyz.split(' ');
-      mesh.position = new BABYLON.Vector3(parseFloat(pos_split[0]), parseFloat(pos_split[1]), parseFloat(pos_split[2]));
-      mesh.rotation.y = parseFloat(loaded_json.hotspots[i].rotation_y_deg) * 0.01745329; // convert to radians
+      let pos_split = loaded_json.hotspots[i].position_xyz.split(' ');
+
+      let text_mesh_name = "hotspot_" + i + "_text_plane";
+      let image_mesh_name = "hotspot_" + i + "_image_plane";
+
+      var position = new BABYLON.Vector3(parseFloat(pos_split[0]), parseFloat(pos_split[1]), parseFloat(pos_split[2]));
+
+      if (loaded_json.hotspots[i].location_id) {
+        console.log("found location id: " + loaded_json.hotspots[i].location_id);
+        let transform_node = scene.getNodeByID(loaded_json.hotspots[i].location_id);
+        if (transform_node) {
+          console.log("hotspot " + i + " set to transform node location");
+          position = transform_node.position;
+          // position.x = -position.x;
+
+          let global_position = BABYLON.Vector3.TransformCoordinates(position, rotation_matrix);
+          position = global_position;
+          position.y += hotspot_text_vert_offset;
+        }
+      } else {
+        // skip the others for now!
+        continue;
+      }
+
+      // TODO also add title
+      if (loaded_json.hotspots[i].text_image) {
+        let mesh = BABYLON.MeshBuilder.CreatePlane(text_mesh_name, { height: 1 }, scene);
+        mesh.position = position;
+        //mesh.rotation.y = parseFloat(loaded_json.hotspots[i].rotation_y_deg) * one_deg_in_rad; // convert to radians
+        mesh.billboardMode = BABYLON.TransformNode.BILLBOARDMODE_Y;
+        let image_url = hotspots_image_dir + loaded_json.hotspots[i].text_image;
+        apply_image_url_to_mesh(image_url, text_mesh_name, true, false, _hotspot_text_resize_cb);
+      }
+
       if (loaded_json.hotspots[i].picture) {
-        console.log("hotspot " + i + " picture=" + loaded_json.hotspots[i].picture);
-        var image_url = hotspots_image_dir + loaded_json.hotspots[i].picture + hotspots_image_format;
-        apply_image_url_to_mesh(image_url, mesh_name, true, false, _hotspot_resize_cb);
+        let mesh = BABYLON.MeshBuilder.CreatePlane(image_mesh_name, { height: 1 }, scene);
+        let picture_scale = 1.0;
+        if (loaded_json.hotspots[i].picture_scale) {
+          picture_scale = loaded_json.hotspots[i].picture_scale;
+        }
+        mesh.position = new BABYLON.Vector3(position.x, position.y + hotspot_image_additional_vert_offset * picture_scale, position.z);
+        //mesh.rotation.y = parseFloat(loaded_json.hotspots[i].rotation_y_deg) * one_deg_in_rad; // convert to radians
+        mesh.billboardMode = BABYLON.TransformNode.BILLBOARDMODE_Y;
+        //console.log("hotspot " + i + " picture=" + loaded_json.hotspots[i].picture);
+        let image_url = hotspots_image_dir + loaded_json.hotspots[i].picture + hotspots_image_format;
+        mesh.scaling.x = mesh.scaling.y = picture_scale;
+        apply_image_url_to_mesh(image_url, image_mesh_name, true, false, _hotspot_resize_cb);
       }
     }
   }
   xmlhttp.send();
 }
 
+function _hotspot_text_resize_cb(meshname) {
+  let mesh = scene.getNodeByID(meshname);
+  var textures = mesh.material.getActiveTextures();
+  let w = textures[0].getSize().width;
+  let h = textures[0].getSize().height;
+  let aspect = w / h;
+  mesh.scaling.x = hotspot_text_scale * aspect;
+  mesh.scaling.y = hotspot_text_scale;
+}
+
 function _hotspot_resize_cb(meshname) {
   let mesh = scene.getNodeByID(meshname);
   var textures = mesh.material.getActiveTextures();
-  let w = textures[0].getSize().width; 
+  let w = textures[0].getSize().width;
   let h = textures[0].getSize().height;
-  let aspect = w / h ;
-  mesh.scaling.x = hotspots_scale * aspect;
-  mesh.scaling.y = hotspots_scale;
+  let aspect = w / h;
+  mesh.scaling.x *= (hotspots_scale * aspect);
+  mesh.scaling.y *= (hotspots_scale);
 }

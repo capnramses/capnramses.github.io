@@ -11,7 +11,6 @@ History:
 PROBLEMS WITH THIS
 
 - visible flickering/stutter as sections enable/disable the first time
-- not enough overlap in zones causes a flicker
 
 */
 
