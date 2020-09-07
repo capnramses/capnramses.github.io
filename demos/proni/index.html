@@ -69,7 +69,7 @@ History:
 		// Loads all babylon assets from the file and appends them to the scene
 		//let treasury_mesh = BABYLON.SceneLoader.Append("./mesh/", "treasury_draco.glb", scene, function (scene) {
 		BABYLON.SceneLoader.ImportMesh(["Ground", "House", "Shelves", "Treasury"], "./mesh/", "treasury_draco.glb", scene, function (meshes, particleSystems, skeletons) {
-			BABYLON.SceneLoader.ImportMesh(["Locations", "ZoneBoxes", "NavMeshes"], "./mesh/", "Utilities.glb", scene, function (meshes, particleSystems, skeletons) {
+			BABYLON.SceneLoader.ImportMesh(["Locations", "ZoneBoxes", "NavMeshes"], "./mesh/", "utils_draco.glb", scene, function (meshes, particleSystems, skeletons) {
 				console.log("Loaded Utilities.glb");
 				chain_lamps_disable_backface_culling();
 				hotspots_init();

@@ -19,6 +19,7 @@ function woods_guide_init() {
 	if (bookStand002Node) {
 		console.log("Reading Stand 01 (plinth for Woods' Guide) found");
 		// put the book so it sits on the plinth's position with an offset rotation and position to centre it on the top of the plinth
+		// NB: the book is ~360kb and this is 95% from detailed images at 512x512 res.
 		let book_mesh = BABYLON.SceneLoader.Append("./mesh/", "book_reexport.glb", scene, function (scene) {
 			let node = scene.getNodeByID("Book");//"Book Stand002");
 			node.position = new BABYLON.Vector3(-38.2, 3.48, 3.19);
