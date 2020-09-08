@@ -1,13 +1,14 @@
 /*
 Functions for pulling in information hotspots.
+Copyright:   Beyond 2022
+Licence:     TBD
 Language:    JavaScript
 History:
 2020 Sep 2: First version. Anton Gerdelan
 */
 
 var hotspots_json_url = "hotspots.json";
-var hotspots_text_images_dir = "images/hotspot_text/";
-var hotspots_pictures_dir = "images/hotspot_pictures/";
+var hotspots_image_dir = "images/";
 var hotspots_image_format = ".jpg";
 var hotspots_scale = 1.0;
 var hotspot_text_scale = 0.5;
@@ -22,9 +23,9 @@ function hotspots_init() {
 	let locations_node = scene.getNodeByID("Locations");
 	if (locations_node) {
 		let children = locations_node.getChildren();
-		//	console.log("found " + children.length + " locations: ");
+		console.log("found " + children.length + " locations: ");
 		for (var i = 0; i < children.length; i++) {
-			//		console.log("location: " + children[i].id);
+			console.log("location: " + children[i].id);
 			// add a 'hotspot' sphere -- colour-coded to match video windows
 			let sphere_mesh = BABYLON.MeshBuilder.CreateSphere(children[i].id + "_icon_mesh", { diameter: 1, segments: 32 }, scene);
 			sphere_mesh.material = material;
@@ -32,7 +33,7 @@ function hotspots_init() {
 			// babylon seems to -x on everything /except/ loaded transform position nodes so i do it manually here
 			sphere_mesh.position = new BABYLON.Vector3(-children[i].position.x, children[i].position.y, children[i].position.z);
 
-			//		console.log("created sphere for " + children[i].id + " at " + sphere_mesh.position);
+			console.log("created sphere for " + children[i].id + " at " + sphere_mesh.position);
 		}
 	}
 
@@ -43,7 +44,7 @@ function hotspots_init() {
 		let str = xmlhttp.responseText;
 		let loaded_json = JSON.parse(str);
 
-		//	console.log("number of hotspots: " + loaded_json.hotspots.length);
+		console.log("number of hotspots: " + loaded_json.hotspots.length);
 		for (var i = 0; i < loaded_json.hotspots.length; i++) {
 			let pos_split = loaded_json.hotspots[i].position_xyz.split(' ');
 
@@ -53,10 +54,10 @@ function hotspots_init() {
 			var position = new BABYLON.Vector3(parseFloat(pos_split[0]), parseFloat(pos_split[1]), parseFloat(pos_split[2]));
 
 			if (loaded_json.hotspots[i].location_id) {
-				//	console.log("found location id: " + loaded_json.hotspots[i].location_id);
+				console.log("found location id: " + loaded_json.hotspots[i].location_id);
 				let transform_node = scene.getNodeByID(loaded_json.hotspots[i].location_id);
 				if (transform_node) {
-					//	console.log("hotspot " + i + " set to transform node location");
+					console.log("hotspot " + i + " set to transform node location");
 					// babylon seems to -x on everything /except/ loaded transform position nodes so i do it manually here
 					position = new BABYLON.Vector3(-transform_node.position.x, transform_node.position.y, transform_node.position.z);
 					position.y += hotspot_text_vert_offset;
@@ -72,8 +73,8 @@ function hotspots_init() {
 				mesh.position = position;
 				//mesh.rotation.y = parseFloat(loaded_json.hotspots[i].rotation_y_deg) * one_deg_in_rad; // convert to radians
 				mesh.billboardMode = BABYLON.TransformNode.BILLBOARDMODE_Y;
-				let image_url = hotspots_text_images_dir + loaded_json.hotspots[i].text_image;
-				apply_image_url_to_mesh(image_url, text_mesh_name, true, true, _hotspot_text_resize_cb);
+				let image_url = hotspots_image_dir + loaded_json.hotspots[i].text_image;
+				apply_image_url_to_mesh(image_url, text_mesh_name, true, false, _hotspot_text_resize_cb);
 			}
 
 			if (loaded_json.hotspots[i].picture) {
@@ -86,9 +87,9 @@ function hotspots_init() {
 				//mesh.rotation.y = parseFloat(loaded_json.hotspots[i].rotation_y_deg) * one_deg_in_rad; // convert to radians
 				mesh.billboardMode = BABYLON.TransformNode.BILLBOARDMODE_Y;
 				//console.log("hotspot " + i + " picture=" + loaded_json.hotspots[i].picture);
-				let image_url = hotspots_pictures_dir + loaded_json.hotspots[i].picture + hotspots_image_format;
+				let image_url = hotspots_image_dir + loaded_json.hotspots[i].picture + hotspots_image_format;
 				mesh.scaling.x = mesh.scaling.y = picture_scale;
-				apply_image_url_to_mesh(image_url, image_mesh_name, true, true, _hotspot_resize_cb);
+				apply_image_url_to_mesh(image_url, image_mesh_name, true, false, _hotspot_resize_cb);
 			}
 		}
 	}

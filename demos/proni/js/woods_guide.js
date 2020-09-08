@@ -1,5 +1,7 @@
 /*
 Functions for querying Wood's Guide and changing page textures to turn the page.
+Copyright:   Beyond 2022
+Licence:     TBD
 Language:    JavaScript
 History:
 2020 Aug 24: First version. Anton Gerdelan
@@ -15,7 +17,7 @@ var woods_guide_current_page_number = woods_guide_first_page_number;
 function woods_guide_init() {
 	var bookStand002Node = scene.getNodeByID("Reading Stand 01");//"Book Stand002");
 	if (bookStand002Node) {
-		//console.log("Reading Stand 01 (plinth for Woods' Guide) found");
+		console.log("Reading Stand 01 (plinth for Woods' Guide) found");
 		// put the book so it sits on the plinth's position with an offset rotation and position to centre it on the top of the plinth
 		// NB: the book is ~360kb and this is 95% from detailed images at 512x512 res.
 		let book_mesh = BABYLON.SceneLoader.Append("./mesh/", "book_reexport.glb", scene, function (scene) {

@@ -1,5 +1,7 @@
 /*
 Functions for controlling the camera
+Copyright:   Beyond 2022
+Licence:     TBD
 Language:    JavaScript
 History:
 2020 Aug 31: First version. Anton Gerdelan
