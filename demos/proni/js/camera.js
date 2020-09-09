@@ -9,7 +9,7 @@ var original_cam_pos;
 var prev_cam_pos;
 
 function camera_init() {
-	original_cam_pos = new BABYLON.Vector3(39.6, 3.88, 3.33);
+	original_cam_pos = new BABYLON.Vector3(59.84, 2.80, 3.75); // (39.6, 3.88, 3.33);
 	prev_cam_pos = new BABYLON.Vector3(39.6, 3.88, 3.33);
 	var camera = new BABYLON.UniversalCamera("camera0", original_cam_pos, scene);
 	camera.rotation = new BABYLON.Vector3(0.0, -1.5, 0.0);

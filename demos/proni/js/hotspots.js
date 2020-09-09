@@ -20,6 +20,7 @@ function hotspots_init() {
 	material.alpha = 0.57;
 
 	let locations_node = scene.getNodeByID("Locations");
+	/* GREEN SPHERES TO VISUALISE LOCATIONS
 	if (locations_node) {
 		let children = locations_node.getChildren();
 		//	console.log("found " + children.length + " locations: ");
@@ -35,6 +36,7 @@ function hotspots_init() {
 			//		console.log("created sphere for " + children[i].id + " at " + sphere_mesh.position);
 		}
 	}
+	*/
 
 	var xmlhttp = new XMLHttpRequest();
 	console.log(" loading hotspots from " + hotspots_json_url);
@@ -61,9 +63,6 @@ function hotspots_init() {
 					position = new BABYLON.Vector3(-transform_node.position.x, transform_node.position.y, transform_node.position.z);
 					position.y += hotspot_text_vert_offset;
 				}
-			} else {
-				// skip the others for now!
-				continue;
 			}
 
 			// TODO also add title
@@ -73,6 +72,10 @@ function hotspots_init() {
 				//mesh.rotation.y = parseFloat(loaded_json.hotspots[i].rotation_y_deg) * one_deg_in_rad; // convert to radians
 				mesh.billboardMode = BABYLON.TransformNode.BILLBOARDMODE_Y;
 				let image_url = hotspots_text_images_dir + loaded_json.hotspots[i].text_image;
+				if (loaded_json.hotspots[i].text_image_scale) {
+					console.log("[hotspots] applying text image scale of " + loaded_json.hotspots[i].text_image_scale);
+					mesh.scaling.x = mesh.scaling.y = parseFloat(loaded_json.hotspots[i].text_image_scale);
+				}
 				apply_image_url_to_mesh(image_url, text_mesh_name, true, true, _hotspot_text_resize_cb);
 			}
 
@@ -80,7 +83,7 @@ function hotspots_init() {
 				let mesh = BABYLON.MeshBuilder.CreatePlane(image_mesh_name, { height: 1 }, scene);
 				let picture_scale = 1.0;
 				if (loaded_json.hotspots[i].picture_scale) {
-					picture_scale = loaded_json.hotspots[i].picture_scale;
+					picture_scale = parseFloat(loaded_json.hotspots[i].picture_scale);
 				}
 				mesh.position = new BABYLON.Vector3(position.x, position.y + hotspot_image_additional_vert_offset * picture_scale, position.z);
 				//mesh.rotation.y = parseFloat(loaded_json.hotspots[i].rotation_y_deg) * one_deg_in_rad; // convert to radians
@@ -101,8 +104,8 @@ function _hotspot_text_resize_cb(meshname) {
 	let w = textures[0].getSize().width;
 	let h = textures[0].getSize().height;
 	let aspect = w / h;
-	mesh.scaling.x = hotspot_text_scale * aspect;
-	mesh.scaling.y = hotspot_text_scale;
+	mesh.scaling.x *= (hotspot_text_scale * aspect);
+	mesh.scaling.y *= (hotspot_text_scale);
 }
 
 function _hotspot_resize_cb(meshname) {
