@@ -101,7 +101,6 @@ History:
 				console.log("Loaded Utilities.glb");
 				chain_lamps_disable_backface_culling();
 				hotspots_init();
-				ulster_init();
 				woods_guide_init();
 				zones_init();
 				firebreak_init();
@@ -110,6 +109,7 @@ History:
 				for (var i = 0; i < scene.meshes.length; i++) {
 					scene.meshes[i].isPickable = false;
 				}
+				ulster_init(); // don't disable pickable on books!
 			});
 			mesh_loaded = true;
 		});
@@ -147,9 +147,11 @@ History:
 		// add book to picking
 		var pickResult = scene.pick(scene.pointerX, scene.pointerY);
 		if (pickResult.pickedMesh) {
-			console.log("picked mesh " + pickResult.pickedMesh.id);
+			console.log("picked mesh " + pickResult.pickedMesh.id + " at " + pickResult.pickedPoint );
 
 			woods_guide_handle_clicks(pickResult.pickedMesh.id);
+			ulster_check_for_bays_map_interactions( pickResult.pickedMesh.id, pickResult.distance);
+			ulster_check_for_book_interactions(pickResult.pickedMesh.id, pickResult.distance);
 		}
 	});
 
@@ -172,6 +174,7 @@ History:
 
 		zones_update();
 		firebreak_update(elapsed_s);
+		ulster_update_animations(elapsed_s);
 		scene.render();
 	});
 </script>

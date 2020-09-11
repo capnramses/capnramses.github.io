@@ -14,13 +14,20 @@ var hotspot_text_scale = 0.5;
 var hotspot_text_vert_offset = 1.0;
 var hotspot_image_additional_vert_offset = 0.75;
 
-function hotspots_init() {
-	let material = new BABYLON.StandardMaterial("hotspot_icon_mat", scene);
-	material.diffuseColor = material.emissiveColor = material.specularColor = material.ambientColor = new BABYLON.Color3(0, 1, 0);
-	material.alpha = 0.57;
+// green spheres to show you can active the firebreak
+var hotspot_firebreak_locations = [
+	{ x: 33.37, y: 3.57, z: 0.00 },
+	{ x: 24.59, y: 2.83, z: 0.00 }
+];
 
-	let locations_node = scene.getNodeByID("Locations");
+function hotspots_init() {
+
+	let green_material = new BABYLON.StandardMaterial("hotspot_green_mat", scene);
+	green_material.diffuseColor = green_material.emissiveColor = green_material.specularColor = green_material.ambientColor = new BABYLON.Color3(0, 1, 0);
+	green_material.alpha = 0.57;
+
 	/* GREEN SPHERES TO VISUALISE LOCATIONS
+	let locations_node = scene.getNodeByID("Locations");
 	if (locations_node) {
 		let children = locations_node.getChildren();
 		//	console.log("found " + children.length + " locations: ");
@@ -37,6 +44,14 @@ function hotspots_init() {
 		}
 	}
 	*/
+
+	{ // firebreak door green spheres
+		for (var i = 0; i < hotspot_firebreak_locations.length; i++) {
+			let sphere_mesh = BABYLON.MeshBuilder.CreateSphere("door_green_sphere_" + i, { diameter: 0.5, segments: 16 }, scene);
+			sphere_mesh.position = new BABYLON.Vector3(hotspot_firebreak_locations[i].x, hotspot_firebreak_locations[i].y, hotspot_firebreak_locations[i].z);
+			sphere_mesh.material = green_material;
+		}
+	}
 
 	var xmlhttp = new XMLHttpRequest();
 	console.log(" loading hotspots from " + hotspots_json_url);

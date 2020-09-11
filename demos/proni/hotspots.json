@@ -91,9 +91,8 @@
 			"audio": "",
 			"picture": "10_33a__PROI_Interior_of_the_Treasury",
 			"picture_scale": "2.0",
-			"position_xyz": "-2 4 2",
-			"text_image": "hotspot_text_record_treasury.png",
-			"location_id": "Location_Treasury Ground Floor"
+			"position_xyz": "10.83 4 -1.35",
+			"text_image": "hotspot_text_record_treasury.png"
 		},
 		{
 			"name": "Wood's Guide",
