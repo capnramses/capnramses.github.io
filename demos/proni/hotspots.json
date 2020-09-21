@@ -37,6 +37,18 @@
 			"text_image": "hotspot_text_stairwell.png"
 		},
 		{
+			"name": "Bays Map",
+			"hotspot_type": "Locate",
+			"location": "Inside the Front Door",
+			"title": "The Stairwell",
+			"caption": "Locate: click on a hotspot and teleport to the very location in the Record Treasury where we have placed records connected to Ulster's history back on the virtual shelves.",
+			"audio": "",
+			"position_xyz": "38.74 3.04 -3.18",
+			"text_image": "hotspot_text_locate.png",
+			"billboard": "no",
+			"rotation_y_deg": "-90"
+		},
+		{
 			"name": "The Search Room",
 			"hotspot_type": "Explore",
 			"location": "The Search Room",
@@ -44,9 +56,11 @@
 			"caption": "Old Photo of Wood and Chart / Description of what it was like in 1922 / 3-D photo of modern Court of Appeal",
 			"audio": "The rooms round this central hall [Search Room] were given up to searchers, officials and clerks, together with a library, whilst some of the top rooms and all the basement were allocated to the fore and and office keeper for a residence.'",
 			"picture": "09_32a_PROI_Reading_Room",
-			"position_xyz": "34.88 4.53 0.07",
+			"picture_scale": "1.75",
+			"position_xyz": "32.1 3.9 2.42",
 			"text_image": "hotspot_text_search_room.png",
-			"location_id": "Location_ReadingRoom1"
+			"billboard": "no",
+			"rotation_y_deg": "-90"
 		},
 		{
 			"name": "Reading Room, Archivist's Desk",

@@ -38,7 +38,8 @@ var bays_map_icon_locations = [
 	{ x: 37.93, y: 3.52, z: -3.28 }, // patent floor 5e bay 7b
 	{ x: 38.04, y: 3.5, z: -2.57 }, // parish return -- TODO(anton) i think this goes on the other page (5O). put on floor 4K for now
 	{ x: 38.27, y: 3.46, z: -3.27 }, // gazette floor 2E bay 4B
-	{ x: 38.39, y: 3.43, z: -3.55 } // map - Floor 1C, Bay 8B, item 1
+	{ x: 38.39, y: 3.43, z: -3.55 }, // map - Floor 1C, Bay 8B, item 1
+	{ x: 37.84, y: 3.54, z: -3.95 } // teleport to top floor ( button in margin )
 ];
 var bays_map_icon_meshes = [];
 
@@ -46,19 +47,21 @@ var ulster_green_item_shelf_locations = [
 	{ x: -2.15, y: 6.38, z: 7.37 }, // patent TODO
 	{ x: 14.88, y: 9.44, z: -9.88 }, // parish return  - floor 5O Bay 5B item 76 TODO
 	{ x: 10.65, y: 12.50, z: 5.69 }, // gazette floor 2E bay 4B TODO
-	{ x: 14.89, y: 18.59, z: -12.28 }// map - Floor 1C, Bay 8B, item 1 TODO
+	{ x: 14.89, y: 18.59, z: -12.28 } // map - Floor 1C, Bay 8B, item 1 TODO
 ];
 var ulster_item_shelf_user_locations = [
 	{ x: -1.120822694034883, y: 6.379304885864258, z: 8.335161821474872 },
 	{ x: 13.683353347384507, y: 9.42132568359375, z: -10.764374685757758 },
 	{ x: 11.8529691898396, y: 12.463345527648926, z: 4.909883973437672 },
-	{ x: 13.817953123244141, y: 18.57316493988037, z: -13.468687666840454 }
+	{ x: 13.817953123244141, y: 18.57316493988037, z: -13.468687666840454 },
+	{ x: -1.24, y: 18.57, z: 0.39 } // top floor stairs
 ];
 var ulster_item_shelf_user_rotations = [
 	{ x: 0.10091542096614921, y: -8.59875837635061, z: 0 },
 	{ x: 0.0633580325072943, y: -11.800531411810164, z: 0 },
 	{ x: 0.06602234871064483, y: -19.814204481580077, z: 0 },
-	{ x: 0.1370302560868334, y: -11.946001385225632, z: 0 }
+	{ x: 0.1370302560868334, y: -11.946001385225632, z: 0 },
+	{ x: 0.0035667650464743087, y: -17.257027885613883, z: 0 } // top floor stairs
 ];
 var ulster_shelf_item_move_directions = [
 	1.0,
@@ -227,8 +230,8 @@ function ulster_select_reading_desk_item(item_index) {
 }
 
 function ulster_teleport_to_treasury_item(item_index) {
-	if (item_index < 0 || item_index >= ulster_image_filenames.length) {
-		console.error("item_index " + item_index + " is out of range. max: " + ulster_image_filenames.length);
+	if (item_index < 0 || item_index >= ulster_item_shelf_user_locations.length) {
+		console.error("item_index " + item_index + " is out of range. max: " + ulster_item_shelf_user_locations.length);
 		return;
 	}
 

@@ -84,8 +84,11 @@ function hotspots_init() {
 			if (loaded_json.hotspots[i].text_image) {
 				let mesh = BABYLON.MeshBuilder.CreatePlane(text_mesh_name, { height: 1 }, scene);
 				mesh.position = position;
-				//mesh.rotation.y = parseFloat(loaded_json.hotspots[i].rotation_y_deg) * one_deg_in_rad; // convert to radians
-				mesh.billboardMode = BABYLON.TransformNode.BILLBOARDMODE_Y;
+				if (!loaded_json.hotspots[i].billboard || loaded_json.hotspots[i].billboard != "no") {
+					mesh.billboardMode = BABYLON.TransformNode.BILLBOARDMODE_Y;
+				} else if (loaded_json.hotspots[i].rotation_y_deg) {
+					mesh.rotation.y = parseFloat(loaded_json.hotspots[i].rotation_y_deg) * one_deg_in_rad; // convert to radians
+				}
 				let image_url = hotspots_text_images_dir + loaded_json.hotspots[i].text_image;
 				if (loaded_json.hotspots[i].text_image_scale) {
 					console.log("[hotspots] applying text image scale of " + loaded_json.hotspots[i].text_image_scale);
@@ -102,7 +105,11 @@ function hotspots_init() {
 				}
 				mesh.position = new BABYLON.Vector3(position.x, position.y + hotspot_image_additional_vert_offset * picture_scale, position.z);
 				//mesh.rotation.y = parseFloat(loaded_json.hotspots[i].rotation_y_deg) * one_deg_in_rad; // convert to radians
-				mesh.billboardMode = BABYLON.TransformNode.BILLBOARDMODE_Y;
+				if (!loaded_json.hotspots[i].billboard || loaded_json.hotspots[i].billboard != "no") {
+					mesh.billboardMode = BABYLON.TransformNode.BILLBOARDMODE_Y;
+				} else if (loaded_json.hotspots[i].rotation_y_deg) {
+					mesh.rotation.y = parseFloat(loaded_json.hotspots[i].rotation_y_deg) * one_deg_in_rad; // convert to radians
+				}
 				//console.log("hotspot " + i + " picture=" + loaded_json.hotspots[i].picture);
 				let image_url = hotspots_pictures_dir + loaded_json.hotspots[i].picture + hotspots_image_format;
 				mesh.scaling.x = mesh.scaling.y = picture_scale;
