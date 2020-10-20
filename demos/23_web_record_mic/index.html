@@ -1,0 +1,23 @@
+<html>
+
+<head>
+  <title>PoC Interactive Slides (audio)</title>
+  <!-- nice reference: https://www.html5rocks.com/en/tutorials/getusermedia/intro/ -->
+</head>
+
+<body>
+
+  <!-- TODO(Anton) audio playback -->
+  <button onclick="enable_audio(this);">enable audio</button>
+  <button onclick="startRecording(this);" disabled>record</button>
+  <button onclick="stopRecording(this);" disabled>stop</button>
+
+  <h2>Recordings List</h2>
+  
+  <ul id="recordingslist"></ul>
+
+  <!-- TODO(Anton) display a single slide's stuff -->
+</body>
+<script src="js/recorder.js"></script>
+<script src="js/main.js"></script>
+</html>
