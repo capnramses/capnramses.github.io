@@ -1,0 +1,70 @@
+<html>
+
+<head>
+	<title>Demo of web speech API</title>
+</head>
+
+<body>
+	<h1>demo of web speech API</h1>
+
+	<p>
+		Click the button then wait a bit for a response with a transcript.
+	</p>
+
+	<button id="my_button" onclick="record_me(this)">start recording</button>
+
+	<p id="response_text">
+
+	</p>
+
+</body>
+
+</html>
+
+<script>
+	var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+	var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList;
+	var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent;
+
+	var look_for_list = ['anton', 'hello', 'world', 'speech', 'grammar'];
+
+	// create a grammar
+	var grammar = '#JSGF V1.0; grammar colors; public <look_for_list> = ' + look_for_list.join(' | ') + ' ;';
+	var speechRecognitionList = new SpeechGrammarList();
+	speechRecognitionList.addFromString(grammar, 1);
+
+	// set up recognition with grammar and language
+	var recognition = new SpeechRecognition();
+	recognition.grammars = speechRecognitionList;
+	recognition.continuous = false;
+	recognition.lang = 'en-US';
+	recognition.interimResults = false;
+	recognition.maxAlternatives = 1;
+	recognition.onspeechend = function () {
+		recognition.stop();
+	}
+	recognition.onresult = function (event) {
+		var response_text = event.results[0][0].transcript;
+		document.getElementById("response_text").innerHTML = "Transcript (confidence " + event.results[0][0].confidence + "):<br />" + response_text;
+	}
+	recognition.onspeechend = function () {
+		recognition.stop();
+		document.getElementById("my_button").hidden = false;
+	}
+	recognition.onnomatch = function (event) {
+		diagnostic.textContent = "I didn't recognise that color.";
+	}
+
+	recognition.onerror = function (event) {
+		diagnostic.textContent = 'Error occurred in recognition: ' + event.error;
+	}
+
+	function record_me(button_el) {
+		recognition.start();
+		console.log("user pressed start button " + button_el.id);
+		document.getElementById("my_button").hidden = true;
+		document.getElementById("response_text").innerHTML = "processing...";
+	}
+
+
+</script>
