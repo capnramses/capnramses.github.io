@@ -49,16 +49,24 @@
 		to derive later.
 		Normals are also not provided. It would be trivial to derive flat normals (the cross product of 2 edge vectors
 		from each face) and add these to the listing. Without either of these features the solid renders are hard to
-		visualise, so the wireframe render made more sense. 
+		visualise, so the wireframe render made more sense.
 	</p>
 
 	<p>
-		The book chapter lists points and polygons using a numbering scheme to identify some interesting geometric properties,
-		and numerical patterns, for each solid. I went through by hand and re-sorted these into boring array indices, so there
+		The book chapter lists points and polygons using a numbering scheme to identify some interesting geometric
+		properties,
+		and numerical patterns, for each solid. I went through by hand and re-sorted these into boring array indices, so
+		there
 		may be a mistake or two lingering in my code. I tried to retain the original numbering in comments.
+		Not all of the shapes are given in <i>"unit"</i> sized between -1 and 1, but it's trivial to scale these to size.
+		The solids are not given in "face down" resting configuration, by the book describes transformations to get each.
+		Perhaps that is important if you are using them to represent gaming dice.
+		You will notice that the eight-sided solid looks small compared the cube. It is the "dual" of the cube - if placed
+		inside
+		the cube (I did this to check) the vertices touch each of the cube's faces.
 	</p>
 
-<h3>Listing: The Platonic Solids (C99)</h3>
+	<h3>Listing: The Platonic Solids (C99)</h3>
 
 	<pre>/**
 * Based on "A Trip Down the Graphics Pipeline", Ch. 4 "Platonic Solids", Jim Blinn.
