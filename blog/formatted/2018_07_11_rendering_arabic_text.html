@@ -103,7 +103,7 @@
 		bytes to encode - so it's a form of compression. Other encoding methods are more consistent sizes
 		but not compressed. JavaScript uses UTF-16 I believe. Go uses UTF-8.
 		You do need a <i>codepoint-to-utf8-char-array</i> encoder and decoder pair of functions though. Mine
-		are <a href="https://github.com/capnramses/lang/blob/master/c/utf8/main.c">here</a>.
+		are <a href="https://github.com/capnramses/apg/tree/master/apg_unicode">https://github.com/capnramses/apg/tree/master/apg_unicode</a>.
 		Your best bet is to keep all your strings in memory as UTF-8, and en/decode to whatever you need to
 		interface with at the last moment.
 	</p>
