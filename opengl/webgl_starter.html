@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>WebGL Starter - Anton's OpenGL 4 Tutorials</title>
+	<link rel="stylesheet" type="text/css" href="../greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="index.html">[index]</a>
+	<h1>WebGL Starter</h1>
+
+	<p>
+		<i>
+			Anton Gerdelan. 18 May 2015.
+		</i>
+	</p>
+
+	<div class="centre">
+		<canvas id="mycanvas">
+			This text will appear if the browser doesn't support HTML5.
+		</canvas><br />
+		<small><i>
+				A model from a recent Ludum Dare game jam.
+				You can view the source code of the page to see how I display this.
+			</i></small>
+	</div>
+
+	<p>
+		Web applications are attractive because they are an excellent way to <b>share
+			your work</b>. All the user needs to do is open a web link. WebGL is a
+		<b>browser-implemented</b> interface that gives web applications access to
+		powerful <b>hardware-accelerated rendering</b>. No plug-ins or installation are
+		required. WebGL is based on the mobile version of OpenGL; "OpenGL ES", which
+		does not require the very latest graphics hardware, it's very portable, and
+		will run on older desktops and most mobile devices as well. And, even better,
+		you don't need to make a special build for each operating system. You will
+		probably find WebGL to be several times <b>faster to create programmes</b> with
+		than the desktop and mobile equivalents.
+	</p>
+
+	<p>
+		I am going to explain how I made the rotating character at the top of this
+		page, and introduce basic start-up, use of JavaScript, loading textures,
+		shaders, meshes and file loading, and matrix manipulation.
+		To avoid redundant tutorial content I'm going to assume that you've done at
+		least the basics of modern OpenGL programming already - this means you have an
+		idea about shaders and vertex buffers. I will assume that the reader is
+		familiar with basic HTML, but not necessarily with JavaScript or newer web
+		interfaces. <b>We will not be using any
+			frameworks</b> or high-level interfaces, as there are ample resources for these
+		already.
+	</p>
+
+	<h2>Technology Overview</h2>
+
+	<p>
+		You will find yourself switching between several languages when writing WebGL
+		software.
+	</p>
+
+	<table>
+		<tr class="border_bottom">
+			<th>Language</th>
+			<th>R&ocirc;le</th>
+		</tr>
+		<tr>
+			<td>HTML5</td>
+			<td>Write a web page with canvas rectangle to render in.</td>
+		</tr>
+		<tr>
+			<td>JavaScript</td>
+			<td>Call GL functions, load assets using AJAX, handle user input, write main
+				logic.</td>
+		</tr>
+		<td>GLSL</td>
+		<td>Write shaders to define the style of rendering.</td>
+	</table>
+
+	<p>
+		We will just write some basic HTML, using only one or two of the newer
+		features from 5. JavaScript has a file loading interface commonly referred to
+		as "AJAX" (asynchronous JavaScript and XML), as it was designed to serialise
+		XML files into JavaScript object, but we will use it as a generic file loader
+		that returns strings containing file contents. The shader language, with one
+		or two very minor differences, is the same as that for OpenGL ES, with WebGL
+		1.0 based on the OpenGL ES 2.0 specification, and WebGL 2.0 based on ES 3.0.
+	</p>
+
+	<h2>Basic HTML Skeleton</h2>
+
+	<p>
+		We can start by making a very simple HTML web-page.
+	</p>
+
+	<br />
+	<div class="centre">
+		<img src="webgl_images/canvas.png" /><br />
+		<small><i>We start by making a simple HTML web page with a canvas area on
+				it (shown in hatching). We will be able to use any other web interface elements
+				to interact with our code.</i></small>
+	</div>
+
+	<p>
+		The basic concept with WebGL software is that we write a normal web-page, and
+		use the new HTML5 <code>canvas</code> tag to define an area of the page (a blank
+		rectangle) that our rendering will draw to. You can use any of HTML's forms,
+		text areas, and other elements to interact with your visualisation - we can
+		say that we get a user interface library built-in.
+	</p>
+
+	<p>
+		I started with something like this:
+	</p>
+
+	<p>
+		<textarea rows="12">
+<html>
+<head></head>
+<body>
+<canvas id="mycanvas">
+This text will appear if the browser doesn't support HTML5.
+</canvas><br />
+<small><i>
+A model from a recent Ludum Dare game jam.
+You can view the source code of the page to see how I display this.
+</i></small>
+</body>
+</html></textarea>
+	</p>
+
+	<p>
+		If you open this in a browser you won't see anything - just a space where the
+		default 300x150 pixel canvas sits. We will attach a GL context to it shortly.
+		To do that we add some JavaScript, which will talk to our web document.
+	</p>
+
+	<div class="centre">
+		<img src="webgl_images/canvas2.png" /><br />
+		<small><i>In our HTML, the canvas is a simple tag with a DOM id as a code hook.
+				We can also provide <code>width</code> and <code>height</code> attributes to specify
+				the actual size of the canvas on the page.
+			</i></small>
+	</div>
+
+	<p>
+		We leverage the DOM
+		(document object model) to access web page elements from our JavaScript code.
+		This is as simple as giving each element's HTML tag an <code>id="my_thingy"</code>
+		attribute. The browser also has a BOM (browser object model) which
+		provides built-in functions to handle user interaction <i>via</i> mouse,
+		gamepad, or keyboard.
+	</p>
+
+	<h2>JavaScript Start-Up Code</h2>
+
+	<p>
+		JavaScript replaces C as the main interface language to the graphics library.
+		If you've never used JavaScript before then you should know that it has nothing
+		to do with the Java language apart from the name - it was a marketing scheme
+		from a time when people still thought that Java was a good idea!
+		JavaScript is a client-side script language, which means that a client's
+		web-browser downloads your entire source code, then runs it within their
+		browser on their own CPU. This means that you can do much more powerful
+		interactive debugging, and it doesn't need recompilation, but it's a bit
+		slower than C.
+	</p>
+
+	<p>
+		We can add JavaScript inside <code>script</code> tags anywhere in the HTML
+		file, put I prefer to put them all at the end, after my HTML content. Scripts
+		support various languages through the <code>type=</code> attribute, but JavaScript
+		is the default, and JavaScript blocks will execute automatically.
+		You can add this script block to your page:
+	</p>
+
+	<textarea rows=16>
+<script>
+	console.log("starting WebGL");
+
+	var canvas = document.getElementById("mycanvas");
+	canvas.width = 512;
+	canvas.height = 256;
+	var gl = canvas.getContext("webgl");
+
+	gl.clearColor(0.85, 0.85, 0.85, 1.0);
+	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+	// set some GL states that I want to use for rendering
+	gl.cullFace(gl.BACK);
+	gl.frontFace(gl.CCW);
+	gl.enable(gl.CULL_FACE);
+	gl.enable(gl.DEPTH_TEST);
+</script></textarea>
+
+	<p>
+		I introduce a few new concepts here. The first instruction is the JavaScript
+		equivalent of <code>printf()</code>. If you go to your browser's developer menu
+		you can open the JavaScript console, and you should see the message. It's good
+		to have this open whenever you refresh or reload your page, as it will give
+		you quite good error information that you may not otherwise be aware of as the
+		page may go on to look like it loaded correctly.
+	</p>
+
+	<p>
+		I use the DOM to fetch my canvas element as a JavaScript object. Note that
+		JavaScript does not use strong typing - everything is a <code>var</code> object,
+		which I can tell you causes far more problems than it solves. In any case,
+		my first action is to modify the canvas' width and height attributes from
+		JavaScript, which should change its size on the page.
+	</p>
+
+	<p>
+		Next, I ask the canvas to set itself up with a new WebGL context, and keep
+		track of this as an object called <code>gl</code>. This object will be our
+		interface to all of the WebGL functions.
+	</p>
+
+	<p>
+		My final instructions use the <code>gl</code> object to call GL functions.
+		They are almost identical to OpenGL function names and constants,
+		except that <code>gl</code> and <code>GL_</code> are removed, and we access each
+		through our new object. You can set the aplha channel here to 0.0 if
+		you want to background to be transparent and the page background to show
+		through. If you refresh the web page you should see the canvas bigger, and
+		coloured. You can find the complete list of OpenGL functions on the WebGL
+		Quick Reference card at
+		<a href="https://www.khronos.org/webgl/">https://www.khronos.org/webgl/</a>.
+	</p>
+
+	<p>
+		You'll notice, reading the reference card, that WebGL does not support newer
+		OpenGL's Vertex Array Object (VAO). It's actually quite tedious rendering in
+		OpenGL without VAOs, as you have to set up vertex attribute pointers every time
+		that you draw. There's a VAO extension for WebGL though. You can see it in
+		<a href="https://www.khronos.org/registry/webgl/extensions/">the extension
+			registry</a>. We can query that in our script block, which will return a new
+		object, which is then our interface to the VAO extension's subset of functions:
+	</p>
+
+	<textarea rows="4">
+var vao_ext = gl.getExtension ("OES_vertex_array_object");
+if (!vao_ext) {
+  console.error ("ERROR: Your browser does not support WebGL VAO extension");
+}</textarea>
+
+	<p>
+		If it isn't supported by the user's browser/system then we can use the error
+		logging mechanism of the browser console to report that. This also includes a
+		line number link in the console's output.
+	</p>
+
+	<h2>Loading a Texture Asynchronously</h2>
+
+	<p>
+		It's actually much easier to load a texture into WebGL than regular OpenGL as
+		we don't need an image loading library - HTML already loads images. We can use
+		an image that appears on the web page as texture, or load one quietly in
+		JavaScript. Note that this is asynchronous, so the texture will actually be
+		created some time later in your code after you provide the image URL.
+	</p>
+
+	<textarea rows="16">
+var texture = gl.createTexture();
+texture.is_loaded = false;
+var image = new Image();
+image.onload = function () {
+  gl.bindTexture (gl.TEXTURE_2D, texture);
+  gl.pixelStorei (gl.UNPACK_FLIP_Y_WEBGL, true);
+  gl.texImage2D (gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE,
+    image);
+  gl.texParameteri (gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri (gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texParameteri (gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri (gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  texture.is_loaded = true;
+  console.log ("texture loaded ");
+}
+image.src = "webgl_starter/heckler.png";</textarea>
+
+	<p>
+		That's it! Note that I did something really unusual, and set an
+		<code>is_loaded</code> attribute <u>inside the texture</u>. We know that OpenGL
+		textures aren't even objects - they certainly don't have attributes! In
+		JavaScript we can <b>dynamically add new attributes to extant objects</b>.
+	</p>
+
+	<p>
+		Because the modern web uses an asynchronous download model <b>we can never be
+			sure when a resource will actually be downloaded</b>. On a bad connection the
+		<code>onload</code> function may not even execute for a minute after your main loop
+		starts. In the mean-time we will at least have a valid, but empty, texture with
+		a flag to check against. In a C programme that was
+		sophisticated enough to load files asynchronously, we would have a little
+		set-up like this:
+	</p>
+
+	<textarea rows="7">
+start_loading_shader();
+start_loading_texture();
+start_loading_mesh();
+while ( !everything_has_loaded() ) {
+  sleep();
+}
+// end of loading function</textarea>
+
+	<p>
+		We are not allowed to have a thread-hogging wait loop in JavaScript, so the
+		best we can do is add an if-statement check in our main loop, so that it won't
+		try to draw before all the required assets are loaded. For example:
+	</p>
+
+	<textarea rows="8">
+if (texture.is_loaded) {
+  gl.activeTexture (gl.TEXTURE0);
+  gl.bindTexture (gl.TEXTURE_2D, texture);
+  ...
+  // draw with the texture
+}
+...
+// rest of drawing code</textarea>
+
+	<p>
+		You can see why it's useful to inject some state attributes, and where the
+		"popping-in" effect of resources we see in WebGL demos comes from. If you want
+		to avoid this odd effect you could have a function that checks if all of the
+		assets are loaded before rendering,
+		and instead render perhaps some "loading.." text, but from my experience with
+		a larger commercial project which had a lot of resource data to download, you
+		can get a very bad user experience if they have to wait for a long time on a
+		mobile device or on a poor connection - you'll probably find <b>users prefer
+			"popping-in" to a long wait</b>.
+	</p>
+
+	<h2>Loading Shaders from HTML Scripts</h2>
+
+	<p>
+		I usually like to have my shaders in external files, but that's actually a
+		little bit inconvenient in JavaScript, which will also want to load them
+		asynchronously. For multi-part shaders it's actually an annoyance using this
+		mechanism. You could concatenate both shaders into one file. You can also store
+		the shaders in JavaScript strings. Most developers instead find it more
+		convenient to put shaders in their own script blocks so that you don't have to
+		worry about string formatting or asynchronous downloads. I put my vertex shader
+		in its own script block above my other scripts:
+	</p>
+
+	<textarea rows="16">
+<script id="heckler.vert" type="text/glsl">
+attribute vec3 vp;
+attribute vec2 vt;
+attribute vec3 vn;
+
+uniform mat4 PV, M;
+
+varying vec2 st;
+varying vec3 n;
+
+void main () {
+  st = vt;
+  n = vec3 (PV * M * vec4 (vn, 0.0));
+  gl_Position = PV * M * vec4 (vp, 1.0);
+}
+</script></textarea>
+
+	<p>
+		I set the <code>type</code> attribute to something appropriate-looking so that the
+		browser doesn't think that it's JavaScript that should be exectuted. I set the
+		<code>id</code> attribute so that I can fetch it later. The GLSL for WebGL 1.0 uses
+		the <code>acoderibute</code> and <code>varying</code> keywords of older OpenGL 2.1 and
+		OpenGL ES rather than newer <code>in</code> and <code>out</code>. Similarly, I have a
+		fragment shader in a script block:
+	</p>
+
+	<textarea rows="19">
+<script id="heckler.frag" type="text/glsl">
+precision mediump float;
+
+varying vec2 st;
+varying vec3 n;
+uniform sampler2D dm;
+
+void main () {
+  vec4 texel = texture2D (dm, st);
+
+  vec3 nn = normalize (n);
+  vec3 fwd = normalize (vec3 (0.0, 0.0, -1.0));
+  
+  gl_FragColor = texel;
+  
+  gl_FragColor.rgb = gl_FragColor.rgb * dot (nn, fwd) * 0.7
+    + 0.3 * gl_FragColor.rgb;
+}
+</script></textarea>
+
+	<p>
+		We also have <code>varying</code> instead of <code>in</code> here, and the built-in
+		<code>gl_FragColor</code> instead of an output variable. WebGL fragment shaders
+		are required to have that exact precision statement at the top.
+	</p>
+
+	<p>
+		To fetch the contents of these blocks as JavaScript strings, I do this after
+		loading the mesh:
+	</p>
+
+	<pre>
+var el = document.getElementById ("heckler.vert");
+var vs_str = el.innerHTML;
+el = document.getElementById ("heckler.frag");
+var fs_str = el.innerHTML</pre>
+
+	<p>
+		I just use the DOM again to fetch the strings. Instead of a script block, you
+		could just as well put your shaders in a visible <code>textarea</code>, and live
+		edit them. Web elements have a range of <code>.on....()</code> functions
+		that you can define. When a user clicks on something, or text is changed a
+		callback function will fire - your function could recompile the shaders.
+	</p>
+
+	<p>
+		Following this, I have regular-looking code compiling the shaders and getting
+		some variables to hold the locations of uniforms. Note that I also explicitly
+		bind the locations of my attributes to 0, 1, and 2, for points, texture
+		coordinates, and normals, respectively.
+	</p>
+
+	<pre>
+var vs = gl.createShader (gl.VERTEX_SHADER);
+var fs = gl.createShader (gl.FRAGMENT_SHADER);
+gl.shaderSource (vs, vs_str);
+gl.shaderSource (fs, fs_str);
+gl.compileShader (vs);
+if (!gl.getShaderParameter (vs, gl.COMPILE_STATUS)) {
+  console.error ("ERROR compiling vert shader. log: " +
+    gl.getShaderInfoLog (vs));
+}
+gl.compileShader (fs);
+if (!gl.getShaderParameter (fs, gl.COMPILE_STATUS)) {
+  console.error ("ERROR compiling frag shader. log: " +
+    gl.getShaderInfoLog (fs));
+}
+var sp = gl.createProgram ();
+gl.attachShader (sp, vs);
+gl.attachShader (sp, fs);
+gl.bindAttribLocation (sp, 0, "vp");
+gl.bindAttribLocation (sp, 1, "vt");
+gl.bindAttribLocation (sp, 2, "vn");
+gl.linkProgram (sp);
+if (!gl.getProgramParameter (sp, gl.LINK_STATUS)) {
+  console.error ("ERROR linking program. log: " + gl.getProgramInfoLog (sp));
+}
+gl.validateProgram (sp);
+if (!gl.getProgramParameter(sp, gl.VALIDATE_STATUS)) {
+  console.error ("ERROR validating program. log: " +
+    gl.getProgramInfoLog (sp));
+}
+var heckler_PV_loc = gl.getUniformLocation (sp, "PV");
+var heckler_M_loc = gl.getUniformLocation (sp, "M");</pre>
+
+	<p>
+		"PV" is my combined projection and view matrix, and "M" is my model matrix.
+		Although similar to OpenGL in C, you can see things like string functions are
+		a little bit easier to deal with. If you refresh the browser and look in the
+		console you should get an error message (including shader and linker logs) if
+		that didn't work. If you want to be sure that the shader code loaded, you can
+		use <code>alert (vs_str);</code> to throw up an alert box with the vertex shader
+		string.
+	</p>
+
+	<h2>Loading a Mesh File with AJAX</h2>
+
+	<p>
+		I have a mesh file that I want to render - a Wavefront .obj file I made for a
+		recent game jam. What I want to do is read the .obj file into a string, then
+		use JavaScript string parsing functions (which are quite good) to break that
+		up into lists of points, texture coordinates, and normals. We can use AJAX for
+		that, which works like this:
+	</p>
+
+	<pre>
+var xmlhttp = new XMLHttpRequest();
+xmlhttp.open ("GET", "OUR_URL_STRING_HERE", true);
+xmlhttp.onload = function (e) {
+  var str = xmlhttp.responseText;
+  var lines = str.split ('\n');
+  for (var i = 0; i < lines.length; i++) {
+    //...parsing code goes here...
+  }
+}
+xmlhttp.send ();</pre>
+
+	<p>
+		First, we get an interface to a new XMLHTTPRequest (AJAX' real name). We tell
+		it that it will use the HTTP "GET" request to retrieve a file from a URL, which
+		we will give it as a string. Finally, it prefers to work asynchronously, which
+		can be quite tricky to set up in JavaScript, but is worth doing to get the best
+		loading time. If you prefer to skip this extra fuss you can set the third
+		parameter of the <code>open()</code> function to <code>false</code>, but the browser
+		will complain to you in the console.
+
+	<p>
+		We can handle our asynchronous download with AJAX in the same way as we handled
+		the texture - adding an <code>is_loaded</code> attribute. I'll also check that the
+		texture was loaded, because it would look terrible if the VAO loaded first,
+		and rendered with some other texture:
+	</p>
+
+	<pre>
+var my_vao = start_loading_obj ("meshes/my_mesh.obj");
+...
+// _inside the main drawing loop_
+if (my_vao.is_loaded && texture.is_loaded) {
+  vao_ext.bindVertexArrayOES (my_vao);
+  ...
+  // draw stuff that requires the VAO
+}</pre>
+
+	<p>
+		I won't paste the 50-lines or so for .obj parsing here, but you can view it at
+		<a href="https://antongerdelan.net/opengl/webgl_starter/obj_parser.js">obj_parser.js</a>.
+		There are many ways that you can structure your JavaScript objects and
+		functions. Another annoying limitation to JavaScript is that you cannot really
+		pass back more than one variable from a function as you can in C. You might
+		consider creating a mesh container object that holds a VAO and a point count,
+		or simply adding the vertex point count as another attribute in your VAO like
+		I do here - it all depends on how much abstraction you like to have in your
+		working code.
+	</p>
+
+	<pre>
+function start_loading_obj (url) {
+  // first create an empty VAO
+  var vao = vao_ext.createVertexArrayOES ();
+  // inject an is_loaded boolean
+  vao.is_loaded = false;
+  // inject point count into VAO (yeah...)
+  vao.pc = 0;
+
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.open ("GET", url, true);
+  xmlhttp.onload = function (e) {
+    var str = xmlhttp.responseText;
+    var lines = str.split ('\n');
+    for (var i = 0; i < lines.length; i++) {
+      //...parsing code goes here...
+    }
+    // store loaded state and point count in VAO
+    vao.pc = sorted_vp.length / 3;
+    vao.is_loaded = true;
+  }
+  // start loading
+  xmlhttp.send ();
+  // return the empty VAO
+  return vao;
+}</pre>
+
+	<p>
+		Note that, similar to the texture creation, the first step is to <u>create a
+			valid, but empty, VAO</u>. This will be returned to the function caller whilst
+		the download starts. That means that even if the download has not finished, our
+		main programme still has a valid handle to the eventual VAO, and can check its
+		state. The <code>send</code> function starts the HTTP
+		handshaking. When the file has actually downloaded to the client the
+		<code>onload</code> callback function will start - some-time after the original
+		function call returned. It's very easy to make a mistake here when testing. On
+		a local network the download won't have a delay. From another continent, with a
+		large mesh, the delay could take some time - <b>when testing asynchronous
+			download code, check over the longest and worst connection possible</b>. You
+		will definitely make mistakes with the little check flags and callbacks, and
+		have code that assumes something has downloaded without sufficiently checking.
+	</p>
+
+	<p>
+		In your parsing code you can use the <code>str.split ('\n');</code> command to
+		return an array of strings; one for each line in the file, and parse that in a
+		loop with <code>for (var i = 0; i < lines.length; i++) {</code>. Note that JavaScript uses dynamic arrays
+		(basically
+		C++ vectors), and they always know their own length. </p>
+	<p>
+		To include an external JavaScript file, we just add another <code>script</code>
+		block, and specify the <code>src="path_to_file.js"</code> attribute.
+	</p>
+
+	<textarea rows="2">
+<script src="webgl_starter/obj_parser.js">
+</script></textarea>
+
+	<p>
+		I have a relative path to my file here. Note that <b>you must have a closing
+			script tag</b> - you cannot have a single, self-closing
+		<code>&lt;script /&gt;</code> tag, as you can with other types of HTML element. This new
+		script block should really appear before our other block, so that the browser
+		parses it before it is used. If you don't do this it will still work, but the
+		browser might warn you that it has been forced to load the script
+		less efficiently.
+	</p>
+
+	<h3>Cross-Origin File Access</h3>
+
+	<p>
+		If you're loading your web page from your desktop AJAX may complain and refuse to
+		load files as it violates security policy. You can put your content on a local
+		web-server - there are many light-weight servers available. You can start
+		Chrome with the <code>--disable-web-security</code> command-line flag to ignore
+		this precaution, or you can just use Firefox, which should ignore this problem
+		entirely and load your files.
+	</p>
+
+	<h2>Creating Matrices</h2>
+
+	<p>
+		You will need a set of vector and matrix maths functions for JavaScript. A very
+		popular library is Brandon Jones'
+		<a href="https://github.com/toji/gl-matrix">gl-matrix</a>. I also ported
+		<a href="https://github.com/capnramses/apg_maths">my maths library</a> to
+		JavaScript. You can of course also write your own. It's easier to just leave
+		matrices and vectors in JavaScript's native array format, rather than creating
+		custom data structures.
+	</p>
+
+	<p>
+		It's worth having a look at the source code of a
+		JavaScript maths library to see how functions, parameters, and arrays work in
+		JavaScript. Functions do not have declarations - just a definition. They are
+		all prefixed with the <code>function</code> keyword instead of a data-type, and can
+		return or not return a value. Parameters are just given name, and do not
+		require a <code>var</code> prefix. Currying and more advanced functional
+		programming is possible. Arrays are given as comma-separated lists of values
+		inside square brackets. An empty array is created with either
+		<code>var my_array = []</code> or <code>var my_array = new Array ()</code>.
+	</p>
+
+	<p>
+		I just include my maths library with another script block. I create my view
+		and projection matrices with familiar-looking functions:
+	</p>
+
+	<pre>
+var cam_dirty = true;
+var V = look_at ([0.0, 0.4, 1.0], [0.0, 0.4, 0.0],
+  normalise_vec3 ([0.0, 1.0, 0.0]));
+var aspect = canvas.clientWidth / canvas.clientHeight;
+var P = perspective (67.0, aspect, 0.1, 100.0);
+var PV = mult_mat4_mat4 (P, V);</pre>
+
+	<p>
+		<b>Very important JavaScript note:</b> my canvas dimensions are integers, but
+		division here does floating point division, not integer division. This could be
+		your first encounter with the horrible bits of JavaScript. If you want a
+		particular data type you usually have to enforce it with particular truncation
+		or parsing functions - floating point or string seem to be a kind of default
+		assumed data type in JavaScript in most cases.
+	</p>
+
+	<h2>Drawing in a Loop</h2>
+
+	<p>
+		To have a loop in JavaScript the best strategy is to create function that you
+		put the code to be looped inside, and notify the browser that you want to call
+		this function again when it finishes. Unfortunately, the actual function to
+		request a repeat call does not seem to have been standardised over all the
+		browsers. I took a snippet from Google's <code>webgl-utils.js</code> file to
+		encapsulate that in a cross-browser function:
+	</p>
+
+	<pre>
+window.requestAnimFrame = (function() {
+return window.requestAnimationFrame ||
+  window.webkitRequestAnimationFrame ||
+  window.mozRequestAnimationFrame ||
+  window.oRequestAnimationFrame ||
+  window.msRequestAnimationFrame ||
+  function(callback, element) {
+    return window.setTimeout (callback, 1000 / 60);
+  };
+})();</pre>
+
+	<p>
+		If you put that somewhere in your script blocks we can call it. We will also
+		write a function to repeat that will do our drawing. This can go after your
+		start-up code if you like:
+	</p>
+
+	<pre>
+var previous_millis;
+
+function main_loop () {
+  // update timers
+  var current_millis = performance.now ();
+  var elapsed_millis = current_millis - previous_millis;
+  previous_millis = current_millis;
+  var elapsed_s = elapsed_millis / 1000.0;
+  
+  // draw
+  gl.clear (gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  gl.activeTexture (gl.TEXTURE0);
+  gl.bindTexture (gl.TEXTURE_2D, texture);
+  gl.useProgram (sp);
+  if (cam_dirty) {
+    gl.uniformMatrix4fv (heckler_PV_loc, gl.FALSE, new Float32Array (PV));
+    cam_dirty = false;
+  }
+  var R = rotate_y_deg (identity_mat4 (), current_millis * 0.075);
+  gl.uniformMatrix4fv (heckler_M_loc, gl.FALSE, new Float32Array (R));
+  vao_ext.bindVertexArrayOES (heckler_vao);
+  gl.drawArrays (gl.TRIANGLES, 0, heckler_vao.pc);
+  
+  // "automatically re-call this function please"
+  window.requestAnimFrame (main_loop, canvas);
+}</pre>
+
+	<p>
+		I like to have some timers in my loop so I can do animations, and measure
+		frame rate and so on. You can use the browser's <code>performance.now()</code>
+		function to do this, which gives you milliseconds since the page loaded, with
+		your system's maximum precision up to nanoseconds - much more reliable than
+		JavaScript's data and time functions. After this I start my drawing code. I
+		update my matrix uniform for the projection and view if it hasn't been updated
+		yet. There are some peculiarities with the uniform update function for
+		matrices. The transposition argument must be set to false in WebGL - it won't
+		do a transposition for you. It's a good idea to force the matrix' array to take
+		a 32-bit float data type, and you can do that by creating a new
+		<code>Float32Array</code> object. Right at the end of the function I call the
+		request-to-call-again function. Buffer swapping and the
+		actual drawing of the final image to the canvas are handled automatically.
+		Right at the end of the script block we can actually call this
+		function, which will start the looping process:
+	</p>
+
+
+	<pre>
+previous_millis = performance.now();
+main_loop ();</pre>
+
+	<p>
+		Those are the basics of WebGL, which should be enough to get started if you've
+		done a bit of OpenGL before.
+	</p>
+
+	<h2>Advancing</h2>
+
+	<p>
+		The browser has a plethora of functions and features that you can access. You
+		can look at user interaction with the mouse, keyboard, touch-screens for mobile
+		devices, and even the new W3C gamepad/joystick interface. You can look at
+		setting up more sophisticated asynchronous file streaming.
+	</p>
+
+	<p>
+		Having a set of GUI tools from HTML can not be understated. You can use all of
+		the web's additions to charts, sliders, buttons, and most importantly you have
+		text rendering. You can overlay these on top of the canvas if you like <i>via</i> CSS.
+		You can also float the canvas over other web content, and make the background
+		transparent.
+	</p>
+
+	<p>
+		Browsers have built-in debugging, source, stepping, and watch-list tools. You
+		can do some very comprehensive debugging inside the browser, and even enter
+		new JavaScript code in as the application is running. It's a good idea to try
+		out these tools.
+	</p>
+
+	<p>
+		Be sure to watch the development of the new WebGL 2.0 standard, and see if your
+		browsers already have an early version of this running.
+	</p>
+
+	<h2>Recommended Reading</h2>
+
+	<p>
+		My favourite WebGL book so far is Diego Cantor and Brandon Jones' "WebGL
+		Beginner's Guide", at <a href="https://www.packtpub.com/game-development/webgl-beginners-guide">PACKT</a>.
+		Mozilla Developer Network has an excellent
+		<a href="https://developer.mozilla.org/en/docs/Web/WebGL">tutorial series</a> on getting started with WebGL.
+	</p>
+</body>
+
+</html>
+
+<!-- shaders can be JavaScript strings, but if you put them in a script block
+then you don't need to worry about string formatting. to prevent the browser
+assuming that scripts are javascript that it should execute, change the 'type'
+attribute to something sensible -->
+<script id="heckler.vert" type="text/glsl">
+attribute vec3 vp;
+attribute vec2 vt;
+attribute vec3 vn;
+
+uniform mat4 PV, M;
+
+varying vec2 st;
+varying vec3 n;
+
+void main () {
+  st = vt;
+  n = vec3 (PV * M * vec4 (vn, 0.0));
+  gl_Position = PV * M * vec4 (vp, 1.0);
+}
+</script>
+
+<!-- fragment shaders in webgl require you to put "precision mediump float;"
+at the top. -->
+<script id="heckler.frag" type="text/glsl">
+precision mediump float;
+
+varying vec2 st;
+varying vec3 n;
+uniform sampler2D dm;
+
+void main () {
+  vec4 texel = texture2D (dm, st);
+
+  vec3 nn = normalize (n);
+  vec3 fwd = normalize (vec3 (0.0, 0.0, -1.0));
+  
+  gl_FragColor = texel;
+  
+  gl_FragColor.rgb = gl_FragColor.rgb * dot (nn, fwd) * 0.7
+    + 0.3 * gl_FragColor.rgb;
+}
+</script>
+
+<!-- include JavaScript from a file like this. stricly speaking, we should put
+the files we include _above_ where we actually call their functions etc.
+this file is the code for my .obj mesh loader -->
+<script src="webgl_starter/obj_parser.js">
+</script>
+<!-- and my matrix maths functions -->
+<script src="webgl_starter/apg_maths.js">
+</script>
+
+<!-- or just write code directly into a script block like this. javascript is
+the default script language -->
+<script>
+	// write to the browser console like this
+	console.log("starting WebGL");
+
+	// used the DOM to grab the html canvas element as a javascript object
+	var canvas = document.getElementById("mycanvas");
+	// resize the canvas (default size is 300 × 150 pixels)
+	canvas.width = 256;
+	canvas.height = 256;
+	// use the browser's webgl interface to start a 'context' and hook it up to
+	// the canvas
+	var gl = canvas.getContext("webgl");
+
+	// use the webgl interface to set the background 'clear' colour, and then
+	// clear the background to that colour
+	gl.clearColor(0.85, 0.85, 0.85, 1.0);
+	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+	// get an interface to the VAO extension, so we can use VAOs
+	var vao_ext = gl.getExtension("OES_vertex_array_object");
+	if (!vao_ext) {
+		// write an error message in the console like this
+		console.error("ERROR: Your browser does not support WebGL VAO extension");
+	}
+
+	// set some GL states that I want to use for rendering
+	gl.cullFace(gl.BACK);
+	gl.frontFace(gl.CCW);
+	gl.enable(gl.CULL_FACE);
+	gl.enable(gl.DEPTH_TEST);
+
+	//
+	// load my mesh file using my.obj loader
+	var heckler_vao = start_loading_obj("webgl_starter/heckler.obj");
+
+	//
+	// load my shaders from script blocks
+	// you could make a little function to do this
+	var el = document.getElementById("heckler.vert");
+	var vs_str = el.innerHTML;
+
+	// and again for the fragment shader
+	el = document.getElementById("heckler.frag");
+	var fs_str = el.innerHTML;
+
+	var vs = gl.createShader(gl.VERTEX_SHADER);
+	var fs = gl.createShader(gl.FRAGMENT_SHADER);
+	gl.shaderSource(vs, vs_str);
+	gl.shaderSource(fs, fs_str);
+	gl.compileShader(vs);
+	if (!gl.getShaderParameter(vs, gl.COMPILE_STATUS)) {
+		console.error("ERROR compiling vert shader. log: " +
+			gl.getShaderInfoLog(vs));
+	}
+	gl.compileShader(fs);
+	if (!gl.getShaderParameter(fs, gl.COMPILE_STATUS)) {
+		console.error("ERROR compiling frag shader. log: " +
+			gl.getShaderInfoLog(fs));
+	}
+	var sp = gl.createProgram();
+	gl.attachShader(sp, vs);
+	gl.attachShader(sp, fs);
+	gl.bindAttribLocation(sp, 0, "vp");
+	gl.bindAttribLocation(sp, 1, "vt");
+	gl.bindAttribLocation(sp, 2, "vn");
+	gl.linkProgram(sp);
+	if (!gl.getProgramParameter(sp, gl.LINK_STATUS)) {
+		console.error("ERROR linking program. log: " + gl.getProgramInfoLog(sp));
+	}
+	gl.validateProgram(sp);
+	if (!gl.getProgramParameter(sp, gl.VALIDATE_STATUS)) {
+		console.error("ERROR validating program. log: " +
+			gl.getProgramInfoLog(sp));
+	}
+	var heckler_PV_loc = gl.getUniformLocation(sp, "PV");
+	var heckler_M_loc = gl.getUniformLocation(sp, "M");
+
+	//
+	// load texture
+	console.log("loading image ...");
+	var texture = gl.createTexture();
+	var image = new Image();
+	image.onload = function () {
+		gl.bindTexture(gl.TEXTURE_2D, texture);
+		gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE,
+			image);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+		console.log("texture loaded ");
+	}
+	image.src = "webgl_starter/heckler.png";
+
+	//
+	// camera
+	var cam_dirty = true;
+
+	var V = look_at([0.0, 0.4, 1.0], [0.0, 0.4, 0.0],
+		normalise_vec3([0.0, 1.0, 0.0]));
+	var aspect = canvas.clientWidth / canvas.clientHeight;
+	var P = perspective(67.0, aspect, 0.1, 100.0);
+	// changed fovy from 67.0 to 50.0 -- anton
+	var PV = mult_mat4_mat4(P, V);
+
+	var previous_millis;
+
+  /** FROM Google webgl-utils.js
+   * Provides requestAnimationFrame in a cross browser way.
+   * which is a reliable way to do a rendering loop via callback in javascript
+   */
+	window.requestAnimFrame = (function () {
+		return window.requestAnimationFrame ||
+			window.webkitRequestAnimationFrame ||
+			window.mozRequestAnimationFrame ||
+			window.oRequestAnimationFrame ||
+			window.msRequestAnimationFrame ||
+			function (/* function FrameRequestCallback */ callback, /* DOMElement Element */ element) {
+				return window.setTimeout(callback, 1000 / 60);
+			};
+	})();
+
+	function main_loop() {
+		// update timers
+		var current_millis = performance.now();
+		var elapsed_millis = current_millis - previous_millis;
+		previous_millis = current_millis;
+		var elapsed_s = elapsed_millis / 1000.0;
+
+		//
+		// draw
+		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+		if (heckler_vao.is_loaded) {
+			gl.activeTexture(gl.TEXTURE0);
+			gl.bindTexture(gl.TEXTURE_2D, texture);
+			gl.useProgram(sp);
+			if (cam_dirty) {
+				gl.uniformMatrix4fv(heckler_PV_loc, gl.FALSE, new Float32Array(PV));
+				cam_dirty = false;
+			}
+			var R = rotate_y_deg(identity_mat4(), current_millis * 0.075);
+			gl.uniformMatrix4fv(heckler_M_loc, gl.FALSE, new Float32Array(R));
+			vao_ext.bindVertexArrayOES(heckler_vao);
+			gl.drawArrays(gl.TRIANGLES, 0, heckler_vao.pc);
+		}
+
+		// "automatically re-call this function please"
+		window.requestAnimFrame(main_loop, canvas);
+	}
+
+	previous_millis = performance.now();
+	main_loop();
+</script>

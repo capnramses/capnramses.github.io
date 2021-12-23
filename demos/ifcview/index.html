@@ -1,0 +1,404 @@
+<html>
+	<head>
+		<link rel=stylesheet type="text/css" href="https://antongerdelan.net/greysans.css">
+		<title>IFC Viewer Prototype</title>
+		<script src="webgl-utils.js"></script> <!-- include initialisation helper -->
+		<script src="webgl-debug.js"></script> <!-- include debugging helper (prints to javascript console) -->
+		<script type="text/javascript" src="initGL.js"></script>
+		<script type="text/javascript" src="settings.js"></script>
+		<script type="text/javascript" src="shaderProgramme.js"></script>
+		<script type="text/javascript" src="gl-matrix.js"></script>
+		<script type="text/javascript" src="timer.js"></script>
+		<script type="text/javascript" src="mesh.js"></script>
+		<script type="text/javascript" src="camera.js"></script>
+		
+		<link type="text/css" href="css/ui-lightness/jquery-ui-1.8.21.custom.css" rel="stylesheet" />
+		<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+		<script type="text/javascript" src="js/jquery-ui-1.8.21.custom.min.js"></script>
+		<script type="text/javascript">
+			$(function(){
+
+				// Slider
+				$('#slider').slider({
+					range: true,
+					values: [0, 255]
+				});
+
+				//hover states on the static widgets
+				$('#dialog_link, ul#icons li').hover(
+					function() { $(this).addClass('ui-state-hover'); },
+					function() { $(this).removeClass('ui-state-hover'); }
+				);
+
+			});
+		</script>
+<style type="text/css">
+			/*demo page css*/
+			body{ font: 62.5% "Trebuchet MS", sans-serif; }
+		</style>
+		<style>
+	#red, #green, #blue, #alpha {
+		clear: left;
+		width: 236px;
+		margin: 10px;
+	}
+	#red .ui-slider-range { background: #ef2929; }
+	#red .ui-slider-handle { border-color: #ef2929; }
+	#green .ui-slider-range { background: #8ae234; }
+	#green .ui-slider-handle { border-color: #8ae234; }
+	#blue .ui-slider-range { background: #729fcf; }
+	#blue .ui-slider-handle { border-color: #729fcf; }
+	#alpha .ui-slider-range { background: #333333; }
+	#alpha .ui-slider-handle { border-color: #ff5500; }
+
+	</style>
+	<script>
+	function hexFromRGB(r, g, b) {
+		var hex = [
+			r.toString( 16 ),
+			g.toString( 16 ),
+			b.toString( 16 )
+		];
+		$.each( hex, function( nr, val ) {
+			if ( val.length === 1 ) {
+				hex[ nr ] = "0" + val;
+			}
+		});
+		return hex.join( "" ).toUpperCase();
+	}
+	
+	$(function () {
+		$( "#red, #green, #blue, #alpha" ).slider({
+			orientation: "horizontal",
+			range: "min",
+			max: 255,
+			value: 51,
+			slide: refreshSwatch,
+			change: refreshSwatch
+		});
+
+	});
+	
+		$(function () {
+		$( "#alpha" ).slider({
+			orientation: "horizontal",
+			range: "min",
+			max: 255,
+			value: 255,
+			slide: refreshSwatch,
+			change: refreshSwatch
+		});
+
+	});
+	
+	</script>
+	</head>
+	<body onload="main();" lang="en-NZ" bgcolor="#333333" dir="LTR"3>
+<h1>IFC Viewer Prototype</h1>
+<p><i>W,S,A,D,Q,E keys to move. </i></p>
+<p><canvas id="mainCanvas" style="border: none;" width="512" height="512"></canvas></p>
+<h3>JQueryUI Controls</h3>
+<div id="red"></div>
+<div id="green"></div>
+<div id="blue"></div>
+<div id="alpha"></div>
+<h3>HTML Form Control</h3>
+<p id="warningzone">&nbsp;</p>
+<form name="myform" method="GET">
+<p>r<input type="text" name="inputboxr" size="2" />g<input type="text" name="inputboxg" size="2" />b<input type="text" name="inputboxb" size="2" />a<input type="text" name="inputboxa" size="2" /> <input type="button" name="button" value="Apply" onclick="testResults(this.form)" /></p>
+</form> <form name="radioForm" method="GET">
+<p><input type="radio" name="rotydir" value="pos" onclick="radioChange(this.form)" checked="checked" /> turn <i>this</i> way<br /> <input type="radio" name="rotydir" value="neg" onclick="radioChange(this.form)" /> no, turn <i>that</i> way</p>
+</form>
+<h3>Cam Pos</h3>
+<table>
+<tbody>
+<tr>
+<td><small>FPS (Hz)</small></td>
+<td id="FPS"><small>...</small></td>
+</tr>
+<tr>
+<td><small>Cam World Pos</small></td>
+<td id="campos"><small>...</small></td>
+</tr>
+<tr>
+<td><small>Cam Direction</small></td>
+<td id="camdir"><small>...</small></td>
+</tr>
+<tr>
+<td><small>Mouse Deltas</small></td>
+<td id="mousedeltas"><small>...</small></td>
+</tr>
+<tr>
+<td><small>Yaw</small></td>
+<td id="currentyaw"><small>...</small></td>
+</tr>
+</tbody>
+</table>
+<h3>Settings</h3>
+<p id="summaryP">summary details appear here</p>
+<p>
+<script type="text/javascript"><!--
+			// global for vertex buffer for testing the shader
+			var vboHandle;
+			var vboVNHandle;
+			var myShaderProg;
+			var modelMatLoc;
+			// degrees
+			var degrees = 0.0;
+			var frameTimer;
+			var glContext;
+			var stepTimeAccum = 0;
+			var stepSize = 0.02;
+			var myMesh;
+			var texture;
+			var gCam;
+			var currentlyPressedKeys = {};
+			var mouseHasMovedEver = false;
+			var lastMouseX = 0;
+			var lastMouseY = 0;
+			var mousedown = false;
+			var frameCount = 0;
+			var frameCounterTime = 0.0;
+			var turnPos = true;
+			
+			function radioChange (form) {
+				if (form.rotydir[0].checked) {
+					turnPos = true;
+				}
+				if (form.rotydir[1].checked) {
+					turnPos = false;
+				}
+			}
+			
+			function testResults (form) {
+				var r = form.inputboxr.value;
+				var g = form.inputboxg.value;
+				var b = form.inputboxb.value;
+				var a = form.inputboxa.value;
+				if (r > 1 || g > 1 || b > 1 || a > 1 || r < 0 || g < 0 || b < 0 || a < 0) {
+					document.getElementById('warningzone').innerHTML="<green>* ERROR: values must be between 0.0 and 1.0</green>";
+				} else {
+					document.getElementById('warningzone').innerHTML="";
+				}
+				$( "#red" ).slider( "value", r * 255 );
+				$( "#green" ).slider( "value", g * 255 );
+				$( "#blue" ).slider( "value", b * 255 );
+				$( "#alpha" ).slider( "value", a * 255 );
+				glContext.clearColor (r, g, b, a);
+			}
+			
+			function refreshSwatch() {
+				var r = $( "#red" ).slider( "value" ) / 255.0;
+				var g = $( "#green" ).slider( "value" ) / 255.0;
+				var b = $( "#blue" ).slider( "value" ) / 255.0;
+				var a = $( "#alpha" ).slider( "value" ) / 255.0;
+				document.myform.inputboxr.value = r;
+				document.myform.inputboxg.value = g;
+				document.myform.inputboxb.value = b;
+				document.myform.inputboxa.value = a;
+				glContext.clearColor (r, g, b, a);
+			}
+			
+			function main() {
+				// get handle to the HTML5 canvas that we made
+				var canvas = document.getElementById ("mainCanvas");
+		
+				// start GL
+				var debugging = true;
+				var withLogging = false;
+				glContext = initGL (canvas, debugging, withLogging);
+				// validate
+				if (!glContext) {
+					alert("failed to start GL");
+					return;
+				}
+				// create global settings object from JSON file
+				gGLSettings.loadFromFile("glsettings.json");
+				// update HTML section
+				gGLSettings.printAll();
+				
+				// create a shader programme
+				myShaderProg = new ShaderProgramme (glContext);
+				myShaderProg.loadVertexShaderFromURL (glContext, "basic_vs.glsl");
+				myShaderProg.loadFragmentShaderFromURL (glContext, "basic_fs.glsl");
+				myShaderProg.link (glContext);
+				
+				// enable the shader
+				myShaderProg.use (glContext);
+				// get matrix location in shader
+				modelMatLoc = myShaderProg.getUniformLocation (glContext, "modelMat");
+				// load mesh data from JSON
+				//myMesh = loadMeshFromJSON ("dungeondoor.json");
+myMesh = loadMeshFromJSON ("output.json");
+			//	alert(myMesh.mVertexPoints.length / 3 + " vertices, " + myMesh.mTextureCoords.length / 2 + " texture coords," + myMesh.mVertexNormals.length / 3 + " normals");
+				
+				// set up vp data
+				vboHandle = glContext.createBuffer (); // create a vertex buffer
+				glContext.bindBuffer (glContext.ARRAY_BUFFER, vboHandle); // enable buffer
+				glContext.bufferData (glContext.ARRAY_BUFFER, new Float32Array (myMesh.mVertexPoints), glContext.STATIC_DRAW); // put data into buffer
+				// enable vertex position attribute in shader
+				var vertexPositionAttribute = myShaderProg.getAttributeLocation (glContext, "lc_vp"); // get a handle to the vp attribute in the shader
+				glContext.enableVertexAttribArray (vertexPositionAttribute); // enable attribute for rendering
+				glContext.vertexAttribPointer (vertexPositionAttribute, 3, glContext.FLOAT, false, 0, 0);  // define attribute using currently bound VBO
+				
+				// goes into a separate looping function later
+				glContext.clearColor (gGLSettings.mBackgroundColour.r, gGLSettings.mBackgroundColour.g, gGLSettings.mBackgroundColour.b, 1.0);
+				glContext.enable (glContext.DEPTH_TEST);
+				
+				
+				// CAMERA!
+				gCam = new Camera (45, 512 / 512, 100, 100000, [0, 0, 500], [0, 0, -1]);
+				var projMatLoc = myShaderProg.getUniformLocation (glContext, "projMat");
+				myShaderProg.setUniformMat4ByLocation (glContext, projMatLoc, gCam.mProjMat);
+				var viewMatLoc = myShaderProg.getUniformLocation (glContext, "viewMat");
+				myShaderProg.setUniformMat4ByLocation (glContext, viewMatLoc, gCam.mViewMat);
+				
+				// add keyboard handling callbacks
+				document.onkeydown = function (event) {
+					currentlyPressedKeys[event.keyCode] = true;
+				}
+				document.onkeyup = function (event) {
+					currentlyPressedKeys[event.keyCode] = false;
+					
+				}
+				
+				document.onmousedown = handleMouseDown = function (event) { // only do when cursor inside scene -- want this????
+					mousedown = true;
+				}
+				document.onmouseup = handleMouseUp = function (event) { // do this on document so it can be detected when cursor outside scene
+					mousedown = false;
+					// reset to avoid springy warping mouse when next clicking
+					mouseHasMovedEver = false;
+				}
+				document.onmousemove = handleMouseMove = function (event) {
+					if (!mousedown) {
+						return;
+					}
+					//// could only do when mouse down for sub-window stuff
+					// change to positive and negative coords
+					var newX = event.clientX;
+					var newY = event.clientY;
+
+					// avoid annoying first time mouse move jump
+					if (mouseHasMovedEver == false) {
+						mouseHasMovedEver = true;
+						lastMouseX = newX;
+						lastMouseY = newY;
+						return;
+					}
+					
+					var deltaX = newX - lastMouseX;
+					var deltaY = newY - lastMouseY;
+					lastMouseX = newX
+					lastMouseY = newY;
+					
+					var yawSpeed = 0.1;
+					//gCam.deltaYaw (deltaX * yawSpeed);
+					 
+					
+					/*var newRotationMatrix = mat4.create();
+					mat4.identity(newRotationMatrix);
+					mat4.rotate(newRotationMatrix, degToRad(deltaX / 10), [0, 1, 0]);
+					mat4.rotate(newRotationMatrix, degToRad(deltaY / 10), [1, 0, 0]);
+					mat4.multiply(newRotationMatrix, moonRotationMatrix, moonRotationMatrix);*/
+					
+					var viewMatLoc = myShaderProg.getUniformLocation (glContext, "viewMat");
+					myShaderProg.setUniformMat4ByLocation (glContext, viewMatLoc, gCam.mViewMat);
+				}
+				
+				// create a frame timer
+				frameTimer = new Timer();
+				frameTimer.start();
+				
+				// render loop
+				render (canvas);
+			}
+
+			// rendering loop
+			function render (canvas) {
+				// update matrix based on timer
+				var milliSeconds = frameTimer.milliseconds();
+				var deltaSeconds = milliSeconds / 1000.0;
+				if (milliSeconds > 10) {
+					stepTimeAccum += deltaSeconds;
+					frameCounterTime += deltaSeconds;
+					frameTimer.start();
+				}
+				
+				// compute time steps
+				while (stepTimeAccum > stepSize) {
+					// update matrix for shader
+					var modelMat = mat4.create();
+					mat4.identity (modelMat);
+					if (turnPos) {
+						degrees += stepSize * 0.5;
+					} else {
+						degrees -= stepSize * 0.5;
+					}var axis = vec3.createFrom(0, 1, 0);
+					vec3.normalize(axis);
+					mat4.rotate (modelMat, degrees, axis);
+					mat4.scale (modelMat, [.25, .25, .25]);
+					// enable the shader
+					myShaderProg.use (glContext);
+					myShaderProg.setUniformMat4ByLocation(glContext, modelMatLoc, modelMat);
+					// TODO there are functions in glmatrix to get the normal matrix
+					
+					// camera movement
+					var camMove = [0, 0, 0];
+					var camspeed = 1000.0;
+					var updateMove = false;
+					// keys listed by code: http://stackoverflow.com/questions/1465374/javascript-event-keycode-constants
+					if (currentlyPressedKeys[87] == true) { // w
+						//camMove[2] = -1.0 * camspeed * stepSize;
+						gCam.moveInCamDirBy (camspeed * stepSize);
+						updateMove = true;
+					}
+					if (currentlyPressedKeys[83] == true) { // s
+						//camMove[2] = 1.0 * camspeed * stepSize;
+						gCam.moveInCamDirBy (-camspeed * stepSize);
+						updateMove = true;
+					}
+					if (currentlyPressedKeys[65] == true) { // a
+						//camMove[0] = -1.0 * camspeed * stepSize;
+						gCam.slideCamBy (-camspeed * stepSize);
+						updateMove = true;
+					}
+					if (currentlyPressedKeys[68] == true) { // d
+						//camMove[0] = 1.0 * camspeed * stepSize;
+						gCam.slideCamBy (camspeed * stepSize);
+						updateMove = true;
+					}
+					if (currentlyPressedKeys[69] == true) { // d
+						camMove[1] = -1.0 * camspeed * stepSize;
+						gCam.moveBy (camMove);
+						updateMove = true;
+					}
+					if (currentlyPressedKeys[81] == true) { // d
+						camMove[1] = 1.0 * camspeed * stepSize;
+						gCam.moveBy (camMove);
+						updateMove = true;
+					}
+					if (updateMove == true) {
+						//gCam.moveBy (camMove);
+						
+						var viewMatLoc = myShaderProg.getUniformLocation (glContext, "viewMat");
+						myShaderProg.setUniformMat4ByLocation (glContext, viewMatLoc, gCam.mViewMat);
+					}
+					
+					stepTimeAccum -= stepSize;
+				}
+				
+				// draw geometry (the suggest order of functions on the webgl wiki was wrong)
+				drawScene (glContext);
+				frameCount++;
+				if (frameCount > 9) {
+					frameCount = 0;
+					document.getElementById('FPS').innerHTML="<small>" + (10.0 / frameCounterTime).toFixed(2) + "</small>";
+					frameCounterTime = 0.0;
+				}
+				window.requestAnimFrame(render, canvas); // this function is from webgl-utils
+			}
+// --></script>
+</p>
+</body>
+</html>

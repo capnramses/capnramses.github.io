@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2020_04_03_rasterisation</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>Software Rasterisation Resources</h2>
+
+	<p>I talked about building a software 3D rasteriser in some of my recent live streams, and people asked if I could
+		share my resources.
+		If you start with a program that can write out an image then you can progressively add features one by one, which is
+		quite fun.
+		If you find a <b>triangle fill</b> algorithm to rasterise one triangle (colour the correct pixels between 3 corner
+		points) then you're on the right path.
+		It's easier, and arguably more fun, to write a simple software rasteriser than get a modern 3D API started, which is
+		kind of silly. Yes, it is a good way to learn 3D graphics concepts, much like writing a software ray tracer. Here is
+		some of my demo code.
+	</p>
+
+	<div class="centre">
+		<img src="../images/triangle_fill.png" alg="A single rasterised triangle" />
+	</div>
+
+	<ul>
+		<li><a href="https://github.com/capnramses/gfx_expmts/tree/master/075_triangle_fill">Code</a> for a single triangle
+			fill using an edge function.</li>
+		<li><a href="https://github.com/capnramses/gfx_expmts/tree/master/076_sw_rasteriser">Code</a> for the software
+			rasteriser I wrote in December as a demo for my students.</li>
+	</ul>
+
+	<div class="centre">
+		<img src="../images/software_rasteriser_working.png" alt="A rasterised shape with a flat colour" /> <br />
+		<small>Upgrading from one filled triangle to a shape made of triangles.</small><br />
+		<img src="../images/raster_barycentric_uvw.png" alt="Barcyentric interpolation" /><br />
+		<small>Barycentric coordinates used for interpolating vertex colours.</small><br />
+		<img src="../images/raster_depth_buffer.png" alt="A depth map" /><br />
+		<small>A depth buffer for depth testing.</small><br />
+		<img src="../images/raster_final_coloured_verts.png" alt="A 3D model loaded from a mesh file." /><br />
+		<small>Displaying a 3D model loaded from a mesh file.</small>
+	</div>
+
+	<p>
+		In my <a href="https://github.com/capnramses/gfx_expmts">graphics experiments repository</a> you'll also find code
+		for animating graphics in an X11 window, and a starter for rasterising a cube in an X11 window.
+		I have a similar demo somewhere that rasterises a 3D spinning cube into a 2D canvas element on a webpage.
+	</p>
+
+	<p>I may have some lecture slides from last year about this process that could be helpful - I'll have to dig further
+		to find them...</p>
+</body>
+
+</html>

@@ -1,0 +1,31 @@
+<html>
+	<head>
+		<link rel=stylesheet type="text/css" href="https://antongerdelan.net/greysans.css">
+		<title>WebGL Basic</title>
+		<script type="text/javascript" src="initGL.js"></script>
+		<script type="text/javascript" src="settings.js"></script>
+	</head>
+	<body onload="main();" lang="en-NZ" bgcolor="#333333" dir="LTR"3>
+		<h1>JS WebGL Settings Object</h1>
+		<canvas id="mainCanvas" style="border: none;" width="800" height="800"></canvas>
+		<h3>Settings</h3>
+		<p id="summaryP">summary details appear here</p>	
+
+		<script type="text/javascript">
+				
+			function main() {
+				var canvas = document.getElementById ("mainCanvas");
+				var gl = initGL (canvas);
+
+				gGLSettings.loadFromFile("settings.gl");
+				gGLSettings.printAll();
+				
+				
+				gl.clearColor (gGLSettings.mBackgroundColour.r, gGLSettings.mBackgroundColour.g, gGLSettings.mBackgroundColour.b, 1.0);
+				gl.enable (gl.DEPTH_TEST);
+				// goes into a separate looping function later
+				drawScene (gl);
+			}
+		</script>
+	</body>
+</html>

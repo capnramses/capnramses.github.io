@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2015_06_16_debug_draw</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>OpenGL Debug Drawing Layer</h2>
+
+	<p>
+		I made a little layer of basic visualisations for OpenGL, which I called the
+		imaginative name: <a href="https://github.com/capnramses/apg/tree/master/apg_gldb">OpenGL Debug Draw</a>.
+	</p>
+
+	<div class="centre">
+		<img src="https://github.com/capnramses/apg/blob/master/apg_gldb/screenshot2.png?raw=true" />
+	</div>
+
+	<p>
+		It is inconveniently hard to draw basic visualisation things in modern OpenGL;
+		3d and 2d lines, points, boxes, etc. The sort of things that would be
+		incredibly powerful for hardware accelerated visualisation, and debugging
+		mathematics and logic over the top of games and more complex things where this
+		can often be guesswork. These features are all deprecated and have very
+		unreliable, poorly performing support in modern GL.
+	</p>
+
+	<p>
+		I was flicking through <a
+			href="http://www.amazon.com/gp/product/1466560010/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=1466560010&linkCode=as2&tag=drantger-20&linkId=F7AA2JQXTMDSFH7H">Game
+			Engine Architecture, Second Edition</a><img
+			src="http://ir-na.amazon-adsystem.com/e/ir?t=drantger-20&l=as2&o=1&a=1466560010" width="1" height="1" border="0"
+			alt="" style="border:none !important; margin:0px !important;" />
+		and one chapter suggests having a layer of debug visualisation tools to help
+		designers show vectors, bounding boxes, spheres, points etc. Often 3d maths and
+		things like collisions can rely on some guess work, and it's always a good
+		idea to show what's happening in the model and how it matches to the 3d
+		graphics as we see them. It can also be helpful to show why lighting equations
+		are producing strange results on certain meshes - perhaps the normals are wrong
+		in part of the mesh.
+	</p>
+
+	<p>
+		In earlier times I had used the immediate mode line drawing facilities built
+		into graphics engines, which at some point come unstuck as they are typically
+		not batched together to fit into a single drawing call - each line or box is
+		drawn in a separate drawing operation and it quickly bogs down and interferes
+		with the pace of whatever real-time interaction you want to observe. So my
+		main design feature was to stuff all of these lines into one buffer so they
+		are all drawn together. New lines can be added onto the stack of lines drawn,
+		and all lines added after an arbitrary point can be discarded, but there's no
+		real dynamic adding and removing, which means no proper frustum culling can be
+		done. I feel this is fine for most debugging tasks (even quite intensive stuff).
+		I didn't want to use modern uniform buffers and more complex data types so that
+		I could support even very old GL versions, which I use for some things,
+		because the portability of modern GL is abysmal.
+	</p>
+
+	<p>
+		I considered an arrow-head design to show which way vectors were pointing, but
+		it was easier to just colour the start point of these lines black, with a
+		gradient to a given colour at the other end.
+	</p>
+
+	<h3>Potential Features</h3>
+
+	<p>
+		In my game I already debug radius-of-effect things like ambient sounds with
+		a semi-transparent sphere, but it isn't ideal. A 2d circle with a radius line
+		from the centre shown would work in more views.
+	</p>
+
+	<p>
+		I'm using <tt>GL_LINES</tt> but <tt>TRIANGLES</tt> would be more efficient on
+		a range of drivers - I would just have to abtract the line-drawing API so that
+		it is rendered with appropriately-sized triangle strips. Alternatively, <b>I could
+			write a new 2d rendering API</b> that draws on to a framebuffer texture and renders
+		in an additional pass (this would be pretty neat actually). It would be much
+		easier to compute arrow-heads, nice vector lines, and circles in a 2d API.
+	</p>
+
+	<p>
+		Conversely, I could make the library even more minimal, and potentially just a
+		header file with as little code as possible in it to get lines to screen.
+	</p>
+
+</body>
+
+</html>

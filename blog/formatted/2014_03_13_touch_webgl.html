@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2014_03_13_touch_webgl</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>Touch Screens with WebGL</h2>
+
+	<p>
+		At my visit to U.o.Hull last week Tim McMullen showed me his WebGL terrain
+		simulation using Dart, and tried it out on a <u>massive</u> touch screen
+		display with all the usual swipe and multi-touch recognition. He also pointed
+		out that this would work directly on Android devices, which is a very nice
+		idea indeed, because it means that I can abandon my port from WebGL to Android
+		ADK/NDK entirely, and just use WebGL for everything! I absolutely loathe
+		Android's development kit, and I really like WebGL, so this is fantastic news.
+		Anyway, I tried it out and it works. Apparently you can get an array of touch
+		events for adding
+		<a
+			href="https://developer.apple.com/library/safari/documentation/AudioVideo/Conceptual/HTML-canvas-guide/AddingMouseandTouchControlstoCanvas/AddingMouseandTouchControlstoCanvas.html">multi-touch
+			support</a>,
+		so I'll have to try that too. Using the
+		mouse events as touch events didn't work very well for me in the past, given
+		the range of controls that I had, so hopefully this will be better.
+	</p>
+
+	<p>
+		<a href="https://antongerdelan.net/demos/touch_test/">link to simple demo</a>
+	</p>
+
+</body>
+
+</html>

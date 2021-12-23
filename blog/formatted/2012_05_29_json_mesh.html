@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2012_05_29_json_mesh</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2 id="29may2012">29 May 2012</h2>
+	<h3>Mesh Loading</h3>
+	<p>
+		It looks like the best way to go is going to be to use a native JSON format file.<br />
+		<del>Essentially this means that I don't have to write a mesh parser at all, which is nice</del>.<br />
+		To get to JSON I was originally looking at using a Python script to convert .obj to .json but it looks like there
+		is...<br />
+		<del>...an exporter for <a href="http://http://www.blender.org/">Blender3D</a>
+			called <a href="http://code.google.com/p/blender-machete/">"Machete"</a> which is probably a more elegant
+			solution. Cutting edge?...I had some errors with Machete, but found this
+			<a href="http://www.tamats.com/blog/?p=169">.obj to .json Python script</a>. This could go on a server that stores
+			.objs but there's no reason not to batch process the lot off-line.
+		</del><br />
+		<br />
+		<b><i>tl;dl: I have to write a programme to convert .obj meshes into .json files.</i></b>.
+	</p>
+	<p>New plan:</p>
+	<ol>
+		<li>Demo to load hand-made (or pre-made) JSON mesh file</li>
+		<li>Write my own programme or script to convert or export to JSON</li>
+		<li>Profit!</li>
+	</ol>
+
+	<p>
+		I got a mesh loading from a JSON file:
+	</p>
+
+	<div class="centre">
+		<a href="https://antongerdelan.net/demos/jsonmesh/"><img src="../images/cubejsonmesh.png" width="512" /></a><br />
+		<small><i>
+				this is a rotating box-oid that I loaded from a file in JSON format. all points are in one huge array so it
+				plugs right into the gl data operation [x y z x y z x y.. ]etc..
+			</i></small>
+	</div>
+
+	<h3>next...</h3>
+
+	<p>It wasn't difficult to get that working, but there isn't a strict format for a JSON mesh to be in. The exporters
+		and converters were a bit of a let-down, but I already have
+		a C parser of .obj files, so perhaps I can turn this into a little JSON creater in my own layout. Should be the
+		quickest option.</p>
+
+</body>
+
+</html>

@@ -1,0 +1,133 @@
+<html>
+<head>
+<script src="build/three.min.js"></script>
+<style>
+body {
+font-family:sans,sans-serif;
+}
+</style>
+</head>
+
+<body>
+
+<h1>The Easy Start to 3d-in-a-Browser (Three.js)</h1>
+
+<H2>Step One: Find a Decent Browser</h2>
+
+<P>
+Can you see the cube below this text? If not try FireFox or Chrome! Try this
+site to tell you if your browser has WebGL support: <a href="http://www.doesmybrowsersupportwebgl.com/">http://www.doesmybrowsersupportwebgl.com/</a>.
+</p>
+
+<script>
+
+  var camera, scene, renderer;
+  var geometry, material, mesh;
+
+  init();
+  animate();
+
+  function init() {
+
+    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
+    camera.position.z = 1000;
+
+    scene = new THREE.Scene();
+
+    geometry = new THREE.CubeGeometry( 200, 200, 200 );
+    material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } );
+
+    mesh = new THREE.Mesh( geometry, material );
+    scene.add( mesh );
+
+    renderer = new THREE.CanvasRenderer();
+    renderer.setSize( window.innerWidth, window.innerHeight );
+
+    document.body.appendChild( renderer.domElement );
+
+  }
+
+  function animate() {
+
+    // note: three.js includes requestAnimationFrame shim
+    requestAnimationFrame( animate );
+
+    mesh.rotation.x += 0.01;
+    mesh.rotation.y += 0.02;
+
+    renderer.render( scene, camera );
+
+  }
+
+</script>
+
+<H2>Step Two: Get Three.js and Try It!</h2>
+
+<p>
+You can do things the hard way by making a "canvas" tag on your page, and
+manually starting WebGL (I do this), but you'll need a lot of background
+knowledge on 3d maths and perspective. You can skip all that by using the
+Three.js API, which lets you work at a much, much higher (more abstracted)
+level. Three.js will even add the "canvas" tag to your page, so you don't really
+have to do much at all.
+</p>
+
+<p>
+First, download three.js from <a href="http://threejs.org/">http://threejs.org/</a>
+and unzip somewhere. You can try the examples in the "examples" folder. To make
+a simple test page, you can create a new, empty HTML page with a head and a
+body. Include the main "ThreeJS" JavaScript file inside the head tags like this:
+</p>
+
+<textarea rows=3 cols=100>
+<head>
+<script src="build/three.min.js"></script>
+</head></textarea>
+
+<p><i>
+"This code creates a scene, then creates a camera, adds the camera and cube to
+the scene, creates a &lt;canvas&gt; renderer and adds its viewport in the
+document.body element."</i>
+</p><p>
+Paste this anywhere inside your html tags (right click
+and inspect the source of this page to see how I did it).
+</p>
+
+<textarea rows=35 cols=100>
+<script>
+  var camera, scene, renderer;
+  var geometry, material, mesh;
+
+  init();
+  animate();
+
+  function init() {
+    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
+    camera.position.z = 1000;
+
+    scene = new THREE.Scene();
+
+    geometry = new THREE.CubeGeometry( 200, 200, 200 );
+    material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } );
+
+    mesh = new THREE.Mesh( geometry, material );
+    scene.add( mesh );
+
+    renderer = new THREE.CanvasRenderer();
+    renderer.setSize( window.innerWidth, window.innerHeight );
+
+    document.body.appendChild( renderer.domElement );
+  }
+
+  function animate() {
+    // note: three.js includes requestAnimationFrame shim
+    requestAnimationFrame( animate );
+
+    mesh.rotation.x += 0.01;
+    mesh.rotation.y += 0.02;
+
+    renderer.render( scene, camera );
+  }
+</script></textarea>
+
+</html>

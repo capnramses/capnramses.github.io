@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-US">
+<head>
+<meta name="generator" content=
+"HTML Tidy for Linux/x86 (vers 1st November 2003), see www.w3.org" />
+<title>Some Helpful JavaScript Tricks</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="duration" content="90" />
+
+<!-- style -->
+<link rel="stylesheet" href="styles/slidy.css" type="text/css" />
+<link rel="stylesheet" href="styles/burntorange.css" type="text/css" />
+<script src="scripts/slidy.js" charset="utf-8" type="text/javascript">
+
+</script>
+</head>
+<body>
+
+<div class="background" />
+
+
+<!-- THE FIRST SLIDE -->
+<div class="slide">
+<h1>Some Helpful JavaScript Tricks<small><grey>
+<br/>Dr Anton Gerdelan gerdela@scss.tcd.ie
+</grey></small>
+</h1>
+
+<table>
+<tr>
+<td>
+<h2>About Me</h2>
+<ul>
+<li>Working on Knoholem smart buildings with Dave and Kris</li>
+<li>Doing lots of 3d graphics with WebGL visualisation (JavaScript).</li>
+</ul>
+</td>
+</tr>
+</table>
+<p>
+<a href="https://antongerdelan.net/3dmodelviewer/">https://antongerdelan.net/3dmodelviewer/</a>
+</p>
+
+</div>
+
+<div class="slide">
+<h1>The Trouble With JavaScript...</h1>
+<ul>
+<li>typos can be valid (create a new variable by accident)</li>
+<li>errors don't appear unless you explicitly go looking for them</li>
+</ul>
+<h2>The DOM, Browser Consoles, and Debugging</h2>
+<ol>
+<li>Modify a webpage with JavaScript</li>
+<li>Deliberately make some mistakes</li>
+<li>Print some info to the console</li>
+<li>Track down the mistakes</li>
+</ol>
+<h2>For This Part You Will Need</h2>
+<ol>
+<li>Chrome or Firefox with the Firebug plug-in</li>
+<li>Some experience with a debugger tool?</li>
+<li>Patience</li>
+</ol>
+</div>
+
+<div class="slide">
+<h1>The Document Object Model</h1>
+<ol>
+<li>Make a simple HTML page; html, head, body</li>
+<li>Add an HTML paragraph tag</li>
+<li>Give the paragraph an "id" attribute (HTML 4)</li>
+<li>Add a script tag that accesses the paragraph (DOM)</li>
+</ol>
+
+<textarea cols=100 rows=20>
+<html>
+
+<head>
+</head>
+
+<body>
+<h1>here is a heading</h1>
+<p id = "para">
+Here is a paragraph of text.
+</p>
+</body>
+
+</html>
+
+<script>
+var p = document.getElementById ("para");
+p.innerHTML = "changed the content";
+</script>
+
+</textarea>
+
+</div>
+
+<div class="slide">
+<h1>The Browser Console</h1>
+<ul>
+<li>built in to browser to act like a command-line. can input and output.</li>
+<li>add an <tt>alert ("the page has loaded!");</tt> box to print some info. quickly gets annoying!</li>
+<li>try <tt>console.log ("some text");</tt></li>
+<li>menu to the console (or ctrl+shift+i on chrome) and refresh</li>
+<li>try <tt>console.log ("the value of para is: " + p.innerHTML);</tt></li>
+<li>some browsers have <tt>console.error ("an error occurred here");</tt></li>
+<li>note that you can click on the link to go to the line in your script</li>
+</ul>
+</div>
+
+<div class="slide">
+<h1>Let's Break Things</h1>
+
+<ol>
+<li>close the console</li>
+<li>change the<br/><tt>p.innerHTML =...</tt> line <br/>to <tt>q.innerHTML =...</tt></li>
+<li>refresh the page. what happened?</li>
+<li>open the console and refresh. handy?</li>
+</ol>
+
+</div>
+
+<div class="slide">
+<h1>Typos Can Be a Problem</h1>
+
+<ol>
+<li>Add a new JS variable <tt>var count = 10;</tt></li>
+<li>Change your paragraph to print this number; <tt>p.innerHTML = "count = " + count;</tt></li>
+<li>Before that line, add another line; <tt>count = 111;</tt>. Check that it prints:
+
+<pre>
+var count = 10;
+count = 111;
+p.innerHTML = "count = " + count;
+</pre>
+
+</li>
+<li>Now, deliberately make a typo - change the name "count" on the second line. what happened?
+did the console show the error?</li>
+</ol>
+
+</div>
+
+<div class="slide">
+<h1>The Debugger</h1>
+<ul>
+<li>In Chrome go to "sources", in Firefox+Firebug go to "scripts"</li>
+<li>Add a breakpoint at the start of the script by clicking in the margin next
+to the first JS instruction</li>
+<li>Refresh the page. It should "halt" by the break-point.</li>
+<li>Resume. Step over. Step into.</li>
+<li>Find the <tt>count</tt> variable in the scope or watch-list</li>
+<li>Find the <tt>counts</tt> variable in the scope or watch-list</li>
+<li>Browse the contents of the <tt>p</tt> object</li>
+</ul>
+</div>
+
+<div class="slide">
+<h1>Dynamic Content and User Input</h1>
+<ul>
+<li>form elements; textarea, radio buttons, check box. jQuery sliders</li>
+<li>Create a couple of radio buttons in the HTML body:<br/>
+<textarea rows=3 cols=100>
+<input onclick="top_click()" type="radio" name="mybutton" checked="checked">top button<br/>
+<input onclick="bottom_click()" type="radio" name="mybutton">bottom button
+</textarea>
+</li>
+<li>note that I use the <tt>onlick</tt> attribute to launch a JS function for each
+<pre>
+function top_click () {
+	var p = document.getElementById ("para");
+	p.innerHTML = "the top button was clicked";
+}
+
+function bottom_click () {
+	var p = document.getElementById ("para");
+	p.innerHTML = "the bottom button was clicked";
+}
+</pre>
+</li>
+<li>try it!</li>
+</ul>
+</div>
+
+<div class="slide">
+<h1>Summary</h1>
+<ul>
+<li>DOM</li>
+<li>Console output</li>
+<li>Debugging</li>
+<li>Watch out for typos!</li>
+<li>Dynamic content with browser interaction like <tt>onlick=...</tt></li>
+<li>Questions?</li>
+</ul>
+</div>
+
+</body>
+</html>

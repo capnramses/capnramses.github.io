@@ -1,0 +1,311 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Some Project-Building Tips</title>
+</head>
+<style>
+body {
+font-family: sans;
+}
+</style>
+<body>
+
+<h1>Some Project-Building Tips<br />
+<small><tt>Anton Gerdelan  [gerdela@scss.tcd.ie]  27 Nov 2013</tt></small>
+</h1>
+
+
+<p>
+Web developers set up a <b>local server</b> on their machine to test their site
+before uploading to the real server. Setting up on a real server is exactly the
+same process, except that it has a proper web address, or registered domain
+name.
+</p>
+
+<ul>
+<li>Need a database? &rarr; LAMP</li>
+<li>Don't need a database? &rarr; Mongoose</li>
+</ul>
+
+<p>
+Get project running on a local server, then try it with <u>several different
+browsers</u>.
+</p>
+
+<hr />
+<h2>Mongoose</h2>
+
+<ol>
+<li>Download <a href=https://code.google.com/p/mongoose/>https://code.google.com/p/mongoose/</a></li>
+<li>Unzip in a local folder</li>
+<li>Run</li>
+<li>Serves files out of own folder (Windows) or <tt>/var/www/</tt> (Linux/Mac)</li>
+<li>Create a test <tt>index.html</tt> page in the folder</li>
+<li>Navigate browser to <a href="http://127.0.0.1/">http://127.0.0.1/</a></li>
+</ol>
+
+<hr />
+<h2>LAMP/WAMP/MAMP</h2>
+
+<ul>
+<li>"Linux + Apache (HTTP server) + mySQL + PHP (or Python) script parser"</li>
+<li>Usually found all-together in one install package.</li>
+<li>WAMP for Windows or XAMPP <a href="http://www.apachefriends.org/en/xampp.html">http://www.apachefriends.org/en/xampp.html</a></li>
+<li>Same idea as Mongoose but with PHP and databases</li>
+<li>Some settings files usually need tweaking after install for Apache and PHP</li>
+</ul>
+<hr />
+<h3>Check that Apache2 is Running</h3>
+
+<ol>
+<li>Restart (or start) Apache2 server</li>
+<li>Browse to <a href="http://127.0.0.1/">http://127.0.0.1/</a> to see if
+basic HTTP works (HTML index page)</li>
+<li>On WAMP this is <tt>c:\wamp\www</tt> - you can put your HTML here</li>
+</ol>
+<hr />
+<h3>Check that PHP5 is Running</h3>
+
+<ol>
+<li>Create a simple <tt>test.php</tt> file in your web folder (same place as the
+.html):
+</ol>
+
+<textarea rows=5 cols=80>
+<?php
+
+phpinfo();
+
+?></textarea>
+
+<br />
+
+<img src="phpinfo.png" />
+<hr />
+
+
+<h3>Check that MySQL is Running</h3>
+
+<ul>
+<li>You <u>can</u> use the <tt>phpmyadmin</tt> tool to admin your database server:
+<a href="http://127.0.0.1/phpmyadmin/">http://127.0.0.1/phpmyadmin/</a>
+(or click in WAMP menu)</li>
+<li>Can also do this with the mysql terminal (also from WAMP menu): <tt>mysql</tt></li>
+</ul>
+<hr />
+<h3>Create a New Database with phpmyadmin</h3>
+
+<ol>
+<li>Click on "Databases" tab</li>
+<li>Choose a name and format (I used default format)</li>
+</ol>
+
+<img src="phpmyadmin.png" />
+<hr />
+
+
+<h3>Create a Table in the new Database</h3>
+
+<ol>
+<li>You can create <b>tables</b> in phpmyadmin (or the mysql terminal) too</li>
+<li>Click on your new db in the left-hand thingy</li>
+<li>I'll make a table called "logins" with 2 columns of data.</li>
+<li>Guess what they will be?</li>
+</ol>
+
+<img src="createtable.png" />
+<img src="tableguts.png" />
+<hr />
+
+
+<h3>Add a Couple of Default Entries</h3>
+
+<ol>
+<li>"Adding" an entry to a table is called "<b>INSERT</b>"</li>
+<li>Click on the "insert" tab</li>
+<li>Note that when you do this PHPMYADMIN also shows you the SQL query (code)
+to use to do this from the SQL terminal or in a PHP script:<br /> <tt>INSERT INTO `antonsdb`.`logins` (`name`, `password`) VALUES ('anton', 'secret');</tt></li>
+</ol>
+
+<img src="insert.png" />
+
+<ul>
+<li>Note that this is not the proper way to store a password securely</li>
+</ul>
+<hr />
+<h3>Query the Database from Our PHP Page</h3>
+
+<ul>
+<li>Connect to mysql database in PHP page:</li>
+<li>We use PHP because it's server-side, so <b>the user can't see our login
+details</b></li>
+<li>Note: set up user and password first - generally don't use the admin user
+to make queries and things.</li>
+<li>New user using SQL Buddy in WAMP</li>
+<li>In mysql terminal this is: <tt>create user 'antonsql'@'localhost' IDENTIFIED BY 'trinity';</tt></li>
+<li>In myphp admin I gave my "antonsql" user access to my database in the "Priviliges" tab</li>
+</ul>
+
+<img src="addusertodb.png" />
+<br />
+<textarea rows=11 cols=100>
+<?php
+// Create connection
+$con=mysqli_connect("localhost","antonsql","trinity","antonsdb");
+
+// Check connection
+if (mysqli_connect_errno($con)) {
+  echo "Failed to connect to MySQL: " . mysqli_connect_error();
+} else {
+  echo "Connection to MySQL succeed";
+}
+?></textarea>
+
+<img src="sqlconnectiondone.png" />
+<hr />
+<h3>Now We Can SELECT/INSERT/etc.</h3>
+
+<ul>
+<li>To interact with the database we make a <b>query</b> in a format called SQL
+(structured query language)</li>
+<li><b>SELECT</b> means "get things from a database table(s)"</li>
+<li><b>INSERT</b> means "add an entry to a database table</li>
+<li>let's use <b>SELECT</b> to list all the user names and passwords in the
+<b>logins</b> table that I created</li>
+<li>In PHP when you say <b>echo</b> it means "generate this as the HTML that
+appears on the user's page"</li>
+<li>I use <tt>echo</tt> to build an HTML table containing the user names and
+passwords</li>
+</ul>
+
+<textarea rows=24 cols=100>
+<?php
+// Create connection
+$con=mysqli_connect("localhost","antonsql","trinity","antonsdb");
+
+// Check connection
+if (mysqli_connect_errno($con)) {
+  echo "Failed to connect to MySQL: " . mysqli_connect_error();
+} else {
+  echo "Connection to MySQL succeed";
+}
+
+$result = mysqli_query ($con, "SELECT * FROM logins");
+
+echo "<h2>logins are:</h2>";
+echo "<table border=1><tr><td><b>Name</b></td><td><b>Password</b></td></tr>";
+
+while ($row = mysqli_fetch_array($result)) {
+  echo "<tr><td>" . $row['name'] . "</td><td>" . $row['password'] . "</td></tr>";
+}
+
+echo "</table>";
+
+mysqli_close ($con);
+?></textarea>
+
+<br />
+<img src="passwordslist.png" />
+
+<ul>
+<li>You could use a similar query to check if an entered user name and password
+matches one in the database</li>
+</ul>
+<hr />
+<h2>Extra Info</h2>
+
+<ul>
+<li>SQL queries can get mixed results from unions or intersections between tables:<br />
+<i>"give me the names of all male users over 21 who have bought 1 or more books with the 'programming' keyword"</i>
+</li>
+<li>This gets an intersection of matches in several tables, using SELECT</li>
+<li>The method used is called "relational algebra"</li>
+<li>It's horrible, and I avoid using it because it doesn't map well to
+low-level programming (which I like)</li>
+<li>Still the most convenient way of managing a web-served database that can expand organically</li>
+<li>In the 90s/2000s "Object Oriented" databases were a popular alternative,
+which mapped well to languages like Java. Gone out of fashion again.</li>
+<li>An emerging trend is databases with <b>triplestore</b> format, which have a
+bit more natural information about links between items; IS A, HAS A</li>
+<li>Databases linked to the <b>semantic web</b> is a popular new trend; pages
+can store more meaningful information in HTML5 tags, for example, hooks to swap
+text to the language translation based on browser setting.</li>
+</ul>
+<hr />
+<h2>Helpful Links</h2>
+
+<ul>
+<li>
+Site with a great guide to WAMP set-up, different packages available, and
+including what to do if you need to modify settings:
+<a href="http://www.ntu.edu.sg/home/ehchua/programming/howto/WampServer_HowTo.html">http://www.ntu.edu.sg/home/ehchua/programming/howto/WampServer_HowTo.html</a>
+</li>
+</ul>
+<hr />
+<hr />
+<h1>Our 3d Project</h1>
+
+<img src="main-heading.gif" />
+
+<ul>
+<li>Cardiff, Karlsruhe IT, CETMA (Brindisi), Matrix (Spain), +3 EU buildings</li>
+<li>Dave Lewis, Kris McGlinn, and me</li>
+<li>Trinity does the visualisation side</li>
+<li>Architectural CAD models of buildings</li>
+<li>We convert to a 3d graphics version and display in WebGL</li>
+<li>Similar process to go to Android/iOS</li>
+<li>JavaScript, JSON, AJAX, HTML5 canvas, lots of DOM/BOM stuff, GLSL</li>
+</ul>
+
+<p>
+Gradually play with new ideas and put little demos up
+<a href="http://kdeg-vm-44.scss.tcd.ie/proxy/buildviz/demo/">
+http://kdeg-vm-44.scss.tcd.ie/proxy/buildviz/demo/
+</a>
+</p>
+
+<video width=800 controls>
+<source src="demo-1.mp4" type="video/mp4">
+Your browser is not HTML5-compliant or doesn't like mp4
+</video>
+
+<video width=800 controls>
+<source src="demo-3.mp4" type="video/mp4">
+Your browser is not HTML5-compliant or doesn't like mp4
+</video>
+
+<img src="3dprintfloorattemp2.png" />
+
+<hr /><hr />
+
+<h1>And Because You Asked...</h1>
+
+<ul>
+<li>Game uses OpenGL (C code) + the same GLSL shaders as for WebGL</li>
+<li>Spare-time project to teach myself modern graphics, and for fun</li>
+<li>Started in 2010 I think...</li>
+</ul>
+
+<a href="http://youtu.be/0wHAHdwjME8">Youtube - fireball test vid</a>
+
+<ul>
+<li>Mixture of simple 3d tiles and 2d sprites</li>
+<li>Because it's silly-looking and quick to do</li>
+</ul>
+
+<img src="wizardman.jpg" /><br />
+<img src="wizardman2.jpg" /><br />
+<img src="crongdor_diffuse.png" /><br />
+
+<video width=800 controls>
+<source src="crongdem1.mp4" type="video/mp4">
+<source src="crongdem1.webm" type="video/webm">
+</video>
+
+<video width=800 controls>
+<source src="crongboulder.mp4" type="video/mp4">
+<source src="crongboulder.webm" type="video/webm">
+</video>
+
+</body>
+</html>

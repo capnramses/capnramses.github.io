@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2012_06_25_rt_shaders</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2 id="25june2012">25 June 2012</h2>
+	<h3>"On-the-Fly" Shader Editing with HTML Forms</h3>
+	<p>
+		So, I've been working on a talking head using morph targets. The interpolation had a couple of mistakes, so I
+		thought it might be a nice opportunity to build in a web form for modifying the shaders on the fly. This would speed
+		up development response even more than the rather impressive build-review rate we have already with WebGL. I was
+		inspired by the interactive demo on Ricardo Cabello's website; <a
+			href="http://mrdoob.com/139/GLSL_Sandbox">http://mrdoob.com/139/GLSL_Sandbox</a>. I wanted to use a "recompile"
+		button, instead of the Google-style feedback per-typed letter. Anyway - it worked, and here is the demo. Now I can
+		use it to fix up that talking head...
+	</p>
+
+	<div class="centre">
+		<a href="editshaders/">
+			<img src="../images/editshaders.png" width="512" /><br />
+		</a>
+		<small>
+			<i>
+				You can modify the shaders on the fly by editing a text box, and clicking "compile". It should throw detailed
+				alerts at you on any errors. It seems to continue gracefully after errors, although I'm not 100% confident in
+				that.
+			</i>
+		</small>
+	</div>
+
+	<h3>Next tasks...Encapsulate Functions for a "Renderable" Object</h3>
+	<p>
+		Drawing two separate objects with separate shaders is not working. It is incredibly hard to know which opengl
+		functions to have bound before others. Official Khronos documentation is not written for humans. Current tutorials
+		are murky and confused. So, back to basics - I need to start with a very simple example and establish exactly which
+		commands do what, in what order, and which need to be called before rendering. Trial and error. Messy business. I
+		had to do this with OpenGL 4, but it uses a different structure to WebGL's buffers and attributes. I think I can
+		save a lot of community frustration by putting pen to paper after that...
+	</p>
+
+</body>
+
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2015_02_03_c99</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>The Trouble with C, and Using C99</h2>
+
+	<p>
+		About three years ago I finally realised that all my C++ programmes were
+		grossly over-complicated and enormously time-inefficient to write. Part of this
+		was due to getting carried away with design patterns, refactoring, abstraction
+		layers, and other software engineering busywork that I now believe basically
+		exists as a trap to capture OCD-inclined people and hold them in project
+		purgatory indefinitely. The other part was due to C++ itself. I think that I
+		can summarise my perception thus:
+	</p>
+
+	<h3>C++ Features Extending What C89 Has</h3>
+	<table>
+		<tr>
+			<th>feature</th>
+			<th>practical value</th>
+			<th>time cost</th>
+		</tr>
+		<tr>
+			<td>declare variables anywhere</td>
+			<td>extremely high</td>
+			<td>huge saving</td>
+		</tr>
+		<tr>
+			<td>boolean data-type</td>
+			<td>extremely high</td>
+			<td>large saving</td>
+		</tr>
+		<tr>
+			<td>single-line comments</td>
+			<td>very high</td>
+			<td>saving</td>
+		</tr>
+		<tr>
+			<td>*& vs. **</td>
+			<td>high</td>
+			<td>none</td>
+		</tr>
+		<tr>
+			<td>inline functions</td>
+			<td>moderate</td>
+			<td>very small</td>
+		</tr>
+		<tr>
+			<td>operator overloading</td>
+			<td>moderate</td>
+			<td>small</td>
+		</tr>
+		<tr>
+			<td>extended operators</td>
+			<td>negligible</td>
+			<td>moderate</td>
+		</tr>
+		<tr>
+			<td>generic in/out streams</td>
+			<td>dubious</td>
+			<td>moderate</td>
+		</tr>
+		<tr>
+			<td>class private/public sections</td>
+			<td>none</td>
+			<td>small</td>
+		</tr>
+		<tr>
+			<td>class methods/functions</td>
+			<td>none</td>
+			<td>small</td>
+		</tr>
+		<tr>
+			<td>try/catch exception handling</td>
+			<td>none</td>
+			<td>high</td>
+		</tr>
+		<tr>
+			<td>getter/setter conventions</td>
+			<td>none</td>
+			<td>very high</td>
+		</tr>
+		<tr>
+			<td>"virtual" anything</td>
+			<td>none</td>
+			<td>extremely high</td>
+		</tr>
+		<tr>
+			<td>inheritance</td>
+			<td>none</td>
+			<td>extremely high</td>
+		</tr>
+		<tr>
+			<td>polymorphism</td>
+			<td>none</td>
+			<td>extremely high</td>
+		</tr>
+		<tr>
+			<td>templates</td>
+			<td>the lure of chaos</td>
+			<td>extremely high</td>
+		</tr>
+	</table>
+
+	<h3>C++ Deficiencies that C89 Doesn't Have</h3>
+	<table>
+		<tr>
+			<th>deficiency</th>
+			<th>problem rating</th>
+		</tr>
+		<tr>
+			<td>time to learn/master</td>
+			<td>extremely high</td>
+		</tr>
+		<tr>
+			<td>number of possible styles to read</td>
+			<td>extremely high</td>
+		</tr>
+		<tr>
+			<td>allows/vulnernable to bad code</td>
+			<td>high</td>
+		</tr>
+		<tr>
+			<td>compiler-dependent libraries</td>
+			<td>moderate</td>
+		</tr>
+		<tr>
+			<td>glut of IDE/compiler-dependent code</td>
+			<td>moderate</td>
+		</tr>
+	</table>
+
+	<h3>The Choices</h3>
+
+	<p>
+		So what I really want now is to produce things <b>quickly</b>. Now <b>I
+			appreciate low-level simplicity more than abstraction</b>. Fewer, well-chosen
+		features makes a stronger language than a huge variety of features of varying
+		quality and usefulness. How can I get the advantages of
+		C++ without the disadvantages? In the last 3 years I have been experimenting
+		with several styles of C++ and C.
+	</p>
+
+	<h4>Pedantic C89</h4>
+
+	<p>
+		C89, the "default" C on most compilers has a pleasing simplicity but can be
+		rather frustrating when it comes to variable declarations. In 3d graphics,
+		having overloaded operators for vector and matrix data-types is rather handy,
+		and writing functions to do this can be a pain.
+		In pedantic compile mode the compiler will whine if you
+		use single-line comments. You could just leave out the pedantic flag, but would
+		you miss something interesting?
+		C89 is an acceptable solution
+		and writes very portable, concise code, but we are stuck with some tedious
+		relics of the past.
+	</p>
+
+	<h4>"C++--"</h4>
+
+	<p>
+		The obvious solution to get most of the best of all worlds is my original style
+		of C compiled with the C++ compiler. We can link-in libraries from C++ which
+		is very handy. We do assume some passive C++ problems though - mangled function
+		headers - so we have to be prepared to use open-source everything or sacrifice
+		portability.
+	</p>
+
+	<h4>C99</h4>
+
+	<p>
+		Most C compilers can be coerced into compiling for the C99 standard with a flag
+		like <tt>-std=c99 -pedantic-errors</tt>. The Internet says this isn't the
+		default because the implementations are still not completed! You can read about
+		the status of C99 implementation in the GCC project at
+		<a href="https://gcc.gnu.org/c99status.html">https://gcc.gnu.org/c99status.html</a>.
+		It seems that there are only one or two minor optional features that have been
+		left out there.
+	</p>
+
+	<p>
+		C99 offers a collection of features that you probably won't want if you like
+		being in control of low-level code - variable-length arrays, and some extra
+		stuff that's interesting but probably not used that often - complex numbers,
+		but it does have single-line comments, mixed declarations and code, better
+		type casting rules, inline functions, boolean data type <i>via</i>
+		<tt>stdbool.h</tt> and variations of the standard types of integers and floats
+		for specific memory sizes. You can use the <tt>pragma</tt> pre-processor
+		directive.
+	</p>
+
+	<h4>C11</h4>
+
+	<p>
+		C11 introduces native multi-threading and better Unicode support <i>via</i>
+		<tt>char16_t</tt> and <tt>char32_t</tt>, some bounds-checking stuff and file
+		pointers that can open and exclusive-access lock a file. The status of C11 in
+		GCC is <a href="https://gcc.gnu.org/wiki/C11Status">https://gcc.gnu.org/wiki/C11Status</a>.
+		You can ask for C11 in GCC ~4.7 and newer with <tt>-std=c11</tt>. Some of the
+		new features have dubious support in <tt>glibc</tt> which makes the standard
+		not so attractive for just a few additional low-value features.
+	</p>
+
+	<h3>Summary</h3>
+
+	<p>
+		I have had the best experiences of all my programming so far with C99. Some
+		limitations I can name are:
+	</p>
+
+	<ul>
+		<li>poor/inconsistent/conflicted Unicode or wide-character support</li>
+		<li>cumbersome generic parsing functions compared to other languages
+			(<tt>strtok()</tt> still really really sucks)</li>
+		<li>poor native memory diagnostics</li>
+		<li>poor native time library</li>
+		<li>lose compatibility with C++ libraries</li>
+	</ul>
+	</p>
+
+	<p>
+		Don't take everything as law from your software engineering teachers. If it
+		smells like BS it probably is.
+	</p>
+
+</body>
+
+</html>

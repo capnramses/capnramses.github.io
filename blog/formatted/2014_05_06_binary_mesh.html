@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2014_05_06_binary_mesh</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>Binary Mesh Files</h2>
+
+	<div class="centre">
+		<img src="../images/binary_opengl_teapot.png" /><br />
+		<small><i>
+				Binary teapot mesh loaded into OpenGL. It was very easy to convert an .obj into
+				a .bin. File size was about the same. Parsing time was much quicker, because it
+				is pre-arranged into the order that it will be copied into vertex buffer
+				objects.
+			</i></small>
+	</div>
+
+	<p>
+		I've been curious about binary mesh files for a while. I wrote a Wavefront .obj
+		to binary converter tool. It has the following advantages:
+	</p>
+
+	<ul>
+		<li>
+			There is no need for any mark-up or descriptive text.
+		</li>
+		<li>
+			Precision of <tt>float</tt>s are preserved exactly.
+		</li>
+		<li>
+			Data can be written in exactly the format that you intend to load it into
+			buffers e.g. it can be interleaved.
+		</li>
+		<li>
+			Mesh data is obfuscated and difficult to reverse engineer.
+		</li>
+	</ul>
+
+	<p>
+		Eliminating all of the cladding text makes the file much smaller, especially if
+		the format has a lot of descriptive text for each data point. Wavefront .obj is
+		actually pretty sparse - points are preceded by only 3 bytes of descriptive
+		text, but XML or other formats like IFC use a huge amount of bloat so the saving
+		would be much higher for those.
+	</p>
+
+	<p>
+		With a <tt>float</tt> stored in 4 bytes you get exactly what you intend - there
+		is no data loss by rounding floats to 2 decimal points, as you might do in a
+		text format, nor is there an excessive data cost - text formats with 8 s.f.
+		cost double what they should do and still do not guaranty full precision.
+	</p>
+
+	<p>
+		Pre-ordering your data is pretty neat. This means that your parsing time is
+		absolutely trivial - I only needed 5 lines of basic C code to copy the file data
+		into vertex buffer objects. The down-side here is that you lose the minor
+		optimisation that .obj files have with regards to redundant data. Sometimes the
+		binary files are smaller, sometimes there is not much saving. I didn't expect
+		this. You could add a similar face-indexing idea but this is not hugely
+		attractive. If you are doing flat-shading and do not have texture coordinates
+		then you can swoop in and add the data for an indexing buffer - then you get
+		the best of both smaller file size and parsing straight into buffers.
+	</p>
+
+	<p>
+		If you wanted to protect your original 3d model data, you make it a bit
+		difficult to convert back into .obj because you would need to know or work out
+		the layout of the data. You could make this even more proprietary and difficult
+		if you really wanted to.
+	</p>
+
+	<p>
+		For a basic interleaved vertex data binary file, all I needed to do was write
+		a header of 1 integer size which contained the number of points in the mesh,
+		then just a fixed arrangement of floats per point - XYZSTXYZ, where I had the
+		position, the texture coordinate, and the normal for each point. Very trivial to
+		parse because you can allocate all the memory as soon as you read the first
+		integer. To support splitting by group (sub-mesh) or to indicate that you will
+		have animation data at the end, then I just add a further variable or two to the
+		header.
+	</p>
+
+	<h3>WebGL</h3>
+
+	<div class="centre">
+		<img src="../images/binary_webgl_teapot.png" /><br />
+		<small><i>
+				Binary teapot mesh loaded into WebGL. Parsing is quicker, and the file
+				is much smaller than a JSON mesh, but the parsing in JavaScript is very ugly.
+			</i></small>
+	</div>
+
+	<p>
+		I also made a WebGL viewer. This turns out to be a bit more tricky, but there is
+		a certain attraction to using a more efficient format for transmission over the
+		web. JavaScript's binary file reading capabilities are not very good. After
+		reading the file with AJAX you have to manipulate read data with bitwise
+		operators - yuck. I found a really nice example implementation of this
+		<a href="http://fhtr.blogspot.ie/2009/12/3d-models-and-parsing-binary-data-with.htm">on this blog</a>.
+		There's something ever so slightly wrong with it but I can't quite put my finger
+		on it - it won't read the very last byte in a file because it thinks it doesn't
+		exist. There's an alternative, similar to how glTF works, by providing a JSON
+		file layout description
+		<a href="http://blog.vjeux.com/2011/javascript/binaryparser-unleash-javascript-power.html">here</a>
+		although I'm not 100% clear on how that works as there are some broken links.
+		Anyway, I got a JavaScript binary reader coded, and it does a nice, and
+		extremely fast job of parsing the files. The downside is that the binary files
+		aren't as small as I'd like them to be. It's possible to add zip-style
+		compression but JavaScript unzippers look a bit unreliable, or at least
+		unorthodox. This is on my TODO list to try.
+	</p>
+
+	<h2>Fullscreen WebGL</h2>
+
+	<p>
+		I found out how to get WebGL to go fullscreen. It's very hack-ish. You need to
+		make a browser-specific request for a specific DOM element to be made
+		fullscreen. This can be the HTML5 canvas. There's one for Three.js called
+		<a href="http://learningthreejs.com/data/THREEx/docs/THREEx.FullScreen.html">THREEx.Fullscreen</a>
+		that wraps this multi-browser behaviour. This actually works generically - it's
+		not Three.js specific. The browser won't allow you to request fullscreen on load
+		because this would be really annoying for users. Instead, you have to embed the
+		request inside some sort of DOM callback or event action thing. The common
+		approach is to put that inside a key-press callback but that's actually really
+		annoying too because it's a surprise and happens every time you click back onto
+		the browser tab - a huge pain when you're debugging. Example code doing this is
+		also inefficient because it makes perspective calculation and uniform updates
+		every single frame that a key is pressed or held - this will wreck your WebGL
+		frame rate.
+	</p>
+
+	<p>
+		I tied the callback to a check-box button instead. Then the user is explicitly
+		aware of what they are doing and have full control. In this way the callback
+		only fires on the button click so I can also make sure that perspective
+		recalculation only occurs once. Unfortunately there is quite some delay between
+		the request and the actual resize taking place. In this time you keep
+		rendering. You could resize the canvas and the perspective aspect ratio every
+		single frame, but instead I just check if the size has changed since last time.
+		Still not ideal.
+	</p>
+
+	<h2>Android Devices</h2>
+
+	<p>
+		I make no secret of it - I think Android devices suck. Everything about their
+		user interface irritates me. There is no standard green indicator LED for "I'm
+		charging/plugged in" or blinking for "I need to charge". Half the cables don't
+		work properly so it would be great to know these things. Instead you get a lazy
+		pop-up image of an AA battery. What does that mean? Empty? Full? Hungry? Broken?
+		Charging? And it won't turn on. When it eventually reaches about 5% charge you
+		hold down the power button for far too long to turn it on. Then you get a motor
+		vibration, not a light or a pop-up or anything - a slight motor vibration to
+		let you know that it's booting. Grrrr! Anyway, this is a post-to-self to remind
+		me of another couple of huge UI annoyances [eye twitch]
+	</p>
+
+	<h3>To log in with school wifi</h3>
+
+	<ul>
+		<li>
+			Choose main compsci wireless (staff), compsci2 is postgrads
+		</li>
+		<li>
+			Choose PEAP
+		</li>
+		<li>
+			Don't leave default - choose MSVCHAP2 for secondary auth.
+		</li>
+		<li>
+			There is an <b>un-indicated scroll down</b> to see user log-in info
+		</li>
+		<li>
+			Identity = staff user name
+		</li>
+		<li>
+			Pass = staff pass
+		</li>
+		<li>
+			Set <b>manual</b> proxy with school's www-proxy for http 8080.
+		</li>
+	</ul>
+
+	<p>
+		A vertical scroll-bar as used everywhere in all other computing would be a great
+		idea for Android to think about adopting. I had no idea the rest of the form
+		was there until I accidentally swiped down on the input form.
+	</p>
+
+	<h3>Re-enable WebGL Support in Chrome</h3>
+
+	<p>
+		Updating Chrome usually breaks webgl support as Google alternates between
+		deciding if the GPU is on the "okay" list or not, and the extensions to enable
+		WebGL change. Major pain in the butt.
+	</p>
+
+	<ul>
+		<li><a href="http://get.webgl.org">http://get.webgl.org</a> to check support.</li>
+		<li><a href="chrome://flags">chrome://flags</a></li>
+		<li>Enable the first flag - <b>Override software rendering list</b></li>
+		<li>Disable - <b>Disable WebGL</b> (some versions of Chrome)</li>
+		<li>Enable - <b>Enable WebGL</b> (other versions of Chrome)</li>
+		<li><a href="about://gpu">about://gpu</a> - check status</li>
+		<li>Try the first link again</li>
+	</ul>
+
+	<h2>WebGL is Better than OpenGLES on Android</h2>
+
+	<p>
+		Once I got WebGL rendering properly I threw some (rather complex) demos at the
+		Nexus tablet. I use very minimalist, event-driven JavaScript and rely on
+		shaders and the raw power of the GPU to do most of my processing. Tablets and
+		phones have some <u>very</u> capable graphics hardware. <b>WebGL works really
+			well on the Nexus</b>. I will no longer bother building OpenGL ES on Android.
+	</p>
+
+	<ol>
+		<li>The default Java environment for Android is a horrible time-wasting, slow,
+			over-engineered abomination, no doubt designed to make life easier to web
+			developers. It's leagues behind the iOS development kit. I've pretty much got
+			the view that Java's day has passed and I will not use it again.</li>
+		<li>The NDK (native C development kit) is hands down the <b>absolute worst
+				development environment</b> that I have ever used anywhere. This really turned
+			me off buying an Android. They've taken a free operating system and broken it -
+			replacing Unix philosophy GNU tools and C functionality with bits and pieces of
+			scrappy horrible rubbish that wastes a lot of time to get running together.
+			You're locked out from building natively on the device, and have to contrive
+			these disgusting custom app builds and copy them over. Some of the official
+			demos work. It took me a week to get a 3d object on the screen.</li>
+		<li>WebGL can be developed anywhere, with just a text editor. Browsers have
+			fairly okay tools for debugging built in.</li>
+		<li>WebGL is built once, and the same software will run on Android browsers,
+			and almost all desktop browsers. Android apps only run on android (sometimes).
+		</li>
+		<li>WebGL is incredibly fast to build. No compile times - just refresh the
+			browser. Occasionally you do get hung up on a horrible surprise JavaScript bug.
+		</li>
+		<li>You have pretty good control over file fetching and compression with
+			JavaScript. It's not as good as desktop C, but far superior to Android's awful
+			Java AssetManager, which can not be avoided by the NDK - you have to bridge to
+			it with the JNI, which I will never ever use again. Some work-arounds are
+			required for binary files and zip compression.</li>
+		<li>In WebGL you get touch-screen controls for free via the very simple HTML5 DOM.</li>
+		<li>Fullscreen support works really well on Android, and screen orientation/flip
+			seems to be handled correctly without you having to do anything.</li>
+		<li>I ran a very complex WebGL demo and it ran at top speed. EGL is doing a good
+			job there I think.</li>
+	</ol>
+
+	<p>
+		Now, if iOS would stop acting like a Japanese hold-out and unlock its webgl
+		capability in the browser we would have an incredibly powerful "deliver 3d to
+		all devices" platform. Apparently iOS has support for WebGL in its ads platform.
+		I guess they're worried about losing income from their appstore bogus legalised
+		gambling economy -
+		didn't seem to bother Google though so maybe it's just being cautious about
+		drivers.
+	</p>
+
+</body>
+
+</html>

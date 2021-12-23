@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2012_05_31_phong</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2 id="31may2012">31 May 2012</h2>
+	<h3>Phong Lighting in Shaders</h3>
+	<p>
+		Nothing too hard to begin with;
+	</p>
+	<ol>
+		<li>I extended my .obj parser to export normals to the JSON, right after where I exported the array of texture
+			coordinates (once again remebering
+			to put a comma in-between).</li>
+		<li>I created a new vertex buffer object, copied the data from the JSON file in, and</li>
+		<li>Added a new per-vertex attribute in the same way that I added the attribute for texture coordinates</li>
+		<li>I created a view matrix using <tt>lookAt</tt> from <tt>gl-Matrix.js</tt> and sent it in as a uniform variable
+		</li>
+		<li>I created a projection matrix using <tt>perspective</tt> from the same library</tt>
+		<li>create a light position and some colours</li>
+		<li>did all the usual calculations for ambient diffuse and specular components</li>
+		<li>I sent my per-attribute normals straight to the fragment shader to use as a colour to make sure they were okay
+			(see 1st picture, below)</li>
+		<li>and then something weird happened...(see 2nd picture).</li>
+	</ol>
+
+	<div class="centre">
+		<img src="../images/lc_normaltest.png" width="512" /><br />
+		<small><i>Using the local-space normals (the unconverted values from my JSON file) as colours. Seems to be fine! Red
+				= facing right, Green = Up, Blue = Forward</i></small><br />
+		<img src="../images/ec_normalsTest.png" width="512" /><br />
+		<small><i>Testing the normals after converting them to eye-space. (Red=To the view-point's right, Green=Up,
+				blue=towards the view-point). But why does it look washed out? (Sorry ignore that the background colour is
+				different).</i></small>
+	</div>
+
+	<p>
+		At first I thought that I must be scaling my normals, and forgetting to re-normalise them. Then <i>nope</i> - still
+		dark colours and grey-ish looking where it should be black.
+		I used the dot product result and also its negative as colours - seemed fine. Then it occured to me that my usual
+		lighting equation from OpenGL was doing something unexpected:</p>
+
+	<div class="centre">
+		<tt>vec4 Id = Ld * Kd * dot (s, normal); </tt>
+	</div>
+
+	<p><i>
+			Where;<br />
+
+			<ul>
+				<li><tt>Id</tt> is the RGBA intensity of diffuse light</li>
+				<li><tt>Ld</tt> is the RGBA colour of the diffuse light, and</li>
+				<li><tt>Kd</tt> is the RGBA coefficient of diffuse reflection for the surface (I used my texture map for this),
+				</li>
+				<li><tt>dot (s, normal)</tt> gets the dot product (the angle between two vectors as a factor between 0 and 1) of
+					the surface normal, and the direction (<tt>s</tt>) from the surface to the
+					light source.</li>
+			</ul>
+
+		</i></p>
+
+	<p>
+		It works like this mathematically (component-wise multiplication):
+	</p>
+
+	<div class="centre">
+		<tt>
+			Id.r = Ld.r * Kd.r * factor;<br />
+			Id.g = Ld.g * Kd.g * factor;<br />
+			Id.b = Ld.b * Kd.b * factor;<br />
+			Id.a = Ld.a * Kd.a * factor;<br />
+		</tt>
+	</div>
+
+	<p>
+		Now, the alpha channel is also multiplied by the factor. Normally, this doesn't do anything in OpenGL unless you
+		explicitly enable a blend mode first. Then you can use it to
+		make your fragments transparent. I suspected something so I set <tt>Id.a = 1.0</tt> after the lighting equation. And
+		it fixed the problem! It turns out that in WebGL, there is
+		a default blend mode enabled somewhere that was showing the background of the HTML page through the fragment -
+		making it look grey (my webpage was grey).
+	</p>
+
+	<div class="centre">
+		<a href="https://antongerdelan.net/demos/phong/">
+			<img src="../images/phong.png" width="512" /></a><br />
+		<small><i>It worked out pretty nicely after figuring out the alpha-blend WebGL thing. Click image for
+				demo.</i></small>
+	</div>
+
+	<h3>Virtual Camera with Controls</h3>
+
+	<p>
+		Getting started was pretty easy. You have two event systems that you can use. <tt>document.event</tt> and
+		<tt>canvas.event</tt>. The canvas system is exactly the same,
+		but only returns true for events if the mouse cursor is inside the canvas area. This would be handy for things like
+		mouse-picking or checking for change of user focus.
+		I found the focus a little problematic and ended up only allowing the mouse cursor to do things whilst a key was
+		held down. You only get absolute screen pixel positions as well,
+		so it limits your options for first-person cameras where you might want to keep turning around, even after when the
+		mouse cursor reaches the side of the window. If you can
+		design around these limitations then you are fine. The event system uses numbered codes to check for each keyboard
+		key. There is a list here:
+		<a
+			href="http://stackoverflow.com/questions/1465374/javascript-event-keycode-constants">http://stackoverflow.com/questions/1465374/javascript-event-keycode-constants</a>.
+	</p>
+
+	<div class="centre"><a href="https://antongerdelan.net/demos/virtualcamera/">
+			<img src="../images/virtualcam.png" width="512" /></a><br />
+		<small><i>You can use HTML5's built-in keyboard and mouse event system to easily grab user input for WebGL. Click to
+				run demo.</i></small>
+	</div>
+
+	<p>
+		I first went for the basics and wrote a Camera object where pressing W,A,S,D keys would move the camera along
+		-Z,-X,+Z, and +X axes, respectively. No sweat but the camera was
+		always facing forward. I used the mouse cursor to rotate a vector that I was using in the <tt>lookAt</tt> function.
+		I ran into a very strange problem then. Moving forwards and
+		backwards in the direction of the camera was fine, but left and right was not. I used the <tt>cross()</tt> function
+		from <tt>gl-matrix.js</tt> to define a sideways-pointing
+		vector, but the function was not returning the correct result when I laid it out like this: <tt>var sideVec =
+			vec3.cross (forwardVec, [0 1 0]);</tt>. I changed the parameters
+		around and set it up like: <tt>vec3.cross (forwardVec, [0, 1, 0], sideVec);</tt> and it was fine.
+	</p>
+
+	<h3>Next...</h3>
+
+	<p>
+		I dread implementing texture shadows in normal OpenGL. Do I dare? Probably not. I could move onto building a more
+		generic engine type of thing but I don't have any real project
+		specs yet. I guess I'm up to fluffing around with the experimental parts. I will need to do some animation software
+		eventually, so perhaps I should have a look at building a
+		hardware skinning demo using some sort of JSON script for animation.
+	</p>
+
+</body>
+
+</html>

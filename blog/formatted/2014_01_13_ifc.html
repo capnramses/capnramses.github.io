@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2014_01_13_ifc</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>More on IFC Viewing</h2>
+
+	<h3>The Case of the Missing Triangles</h3>
+
+	<p>
+		I did a bit of poking around to find out why my IFC-to-custom-format conversion
+		was missing triangles. I suspected that some were still quads. I imported the
+		IFC into Blender, triangulated it, and exported in Wavefront .obj and I still
+		had the same problem. Curious!
+	</p>
+
+	<div class="centre">
+		<img src="../images/ifccustom.png" /><br />
+		<small><i>My converter successfully converted an IFC mesh that my viewer could
+				draw in OpenGL 4, but some bits were missing.</i></small>
+	</div>
+
+	<p>
+		I used my converter's post-processing tools to clean up the mesh, but this
+		didn't work very well, and introduced some additional errors.
+		On closer investigation the files were fragmented into a very high number of
+		separate 'sub-meshes'. These didn't seem to follow any sensible order; one
+		would presume that the cars would be a sub-mesh, the roof another, etc. I
+		suspect that the IFC 'classes' (templates) are represented as separate 'objects'
+		in 3d graphics jargon (an object is a sub-mesh). Probably the converter couldn't
+		deal with merging hundreds and hundreds of objects together. It's absolutely
+		not efficient to separate a mesh into sub-meshes for drawing because it doesn't
+		make use of the parallelism of modern graphics hardware. I was only using one
+		drawing operation - one sub-mesh drawn, so it was more than likely missing some
+		of the extra pieces if they weren't religiously put into the same hierarchy of
+		IFC classes.
+	</p>
+
+	<div class="centre">
+		<img src="../images/ifcview2.png" /><br />
+		<small><i>Manually cleaning up the mesh in Blender, and joining all of the
+				vertex groups/sub-meshes together solved the missing triangles problem.</i>
+		</small>
+	</div>
+
+	<p>
+		I imported the IFC into Blender and manually 'cleaned up' the mesh. There were
+		thousands of repeated (redundant) vertices that I stripped away. I also
+		'joined' all of the objects/classes/sub-meshes into a single mesh with no
+		hierarchy anything. I forcibly triangulated the entire mesh, recalculated the
+		normals to all face outwards, and applied various small optimisations. This
+		seemed to fix the main problem, as pictured above. There are some holes in it
+		though (between floors, for example). Either some objects were left out, or
+		the polygons are in a reverse order to the rest, and the viewer thinks that
+		they are facing the other way, and would be visible from inside the house.
+	</p>
+
+	<div class="centre">
+		<img src="../images/ifcview2_nocull.png" /><br />
+		<small><i>
+				Finally - the entire mesh drawn! I had to disable back-face culling. This shows
+				that some of the polygons are erroneously defined in back-to-front 'winding'
+				order, opposite to the convention used in the rest of the mesh.
+			</i>
+		</small>
+	</div>
+
+	<p>
+		I disabled 'back-face culling' so that forward and backward-facing polygons
+		were all drawn. This is very in-efficient to draw, but shows that yes, indeed,
+		some of the polygons from the IFC are defined in an inconsistent order to the
+		rest! This could be because some of the non-triangular polygons were incorrectly
+		triangulated, but I doubt it.
+	</p>
+
+	<h3>Criticism of IFC File Size</h3>
+
+	<table>
+		<tr>
+			<td><b>File Format</b></td>
+			<td>File Size (kB)</td>
+		</tr>
+		<tr>
+			<td>.ifc</td>
+			<td>14600</td>
+		</tr>
+		<tr>
+			<td>.obj</td>
+			<td>1400</td>
+		</tr>
+		<tr>
+			<td>.apg</td>
+			<td>3400</td>
+		</tr>
+	</table>
+
+	<p>
+		The above table gives a comparison of file sizes for the same sample IFC mesh
+		that <u>only contains geometry for drawing</u>. Firstly, the original file in
+		IFC format was a gigantic 14.6 MB. This is really too large to use as an
+		interchange format over the web. The exact same geometry in a face-indexed
+		Wavefront .obj file is only 1.4 MB, and in my custom non-index format it is
+		still only 3.4 MB. Why is the IFC file an order of magnitude larger? My own
+		format is already excessively verbose for the purpose of readability and
+		debugging, and has no optimisation at all.
+	</p>
+
+	<textarea rows=4>
+#115016=IFCCARTESIANPOINT((0.4054951125383379,3.440000023841857,0.25292933344841));
+#115017=IFCCARTESIANPOINT((0.4054951125383379,3.440000023841857,0.25292933344841));
+#115018=IFCCARTESIANPOINT((0.4074391105771067,3.440000023841857,0.2504039964079857));
+#115019=IFCCARTESIANPOINT((0.4097790510952475,3.420004699528216,0.2504039964079857));</textarea>
+
+	<p>
+		I did a quick analysis of the test file.
+		A sample of the critical part of the file is above.
+		Although it is better suited for
+		C-style <tt>fscanf</tt> parsing than XML-based formats, it still has some
+		irritations around variable numbers of, or optional attributes. Ignoring that
+		small issue, some more important observations of weak points in the format:
+	</p>
+
+	<ul>
+		<li>Glut of useless header information and meta-data.</li>
+		<li>Excessively verbose titles for each and every data point.</li>
+		<li>Superfluous line numbers on every line.</li>
+		<li>Unnecessary operators, brackets, and semi-colons on every line.</li>
+		<li>Meta-data that can be quickly derived from the data itself.</li>
+	</ul>
+
+	<p>
+		Basically, the main failing is that the amount of bytes used to represent a
+		single data point is far too high. In IFC a point itself (just the
+		XYZ value) occupies about 50 bytes of data. I would argue that the precision
+		used is probably too high,
+		far beyond the actual accuracy of the data, which is misleading. We want to
+		use <tt>float</tt> to represent data for drawing, and this can only be
+		guaranteed to support 8 s.f. Do we really have measurements of the building
+		down to 10^-17 of a meter? I don't think so! The wood used in the building will
+		warp above the mm range. These values could probably be about 20 bytes.
+		Regardless, the main problem is that every data
+		point comes with <u>another 90 bytes of data saying that it is a data point</u>.
+		This could easily be addressed by having a single line appear before all the
+		points that says something to the tune of "2000 3d points follow this line".
+	</p>
+
+	<p>
+		Now, this is only for a trivial example file. For a larger building that
+		<u>also</u> includes other types of system that are not for graphical display
+		we have something that takes several minutes to parse, and is far too big to
+		be requested over the web (my primary use-case). I'm disappointed that it's
+		still too intricate to reliably build an automatic converter for. I still had
+		to do a significant amount of by-eye manual clean-up before it was ready for
+		conversion to another format. My gut feeling is that using a complex format
+		like this that allows bad geometric design is not a good idea. It's not good
+		for interchange over the web, or for any sort of drawing, and I don't see good
+		reasons for this - it's just not efficiently designed. I think it would be
+		better to get the users of CAD design software to understand <u>why</u> a mesh
+		should be designed a certain way for efficient rendering. It's no longer really
+		appropriate for a designer to not know how modern 3d graphics hardware works
+		when there are so many interesting, and incredibly useful run-on applications
+		of visualising these building plans in 3d.
+	</p>
+
+</body>
+
+</html>

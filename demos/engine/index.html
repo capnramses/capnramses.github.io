@@ -1,0 +1,62 @@
+<html>
+
+<head>
+<title>Anton's WebGL Engine</title>
+</head>
+
+<body onload="main();">
+<h1>Anton's WebGL Engine</h1>
+<canvas id="glcanvas" width="512" height="512">Your browser does not support HTML5</canvas>
+<p>
+<small>FPS: </small><small id="fps">xxx.xx</small>
+</p>
+</body>
+
+</html>
+
+<!-- some includes -->
+<script type="text/javascript" src="webgl-utils.js"></script> <!-- include initialisation helper -->
+<script type="text/javascript" src="webgl-debug.js"></script> <!-- include debugging helper (prints to javascript console) -->
+<script type="text/javascript" src="initGL.js"></script> <!-- start gfx -->
+<script type="text/javascript" src="drawScene.js"></script> <!-- draw gfx -->
+<script type="text/javascript" src="gl-matrix.js"></script>  <!-- maths helper -->
+<script type="text/javascript" src="Camera.js"></script>  <!-- virtual camera -->
+<script type="text/javascript" src="Settings.js"></script>  <!-- virtual camera -->
+<script type="text/javascript" src="timer.js"></script>  <!-- virtual camera -->
+<script type="text/javascript" src="mainLoop.js"></script>  <!-- virtual camera -->
+<!-- main execution thread starts here -->
+<script type="text/javascript">
+// globals
+var gl;
+var gSettings;
+var gCam;
+var gGraphicsStarted = false;
+var gFrameTimer;
+var gFrameCounterSeconds = 0.0;
+var gFrameCount = 0;
+var gTimeStepAccumSeconds = 0.0;
+var gTimeStepSizeSeconds = 0.1;
+
+function main() {
+	// get handle to the HTML5 canvas that we made
+	var canvas = document.getElementById ("glcanvas");
+	// load settings from file
+	gSettings = new Settings();
+	gSettings.loadFromFile ("glsettings.json");
+	// start gl
+	gl = initGL (canvas, gSettings.mDebugging, gSettings.mWithLogging);
+	// validate
+	if (!gl) {
+		alert("failed to start GL");
+		return;
+	}
+	// allow sliders and forms to affect graphics now
+	gGraphicsStarted = true;
+	// create camera
+	gCam = new Camera (45, gl.viewportWidth / gl.viewportHeight, 0.1, 100, [0, 3, 8], [0, 0, -1]);
+	gl.clearColor (gSettings.mBackgroundColour.r, gSettings.mBackgroundColour.g, gSettings.mBackgroundColour.b, 1.0);
+	//  main loop
+	startMainLoop ();
+}
+
+</script>

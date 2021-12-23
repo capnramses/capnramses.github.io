@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Hot Reloading Shaders - Anton's OpenGL 4 Tutorials</title>
+	<link rel="stylesheet" type="text/css" href="../greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="index.html">[index]</a>
+	<h1>Hot Reloading Shaders</h1>
+	<h4>Anton Gerdelan. Last edited: 20 March 2019</h4>
+
+	<p>
+		Being able to edit your shader code and see what visually changes, live, without restarting your program, is really
+		handy. It's also a lot more fun, and you'll get nicer-looking shaders out as a result! If you've ever played around
+		at <a href="https://www.shadertoy.com/">Shadertoy</a> you'll know what I mean.
+		This kind of idea is often referred to as <i>hot-reloading</i>.
+		It's not too hard to set this up for your OpenGL programs.
+	</p>
+
+	<p>
+		You do not need it to follow this tutorial, but for reference
+		my finished example code is available in <a
+			href="https://github.com/capnramses/antons_opengl_tutorials_book/tree/master/41_shader_hot_reload">the GitHub
+			repository for my OpenGL tutorials book</a>.
+	</p>
+
+	<h2>Starting Point</h2>
+
+	<p>
+		Let's start with a minimal, functioning program that displays something with a shader. We can take a working <a
+			href="hellotriangle.html">Hello Triangle</a> as a starting point. The next step is to move shader creation into
+		separate functions.
+		Let's create the following functions:
+	</p>
+
+	<ol>
+		<li>Create a shader program from 2 provided strings; a vertex shader, and a fragment shader.</li>
+		<li>Create a shader program from 2 provided file names; one for each shader.</li>
+	</ol>
+
+	<h3>Create Shader Program From Strings</h3>
+
+	<p>
+		If you're working from a <i>Hello Triangle</i> that loads shaders from hard-coded strings it should be
+		fairly straight-forward to move the code that links and compiles shaders into a function, and call that.
+		I'm going to return the handle to a valid shader program on success, or 0 on any error.
+	</p>
+
+	<pre>
+GLuint create_shader_program_from_strings(
+  const char* vertex_shader_str,
+  const char* fragment_shader_str );</pre>
+
+	<p>
+		If you don't have it already, it's important that your function checks for shader compile and linking errors here,
+		as described in my <a href="shaders.html">Shaders</a> tutorial. My version, with error handling, is reproduced as
+		<a href="#listing1">Listing 1</a> at the end of this article. Call your function from your code, and ensure that
+		your program still works, before continuing.
+	</p>
+
+	<h3>Create Shader Program From Files</h3>
+
+	<p>
+		We also need a function to load a shader program from files. This function can copy shader file contents into
+		strings and call the previous function.
+	</p>
+
+	<pre>
+GLuint create_shader_program_from_files(
+  const char* vertex_shader_filename,
+  const char* fragment_shader_filename );</pre>
+
+	<p>
+		If we move our vertex shader string into a new file called
+		<tt>myshader.vert</tt>,
+		and the fragment shader into <tt>myshader.frag</tt> we can modify our program so that it creates our shader program
+		from
+		a function that takes those two file names.
+	</p>
+
+	<pre>
+GLuint create_shader_program_from_files(
+  const char* vertex_shader_filename,
+  const char* fragment_shader_filename ) {
+  
+  // load files into strings here
+
+  return create_shader_program_from_strings( vertex_shader_str, fragment_shader_str );
+}</pre>
+
+	<p>
+		My function to do this is reproduced in <a href="#listing2">Listing
+			2</a>. There is no need for your function to be as verbose as mine - I added extra validation detail for
+		consideration. You should get your function working before continuing. This is a bit trickier than the previous
+		function. Some potential issues and their solutions are described in the <a href="#problems">Common Problems</a>
+		sections.
+	</p>
+
+	<h2>Function to Reload a Shader From Source Files</h2>
+
+	<p>
+		The next stage of the plan is to reload our shader when we hit a keyboard button - I'll use 'R'. The actual
+		reloading you could do in several ways. In one of my projects, I load, compile, and link the shaders again, and if
+		anything failed I replace the shader with a simple fall-back that renders everything in a solid colour. This gives
+		me visual indication that I've made a mistake in my shader. Shadertoy and similar prefer to report compile errors in
+		text, but leave the displayed shader unmodified if something didn't work. It's up to you. Let's go for the second
+		approach. To do this we need a new function:
+	</p>
+
+	<pre>
+void reload_shader_program_from_files(
+  GLuint* program,
+  const char* vertex_shader_filename,
+  const char* fragment_shader_filename );</pre>
+
+	<p>
+		The algorithm that the function will implement can be described like this:
+	</p>
+
+	<ol>
+		<li>Create a new shader program from the given file names. Halt on failure - return from the function. </li>
+		<li>Delete our previous shader program.</li>
+		<li>Change the value of our shader program handle to the value of the new program.</li>
+	</ol>
+
+	<p>
+		Because we want our original shader program to remain untouched in case of failure, we don't modify it, but create a
+		new program. On success simply delete it and continue as per normal, using the new handle. For larger shaders this
+		may introduce a stutter in your program. The file reading in your functions could be done in a thread,
+		but I would not consider this until you actually need it.
+	</p>
+
+	<pre>
+void reload_shader_program_from_files(
+  GLuint* program,
+  const char* vertex_shader_filename,
+  const char* fragment_shader_filename ) {
+
+  assert( program && vertex_shader_filename && fragment_shader_filename );
+
+  GLuint reloaded_program = create_shader_program_from_files(
+    vertex_shader_filename, fragment_shader_filename );
+
+  if ( reloaded_program ) {
+    glDeleteProgram( *program );
+    *program = reloaded_program;
+  }
+}</pre>
+
+	<p>
+		You can call this function within your main loop:
+	</p>
+
+	<pre>
+if ( glfwGetKey( window, GLFW_KEY_R ) ) {
+  reload_shader_program_from_files( &shader_program, "myshader.vert", "myshader.frag" );
+}</pre>
+
+	<p>
+		Now try changing the output colour in your fragment shader file, and hit 'R' with your program's window focused.
+		When you have this working you are already in a significantly better place to edit shaders on the fly! You can
+		see that it would be a much nicer workflow to add lighting and shading to. Any shader errors should print to the
+		console. You could stop here - this is usually enough for most of my projects.
+	</p>
+
+	<h2>Polling the File System for Changes</h2>
+
+	<p>
+		If you would rather have your shaders automatically reload on change, without needing to hit a button, you can
+		periodically ask
+		the file system. The system headers and functions that you need to use vary based on operating system. For
+		multi-platform
+		support you will need to make a small utility with <tt>ifdef</tt> clauses per-platform.
+	</p>
+
+	<p>
+		I may add some code to do this in the future to the source code example, but will not add it here for brevity. The
+		basic concept is to
+		ask the system to watch your shader files, or directory containing shader files, ask it if anything has changed
+		every
+		now and again, and then
+		call your reload function on shader programs that have had one or both of their source files modified.
+	</p>
+
+	<ul>
+		<li>On Windows you can use <a
+				href="https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-findfirstchangenotificationa">the
+				file API</a>.</li>
+		<li>On OS X you can use <b>FSEvents</b>.</li>
+		<li>On Linux you can use <b>inotify</b>.</li>
+	</ul>
+
+	<p>
+		If you know of any reference examples doing the above with shaders, I am happy to link them at the end of this
+		article.
+	</p>
+
+	<p>
+		You may also use libraries such as Qt or Boost, but beware these will add very significant complexity to your
+		project, which you can avoid by writing your own small utility.
+	</p>
+
+	<p>
+		At this point you've probably considered that you will have several shader programs, and it would make sense to
+		remember which programs have which filenames. You can create a simple data structure to do so, and/or put them in an
+		array of all of your loaded shader programs:
+	</p>
+
+	<pre>
+struct shader_program_t {
+  GLuint program_handle;
+  char vertex_shader_filename[1024];
+  char fragment_shader_filename[1024];
+};</pre>
+
+	<h2>Suggestions</h2>
+
+	<p>
+		Add some additional inputs to your shaders - uniforms such as the time (you can use the value returned by
+		<tt>glfwGetTime()</tt>),
+		additional vertex shader inputs such as texture
+		coordinates, a noise texture, etc.
+		Then you have plenty of ingredients to play with for interesting animated effects. Combining the current time as a
+		float,
+		with the position of a fragment on a surface,
+		with a <tt>sin()</tt> or cosine wave, gives you a huge amount of potential to live-edit to create interesting
+		effects, or
+		modify other shader effects. Shadertoy even combines shaders with audio waveforms. There are plenty of ideas in
+		Shadertoy demos.
+	</p>
+
+	<h2>Can I Reload Meshes and Textures Too?</h2>
+
+	<p>
+		You might have been wondering if the same process can be used to improve your workflow with other asset files.
+		The answer is yes! I do this in my projects to reload textures and meshes, so I can modify them and see how they
+		interact with the rest of the scene - how they are affected by scale, lighting, and shaders. Remember that our
+		perception of colour is affected by the surrounding colours, so you can get a different impression of your images
+		edited with a white editor background, to how they look in the final scene.
+	</p>
+
+	<h2 id="problems">Common Problems</h2>
+
+	<ul>
+		<li>
+			Linking and compiling - you should be able to re-use the libraries and build settings from a working OpenGL
+			Hello Triangle project. It requires only OpenGL, GLEW, and GLFW. I wrote my program for this article on a
+			Windows machine and compiled it with MinGW-w64.
+			The compilation instruction I used is at the top of the file's source code. There is also a Makefile.
+		</li>
+		<li>
+			<i>"[MS Visual Studio] program can't find my shader files!"</i> - As with other data files, Visual Studio projects
+			may set a different <b>current working directory</b> than what you might expect, when running the program from
+			within the editor. Look in your project settings for your working directory path. It's usually set to in some
+			directory relative to the solution file, and you can change this setting.
+		</li>
+		<li>
+			<i>"It worked on my computer!" - File reading and operating system issues.</i> Be careful with any file reading
+			operations that copy the entire file into a dynamically allocated buffer. If you are not reading the file in
+			binary mode, then different characters are appended to the ends of lines and buffers on different operating
+			systems,
+			which may mean your program's buffer needs to be larger than the file it is reading from. I used large fixed-size
+			arrays, so I didn't need to worry about that. Read the manual pages of the functions that you are using for more
+			details.
+		</li>
+	</ul>
+
+	<h2>Code Listings</h2>
+
+	<h3 id="listing1">Listing 1: Function to Create a Shader Program from Strings</h3>
+
+	<pre>
+// function creates a shader program from a vertex and fragment shader
+// vertex_shader_str - a null-terminated string of text containing a vertex shader
+// fragment_shader_str - a null-terminated string of text containing a fragment shader
+// returns a new, valid shader program handle, or 0 if there was a problem
+// asserts on NULL parameters
+GLuint create_shader_program_from_strings(
+  const char* vertex_shader_str,
+  const char* fragment_shader_str ) {
+
+  assert( vertex_shader_str && fragment_shader_str );
+
+  GLuint shader_program         = glCreateProgram();
+  GLuint vertex_shader_handle   = glCreateShader( GL_VERTEX_SHADER );
+  GLuint fragment_shader_handle = glCreateShader( GL_FRAGMENT_SHADER );
+
+  { // compile shader and check for errors
+    glShaderSource( vertex_shader_handle, 1, &vertex_shader_str, NULL );
+    glCompileShader( vertex_shader_handle );
+    int lparams = -1;
+    glGetShaderiv( vertex_shader_handle, GL_COMPILE_STATUS, &lparams );
+
+    if ( GL_TRUE != lparams ) {
+      fprintf( stderr, "ERROR: vertex shader index %u did not compile\n",
+        vertex_shader_handle );
+
+      const int max_length = 2048;
+      int actual_length    = 0;
+      char slog[2048];
+      glGetShaderInfoLog( vertex_shader_handle, max_length, &actual_length, slog );
+      fprintf( stderr, "shader info log for GL index %u:\n%s\n", vertex_shader_handle,
+        slog );
+
+      glDeleteShader( vertex_shader_handle );
+      glDeleteShader( fragment_shader_handle );
+      glDeleteProgram( shader_program );
+      return 0;
+    }
+
+  }
+
+  { // compile shader and check for errors
+    glShaderSource( fragment_shader_handle, 1, &fragment_shader_str, NULL );
+    glCompileShader( fragment_shader_handle );
+    int lparams = -1;
+    glGetShaderiv( fragment_shader_handle, GL_COMPILE_STATUS, &lparams );
+
+    if ( GL_TRUE != lparams ) {
+      fprintf( stderr, "ERROR: fragment shader index %u did not compile\n",
+        fragment_shader_handle );
+
+      const int max_length = 2048;
+      int actual_length    = 0;
+      char slog[2048];
+      glGetShaderInfoLog( fragment_shader_handle, max_length, &actual_length, slog );
+      fprintf( stderr, "shader info log for GL index %u:\n%s\n", fragment_shader_handle,
+        slog );
+
+      glDeleteShader( vertex_shader_handle );
+      glDeleteShader( fragment_shader_handle );
+      glDeleteProgram( shader_program );
+      return 0;
+    }
+
+  }
+
+  glAttachShader( shader_program, fragment_shader_handle );
+  glAttachShader( shader_program, vertex_shader_handle );
+
+  { // link program and check for errors
+    glLinkProgram( shader_program );
+    glDeleteShader( vertex_shader_handle );
+    glDeleteShader( fragment_shader_handle );
+    int lparams = -1;
+    glGetProgramiv( shader_program, GL_LINK_STATUS, &lparams );
+
+    if ( GL_TRUE != lparams ) {
+      fprintf( stderr, "ERROR: could not link shader program GL index %u\n",
+        shader_program );
+
+      const int max_length = 2048;
+      int actual_length    = 0;
+      char plog[2048];
+      glGetProgramInfoLog( shader_program, max_length, &actual_length, plog );
+      fprintf( stderr, "program info log for GL index %u:\n%s", shader_program, plog );
+
+      glDeleteProgram( shader_program );
+      return 0;
+    }
+
+  }
+
+  return shader_program;
+}
+  </pre>
+
+
+	<h3 id="listing2">Listing 2: Function to Create a Shader Program from Files</h3>
+
+	<pre>
+// set a max limit on shader length to avoid dynamic memory allocation
+#define MAX_SHADER_SZ 100000
+
+GLuint create_shader_program_from_files(
+  const char* vertex_shader_filename
+  const char* fragment_shader_filename ) {
+
+  assert( vertex_shader_filename && fragment_shader_filename );
+
+  printf( "loading shader from files `%s` and `%s`\n", vertex_shader_filename,
+    fragment_shader_filename );
+
+  char vs_shader_str[MAX_SHADER_SZ];
+  char fs_shader_str[MAX_SHADER_SZ];
+  vs_shader_str[0] = fs_shader_str[0] = '\0';
+  { // read vertex shader file into a buffer
+    FILE* fp = fopen( vertex_shader_filename, "r" );
+    if ( !fp ) {
+      fprintf( stderr, "ERROR: could not open vertex shader file `%s`\n",
+        vertex_shader_filename );
+      return 0;
+    }
+    size_t count = fread( vs_shader_str, 1, MAX_SHADER_SZ - 1, fp );
+    assert( count < MAX_SHADER_SZ - 1 ); // file was too long
+    vs_shader_str[count] = '\0';
+    fclose( fp );
+  }
+  { // read fragment shader file into a buffer
+    FILE* fp = fopen( fragment_shader_filename, "r" );
+    if ( !fp ) {
+      fprintf( stderr, "ERROR: could not open fragment shader file `%s`\n",
+        fragment_shader_filename );
+      return 0;
+    }
+    size_t count = fread( fs_shader_str, 1, MAX_SHADER_SZ - 1, fp );
+    assert( count < MAX_SHADER_SZ - 1 ); // file was too long
+    fs_shader_str[count] = '\0';
+    fclose( fp );
+  }
+
+  return create_shader_program_from_strings( vs_shader_str, fs_shader_str );
+}
+  </pre>
+</body>
+
+</html>

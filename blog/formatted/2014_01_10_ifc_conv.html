@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2014_01_10_ifc_conv</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>Converting Industry Foundation Classes for 3d Graphics</h2>
+
+	<p>
+		European public buildings have adopted IFC files as a new standard for
+		architectural plans. They're basically an indexed format that has tags for
+		lots of
+		different types of structural, electrical, etc. plans within a single file. I
+		wrote a couple of parsers to read structural data from the format directly,
+		but it's really not efficient to do this as part of specialised viewing
+		programme [read: grossly inefficient and not at all practical], especially if
+		you want a light-weight browser-driven web script to do it. There are
+		specialised libraries for doing this, but once again I find that it's really
+		bloated when all you want to do is display some geometry. This is an order of
+		magnitude more 'heavy' than the similar "do everything for all purposes" XML
+		COLLADA graphics format.
+	</p>
+
+	<h3>Why IFC is Not Appropritate for Modern Visualisation Hardware</h3>
+
+	<p>
+		Modern graphics processors only draw triangles. IFC meshes are not arranged in
+		triangles. Nor are they lists of quads. What you get is a jumble of different
+		'template' pieces like 'WallA', and 'WallSectionB2' that are reused here and
+		there like LEGO prefab bricks. You can get vertex points out of each prefab,
+		which means that you can construct your triangulated mesh eventually. Each
+		prefab can call on other prefabs. That's okay, but <b>each prefab has it's own
+			coordinate space</b>. This creates a small nightmare for parsing, as you have
+		to 1. do a lot of store-fetch-lookup-store-fetch type of operations to
+		construct the final mesh, and 2. as you do it recurse a matrix hierarchy to
+		assemble the mesh into a single coordinate space. Now, assuming that you've
+		triangulated it all you have a reconstructed mesh you can draw. This can take
+		up to a minute on a modern CPU, for a moderately complex building model [and
+		generate a lot of unnecessary carbon] which is really not acceptible if you're
+		making a user-friendly interface.
+	</p>
+
+	<p>
+		I suspect that the original file format design did consider 3d rendering, but
+		not modern 3d rendering. It would have lent itself to OpenGL 1.1/2.1 rendering,
+		which had fixed-function blocks that could render quads. That might have been
+		okay for rendering all the different prefab bits separately with
+		<tt>begin()</tt> and <tt>end()</tt> commands, with the vertices pumped in
+		one-by-one, and told to draw as quads. Neither of these concepts are
+		available now; and in fact, it is impractically slow to draw a whole building
+		like this in real-time (it has been tried). We need to pack the whole mesh into
+		a single array of triangles, and draw the whole thing in parallel on the GPU.
+		Hence why all of the parsing and assembly is a problem. Putting it all together
+		means that we've lost a lot of the ability to individually highlight or tinker
+		with the separate pieces in a flexible way. I have some ideas for how to do
+		this, but it must really be tailored to the individual end-use scenario
+		- unfortunately it's just not efficient to do this in a fully-flexible way.
+		Modern GPU design just isn't good at that sort of thing.
+	</p>
+
+	<h3>Work-Arounds</h3>
+
+	<p>
+		My initial software didn't use the IFC files. It turns out that these are
+		usually not the primary format being worked on my architects, but rather they'll
+		use a typical CAD design programme, and convert into IFC later. What we did was
+		grab the original CAD files and export an XML file, then parse that.
+		Considerably faster, but still not ideal. On a range of devices you really want
+		something that can be interpreted without XML; a JSON format for WebGL, and a
+		plain-text C-ready format for everything else, so a better solution would be to
+		convert to a specialised graphics format. Most CAD software should be able to
+		generate a Wavefront .obj static mesh, which is fairly trivial to parse, but
+		an ideal solution would treat the IFC file as the source, because it's becoming
+		a standard sort of thing, and convert that to a custom graphics format. A
+		pre-processing stage is okay, and then you don't need to keep a second file
+		with the IFC file just for graphics - it can be generated as needed.
+	</p>
+
+	<h3>Converter Attempt 1</h3>
+
+	<p>
+		A couple of posts ago I made a general purpose converter that took just about
+		any format, and output to my new custom format. It turns out that this should
+		be able to do the painful job of constructing a mesh from IFC as well, and
+		stripping out all the non-graphics bits. I gave it a go with one of Karlsruhe
+		IT's sample IFC meshes:
+	</p>
+
+	<div class="centre">
+		<img src="../images/ifccustom.png"><br />
+		<small><i>Converting a sample IFC mesh into a custom format sort-of worked.
+			</i></small>
+	</div>
+
+	<p>
+		The output mesh is massively simplified into a long array of points forming
+		what should be triangles. The holes and incorrect link-ups in the viewer look
+		like some of the mesh might have been exported in quads of 4 points (hence the
+		holes because it was expecting triangles), and some in triangles (the cars are
+		all correct). I guess the triangulation wasn't consistent. Perhaps I can load
+		it into Blender first to check that out.
+	</p>
+
+	<p>
+		The nice thing about having a custom
+		converter is that you have the option of adding your own annotations to
+		different parts of the mesh, for example:
+	</p>
+
+	<ul>
+		<li>sub-divide the mesh into different sub-meshes for more efficient rendering</li>
+		<li>interactively colourise different rooms/floors/things of interest in specific colours</li>
+		<li>animate moving parts of the mesh to display different states</li>
+		<li>create a colourised version for use in a second framebuffer - this could
+			for example, be used to detect if a user has clicked on different parts of interest
+			(there's no way to sensibly do this with a single mesh)</li>
+	</ul>
+
+	<p>
+		An observation about 3d architectural plans is that they aren't very efficient,
+		as a rule - the architects will add more polygons to minutely detail things
+		like stair rails, or bayonette lamp fittings, that basically aren't at all
+		important in the context of the whole scene. You can see in the image above
+		that some completely flat areas have been sub-divided into large numbers of
+		polygons for no reason at all. This means that we have been doing a lot of
+		manual clean-up-and-tidy work on architectural plans before we visualise them.
+		Some of this could potentially be automated, but any automation will inevitably
+		introduce some error. Identifying highly-detailed components and separating
+		them from the main mesh might be an idea worth considering. Then the user
+		could tick check-boxes to display these things i.e. be lazy and let the user
+		decide if it's important to display stair rails or not. I suspect that a better
+		idea would be some sort of indication to the actual designers at the CAD level,
+		or a "can I flatten this area into a single quad?" prompt-based optimisation
+		script that can be run before exporting.
+	</p>
+
+	<p>
+		I'm investigating this topic as part of a wider range of visualisation topics
+		for the EU <a href="http://www.knoholem.eu/page.jsp?id=2">Knoholem</a> FP7 research
+		project.
+	</p>
+
+</body>
+
+</html>

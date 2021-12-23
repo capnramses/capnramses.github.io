@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2019_03_10_header_files</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>Managing Code Projects Part One: Header Files</h2>
+
+	<p>
+		I'll write a few blog posts to share some experience about working on larger projects or coordinating with teams.
+		I want to start out easy so here's a little aside about avoiding code tangles. Even projects that start off simple
+		can quickly become quite complicated to follow as they grow, and as more people work on parts of them.
+	</p>
+
+	<h3>How Did This All Get So Tangled?</h3>
+
+	<p>
+		Structuring code in projects turns out to be one of the hardest things to learn how to do well. I mean it takes
+		many years re-inventing the wheel and being exposed to the ideas of others before you start to get it right.
+		Project structure is largely a problem about clearly communicating <b>with other people</b>.
+		You'll often [read: almost always] work on older, and sometimes very old, codebases that are extremely difficult
+		to follow. I'm talking about <b>LEGACY CODE</b>. I saw a great definition of this zip past on Twitter recently
+		<i>"Legacy code is code you are afraid to change."</i>
+		It's very easy to blame people who worked on code that is a mess, but that's not fair - there are good
+		reasons why messy code exists, and it may be inevitable:
+	</p>
+
+	<ul>
+		<li>The team was directed to rush to meet deadlines, and asked to skip due diligence on structure and iterations -
+			this is almost certainly why.</li>
+		<li>Programmers were catapulted, one at a time, into the project after it started, and it was already a mess by
+			then. They did keyhole surgery,
+			or wrote a layer/wrapper/interface to paint over the mould, then got out. Looking at these codebases can feel like
+			examining the stratum layers of
+			sediment deposits in an exposed cliff face. Comments can often be quite ... human. Nobody really had oversight of
+			taking care of the whole of
+			the project in a consistent way. Refactoring was left for a very, very rainy day.</li>
+		<li>The programmers were not very experienced in working on long-running projects, didn't get needed senior
+			oversight, or were just not familiar with that programming language.</li>
+	</ul>
+
+	<div class="centre">
+		<img width="600"
+			src="https://external-preview.redd.it/1XuftAfkSNyK2nypxkAZRyR0H2aHnUyBIxFVZ59pj08.png?auto=webp&s=b06753c948d6c0c0513798fe986a6132d94e5172" /><br />
+		<small><i>This popular Internet image could probably be titled "A typical project: Day 1, Day 365."</i></small>
+	</div>
+
+	<p>
+		A real conundrum with contemporary software development is that software projects are never 'finished'.
+		We do 'software as a service' or Agile continuous delivery. The requirements change frequently, which mean design
+		must be flexible to change.
+		But many of our tools and techniques were designed assuming the entire project had been fully specced out in
+		advance.
+		As an industry-standard OOP project evolves it quickly collapses into a birds nest of everything-includes-everything
+		else.
+		Eventually you reach a log-jam state where there is no nice way to structure things, and you either have to scrap
+		it,
+		spend a good deal of time and money re-thinking structure, or do what most programmers do, and just write in
+		shortcuts/pointers/friend
+		relationships to cross around their own object structure. Most people in tech don't actually work on a project, or
+		at a company, for more
+		than a year or two, so can conveniently avoid ever dealing with this and then move to the next start-up!
+	</p>
+
+	<h3>Reducing Relationships Between Files</h3>
+
+	<p>
+		A good principle to <b>keep your software flexible to change</b> - which is the key to longevity -
+		is to reduce relationships between components - try to keep modules/classes/files/functions more or
+		less stand-alone. I can talk about inheritance and composition later, but let's look at something
+		simpler first: header files in C and C++.
+	</p>
+
+	<p>
+		Header files are a language quirk, and understanding what to do with them for a practical purpose is a bit mixed.
+		Here are common conventions:
+	</p>
+
+	<ul>
+		<li><i>Java-ish style</i> - every class has a <tt>myclass.c</tt>, and a corresponding <tt>myclass.h</tt> for the
+			interface and API documentation.</li>
+		<li><i>C modules style</i> - groups of related functions or classes sit in a <tt>mymodule.c</tt>, and these have a
+			<tt>mymodule.h</tt> for externally-visible function declarations and variables (again, the interface).</tt>
+		<li><i>Curmudgeon style</i> - modules have a <tt>mymodule.c</tt> files. There is only one header file for all
+			external declarations, and probably a rude comment at the top saying <i>"This header is only here because C/C++
+				still requires header files in 2019"</i>.</li>
+		<li><i>Typical industry shitshow</i> - there is absolutely no consistently followed convention. Headers include
+			other headers that include other headers, that include the original headers.
+			Tiny code compiles take forever. You lose your sanity trying to follow it. Function code is also in headers.
+			Showing-off-my-skills templated classes creating complex inter-dependencies are everywhere.
+			You can't change or tidy anything, because other, seemingly-unrelated, pieces fall off the other side of the
+			project when you do.
+		</li>
+	</ul>
+
+	<p>
+		Some sort of convention is useful to reduce the cognitive overhead of anyone working on the project. Pick any of the
+		top three - they all have their merits. Add the following concepts - they will help immensely to keep things simple:
+	</p>
+
+	<ul>
+		<li>Header files do not include any other header files, except for <tt>stdint.h</tt> for C and C++ and
+			<tt>stdbool.h</tt> for C.</li>
+		<li>"But what about my custom types in <tt>graphics.h</tt>?" - create a <tt>types.h</tt> for your project, and put
+			all the typedefs and structs used in your interfaces (in header files) in here.
+			Your headers may include <tt>types.h</tt> in addition to the above.</li>
+	</ul>
+
+	<p>
+		You'll find that this will significantly reduce the complexity of growing projects. Try to stick to a single
+		<tt>types.h</tt> file as long as you can, rather than one per module, or it will be more difficult to manage.
+		If you could draw a diagram of relationships between files it would be quite a lot simpler now, yes?
+		If you're just using a single header file for everything then this isn't a concern,
+		but I don't think that's everyone's favourite on team projects. I think you can drop most developer guidelines or
+		rules, but this keep-the-headers-stand-alone one should be helpful to keep and gently enforce.
+	</p>
+
+	<p>
+		You can take this principle further and work towards most <tt>.c</tt> files being able to compile on their own with
+		no or minimal header includes. Try adding a <tt>main()</tt> to the bottom
+		of the file and calling some of your functions. Then you'll also find it easy to reason about the logic, especially
+		from a unit testing point of view, since it's all in one place: data in, logic, data out.
+	</p>
+
+	<div>
+		<p>Here's a `types` header snippet from one of my projects, and a header that uses the types.</p>
+		<tt>types.h</tt>
+		<pre>
+// Copyright Anton Gerdelan &lt;antonofnote@gmail.com&gt;. 2019
+#pragma once
+#include &lt;stdbool.h&gt;
+#include &lt;stdint.h&gt;
+
+// ---------------------------------------------------------------------------------
+//                                           MATH
+// ---------------------------------------------------------------------------------
+typedef struct vec2 {
+  float x, y;
+} vec2;
+typedef struct vec3 {
+  float x, y, z;
+} vec3;
+typedef struct vec4 {
+  float x, y, z, w;
+} vec4;
+typedef struct ivec3 {
+  int x, y, z;
+} ivec3;
+typedef struct mat4 {
+  float m[16];
+} mat4;
+typedef struct versor {
+  float w, x, y, z;
+} versor;
+
+// ---------------------------------------------------------------------------------
+//                                           VOXELS
+// ---------------------------------------------------------------------------------
+typedef struct voxel_coords_t {
+  uint32_t world_tile_x, world_tile_y;
+  uint32_t tile_idx;
+  uint32_t chunk_x, chunk_y;
+  uint32_t layer;
+  uint32_t voxel_in_chunk_x, voxel_in_chunk_y;
+} voxel_coords_t;
+
+...
+</pre>
+	</div>
+
+
+	<div>
+		<tt>props.h</tt>
+		<pre>
+// Copyright Anton Gerdelan &lt;antonofnote@gmail.com&gt;. 2019
+#pragma once
+#include "types.h"
+
+typedef enum prop_types_t { PROP_TYPE_STAIRS = 0, PROP_TYPE_MAX } prop_types_t;
+
+void init_props();
+
+void free_props();
+
+/** creates a prop on top of the given tile */
+void create_prop_on( prop_types_t type, voxel_coords_t coords );
+
+void draw_prop_guide_at( voxel_coords_t coords, const cam_t* cam );
+
+...
+
+</pre>
+	</div>
+
+</body>
+
+</html>

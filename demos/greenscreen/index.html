@@ -1,0 +1,26 @@
+<html>
+	<head>
+		<link rel=stylesheet type="text/css" href="https://antongerdelan.net/greysans.css">
+		<title>WebGL Basic</title>
+		<script type="text/javascript" src="initGL.js"></script>
+		<script type="text/javascript">
+		
+		function main () {
+			var canvas = document.getElementById ("mainCanvas");
+			var gl = initGL (canvas);
+
+			gl.clearColor (0.0, 1.0, 0.0, 1.0);
+			gl.enable (gl.DEPTH_TEST);
+				
+			drawScene (gl);
+		}
+		
+		</script>
+	</head>
+	<body onload="main();" lang="en-NZ" bgcolor="#333333" dir="LTR"3>
+		<h1>JS Very Basic WebGL Test</h1>
+		<center>
+			<canvas id="mainCanvas" style="border: none;" width="800" height="800"></canvas>
+		</center>
+	</body>
+</html>

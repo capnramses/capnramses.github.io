@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2015_02_23_svg_d3</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>HTML5 Drawing with SVG and D3</h2>
+
+	<p>
+		I'm involved with a new research project that wants some web-based
+		visualisation of analytics. I have considerable experience now with JavaScript
+		and WebGL, the 3d canvas, but I'm investigating 2d options now too. I recently
+		<a href="https://antongerdelan.net/blog/?post=2015_02_17_canvas2d">looked at</a>
+		drawing with the 2d HTML5 canvas, which I unexpectedly found to be
+		a raster drawing interface. It's quite easy and pleasing to use.
+	</p>
+
+	<div class="centre">
+		<img src="../images/cnglchart1.png" /><br />
+		<small><i>
+				Playing-around with making charts with the 2d canvas interface. Pixel-exact but
+				not automatically scalable to different resolutions.
+			</i></small>
+	</div>
+
+	<p>
+		To complement this experience I wanted to look at some vector-based web drawing
+		tools. In the past this would have been with Flash, but I'm interested in new
+		HTML capabilities. There's a very popular vector-based visualisation library
+		called <a href="http://d3js.org">D3.js</a>, and HTML is supposed to have an
+		interface to using SVG (scalable vector graphics) built-in as well.
+	</p>
+
+	<h3>D3.js</h3>
+
+	<div class="centre">
+		<img src="../images/d3.png" /><br />
+		<small><i>
+				It took way too long to find out how to make D3 do a simple bar plot with my
+				own data. Custom interface knowledge required.
+			</i></small>
+	</div>
+
+	<p>
+		As soon as I looked at the introduction I immediately knew I was going to
+		dislike D3. The entire introduction page introduces yet-another
+		(pointless) JavaScript wrapper, similar to Node.js. There's not a single thing
+		related to visualisation in the introduction - it's all about this custom JS
+		interface - which frankly I don't want to allocate any brain space to learning.
+		Okay, so skipping ahead - there's no instructions! Just a bunch of finished
+		example visualisations to re-implement. What if I don't want to make a
+		visualisation exactly like these? I played around with one - even finding out
+		how to change the input data was difficult, and this was just a bunch of bars
+		and lines. Not impressed. Here's the code to generate that simple bar plot:
+	</p>
+
+	<textarea rows=33>
+<!doctype html>
+<html>
+<head>
+<style type="text/css">
+  div.bar {
+    display: inline-block;
+    width: 20px;
+    height: 75px;
+    margin-right: 2px;
+    background-color: teal;
+  }
+</style>
+</head>
+<body>
+</body>
+</html>
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script>
+	var x = [
+		100.0, 92.0, 82.8, 70.0, 69.69
+	];
+
+	d3.select("body").selectAll("div")
+		.data(x)
+		.enter()
+		.append("div")
+		.attr("class", "bar")
+		.style("height", function (d) {
+			var h = d;
+			return h + "px";
+		}
+		);
+</script></textarea>
+
+	<p>
+		I suspected just accessing the SVG directly should be easier than using this
+		unusual abstract interface - I mean I just want to specify some lines, how hard
+		is that? Note the custom version of the DOM being used, and the sizes must be
+		given <b>in pixels</b>.
+	</p>
+
+	<h3>HTML5 SVG</h3>
+
+	<p>
+		In true w3c style, the SVG interface is a flaky, unreliable mess. It seems to
+		be designed, really only considering that people would manually add "svg" tags
+		directly into the HTML. This lets you do simple things like draw a circle, but
+		is far to cumbersome for anything that you would actually want to draw. To do
+		dynamic work we need a JS interface, for which the default SVG interface flat
+		out does not work - it does't render anything.
+	</p>
+
+	<div class="centre">
+		<img src="../images/svg.png" /><br />
+		<small><i>
+				A screenshot of my SVG chart. It wasn't harder to make a bar-chart manually
+				with SVG compared to D3.js. The interface sucks, and requires pixel dimensions!
+			</i></small>
+	</div>
+
+	<p>
+		To get
+		anything to work you have to point to a custom spec on the w3c website, and
+		use custom versions of the DOM (document object model) functions, post-fixed
+		with "NS". At this point it's starting to look a lot like the design of OpenGL.
+		After some time doing trial-and-error to establish that things truly weren't
+		working as specified, I found a reliable way to work:
+	</p>
+
+	<textarea rows=4>
+var svg = document.createElementNS ("http://www.w3.org/2000/svg", "svg");
+svg.setAttribute ("width", "512");
+svg.setAttribute ("height", "256");
+document.body.appendChild (svg); </textarea>
+
+	<p>
+		Now I've created an SVG element in the page <i>via</i> JavaScript.
+		Interestingly, the interface requires manual pixel sizes for things, which very
+		much defeats the point in the "S" and "V" of "SVG". Do you really have to write
+		custom cladding to resize everything when the SVG element is resized? Really?
+		Follows my entire file for generating my bar char:
+	</p>
+
+	<textarea rows=51>
+<!doctype html>
+<html>
+<head>
+</head>
+<body>
+</body>
+</html>
+<script>
+	//
+	// it just doesn't work without this namespace link. L.A.M.E. #html5 #flaky
+	//
+	var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+	svg.setAttribute("width", "512");
+	svg.setAttribute("height", "256");
+	document.body.appendChild(svg);
+
+	var data_x = [
+		0,
+		10,
+		20,
+		30,
+		40,
+		50
+	];
+
+	var data_y = [
+		100,
+		60,
+		50,
+		40,
+		20,
+		30
+	];
+
+	for (var i = 0; i < data_x.length; i++) {
+		var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+		rect.setAttribute("fill", "steelblue");
+		var h = (data_y[i] / 100) * 128;
+		rect.setAttribute("height", h.toString() + "px");
+		rect.setAttribute("width", "64px");
+		//
+		// + 1 for stroke edge on lhs
+		var x = data_x[i] / 10 * 64 + 1;
+		var y = 256 - (data_y[i] / 100) * 128;
+		rect.setAttribute("x", x.toString() + "px");
+		rect.setAttribute("y", y.toString() + "px");
+		rect.setAttribute("stroke-width", "1");
+		rect.setAttribute("stroke", "black");
+		svg.appendChild(rect);
+	}
+</script></textarea>
+
+	<p>
+		Interesting points to note:
+	</p>
+
+	<ul>
+		<li>manual SVG is about same number of instructions as D3</li>
+		<li>manual SVG does not require you to learn a crazy, custom JS interface</li>
+		<li>you don't need the D3 library, but you do need the w3c spec link</li>
+		<li>it's necessary to scale things <b>in pixels</b></li>
+	</ul>
+
+	<p>
+		I'm sorry, but no abstraction is worth using if it doesn't save you any time at
+		all. SVG's interface is very badly designed. Once you get going with SVG you
+		have a lot of sensible control over sizes and scales and so on. There are
+		built-in functions for the usual lines and boxes. It's probably a good idea to
+		compute your own canvas-relative factors to replace the pixel-exact sizes for
+		bars and lines. In this case you could draw to any scale by refreshing the
+		canvas when it's resized. It seems to have very nice anti-aliasing, which is a
+		minor advantage of doing the same scaling thing with canvas 2d.
+	</p>
+
+	<h3>Summary</h3>
+
+	<p>
+		I'm not really impressed with 2d-canvas, SVG, or D3.js. None of them are great.
+		WebGL at least uses the GPU (graphics processor unit). SVG and D3 are slow and
+		have flaky interfaces. The manual scaling is just horrible. You can be very
+		exact and produce sharper graphics with 2d canvas, that don't require any
+		anti-aliasing, provided you know exactly the size of the canvas in advance. You
+		can, of course, do 2d graphics with the 3d canvas, which would then also be
+		hardware accelerated, and can access all sorts of interesting effects from that
+		domain. Would I actually use these new tools? I'm not so sure - they have too
+		many disadvantages to be good low-level APIs, and I find D3 just horrible - but
+		I can see how it appeals to people who want to just modify a pre-built visual.
+		C'mon people - it's not hard to manually make a sensible chart.
+	</p>
+
+</body>
+
+</html>

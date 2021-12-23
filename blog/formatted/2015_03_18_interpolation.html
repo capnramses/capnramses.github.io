@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2015_03_18_interpolation</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>Interpolation Functions aka "Tweening" or "Easing"</h2>
+
+	<p>
+		In visualisation and games we often have animated transitions of visual
+		elements. This could be an actor walking between two points, or a menu button
+		moving into place, or a perhaps chart transitioning to a new data set. Most of
+		the transition animations are fluff - they provide no intrinsic value
+		whatsoever, but appear pleasing to the user/audience. And there is value in
+		that, lots of value. Arguably these transitions are more important to
+		animations which only store "key frames" and expect real-time animation to
+		interpolate between these as required. On St Patrick's Day holiday I spent
+		some time looking into this and making my own interpolation library.
+	</p>
+
+	<p>
+		There is a lot of dubious-quality literature around on this topic, which very
+		much reads like a bad re-invention of really basic mathematical functions. A
+		quick google on "easing functions" or "tweening" [cringe] will give you a slice
+		of this. There are some nice, animated, examples at
+		<a href="http://easings.net/">easings.net</a>. I wanted to use some similar
+		functions in my own projects to add some glitter value, but I immediately found
+		some problems with the available resources:
+	</p>
+
+	<ul>
+		<li>A non-standard notation convention for variables is used, which I find
+			confusing.</li>
+		<li>Basic mathematical functions like exponentials tend to be crudely
+			approximated with staggered if-else statements, as if the writer didn't know
+			how to make a simple quadratic or exponential function.</li>
+		<li>Code in commonly-used libraries would generate in-efficient machine code,
+			is hard to read, and is of a generally poor standard.</li>
+		<li>Functions all proceed in one direction, but are named "in" and "out"
+			instead of an accurate analogy such as "accelerating" and "decelerating".</li>
+		<li>Functions are "impure" in that they have fixed-sized lead-ins to wave
+			functions tied to the same scale - this seems flat out dumb. Why not use two
+			separate functions for the lead-in and wobble?</li>
+		<li>Most of the non-linear transition functions in the "easing" functions are
+			so similar when viewed in one dimension that you couldn't tell the difference
+			without looking at a 2d chart.</li>
+	</ul>
+
+	<p>
+		With these considerations I decided to just make my own little collection of
+		interpolation functions. I immediately threw out most of the package of
+		"easing" functions, and only implemented the few that I thought would provide
+		obvious and interesting transitions. Rather than copy the common functions from
+		some library, I just approximated them with as simple as possible pure maths
+		functions, and as little logic as possible. I replaced all the unusual input
+		parameters with current x, initial x, final x, initial y, and final y, the way
+		we would define these things in my mechanics education.
+	</p>
+
+	<div class="centre">
+		<img src="../images/linear.png" /><img src="../images/accel_sine.png" />
+		<img src="../images/accel_exp.png" /><img src="../images/decel_sine.png" />
+		<img src="../images/decel_elastic.png" /><img src="../images/decel_bounce.png" />
+	</div>
+
+	<p>
+		I started with the above, simple functions, which are pretty similar to the
+		"easing" set, and modelled them in gnuplot to see if they looked okay. Then
+		I smashed them into some simple C functions with my basic parameters. The
+		code is available
+		<a href="https://github.com/capnramses/apg_interp/blob/master/apg_interp.h">on GitHub</a>.
+		I tried it out for a title animation in my Crongdor the Barbarian game, and it
+		looked pretty good. I wanted the title to drop down, and then bounce, as if
+		hitting a surface. Rather than use a fixed-size lead-in, as in the easing
+		functions, I just did an exponential interpolation (like gravity) between start
+		height, and end height, then a bounce interpolation, which for me is like a
+		linearly diminishing absolute sine wave.
+	</p>
+
+</body>
+
+</html>

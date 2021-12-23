@@ -1,0 +1,50 @@
+what is latex and what isn't it?
+
+example documents - research paper, report/thesis
+
+what goes in them?
+-style/header
+-sections
+
+how to generate a .pdf or .ps
+compile passes
+
+how to include graphics
+
+rules of thumb
+-good for large documents - separate parts and include (theses, books).
+-good for consistent style
+-good for professional/academic layout
+-good for mathematical formulae printing
+-bad for "publisher" style where arrangement of objects on page is important
+-bad for idiots and non-geeks
+-can also be used for presentations, posters, etc.
+(by TeXsperts (LaTeX nerds)).
+-usually required for scientific publications
+(they give you the 'style' file for their book/proceedings)
+
+general approach
+- start with a template or an existing document
+- choose document type (1-2 column, a4)
+- write \section{headings}
+- add some notes
+- include diagrams
+- add maths
+- add references and content paragraphs
+
+* rebuild every page or so
+* tinker with layout after finishing entire document
+* have a web browser open to find tips
+
+this lecture
+- basic document
+- 1 and 2 column
+- preamble, includes, date, abstract, style file
+- section headings
+- formatting text
+- including references and a .bib file
+- using jabref to build a references database
+- installing latex packages on various O/S
+- adding maths formulae
+- fixing errors e.g.[?], logs
+- including graphics

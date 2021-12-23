@@ -1,0 +1,129 @@
+<html>
+	<head>
+		<link rel=stylesheet type="text/css" href="https://antongerdelan.net/greysans.css">
+		<title>WebGL Mesh Loader from JSON File</title>
+		<script src="webgl-utils.js"></script> <!-- include initialisation helper -->
+		<script src="webgl-debug.js"></script> <!-- include debugging helper (prints to javascript console) -->
+		<script type="text/javascript" src="initGL.js"></script>
+		<script type="text/javascript" src="settings.js"></script>
+		<script type="text/javascript" src="shaderProgramme.js"></script>
+		<script type="text/javascript" src="gl-matrix.js"></script>
+		<script type="text/javascript" src="timer.js"></script>
+		<script type="text/javascript" src="mesh.js"></script>
+	</head>
+	<body onload="main();" lang="en-NZ" bgcolor="#333333" dir="LTR"3>
+		<h1>WebGL Mesh Loader from JSON File</h1>
+		<canvas id="mainCanvas" style="border: none;" width="800" height="800"></canvas>
+		<h3>Settings</h3>
+		<p id="summaryP">summary details appear here</p>	
+
+		<script type="text/javascript">
+			// global for vertex buffer for testing the shader
+			var vboHandle;
+			var myShaderProg;
+			var modelMatLoc;
+			// degrees
+			var degrees = 0.0;
+			var frameTimer;
+			var glContext;
+			var stepTimeAccum = 0;
+			var stepSize = 0.02;
+			var myMesh;
+		
+			function main() {
+				// get handle to the HTML5 canvas that we made
+				var canvas = document.getElementById ("mainCanvas");
+				// start GL
+				var debugging = true;
+				var withLogging = false;
+				glContext = initGL (canvas, debugging, withLogging);
+				// validate
+				if (!glContext) {
+					alert("failed to start GL");
+					return;
+				}
+				// create global settings object from JSON file
+				gGLSettings.loadFromFile("glsettings.json");
+				// update HTML section
+				gGLSettings.printAll();
+				
+				// create a shader programme
+				myShaderProg = new ShaderProgramme (glContext);
+				myShaderProg.loadVertexShaderFromURL (glContext, "basic_vs.glsl");
+				myShaderProg.loadFragmentShaderFromURL (glContext, "basic_fs.glsl");
+				myShaderProg.link (glContext);
+				
+				// enable the shader
+				myShaderProg.use (glContext);
+				// get a handle to the vp attribute in the shader
+				vertexPositionAttribute = myShaderProg.getAttributeLocation (glContext, "lc_vp"); 
+				
+				// get matrix location in shader
+				modelMatLoc = myShaderProg.getUniformLocation (glContext, "modelMat");
+				
+				// create a hard-coded vertex buffer for testing the shader
+				vboHandle = glContext.createBuffer ();
+				// enable buffer
+				glContext.bindBuffer (glContext.ARRAY_BUFFER, vboHandle);
+				// create some data to put in buffer
+				/*var vertices = [
+					-0.5, -0.5, 0.0,
+					0.0, 0.5, 0.0,
+					0.5, -0.5, 0.0
+				];*/
+				//myMesh = loadMeshFromJSON ("testmesh2.json");
+				myMesh = loadMeshFromJSON ("dungeondoor.json");
+				alert(myMesh.mVertexPoints.length);
+				
+				// put data into buffer
+				glContext.bufferData (glContext.ARRAY_BUFFER, new Float32Array (myMesh.mVertexPoints), glContext.STATIC_DRAW);
+				// enable attribute for rendering
+				glContext.enableVertexAttribArray (vertexPositionAttribute);
+				// define attribute using currently bound VBO
+				glContext.vertexAttribPointer (vertexPositionAttribute, 3, glContext.FLOAT, false, 0, 0); 
+				
+				// goes into a separate looping function later
+				glContext.clearColor (gGLSettings.mBackgroundColour.r, gGLSettings.mBackgroundColour.g, gGLSettings.mBackgroundColour.b, 1.0);
+				glContext.enable (glContext.DEPTH_TEST);
+				
+				// create a frame timer
+				frameTimer = new Timer();
+				frameTimer.start();
+				
+				// render loop
+				render (canvas);
+			}
+
+			// rendering loop
+			function render (canvas) {
+				// update matrix based on timer
+				var milliSeconds = frameTimer.milliseconds();
+				var deltaSeconds = milliSeconds / 1000.0;
+				stepTimeAccum += deltaSeconds;
+				
+				// compute time steps
+				while (stepTimeAccum > stepSize) {
+					// update matrix for shader
+					var modelMat = mat4.create();
+					mat4.identity (modelMat);
+					degrees += stepSize * 2.0;
+					var axis = vec3.createFrom(0, 1, 1);
+					vec3.normalize(axis);
+					mat4.rotate (modelMat, degrees, axis);
+					mat4.scale (modelMat, [.25, .25, .25]);
+					// enable the shader
+					myShaderProg.use (glContext);
+					myShaderProg.setUniformMat4ByLocation(glContext, modelMatLoc, modelMat);
+
+					stepTimeAccum -= stepSize;
+				}
+				
+				// draw geometry (the suggest order of functions on the webgl wiki was wrong)
+				drawScene (glContext);
+				
+				frameTimer.start();
+				window.requestAnimFrame(render, canvas); // this function is from webgl-utils
+			}
+		</script>
+	</body>
+</html>

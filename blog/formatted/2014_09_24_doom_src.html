@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2014_09_24_doom_src</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>Original DOOM Source Code</h2>
+
+	<p>
+		I've been having a look at the original DOOM source code, which id Software has
+		put on GitHub: <a href="https://github.com/id-Software/DOOM">https://github.com/id-Software/DOOM</a>.
+		I wanted to see if I could follow their source code, and maybe find something neat for my bag of tricks.
+	</p>
+
+	<p>
+		I ended up succesfully porting the video output to a modern platform-independent OS window on 64-bit
+		machines too!
+	</p>
+
+	<div class="centre">
+		<img src="../images/doomhack4.png" /><br />
+		<p><small>
+				My port of the original DOOM code (which no longer works on desktops) to modern windowed output.
+			</small></p>
+	</div>
+
+	<h3>Code Style Review</h3>
+
+	<p>
+		The first thing that strikes me is that it's in C, not C++, and actually the style and conventions are
+		almost exactly the same as those I've grown to prefer myself. They use C++ comments, with some blank
+		comment lines to emphasise headings for functions and things:
+	</p>
+
+	<textarea rows=8>
+//
+// This is how a function is described
+// some more details
+//
+void actual_function () {
+  // a commented line in a function
+  int the_thing;
+}</textarea>
+
+	<p>
+		Otherwise it's pretty much GNU-standard style, which I think I saw John Carmack support in a tweet
+		somewhere. They even have GNU-standard Changelogs and Makefiles. The indentation is a bit messy - tabs are
+		always assumed to be equivalent to 8 spaces or something crap like that. I guess that's the default in
+		emacs or whatever they were using.
+	</p>
+
+	<p>
+		The <b>really</b> nice thing about this code is that it's bare-bones C. It has basically no external
+		dependencies on dated DOS libraries that are gone. If you want to write code that lasts <b>do re-invent the
+			wheel</b>, <b>do not re-use code from others</b>. There are some supporting utility functions however,
+		but that's all plain C and included in the source. Notable missing external libraries used, which are
+		absent for copyright reasons (Carmack notes in the README that he regrets using these):
+	</p>
+
+	<ul>
+		<li>Sound and music playback.</li>
+		<li>Video display (DOS and presumably the original Unix-based NeXT-Step one).</li>
+	</ul>
+
+	<p>
+		They've replaced these in the '90s with a woefully out-of date X server for linux, and woefully out-of-date
+		inadequate Linux sound system, neither of which will run on a modern system.
+	</p>
+
+	<p>
+		It's hard-coded to use 32-bit computing, and uses a lot of integer-pointer arithmetic. The problem with this
+		is that on a modern, 64-bit computer, it won't compile because the size of integers is still 32-bits but
+		the size of pointers has doubled to 64-bits. 64-bit pointers let us do wonderful things like address more than 4GB
+		of memory. The compiler is disgusted by any such 32-64 number comparisons. Integer/pointer comparisons are
+		not a great idea anyway, and these days we have some data types to abstract these problems.
+	</p>
+
+	<p>
+		There were a few bugs in the source which look like were errors introduced post-release to cope with the
+		third-party add-on episodes. The compiler found these, and it was easy to fix them. Mostly just a case of
+		strings for map names being longer than the allocated memory for the string. An incorrect system header for
+		error numbers was used - I just renamed that.
+	</p>
+
+	<p>
+		There are little scraps of assembler code inlined, which is pretty neat, and these seem to play well with
+		a GCC compile.
+	</p>
+
+	<p>
+		One neat trick that I found was a nice way to check all the command-line parameters for a particular
+		phrase. I always did this the hard way in a big nest of if-else clauses:
+	</p>
+
+	<textarea rows=18>
+//
+// M_CheckParm
+// Checks for the given parameter
+// in the program's command line arguments.
+// Returns the argument number (1 to argc-1)
+// or 0 if not present
+int M_CheckParm (char *check)
+{
+    int		i;
+
+    for (i = 1;i<myargc;i++)
+    {
+	if ( !strcasecmp(check, myargv[i]) )
+	    return i;
+    }
+
+    return 0;
+}</textarea>
+
+	<p>
+		Another neat trick that I somehow missed thus-far is that in a Makefile you can flag-in some
+		#defines that affect your code! It's just a <tt>-D</tt> flag, so you can do stuff like
+		<tt>-Danton</tt>, and then in your code put some <tt>#ifdef ANTON</tt> to get a special build.
+	</p>
+
+	<h3>Compiling</h3>
+
+	<p>
+		The README says that it can only run now on Linux. Actually that's not true;
+		it won't run on anything, but it will eventually compile on Linux. There was
+		probably a period of time for about 1 year after source release where a display
+		driver for a large, beige-coloured CRT would accept a resolution ratio of
+		320x200 at 35Hz. The main problem
+		now though is actually the older 32-bit hard-coded stuff. I didn't
+		want to tediously fix all the 32-bit pointer arithmetic, so I just modified the
+		Makefile to use 32-bit libraries and compile for 32-bit. It didn't work - I was
+		missing a whole lot of 32-bit libraries on my 64-bit Xubuntu machine.
+	</p>
+
+	<p>
+		After updating my 32-bit development libraries it actually compiled! Imagine my
+		elation. Now, the video code that they'd Frankensteined onto the end expected
+		you to run a 320x200 full-screen 8-bit X display at 35Hz.
+		I thought, "Hey, why not try it - for science?", even though I knew my video resolution
+		supported a full-screen minimum of 640x480, and even scaling-up 320x200 a couple of times
+		probably wouldn't work (wrong aspect ratio). It was a bad idea - I broke my video config
+		and couldn't boot back in to my user account until I wiped all my video config manually
+		from another super-user terminal, and fiddled with the incorrectly re-generating .Xauthority.
+		Damnit linux! <b>End of first evening</b>.
+	</p>
+
+	<p>
+		Not to be beaten, I was convinced that this old DOS display stuff must be pretty easy
+		underneath the hood. It must be raster graphics. It must write directly to pixels in a big
+		320x200 array of bytes. This must get copied entire-frame-by-entire-frame to the display
+		interface by the game. My first step was to try to surgically remove all of the X-display
+		interface and get it to compile and run without any graphics - just on a terminal. The nice
+		thing about id's code style is that it's arranged the same as mine - one code module per .c
+		file. I quickly fgrepped and found it was all in <tt>i_video.c</tt> (presumably 'i' for interface).
+		It also had a whack of crappy X-server keyboard event code there too. And some horrible hacky
+		"add a mouse cursor but make it invisible and also make sure it stays inside the boundaries of
+		the 'window' so the programme doesn't lose focus on the OS". What a load of horrible linux
+		crapware (I can't stand the X+distribution window layers on top of GNU/Linux - unreliable shite).
+		I knew what I had to do at this point. I commented out all the X interface code (easily spotted) and
+		headers. I commented out all the user input too (also X event stuff). And guess what - it worked!
+	</p>
+
+	<p>
+		So I had Doom's demo loop running in a terminal window, with the familiar load-up printfs, and some
+		error messages every few frames complaining that my WAD was a different version to the source code.
+		Encouraging! Now, could I fiddle around with graphics and get <b>anything</b> to write to a pixel or
+		two? My general plan forming at this stage was to use a platform-independent windowing library to let me
+		draw to a window instead of fullscreen. This would:
+	</p>
+
+	<ul>
+		<li>Avoid the problems with the dead-and-gone 4:2.5 aspect ratio</li>
+		<li>Avoid the problems with the dead-and-gone 35Hz display frequency</li>
+		<li>Run on ANY modern desktop (Windows/Linux/Apple)</li>
+		<li>Let me hook-in OpenGL to use for basic rendering, with the advantages of
+			built-in texture scaling (to 1600x1000px for example), anti-aliasing if desired.</li>
+		<li>Still leave all the original source code un-modified (expect for the bug fixes).</li>
+		<li>Also provide better keyboard input handling in a platform-independent way.</li>
+		<li>Be easy to extend for more advanced graphics programming/opengl mod projects.</li>
+	</ul>
+
+	<p>
+		I kind-of liked some of the modern Doom ports which also add fancy lighting and transparent stuff and
+		even 3d models, but it's not the same as having the original code, and even the original pixelated graphics!
+		So I wanted to keep it as pure as possible, but get some sort of display out. I didn't feel bad about
+		trashing the X interface stuff, because that wasn't in the original anyway. Also, if I was to change some
+		stuff like game code (weapon damage, AI?) then I wanted to see if I could improve the original, not modify
+		someone else's replacement code.
+	</p>
+
+	<h3>Writing a New Display Interface</h3>
+
+	<p>
+		I quickly found the 320x200 array I was looking for being passed to X - a buffer called <tt>image.data</tt>
+		in bytes. It looked promising. I knew I could make OpenGL expect an 8-bit RGB source image, so my plan,
+		as it stood, was to copy this into a texture, and throw this onto a full-screen quad with some simple
+		nearest-neighbour image sampling. I went hunting for all the DOOM code that copied bytes into this buffer,
+		and put my own buffer there instead.
+	</p>
+
+	<p>
+		I pulled out my 32-bit linux laptop and made sure I had a 32-bit libGL.so (I later found I had this on my
+		64-bit machine too, but oh well). I successfully started up GLFW and GLEW, and got a system window at
+		320x200px with a viewport the same size (it's tiny now). I got something! I got noise in my image! Okay,
+		so maybe this was going to be too hard, maybe not - but....but I found I was missing a few data copies, and
+		fixed that. This is what I got:
+	</p>
+
+	<div class="centre">
+		<img src="../images/doomhack0.png" /><br />
+		<p><small>
+				It's upside-down. It has crap in it. It's repeated 3 times. The colours are wrong. But it <b>clearly says
+					"DOOM"</b>. I knew I was in business at this point.
+			</small></p>
+	</div>
+
+	<p>
+		I actually expected it to be-upside down, and this was easily fixed by inverting the T-axis in my vertex
+		shader where I derive my texture-coordinates per-vertex. The noise and tripling I figured was probably a
+		mis-match between amount of data expected and amount of data actually in the image buffer. Thinking about
+		it the buffer had 320x200 bytes in it, but I was expecting 320x200x3 (x1 byte each for red, blue, and green
+		channels for each pixel). I hoped that there wasn't some special format for colour values, or some special
+		bit-encoded custom format for each pixel. This didn't sound right though - less than 256 colours per pixel
+		wouldn't be enough for DOOM's quite rich colours. It had to something to do with the palette system that
+		Carmack mentioned in the README as an expected difficulty. Anyway, keeping this on the back-burner I flipped
+		the display and added keyboard controls for ESCAPE, ENTER and UPARROW. I got what I had hoped for:
+	</p>
+
+	<div class="centre">
+		<img src="../images/doomhack1.png" /><br />
+		<p><small>
+				The ESCAPE and ENTER buttons let me bring up the menu (phew, it worked!), and start E1M1. When UPARROW let
+				me actually move in 3d I knew I was about to crack the whole thing. The game loop and movement motion
+				worked perfectly!
+			</small></p>
+	</div>
+
+	<p>
+		I saw an article <a href="http://zdoom.org/wiki/palette">here</a> about the colour palettes used in different games
+		based on the Doom engine. It
+		looks like they used a single look-up table which could be replaced for different game art styles. They
+		could even change the palette in-game to have special effects like whole-screen flashes or whole-screen
+		red when the player is hurt. Neat. This had to be what I was assuming was the final image - the 320x200
+		bytes buffer. Each value wasn't a colour at all, but an arbitrary combination of colours. This meant that
+		there was a look-up table in the main code somewhere which would set the red, blue, and green values of
+		each palette index. I dug around (well, fgrepped) until I found it. And there it was - exactly what I
+		needed for my image. I just reversed this palette-encoding function to "correct" my image buffer from
+		320x200 palette indices to 320x200x3 RGB values, 8-bits per channel. I figured X must have already been
+		asking for this, but nope, their display function was taking the palette as a function parameter to the X
+		display function (what the hell X, what kind of weirdo 1980s display are you?).
+	</p>
+
+	<div class="centre">
+		<img src="../images/doomhack2.png" /><br />
+		<p><small>
+				ULTIMATE VICTORY! I never thought I would get this far with such old code, written by other people.
+				I scaled up to 640x400. Because I'm sampling a texture I can resize my viewport to any dimensions and it
+				will work - I'll try to keep to factors of 320x200 though.
+			</small></p>
+	</div>
+
+	<p>
+		So, I tested it, and it runs on my 32-bit and 64-bit machines, and I know I can easily compile the same
+		code on Windows 32 and 64-bit now too! Apple should work, as long as it doesn't mind compiling in 32-bit
+		mode on the newer 64-bit machines. I don't fancy fixing all the pointers (there are hundreds and hundreds).
+	</p>
+
+	<p>
+		I got a lot more of the keyboard keys working, although my code is a bit messy. It also runs Doom II!
+		I can turn on anti-aliasing to fix most of the original pixellation-due-to-scaling issues in a nice way,
+		but leaving the filters in <tt>GL_NEAREST</tt> feels right for now.
+	</p>
+
+	<div class="centre">
+		<img src="../images/doomhack3.png" /><br />
+		<p><small>
+				IDBEHOLD the aliasing!
+			</small></p>
+	</div>
+
+	<p>
+		The entire process took 2 evenings of my gamedev time. Always worth it challenging yourself to new things!
+		I'll tidy it up, add the rest of the keyboard controls, and post the code somewhere. There are loads of
+		great Doom ports, but I think this might be the most minimal whilst reliably working. Stuff I didn't do:
+	</p>
+
+	<ul>
+		<li>Finish the keyboard controls</li>
+		<li>Recreate the sound system in a multi-platform way (OpenAL might be okay - FMOD or IrrKlang better)</li>
+		<li>Improve the efficiency of frame-drawing (who cares, it only has to run at 35Hz)</li>
+		<li>Fix a couple of crash-bugs in the original source (one of the "are you sure you want to quit?" messages
+			is stack smashing) - there are some pretty naughty hidden quit messages in there btw.</li>
+		<li>Fiddle with the original code - weapons, baddies, etc.</li>
+	</ul>
+
+	<h2>Met John and Brenda Romero</h2>
+
+	<p>
+		On a related note, I also met Brenda and John Romero after a talk at DIT in Dublin, and got John to sign
+		my Doom poster! Chatted about Dangerous Dave.
+	</p>
+
+	<div class="centre">
+		<img src="../images/antonromero.png" /><br />
+		<p><small>
+				We're not worthy!
+			</small></p>
+	</div>
+
+
+</body>
+
+</html>

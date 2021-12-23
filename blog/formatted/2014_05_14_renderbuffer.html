@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2014_05_14_renderbuffer</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>OpenGL Renderbuffer vs. Depth Texture Attachment</h2>
+
+	<p>
+		If you want to do any multi-pass rendering or post processing technique in
+		OpenGL you need to set up a secondary <tt>framebuffer</tt>. Your first pass
+		renders the normal 3d scene to the framebuffer, where you typically store the
+		fragment output in a colour texture that fits your viewport. In a subsequent
+		pass you might add a blur or some image processing thing. Using the default
+		framebuffer (the one normally in use) you render a quad covering the screen and
+		sample the texture from the first pass.
+	</p>
+
+	<p>
+		In order to make sure that you still have <b>depth testing</b> (so that farther
+		away things aren't drawn over the top of closer things) in your secondary
+		framebuffer you need to attach an additional depth buffer to it because it's no
+		longer using the default depth buffer. There are 2 apprarent options for this
+		in OpenGL:
+	</p>
+
+	<ol>
+		<li>Attach something called a <tt>renderbuffer</tt> to the framebuffer</li>
+		<li>Attach a normal OpenGL <tt>texture</tt> with its format set to
+			<tt>GL_DEPTH_COMPONENT</tt> or some specific 16/24/32-bit version of that.</li>
+	</ol>
+
+	<p>
+		The OpenGL <a href="http://www.opengl.org/wiki/Renderbuffer_Object">wiki suggests</a>
+		using the texture when you need to sample the depth
+		values later on (such as in shadow mapping), and using the Renderbuffer for
+		everything else. I think David Wolff's book does this too from memory...anyway
+		I always thought "renderbuffer" was a bit odd-sounding for something that was
+		basically a depth buffer, and frankly I spend most of my time with students
+		explaining the weird naming conventions of GL, so I asked <a
+			href="https://twitter.com/capnramses/status/466500320990736384">
+			about it on Twitter</a> this morning.
+	</p>
+
+	<p>
+		Apparently the 'renderbuffer' name is a throw-back to support for an earlier
+		implementation of MSAA (multi-sample anti-aliasing). As suggested I have tried
+		it. I took a simple framebuffer switching demo
+		<a href="https://antongerdelan.net/opengl/framebuffers.html">as described here</a>
+		and put an <tt>if</tt> statement in to try both options, right after where I
+		build my secondary framebuffer:
+	</p>
+
+	<textarea rows=37>
+if (use_depth_texture) {
+  // depth texture instead
+  GLuint depth_tex;
+  glGenTextures (1, &depth_tex);
+  glActiveTexture (GL_TEXTURE0);
+  glBindTexture (GL_TEXTURE_2D, depth_tex);
+  glTexImage2D (
+    GL_TEXTURE_2D,
+    0,
+    GL_DEPTH_COMPONENT,
+    g_gl_width,
+    g_gl_height,
+    0,
+    GL_DEPTH_COMPONENT,
+    GL_UNSIGNED_BYTE,
+    NULL
+  );
+  glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  // attach depth texture to framebuffer
+  glFramebufferTexture2D (
+    GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_tex, 0);
+} else {
+  // create a renderbuffer which allows depth-testing in the framebuffer 
+  GLuint rb = 0;
+  glGenRenderbuffers (1, &rb);
+  glBindRenderbuffer (GL_RENDERBUFFER, rb);
+  glRenderbufferStorage (
+    GL_RENDERBUFFER, GL_DEPTH_COMPONENT, g_gl_width, g_gl_height
+  );
+  // attach renderbuffer to framebuffer
+  glFramebufferRenderbuffer (
+    GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rb);
+}</textarea>
+
+	<p>
+		I set up a scene with 2 spheres, one behind the other, to make sure that depth
+		testing was working. I swapped the rendering order around to be sure - turns out
+		I had forgotten to enable depth testing first...easy to fix!
+	</p>
+
+	<p>
+		I expected the texture might be a bit slower but it wasn't - no big difference.
+		In newer OpenGL - (4.2 I think?) You can use the generic texture storage functions
+		instead which are a bit less verbose, so that's not really a big deal either.
+		It's pretty much the same sort of thing, except that the name is less ambiguous
+		than "renderbuffer" (what buffer isn't used in rendering?), and if you want to you can sample the texture later.
+		Apparently 3.2 and newer can handle depth textures. I don't think WebGL has them
+		yet - I recall doing something gross to store depths in a colour texture to get
+		shadows working. What I would really prefer (to keep it simple) would be
+		something like: <tt>glEnableDepthTesting (my_fbo, 32);</tt> and just not expose the
+		messy bits at all. It would be trivial to write this for myself of course, but if it were
+		like this to begin with <u>it would be easier to learn</u>.
+	</p>
+
+	<p>Thanks <a href="https://twitter.com/g_truc">@g_truc!</a></p>
+
+</body>
+
+</html>

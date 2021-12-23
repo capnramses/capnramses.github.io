@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-US">
+<head>
+<meta name="generator" content=
+"HTML Tidy for Linux/x86 (vers 1st November 2003), see www.w3.org" />
+<title>HTML5 Audio and Video</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="duration" content="90" />
+
+<!-- style -->
+<link rel="stylesheet" href="styles/slidy.css" type="text/css" />
+<link rel="stylesheet" href="styles/burntorange.css" type="text/css" />
+<script src="scripts/slidy.js" charset="utf-8" type="text/javascript">
+
+</script>
+</head>
+<body>
+
+<div class="background" />
+
+
+<!-- THE FIRST SLIDE -->
+<div class="slide">
+<h1>Media Playback in HTML5<small><grey>
+<br/>Dr Anton Gerdelan gerdela@scss.tcd.ie
+</grey></small>
+</h1>
+
+<h2>Previously</h2>
+<ul>
+<li>Embed <u>entire</u> media file. Play with media player <b>plug-ins</b>. Chug chug chug...</li>
+<li>Streaming with proprietary tech like flash e.g. youtube</li>
+</ul>
+
+<h2>HTML5</h2>
+<ul>
+<li>Finally has <tt>audio</tt> and <tt>video</tt> tags for streaming</li>
+<li>Browsers supply controls/media player (no plug-ins)</tt></li>
+<li>Can manipulate more precisely <i>via</i> JavaScript</li>
+<li>Some issues with <a href="http://en.wikipedia.org/wiki/HTML5_video#Browser_support">formats</a> across browsers</li>
+<li>Mozilla examples: https://developer.mozilla.org/en-US/docs/HTML/Using_HTML5_audio_and_video</li>
+</ul>
+
+</div>
+
+<div class="slide">
+<h1>Example</h1>
+
+<video width="512" controls>
+  <source src="https://antongerdelan.net/crongdor/video/crong_gl4_rtvideo_test.mp4" type="video/mp4">
+  <source src="https://antongerdelan.net/crongdor/video/crong_gl4_rtvideo_test.webm" type="video/webm">
+  Your browser is not HTML5-compliant.
+</video>
+
+<textarea cols=110 rows=6>
+<video width="512" controls>
+  <source src="https://antongerdelan.net/crongdor/video/crong_gl4_rtvideo_test.mp4" type="video/mp4">
+  <source src="https://antongerdelan.net/crongdor/video/crong_gl4_rtvideo_test.webm" type="video/webm">
+  Your browser is not HTML5-compliant.
+</video></textarea>
+
+<ul>
+<li>video tag with controls attribute</li>
+<li>added 2 file sources to support FF/Chrome/Safari/etc.</li>
+<li>any other browsers get the "sorry" message</li>
+</ul>
+
+</div>
+
+<div class="slide">
+<h1>Formats Overview</h1>
+
+<ul>
+<li><b>container</b> file holds audio and/or video data</li> 
+<li>data is encoded and decoded in one of several alternative formats (<b>codec</b>)</li>
+<li>codec can be <b>lossless</b> (compressed without losing any data)</li>
+<li>or <b>lossy</b> (smaller files, but less-important data is lost)</li>
+<li>browsers have several codecs, but they are not consistent</li>
+</ul>
+
+<h2>Ogg container file</h2>
+<ul>
+<li>Commonly used <b>Theora</b> (lossy video), <b>vorbis</b> (lossy audio -
+like mp3) or <b>FLAC</b> (lossless audio).</li>
+<li>Better quality than mp3 and avoids licence issues</li>
+<li>Most browsers (not Apple or Microsoft)</li>
+</ul>
+</div>
+
+<div class="slide">
+<h1>Formats Overview contd.</h1>
+
+<h2>mp4 (MPEG-4) container file</h2>
+<ul>
+<li>Commonly used <b>H.264</b> video (high quality lossy) and <b>FAAC</b> (audio)</li>
+<li>Apple and some others</li>
+</ul>
+
+<h2>webm container file</h2>
+<ul>
+<li>Commonly used <b>VP8</b> video and <b>vorbis</b> (audio)</li>
+<li>HTML5 standard. Not Apple or Microsoft</li>
+</ul>
+
+</div>
+
+<div class="slide">
+<h1>Making a Website with Media. Problem?</h1>
+<ul>
+<li>how do we encode video/audio in 2 different formats?</li>
+</ul>
+<ol>
+	<li>try to get the raw, <b>uncompressed</b> recording (lossy&rarr;lossy=nasty)
+		<ul>
+			<li>.raw or .wav file (not mp3 or ogg)</li>
+			<li>sequence of image files in camera's raw format</li>
+			<li>.jpeg is lossy so bad, but may be the best the camera can do</li>
+		</ul>
+</li>
+<li>load into a non-proprietary tool like <b>Audacity</b> or <b>Avidemux</b> so
+that you are not limited to WMV or QuickTime. Adobe Premier Pro (commercial), OpenShot (linux).</li>
+<li>best case scenario for video - numbered sequence of uncompressed images.
+"Import sequence" or drag into editor - it builds video (like making a GIF). Export.</li>
+</ol>
+</div>
+
+<div class="slide">
+<h1>Castle Thunder Exported From Audacity</h1>
+
+<ul><li>Try leaving out the ogg on Firefox or the mp4 on Safari</li></ul>
+
+<audio controls>
+	<source src="Castle_thunder.m4a" type="audio/mp4">
+	<source src="Castle_thunder.ogg" type="audio/ogg">
+  Your browser does not support HTML5 audio.
+</audio>
+
+<textarea rows=6 cols=75>
+<audio controls>
+  <source src="Castle_thunder.m4a" type="audio/mp4">
+  <source src="Castle_thunder.ogg" type="audio/ogg">
+  Your browser does not support HTML5 audio.
+</audio></textarea>
+
+<ul>
+<li>Video is a bit trickier because you need to specify video <b>and</b> audio
+codecs for each file, and they need to match up to the container</li>
+<li>also need to select a <b>frame rate</b> that matches your capture rate. commonly
+29.7 Hz or 25 Hz</li>
+</ul>
+
+</div>
+
+<div class="slide">
+
+<h1>Summary: HTML5 Media</h1>
+
+<ul>
+<li>Streaming without Flash. No plug-ins. Controls and codecs in browser.</li>
+<li>Some file format issues with cross-browser support</li>
+<li>Some assembly required (but fun)</li>
+<li>Can use JavaScript to edit playback (see Mozilla dev network page)</li>
+<li><b>reminder: poll about coursework progress/difficulty</b></li>
+</ul>
+<br /><br />
+<table>
+<caption><b>Some Good Video Encoding Choices</b></caption>
+<tr><td><b>container</b></td><td><b>video codec</b></td><td><b>audio codec</b></td></tr>
+<tr><td><a href="http://en.wikipedia.org/wiki/Ogg_video#Native_browser_playback">ogg</a> (Mozilla/Google/Opera)</td><td>libtheora</td><td>libvorbis</td></tr>
+<tr><td><a href="http://en.wikipedia.org/wiki/WebM_Project">WebM</a> (HTML5; Mozilla, Opera, Google)</td><td>libvpx (VP8)</td><td>libvorbis</td></tr>
+<tr><td><a href="http://en.wikipedia.org/wiki/QuickTime">mp4</a> (Quicktime/Safari)</td><td>libx264</td><td>libfaac</td></tr>
+</table>
+
+</div>
+
+</body>
+</html>

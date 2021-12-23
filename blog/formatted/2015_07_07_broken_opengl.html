@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2015_07_07_broken_opengl</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>Animating the Frankenstein Monster:<br />"Working Around the Broken Bits of OpenGL"</h2>
+
+	<p>
+		<i>
+			Here follows the woeful Tale of my Adventure distributing OpenGL Software,
+			and here find you lists of particular capricious and untrue OpenGL Features to
+			avoid using.
+		</i>
+	</p>
+
+	<h3>The Multi-Platform Game</h3>
+
+	<p>
+		I've been making a game in OpenGL for several years. I want it to have some
+		multi-platform support such that it runs on all my friends' desktops that
+		support some sort of shader-based graphics; Windows, Apple, or Linux. I have
+		the following builds:
+	</p>
+
+	<ul>
+		<li>Windows 32-bit</li>
+		<li>GNU/Linux 32-bit</li>
+		<li>GNU/Linux 64-bit</li>
+		<li>Apple 64-bit</li>
+	</ul>
+
+	<p>
+		I found the 32-bit Windows build works just as well on 64-bit Windows, so I
+		don't bother with the mess of an additional build. All modern Apple desktops
+		are 64-bit. The biggest problem here was actually Visual Studio - the
+		redistributable packages just don't redistribute properly to different Windows
+		systems. It was much less BS to just use MinGW with GCC - just a couple of
+		library files to drop in. Apple and Linux have terrible native support for
+		finding local dynamic libraries (for poorly thought-out security reasons
+		apparently). You have to jump through some extra, and different, hoops to tell
+		the binaries where to find any included dynamic libs - best best is to
+		statically link anything that isn't a native windowing library or a
+		licence-protected library.
+	</p>
+
+	<h3>OpenGL Versions Widely Supported</h3>
+
+	<p>
+		I found I can still do some version of modern shader-based OpenGL on all my
+		target systems, even those using integrated Intel chips on laptops. However,
+		there is a <b>big problem</b> here. There is no one single version of OpenGL
+		that runs on all of them. I have:
+	</p>
+
+	<ul>
+		<li>Modern GPUs on Windows or Linux proprietary drivers; OpenGL up to 4.5</li>
+		<li>Older GPUs on Windows or Linux proprietary drivers; OpenGL up to 3.0</li>
+		<li>Integrated GPUs on Linux using MESA open-source drivers; OpenGL up to 2.1</li>
+		<li>Apple systems supporting <u>only</u> OpenGL 3.3 or 4.1</li>
+		<li>Older Apple systems supporting <u>only</u> OpenGL 3.2</li>
+		<li>Older Apple systems supporting up to OpenGL 2.1</li>
+	</ul>
+
+	<p>
+		Older Apple OS X stops shy of being able to support tessellation and the
+		latest implementation doesn't support compute
+		shaders - what a waste of rare earth minerals and slave labour on expensive GPU hardware
+		components that never get used! This rules out using any really modern GL
+		stuff at all - if you want that you'd have to give up Apple altogether, and
+		1/2 of my friends use these things.
+	</p>
+
+	<p>
+		I want the same game experience to run on all platforms - I don't want to build
+		advanced features that only run on a few builds, so I'm happy to do as
+		<a href="http://richg42.blogspot.ie/2014/05/things-that-drive-me-nuts-about-opengl.html">others</a>
+		have <a href="http://www.joshbarczak.com/blog/?p=154">suggested</a> and use a
+		lowest-common denominator if possible. A <tt>min()</tt> of OpenGL
+		functionality, if you will.
+	</p>
+
+	<p>
+		I find that there are many extensions (read "plug-ins") available to even
+		OpenGL 2.1-only machines, that are
+		<a href="http://feedback.wildfiregames.com/report/opengl/">very widely supported</a>.
+		I created my own extensions-test software that I got all my friends to try, so
+		I have my own statistics. This means I can use OpenGL 2.1 and retro-fit many of
+		the modern features from newer versions quite reliably.
+	</p>
+
+	<p>
+		However, <b>Apple is a problem!</b> It seems I need to support <u>3 different versions
+			of OpenGL</u> just to cover these systems. I tried - the newer systems simply
+		will not run anything non-trivial with OpenGL 2.1. It turns out though, that if you
+		<a href="http://www.glfw.org/faq.html">ask to use OpenGL 3.2 (core forward-compat.)</a> from the
+		GLFW3 library, which I use, it will automatically get the newest of 4.1, 3.3,
+		or 3.2 available on the machine. We can breathe a sigh of relief here, because
+		I can just code to the 3.2 interface and it will work in the newer ones.
+	</p>
+
+	<h3>OpenGL 2.1 with Extensions and OpenGL 3.2</h3>
+
+	<p>
+		So, It seems I have to go with supporting 2 different versions of OpenGL: 2.1
+		with some extensions to bump it up to modern GL behaviour, and 3.2 core
+		forward, which will generalise to 3.3 and 4.1 also. To get 2.1 to behave like
+		3.2 I need to have the following extensions:
+	</p>
+
+	<ul>
+		<li><tt>GL_ARB_vertex_array_object</tt> - VAOs - 88% support</li>
+		<li><tt>GL_ARB_framebuffer_object</tt> - MIP-maps and FBOs - 93% support</li>
+		<li><tt>GL_ARB_framebuffer_sRGB</tt> - gamma-correction - 86% support</li>
+		<li><tt>GL_ARB_uniform_buffer_object</tt> - UBOs - 68% support</li>
+	</ul>
+
+	<p>
+		Vertex array objects are a convenience for coding, and I decided to use them.
+		All my friends' machines supported this. Framebuffer objects add additional
+		post-processing features, and I use them for several special effects. All my
+		friends' machines supported this. sRGB allows automatic colour and
+		gamma-correction with FBOs, and I used this, but I have since heard terrible
+		things about the implementations from a Unity3D person. Uniform buffer objects
+		would add a huge performance boost to my biggest rendering bottleneck, but only
+		some of my friends' machines supported this, so I didn't use it. It was too
+		much of a hassle to code it as an optional feature - it would mean writing
+		a different version of all the shaders - and the systems that didn't
+		have it were the ones that actually needed it.
+	</p>
+
+	<div class="centre">
+		<img src="../images/crong_gfx_menu.png" /><br />
+		<i><small>In-game graphics menu. They greyscale filter is a framebuffer effect.
+				Point sprites are visible in the background, running properly on AMD's linux
+				driver.</small></i>.
+	</div>
+
+	<p>
+		I default the Apple build to 3.2 and the Windows build to 2.1 in a settings
+		file. The user can change the version in an in-game menu or in the settings
+		file directly.
+		This seems a very conservative choice, <i>"What could go wrong?"</i> you might
+		wonder...
+	</p>
+
+	<h3>Multiple Shader Versions and Custom Tools</h3>
+
+	<p>
+		I have to support 2 different versions of GLSL shaders. It's a waste of time
+		manually writing a <tt>#version 120</tt> shader and a slightly different
+		<tt>#version 150</tt> shader for everything (although I did actually do this
+		originally). I wrote a small parser
+		tool that reads my whole folder of GLSL 1.2.x shaders for OpenGL 2.1 and
+		makes a few small changes to spit out the set of GLSL 1.5.x shaders for
+		OpenGL 3.2. Not a big deal in the end, but a very silly lack of foresight in
+		the design of GLSL.
+	</p>
+
+	<p>
+		The upside is that I could have made a few custom additions to GLSL in my
+		parser - I have one for WebGL that adds <tt>#include</tt> support and allows
+		fragment and vertex shaders to sit in sections of the same file - easy enough.
+		I do re-use my lighting code in about 8 shaders, so it would make sense to
+		have it all in one include script. There is an OpenGL extension providing
+		include support, but at 26% support it's safer to roll your own. It would be
+		possible to do custom optimisations and fire custom warnings in such a tool,
+		but would not be so useful for a small project.
+	</p>
+
+	<h3>List of Broken OpenGL Features to Avoid</h3>
+
+	<p>
+		Trial-by-fire has burped up a huge glut of broken, unreliable pieces of the
+		core OpenGL that I had to avoid using. Usually a feature works on my
+		development machine, but the wheels fall off on some other system (usually the
+		Apple implementation of OpenGL). This might be useful for others - maybe we
+		can trade lists? Some of these might be fix-able unintended use of the state
+		machine.
+	</p>
+
+	<table>
+		<tr>
+			<td>Compute shaders</td>
+			<td>Not widely supported on target systems.</td>
+		</tr>
+		<tr>
+			<td>Tessellation shaders</td>
+			<td>Not widely supported on target systems.</td>
+		</tr>
+		<tr>
+			<td>Geometry shaders</td>
+			<td>Had issues on Apple but might be interface confusion.</td>
+		</tr>
+		<tr>
+			<td>Integer vertex attributes</td>
+			<td>I think you can't use variables as uniform array indices.</td>
+		</tr>
+		<tr>
+			<td>Instanced drawing</td>
+			<td>Geometry visually explodes on Apple (may again be interface issue). Built-in GLSL integers break.</td>
+		</tr>
+		<tr>
+			<td>Newer VBO streaming</td>
+			<td>Not widely supported on target systems.</td>
+		</tr>
+		<tr>
+			<td>"Attributeless" rendering</td>
+			<td>Not widely supported on target systems. Broken on Apple.</td>
+		</tr>
+		<tr>
+			<td>Transform feedback shader modes</td>
+			<td>Not widely supported on target systems.</td>
+		</tr>
+		<tr>
+			<td>Uniform buffer objects</td>
+			<td>Not widely supported on target systems.</td>
+		</tr>
+		<tr>
+			<td>Uniform structs</td>
+			<td>I don't use them but others report problems on Apple.</td>
+		</tr>
+		<tr>
+			<td>2d array index of matrix uniform</td>
+			<td>Convention different on Apple. Don't use.</td>
+		</tr>
+		<tr>
+			<td>Uniform location of matrix without index</td>
+			<td>Broken. Explicitly get index of first component; <tt>"my_matrix[0]"</tt>.</td>
+		</tr>
+		<tr>
+			<td>Point rendering</td>
+			<td>Had problems on some implementations (variable name conflict?) with varyings.
+		</tr>
+		<tr>
+			<td><tt>PointSize()</tt> with attenuation</td>
+			<td>Deprecated - control this in shaders.
+		</tr>
+		<tr>
+			<td><tt>Enable(POINT_SPRITE)</tt></td>
+			<td>Enable this in 2.1 but not 3.2 for point sprites.
+		</tr>
+		<tr>
+			<td>Point sprites textures</td>
+			<td><tt>GenerateMipmap()</tt> and <tt>gl_PointCoord</tt> broken in Mesa.</td>
+		<tr>
+			<td><tt>LineWidth()</tt></td>
+			<td>Unofficially deprecated. Don't use line rendering.
+		</tr>
+		<tr>
+			<td>S3 Texture Compression</td>
+			<td>Extension crashes / not detected properly on Apple.</td>
+		</tr>
+		<tr>
+			<td>Skeletal animation shaders</td>
+			<td>Integer attributes for indexing arrays are unreliable. Cast from floats.</td>
+		</tr>
+		<tr>
+			<td>sRGB framebuffers</td>
+			<td>I had no problems but they are reported to be unreliable by others - apparently sRGB textures are fine.</td>
+		</tr>
+		<tr>
+			<td><tt>rand()</tt> etc. in GLSL</td>
+			<td>Were never implemented properly. Don't use.</td>
+		</tr>
+		<tr>
+			<td><tt>const</tt> variables in GLSL</td>
+			<td>Were never implemented properly. Don't use.</td>
+		</tr>
+		<tr>
+			<td>Naming a shader variable <tt>degrees</tt> or <tt>radians</tt></td>
+			<td>Reserved names! Should produce an error. Linux/Windows drivers don't.</td>
+		</tr>
+	</table>
+
+	<p>
+		<i>I'll update this list when I remember more issues that I had</i>.
+	</p>
+
+	<h3>Additional Multi-Platform Complications</h3>
+
+	<p>
+		Of course there are some small issues with default states in the GL state
+		machine differing between implementations. When developing you can assume you
+		have things right, but have your point-sprite textures flip upside-down on
+		Apple. You just have to be explicit with as many default states as you can -
+		Apple's point textures are opposite-axis to the others. If I get a few more
+		I'll make a list, but I usually specify them all out of fear so I probably
+		won't catch them.
+	</p>
+
+	<p>
+		The new high-res "Retina" displays for Apple have been an unexpected problem.
+		You have to do a few extra checks and balances to detect these and set up
+		viewports etc. with the right size. The window treats the display area like a
+		regular-sized window, and the desktop manager will automatically up-size
+		itself. The in-app stuff needs to explicitly specify the higher resolution -
+		you can't re-use the size you set the window to. In GLFW3 you can query
+		<tt>glfwGetFramebufferSize()</tt> to get the real resolution. This presents a
+		somewhat annoying problem for any in-game resolution-chooser to adjust to.
+	</p>
+
+	<p>
+		Techniques that index an array of uniforms will eventually run over the maximum
+		number of uniform floats allowed on lower-end systems. Long lists of matrices
+		may need to be moved into buffers.
+	</p>
+
+	<p>
+		<b>By far the biggest problem</b> with OpenGL distribution is that the shader
+		compiler is unique to each implementation - they all have different problems.
+		Worse, some of compilers will silently fix bugs without complaining, so you
+		get many, many, many <i>"It worked on my machine!"</i> situations. Terrible
+		design. A terribly expensive design for those looking to make money on their
+		work! The official reference compiler sucks because it only tells you if
+		<u>you</u> screwed up (which never happens, unless you get confused with the
+		appalling design of the array literal spec.). Some shader compilers, for
+		example, will allow C-style array literals. These definitely blow up on most
+		shader compilers. You can print all the logs, and these are pretty good, but
+		not great.
+	</p>
+
+</body>
+
+</html>

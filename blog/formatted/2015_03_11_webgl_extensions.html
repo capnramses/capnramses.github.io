@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2015_03_11_webgl_extensions</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>Depth-of-Field Demo</h2>
+
+	<p>
+		I talked about doing some depth-of-field focus demos recently. It's a very
+		popular camera focus effect that basically blurs stuff out increasingly as it's
+		farther away from some point of interest. The basic version renders the depth
+		map out, and then a post-processing shader reads this, and uses the depth value
+		to decide how much blur to apply. I did a
+		<a href="https://antongerdelan.net/demos/webgl_depth_of_field/">WebGL
+			depth-of-field demo</a>
+		of this yesterday. You can dial in a depth value to use as the "in-focus" range
+		from the camera. The shader splits depths either side of this into a "far" and
+		"very far" range. The far range has a 3x3 linear blur kernel applied. The very
+		far range has a 5x5 kernel of blur. It seems to work quite well.
+	</p>
+
+	<div class="centre">
+		<img src="../images/dof_demo.png" /><br />
+		<small><i>The DOF demo with range 150 (about half way into the cube field).</i>
+		</small>
+	</div>
+
+	<h3>WebGL Extensions</h3>
+
+	<p>
+		First problem - WebGL doesn't have writing to depth textures as standard. You
+		can either do the old, clunky, horrible, way of manually writing out an to
+		attached texture and re-arranging the bits to whatever format, or you can
+		enable the depth texture extension, which I did.
+	</p>
+
+	<p>
+		You can find a list of all of the extensions for WebGL at the
+		<a href="https://www.khronos.org/registry/webgl/extensions/">WebGL Extension
+			Registry</a>. The way to use an extension is to first test if it exists in the
+		user's browser. I do this right after getting the GL context for the canvas:
+	</p>
+
+	<textarea rows=4>
+var ext = gl.getExtension (name);
+if (!ext) {
+  do something to complain or fall-back
+}</textarea>
+
+	<p>
+		Where <tt>name</tt> is the string as listed on the Registry, i.e.
+		"WEBGL_depth_texture". Confusingly, sometimes all you need to do is check if
+		the extension exists, and other times, you need to retain the extension
+		returned to use as an interface. You need to do this for VAO, anisotropy, and
+		sRGB extensions. I keep these as globals alongside my <tt>var gl;</tt>. I tried
+		all the extensions on the registry, and printed into a paragraph on my web
+		page if they weren't supported. Most of them were in my work machine's Chrome
+		and FireFox.
+	</p>
+
+	<p>
+		Depth textures are worth using, and well supported. Vertex Array Objects (VAO)
+		can significantly tidy up your drawing code, reduce some JavaScript and
+		general overhead, and are also well supported. You have to use the extension
+		as the interface though, so <tt>vao_ext.createVertexArrayOES()</tt> - you can't
+		just use the main <tt>gl.</tt> interface. sRGB colour spaces report good
+		support but actually are kind of broken - I get different bugs and
+		functionality in my Chrome and FireFox, so I'll just do gamma correction the
+		old-fashioned way. Anisotropic filtering for textures has always been an
+		extension for desktop OpenGL too, despite being around since forever, because
+		of some childish copyright nonsense by one of the larger graphics corporations.
+		Worth using to make your textures look nice at angles to the camera - use
+		factor 4.0, the built-in maximum constant appears to be buggy.
+	</p>
+
+	<h3>SSAA</h3>
+
+	<p>
+		One of the limitations of WebGL is that you tend to be forced to work in a
+		small canvas area or viewport. You only have so many pixels to work with then,
+		so any 3d rendering of scenes can start to look pretty bad, despite reasonably
+		good multi-sample anti-aliasing (MSAA) being built into most browsers. One
+		trick here, which I did in my DOF demo there, is to use super-sample
+		anti-aliasing (SSAA), which, in the simplest case, just means rendering to a
+		framebuffer texture and viewport 2x larger than the canvas area, and sampling
+		that later in a normal-sized viewport. If you enable bi-linear filtering on the
+		framebuffer textures you can get some quite sharp-looking images on small
+		display areas <i>via</i> smoke and mirrors and extra processing time.
+	</p>
+
+	<h3>Circle of Confusion</h3>
+
+	<p>
+		It sounds like a Dungeons and Dragons spell, but it's just a more advanced
+		focus blur effect to try next. The limitation of DOF is that your focus is in
+		one dimension (depth), but perhaps you want a mouse cursor to select an
+		arbitrary thing to focus on, and all 3d distances (not just depth) from that to
+		be blurred. I think it should be possible to just use a combination of 2d
+		screen-space position and depth, without needing to store the 3d positions in
+		a buffer.
+	</p>
+
+	<h3>Observations</h3>
+
+	<p>
+		Basically, with a focus-blur effect, you want stuff in the foreground to be
+		blurred, mid-ground to be in focus, surroundings a little blurred, and
+		background to be very blurred. Because we have more pixels for things rendered
+		close to the camera they look less blurry with the same filter than far-away
+		things. Perhaps a better effect would have a very large blur for the foreground
+		- even rendering to a smaller texture or mip-mapped texture with a higher
+		level beforehand might be wise. Then perhaps a medium blur and large blur for
+		the far background. Non-linear blur selection, in other words.
+	</p>
+
+</body>
+
+</html>

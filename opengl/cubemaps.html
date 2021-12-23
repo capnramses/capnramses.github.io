@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Cube Maps: Skyboxes and Environment Mapping - Anton's OpenGL 4 Tutorials</title>
+	<link rel="stylesheet" type="text/../greysans.css" href="../greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+
+	<p><a href="index.html">[index]</a></p>
+	<h1>Cube Maps: Sky Boxes and Environment Mapping</h1>
+	<h4>Anton Gerdelan. Last Updated 2 October 2016</h4>
+
+	<p>
+		OpenGL has a special kind of texture for cubes that allows us to pack 6 textures
+		into it. It has a matching sampler in GLSL that takes a 3d texture coordinate -
+		with R, S, and T, components. The trick here is that we use a 3d direction
+		vector for the texture coordinates. The component with the biggest magnitude
+		tells GL which of the 6 sides to sample from, and the balance between the
+		remaining 2 components tells GL where on that 2d texture to sample a texel
+		from.
+	</p>
+
+	<p>
+		Two popular techniques that make use of cube maps are <b>sky boxes</b>, which
+		provide the illusion of a 3d background behind the scenery, and <b>environment
+			mapping</b>, which can make a very-shiny surface (think lakes, chrome, or car
+		paint) appear to <b>reflect the environment</b> scenery. We can also use it to
+		approximate <b>refraction</b> for translucent materials like water.
+	</p>
+
+	<h2>Sky Box</h2>
+
+	<p>
+		This technique effectively replaces the GL background colour with a more
+		interesting 3d "painted backdrop". The idea with the sky box technique is to
+		have a big box encase the camera as it moves around. If the box appears to be
+		the same distance even when the camera is moving, then we get a <b>parallax</b>
+		effect - the illusion of it
+		being relatively very far away. We don't rotate it as the camera rotates though
+		- this allows us to pan around. If the texture has been well constructed then we won't
+		notice the seams and it will have been projected onto the box so that it <b>appears
+			as if we are inside a sphere</b> when we sample it with our view 3d vector. We can actually
+		use a dome or a sphere instead of a box, but boxes are easier to texture map.
+	</p>
+
+	<p>
+		The size of the box is <u>not going to affect how big it looks</u>. Think about
+		it - if it's moving with the camera it will look exactly the same close up as
+		far away. The size only matters if it intersects with the clip planes - in this
+		case you will see a plane cutting off part of your box.
+		We will <b>draw the box before anything
+			else</b>, and turn off <b>depth-masking</b>. Remember that this means that it
+		doesn't write anything into the depth buffer - any subsequent draws to the same
+		pixel will draw on top of it. Then it is never drawn in front of your scenery,
+		even if it is closer to the camera.
+	</p>
+
+	<h3>Make a Big Cube</h3>
+
+	<p>
+		We need to make a big cube and put it into a vertex buffer. We don't need to add
+		texture coordinates. We are going to be <u>inside</u> the cube, so make sure
+		that you get the winding order of the vertices so that the "front" faces are
+		on the inside. You can load a cube from a mesh file if you like, but I think
+		that's cheating.
+	</p>
+
+	<pre>
+float points[] = {
+  -10.0f,  10.0f, -10.0f,
+  -10.0f, -10.0f, -10.0f,
+   10.0f, -10.0f, -10.0f,
+   10.0f, -10.0f, -10.0f,
+   10.0f,  10.0f, -10.0f,
+  -10.0f,  10.0f, -10.0f,
+  
+  -10.0f, -10.0f,  10.0f,
+  -10.0f, -10.0f, -10.0f,
+  -10.0f,  10.0f, -10.0f,
+  -10.0f,  10.0f, -10.0f,
+  -10.0f,  10.0f,  10.0f,
+  -10.0f, -10.0f,  10.0f,
+  
+   10.0f, -10.0f, -10.0f,
+   10.0f, -10.0f,  10.0f,
+   10.0f,  10.0f,  10.0f,
+   10.0f,  10.0f,  10.0f,
+   10.0f,  10.0f, -10.0f,
+   10.0f, -10.0f, -10.0f,
+   
+  -10.0f, -10.0f,  10.0f,
+  -10.0f,  10.0f,  10.0f,
+   10.0f,  10.0f,  10.0f,
+   10.0f,  10.0f,  10.0f,
+   10.0f, -10.0f,  10.0f,
+  -10.0f, -10.0f,  10.0f,
+  
+  -10.0f,  10.0f, -10.0f,
+   10.0f,  10.0f, -10.0f,
+   10.0f,  10.0f,  10.0f,
+   10.0f,  10.0f,  10.0f,
+  -10.0f,  10.0f,  10.0f,
+  -10.0f,  10.0f, -10.0f,
+  
+  -10.0f, -10.0f, -10.0f,
+  -10.0f, -10.0f,  10.0f,
+   10.0f, -10.0f, -10.0f,
+   10.0f, -10.0f, -10.0f,
+  -10.0f, -10.0f,  10.0f,
+   10.0f, -10.0f,  10.0f
+};
+GLuint vbo;
+glGenBuffers(1, &vbo);
+glBindBuffer(GL_ARRAY_BUFFER, vbo);
+glBufferData(GL_ARRAY_BUFFER, 3 * 36 * sizeof(float), &points, GL_STATIC_DRAW);
+
+GLuint vao;
+glGenVertexArrays(1, &vao);
+glBindVertexArray(vao);
+glEnableVertexAttribArray(0);
+glBindBuffer(GL_ARRAY_BUFFER, vbo);
+glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);</pre>
+
+	<h3>Create a Cube-Map Texture</h3>
+
+	<p>
+		Now, we need to make or find a suitable set of textures for the sky box. There
+		are some great examples at Humus' (Emil Persson's) site:
+		<a href="http://www.humus.name/index.php?page=Textures">http://www.humus.name/index.php?page=Textures</a>,
+		and many older games will have sky box textures that you can experiment with.
+		You might need to swap the "front" and "back" textures around if they are
+		intended for the opposing coordinate system. Cube maps are sometimes stored
+		inside a single texture file, but more often than not, as 6 separate textures.
+		I'll assume that we are loading from 6 separate textures here. Note that we
+		don't generate mip-maps for a sky box because it's always going to be much the
+		same distance from the camera, and we can just choose an appropriately-sized
+		texture. To test my cube I drew a different coloured border onto each textured
+		face to show where the seams were and check if I needed to swap the front and
+		back textures.
+	</p>
+
+	<p>
+		I have a <tt>create_cube_map()</tt> function which takes file names for the 6
+		separate image files, and generates the opengl texture. This will call another
+		function to load the separate image for each of the 6 sides. Note that each side
+		is going to bind to the same texture that we generated - we will pass this as a
+		parameter. Finally we apply some texture filtering to the texture, and the
+		texture handle is passed back as a function parameter.
+	</p>
+
+	<pre>
+void create_cube_map(
+  const char* front,
+  const char* back,
+  const char* top,
+  const char* bottom,
+  const char* left,
+  const char* right,
+  GLuint* tex_cube) {
+  // generate a cube-map texture to hold all the sides
+  glActiveTexture(GL_TEXTURE0);
+  glGenTextures(1, tex_cube);
+  
+  // load each image and copy into a side of the cube-map texture
+  load_cube_map_side(*tex_cube, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, front);
+  load_cube_map_side(*tex_cube, GL_TEXTURE_CUBE_MAP_POSITIVE_Z, back);
+  load_cube_map_side(*tex_cube, GL_TEXTURE_CUBE_MAP_POSITIVE_Y, top);
+  load_cube_map_side(*tex_cube, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, bottom);
+  load_cube_map_side(*tex_cube, GL_TEXTURE_CUBE_MAP_NEGATIVE_X, left);
+  load_cube_map_side(*tex_cube, GL_TEXTURE_CUBE_MAP_POSITIVE_X, right);
+  // format cube map texture
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+}</pre>
+
+	<p>
+		The texture filtering parameters are interesting. Make sure that you set
+		"clamp to edge" for <u>all three</u> components. If you don't clamp to edge then
+		you might get a visible seam on the edges of your textures (we'll see why
+		shortly). We have some bi-linear filtering to clean up any minor aliasing when
+		the camera rotates. The function that loads each image is very similar to the
+		one that we wrote in the texture mapping tutorial, and also uses Sean Barrett's
+		image loader (stb_image):
+	</p>
+
+	<pre>
+bool load_cube_map_side(
+  GLuint texture, GLenum side_target, const char* file_name) {
+  glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
+
+  int x, y, n;
+  int force_channels = 4;
+  unsigned char*  image_data = stbi_load(
+    file_name, &x, &y, &n, force_channels);
+  if (!image_data) {
+    fprintf(stderr, "ERROR: could not load %s\n", file_name);
+    return false;
+  }
+  // non-power-of-2 dimensions check
+  if ((x & (x - 1)) != 0 || (y & (y - 1)) != 0) {
+    fprintf(stderr,
+    	"WARNING: image %s is not power-of-2 dimensions\n",
+    	file_name);
+  }
+  
+  // copy image data into 'target' side of cube map
+  glTexImage2D(
+    side_target,
+    0,
+    GL_RGBA,
+    x,
+    y,
+    0,
+    GL_RGBA,
+    GL_UNSIGNED_BYTE,
+    image_data);
+  free(image_data);
+  return true;
+}</pre>
+
+	<p>
+		The code is almost identical to creating a single 2d texture in OpenGL, except
+		that we bind a texture of type <tt>GL_TEXTURE_CUBE_MAP</tt> instead of
+		<tt>GL_TEXTURE_2D</tt>. Then
+		<tt><a href="http://www.opengl.org/sdk/docs/man4/xhtml/glTexImage2D.xml">glTexImage2D</a>()</tt>
+		is called 6 times, with the macro for each side as the first parameter, rather
+		than <tt>GL_TEXTURE_2D</tt>.
+	</p>
+
+	<h3>Basic Cube-Map Shaders</h3>
+
+	<p>
+		Our vertex shader just needs position the cube and output texture coordinates.
+		In this case a 3d coordinate as a <tt>vec3</tt>. This should be a direction,
+		but I can use the actual local vertex points as a direction because it's a cube.
+		If you think about it, the points along the front face are going to be interpolated
+		with varying values of <var>x</var> and <var>y</var>, but all will have <var>z</var>
+		value -10.0 (or the biggest size in the cube). You don't need to normalise these
+		first - it will still work. The only problem is that the points <u>exactly</u>
+		on the corners are not going to have a "biggest" component, and pixels may
+		appear black as the coordinate is invalid. This is why we enabled clamp-to-edge.
+	</p>
+
+	<p>
+		<b>Note:</b> I've seen other tutorials that manipulate the <var>Z</var> and
+		<var>W</var> components of <tt>gl_Position</tt> such that, after perspective
+		division the <var>Z</var> distance will always be 1.0; maximum distance in
+		normalised device space, and therefore always in the background. <u>This is a
+			bad idea</u>. It will clash, and possibly visibly flicker or draw all-black,
+		when depth testing is
+		enabled. It's better to just disable depth masking when drawing, as we will do
+		shortly, and make sure that it's the first thing that you draw in your drawing
+		loop.
+	</p>
+
+	<pre>
+#version 400
+
+in vec3 vp;
+uniform mat4 P, V;
+out vec3 texcoords;
+
+void main() {
+  texcoords = vp;
+  gl_Position = P * V * vec4(vp, 1.0);
+}</pre>
+
+	<p>
+		The <var>P</var> and <var>V</var> matrices are my camera's projection, and view
+		matrices, respectively. The view matrix here is a special version of the
+		camera's view matrix that <b>does not contain the camera translation</b>. Inside
+		my main loop I check if the camera has moved. If so I build a very simple view
+		matrix and update its uniform for the cube map shader. This camera only can
+		only rotate on the Y-Axis, but you might use a quaternion to generate a matrix
+		for a free-look camera. Remember that view matrices use negated orientations
+		so that the scene is rotated around the camera. Of course if you are using a
+		different maths library then you will have different matrix functions here.
+	</p>
+
+	<pre>
+if (cam_moved) {
+  mat4 R = rotate_y_deg(identity_mat4(), -cam_heading);
+  glUseProgram(shader_programme);
+  glUniformMatrix4fv(V_loc, 1, GL_FALSE, R.m);
+}</pre>
+
+	<p>
+		The fragment shader uses a special sampler; <tt>samplerCube</tt> which accepts
+		the 3d texture coordinate. Other than that there is nothing special about the
+		fragment shader. Use the <tt>texture()</tt> function, but older GL implementations
+		may prefer <tt>textureCube()</tt>.
+	</p>
+
+	<pre>
+#version 400
+
+in vec3 texcoords;
+uniform samplerCube cube_texture;
+out vec4 frag_colour;
+
+void main() {
+  frag_colour = texture(cube_texture, texcoords);
+}</pre>
+
+	<h3>Rendering</h3>
+
+	<p>
+		Use your shaders, and bind your VAO as usual. Remember that we should bind the
+		texture into an active slot before rendering. This time it has a different
+		texture type; <tt>GL_TEXTURE_CUBE_MAP</tt>. With depth-masking disabled it won't
+		write anything to the depth buffer; allowing all subsequently drawn scenery to
+		be in front of the sky box.
+	</p>
+
+	<pre>
+glDepthMask(GL_FALSE);
+glUseProgram(shader_programme);
+glActiveTexture(GL_TEXTURE0);
+glBindTexture(GL_TEXTURE_CUBE_MAP, tex_cube);
+glBindVertexArray(vao);
+glDrawArrays(GL_TRIANGLES, 0, 36);
+glDepthMask(GL_TRUE);</pre>
+
+	<div class="centre">
+		<img src="images/cubemap0.png" width="512px" />
+		<img src="images/cubemap1.png" width="512px" /><br />
+		<small><i>I found this set of sky box textures on Emil Perssons' website, which have a
+				Creative Commons Attribution licence, so they are excellent for demos. (top)
+				points to a corner of the box, viewing the left and front textures, (bottom)
+				points to another corner, viewing the front, and right textures. I
+				suggest testing it with a camera that can rotate.</i></small>
+	</div>
+
+	<h2>Reflection and Refraction with Static Environment Maps</h2>
+
+	<p>
+		So far we have only used specular highlights to show if a surface is highly
+		reflective, which appears as a brightly-coloured dot. Suppose we want to reflect
+		a more detailed image of the sky box or part of the environment onto the
+		surface. If we have a cube map with an image of a brightly-coloured square
+		window on it, then we can use this to create a much more interesting reflection
+		of light on the surface.
+	</p>
+
+	<h2>Reflecting the Sky Box</h2>
+
+	<p>
+		The most common type of environment map just reflects a scene's sky box onto
+		a surface. We can say that this is a "static" environment map because it won't
+		reflect any moving pieces of the scene. It can produce quite a convincing
+		effect as you can see that the sky box matches the reflection as you rotate the
+		view. You don't need to have a sky box displayed for this to work though - an
+		indoor scene might not have any visible sky, but you might have a cube map
+		that is not displayed, but contains an indoor-like cube map which you only use
+		for reflections.
+	</p>
+
+	<div class="centre">
+		<img src="images/diagreflect.png" width="512px" /><br />
+		<small><i>
+				With the incident direction vector from the camera to the surface position,
+				<var>I</var>, we calculate a reflection <var>R</var> around the surface normal
+				<var>N</var>. We use <var>R</var> to sample the cube map, and the texel is then
+				applied to the fragment of the surface.
+			</i></small>
+	</div>
+
+	<p>
+		The principle is very simple. We work out a direction vector from the view point
+		(camera position) to the surface. We then reflect that direction off the surface
+		based on the surface normal. We use the reflected direction vector to sample the
+		cube map. GLSL has a built-in <tt><a
+				href="http://www.opengl.org/sdk/docs/manglsl/xhtml/reflect.xml">reflect()</a></tt>
+		function which takes an input
+		vector and a normal, and produces the output vector. I had some trouble getting
+		this to compile on all drivers, so I prefer to code it manually.
+	</p>
+
+	<p>
+		I loaded a mesh of the Suzanne monkey head, and created a vertex simple shader
+		for it. I calculate the vertex positions and normals in eye space.
+	</p>
+
+	<pre>
+#version 400
+
+in vec3 vp; // positions from mesh
+in vec3 vn; // normals from mesh
+uniform mat4 P, V, M; // proj, view, model matrices
+out vec3 pos_eye;
+out vec3 n_eye;
+
+void main() {
+  pos_eye = vec3(V * M * vec4(vp, 1.0));
+  n_eye = vec3(V * M * vec4(vn, 0.0));
+  gl_Position = P * V * M * vec4(vp, 1.0);
+}</pre>
+
+	<p>
+		The fragment shader calculates the direction
+		vector from the camera to the surface as <tt>incident_eye</tt>; the incident
+		direction in eye space. Note that this is normally <tt>vec3 dir = normalize(to - from)</tt>
+		but the "from" here is the camera position (0,0,0) in eye space. The built-in
+		reflection function then gets the reflected vector, which is converted to
+		world space and used as the texture coordinates.
+	</p>
+
+	<pre>
+#version 400
+
+in vec3 pos_eye;
+in vec3 n_eye;
+uniform samplerCube cube_texture;
+uniform mat4 V; // view matrix
+out vec4 frag_colour;
+
+void main() {
+  /* reflect ray around normal from eye to surface */
+  vec3 incident_eye = normalize(pos_eye);
+  vec3 normal = normalize(n_eye);
+
+  vec3 reflected = reflect(incident_eye, normal);
+  // convert from eye to world space
+  reflected = vec3(inverse(V) * vec4(reflected, 0.0));
+
+  frag_colour = texture(cube_texture, reflected);
+}</pre>
+
+	<p>
+		You can reduce the number of instructions in the shader if you compute the
+		reflection in world space, but then you need a camera world position uniform.
+	</p>
+
+	<div class="centre">
+		<img src="images/romereflect.png" width="512px" />
+		<img src="images/reflectrome3.png" width="512px" /><br />
+		<small><i>Environment maps reflecting the sky box onto a mesh. Using a highly
+				detailed cube map texture will significantly improve the quality of the effect.
+			</i></small>
+	</div>
+
+	<h3>Common Mistakes</h2>
+
+		<ul>
+			<li>My reflection is upside-down or the wrong side! - Check the direction of your incident and normal vectors.
+				Normalise them.</li>
+			<li>My mesh reflections are not smooth like your monkey! - Remember to use interpolated surface normals (set all
+				faces to smooth normals in Blender).</li>
+		</ul>
+
+		<h3>Refraction</h3>
+
+		<div class="centre">
+			<img src="images/diagrefract.png" width="512px" /><br />
+			<small><i>
+					With the incident direction vector from the camera to the surface position,
+					<var>I</var>, we calculate a refraction <var>R</var> which modifies the incident
+					vector based on the surface normal, <var>N</var>, and the ratio of refractive
+					indices, which is the first index (1.0 for air), divided by the second index
+					(1.3333 for water). With the above example, you might use a cube map that
+					displays the interior of a swimming pool, rather than the sky box.
+				</i></small>
+		</div>
+
+		<p>
+			Translucent objects should <b>refract</b> light. This means that it doesn't
+			go straight through; the ray bends when it hits the surface and changes
+			material. Looking into a swimming pool, for example. This works much the same
+			way as reflection, except that we perturb the eye-to-surface vector about the
+			surface normal, instead of reflecting it. The actual change in direction is
+			governed by
+			<a href="http://en.wikipedia.org/wiki/Snell's_law">Snell's Law</a>.
+			GLSL also has a built-in <tt>refract()</tt> function with a vector-based version
+			of Snell's Law. You can modify the previous fragment shader to use this instead
+			of <tt>vec3 reflected</tt>:</p>
+		</p>
+
+		<pre>
+float ratio = 1.0 /1.3333;
+vec3 refracted = refract(incident_eye, normal, ratio);
+refracted = vec3(inverse(V) * vec4(refracted, 0.0));</pre>
+
+		<p>
+			Where the <tt>ratio</tt> is the ratio between the <b>refractive index</b> of the
+			first material (air, 1.0), and the second material (water, 1.3333).
+			You can find some indices for common materials on
+			<a href="http://en.wikipedia.org/wiki/List_of_refractive_indices">Wikipedia</a>.
+			Note that the monkey head is single-sided; we are
+			ignoring the effect of the light traveling through the back of the head, where
+			it should refract a second time. So you can say that it's not very realistic,
+			but fine for simple surfaces.
+		</p>
+
+		<div class="centre">
+			<img src="images/romerefractplain.png" width="512px" />
+			<img src="images/romerefract.png" width="512px" /><br />
+			<img src="images/romerefract2.png" width="512px" /><br />
+			<img src="images/refractrome3.png" width="512px" /><br />
+			<small><i>
+					Refraction using indices for air (top), water (second), and cubic zirconia
+					(bottom two).
+				</i></small>
+		</div>
+
+		<p>
+			You can imagine that with the right combination of Phong, vertex displacement,
+			and refraction environment map, that you could make a pretty convincing water
+			visualisation.
+		</p>
+
+		<h3>Common Mistakes</h2>
+
+			<ul>
+				<li>My refracted image looks magnified or blocky! - Try using higher-resolution cube map textures.</li>
+				<li>My image is upside-down! - This is probably correct. Look at photos of refractions of real, similar surfaces
+					(i.e. sphere, pool). Check that your index ratio is correct (first / second).</li>
+			</ul>
+
+			<h2>And For Experts...Dynamic Environment Maps</h2>
+
+			<p>
+				It is possible to use the entire scene, including all the moving objects, in an
+				environment map. If you are already comfortable with binding textures to
+				framebuffers (see later tutorials) then you can bind 6 textures as target
+				outputs from 6 framebuffers. You will render the scene 6 times from the point of
+				view of the object that is going to be environment-mapped. Once pointing up,
+				once down, once left, etc. The output textures will be combined into the cube
+				map. The perspective matrix should have a field of view of 90 degrees so that
+				the 6 frustums line up exactly into a cube.
+			</p>
+
+			<ol>
+				<li>Create 6 colour textures</li>
+				<li>Create 6 depth textures</li>
+				<li>Create 6 framebuffers</li>
+				<li>Attach a colour texture and depth map to each framebuffer</li>
+				<li>When rendering bind each framebuffer and draw in 1 of 6 fixed directions</li>
+				<li>Create a cube map from 6 textures</li>
+			</ol>
+
+			<p>
+				We looked at how to manually create a cube-map at the beginning of the article.
+				It's also possible to attach all 6 depth and colour maps to a single framebuffer
+				and render all 6 views in a single pass. To do this you will need to use a
+				geometry shader that redirects the vertex positions to separate
+				<tt>gl_Layer</tt>s. This might give you a small computational improvement if
+				you are computing dynamic environment maps in real-time, but I find geometry
+				shaders to be unstable across the range of drivers and would not recommend this
+				option.
+			</p>
+</body>
+
+</html>

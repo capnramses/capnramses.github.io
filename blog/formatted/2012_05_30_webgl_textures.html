@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2012_05_30_webgl_textures</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2 id="30may2012">30 May 2012</h2>
+	<h3>Wavefront .obj to JSON Mesh Conversion</h3>
+
+	<div class="centre">
+		<img src="../images/doormeshjson.png" width="256" /><br />
+		<small><i>On the left is the mesh loaded from a JSON file that I converted from an .obj file.</i></small>
+	</div>
+
+	<p>
+		Here is my "dungeon door" test mesh that I use instead of teapots. It was really easy to convert an .obj to JSON
+		format in the end; I didn't need to use an exporter or a Python
+		script, I just re-used my C .obj parser code and got it to write all the vertex points to a JSON file. Excellent.
+		I'll upload the programme when it's a little more fully-featured.
+		Now...textures.
+	</p>
+
+	<h3>Texture Loading</h3>
+
+	<div class="centre">
+		<a href="https://antongerdelan.net/demos/textures/">
+			<img src="../images/textures.png" width="512" /></a><br />
+		<i><small>The main problem was that tutorial content on the web has some mistakes! Unbinding a texture during an
+				'onload' style callback can interrupt and cause black rendering.</small></i>
+	</div>
+
+	<p>
+		That was easy enough! I made my parser export another JSON array (remembering to put a comma after the first array),
+		containing texture coordinates. Then some fairly standard
+		GL texture binding and loading, except that you can use the Javascript <tt>Image()</tt> object to load the image
+		from a URL. In the shaders I had to use the <tt>varying</tt> keyword,
+		instead of the <tt>in</tt> and <tt>out</tt> keywords that I'm used to for transferring between the vertex shader and
+		fragment shader. Texture sampling was the same. The only other
+		issue was that I used bi-linear filtering here, but it looks like tri-linear filtering and mip-maps require
+		extensions to be loaded;
+		<a
+			href="http://blog.tojicode.com/2012/03/anisotropic-filtering-in-webgl.html">http://blog.tojicode.com/2012/03/anisotropic-filtering-in-webgl.html</a>.
+	</p>
+
+	<h3>Next...</h3>
+
+	<p>
+		Perhaps some Phong lighting shaders using normals. I also need to think about refactoring these demos into a
+		semi-stable engine where I can re-use the data-structures for
+		many objects/textures/matrices at once. Some manager objects will probably be required. Maybe I should look at
+		extension loading as well.
+	</p>
+
+</body>
+
+</html>

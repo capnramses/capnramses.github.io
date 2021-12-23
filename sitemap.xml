@@ -1,0 +1,1207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+
+<url>
+  <loc>https://antongerdelan.net/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/opengl/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/games/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/publications/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/pro_programming_tools_book/index.html</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/index.html</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2020_04_03_rasterisation.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2020_03_25_streams.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2020_03_24_apg_bmp.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2019_03_10_header_files.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2018_12_20_opengl_sale.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2018_07_11_rendering_arabic_text.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2018_03_08_how_i_write_code.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2017_09_04_dissolve.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2017_07_11_optim.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2017_06_22_doom_wad_][.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2017_05_30_doom_wad.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2017_02_12_maths_textbooks.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2017_01_04_new_book.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2016_12_02_algorithms.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2016_11_07_motivation.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2016_09_25_web_hosting.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2016_06_19_map_editor.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2016_04_20_texture_manager.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2016_04_08_game_on_greenlight.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2016_03_24_game_finished.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2016_03_04_review_templ.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2015_12_08_didnt_learn_in_school.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2015_09_25_unreal_udk.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2015_07_07_broken_opengl.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2015_06_16_debug_draw.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2015_06_03_python.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2015_05_20_skills.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2015_04_15_libraries.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2015_03_18_interpolation.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2015_03_11_webgl_extensions.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2015_03_03_2d_colour_vis.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2015_02_26_static_analysis.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2015_02_25_canvas2dcube.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2015_02_23_svg_d3.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2015_02_20_netsoc.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2015_02_17_canvas2d.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2015_02_10_bresenham.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2015_02_09_gpu_mem.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2015_02_05_text_editors.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2015_02_03_c99.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2015_01_12_2015.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2014_12_10_test_drive.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2014_09_24_doom_src.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2014_09_15_webgl_server.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2014_09_05_compute_raytrace.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2014_09_03_books_games.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2014_08_12_acronyms.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2014_06_04_glmapbufferrange.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2014_05_21_c_cpp.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2014_05_20_inline_asm.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2014_05_14_renderbuffer.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2014_05_06_binary_mesh.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2014_04_24_gamma.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2014_04_15_archicad.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2014_04_14_gimbal_lock.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2014_03_25_game_boy.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2014_03_13_touch_webgl.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2014_03_12_ifc_webgl.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2014_03_11_webgl.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2014_03_10_talks.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2014_02_16_mesa3d.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2014_01_24_vbo_layouts.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2014_01_21_bin_mesh.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2014_01_13_ifc.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2014_01_10_ifc_conv.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2014_01_08_blender_plugin.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2014_01_07_custom_mesh.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2014_01_06_php_blog.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_12_14_webgl_fonts.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_09_30_deferred.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_09_08_batching.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_09_03_maths_cheat.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_08_17_cam_plot.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_08_15_madness.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_08_14_vertex_displ2.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_08_13_vertex_displ.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_08_10_omni_cam.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_07_16_multi_pass.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_07_12_webgl.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_07_11_colour_pick.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_07_09_open_source.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_07_05_3d_portfolio.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_07_03_vis_todo.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_06_29_talking_head.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_06_27_3d_picking.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_06_26_blending.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_06_25_rt_shaders.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_06_18_morph_anim.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_06_15_ifc_render.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_06_12_optimisations.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_06_08_js_timers.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_06_06_fps.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_05_31_phong.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_05_30_webgl_textures.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_05_29_json_mesh.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_05_28_webgl_js.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_05_25_javascript.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_05_23_webgl.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/formatted/2012_05_22_blog.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/opengl/hellotriangle.html</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/opengl/glcontext2.html</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/opengl/shaders.html</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/opengl/vertexbuffers.html</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/opengl/shader_hot_reload.html</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/opengl/raycasting.html</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/opengl/cubemaps.html</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/opengl/blend_shapes.html</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/opengl/webgl_starter.html</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/opengl/compute.html</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/opengl/d3d11.html</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/opengl/book_TOC.html</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/opengl/book_info.html</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/games/dungeo/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/games/ludum_dare_32/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/games/mountain_king/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/games/dolphin_rescue/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/publications/pdf/anton-phdthesis.pdf</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/guest_lectures/2015_11_11_bth/progamming_i_didnt_PRESENTER_NOTES.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/guest_lectures/2015_11_11_bth/progamming_i_didnt.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/guest_lectures/2015_02_18_netsoc/2015_02_18_webgl_netsoc.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/guest_lectures/htm5_plus_js_equals_graphics/jsgfx.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/guest_lectures/lamp_and_some_3d/</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/guest_lectures/threejs/</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/guest_lectures/fancy_web_graphics/js_debug.html</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/guest_lectures/fancy_web_graphics/</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/guest_lectures/fancy_web_graphics/index_small.html</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/guest_lectures/html5_audio_and_video/</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/guest_lectures/javascript_debugging/</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/guest_lectures/morph_targets/</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/guest_lectures/webgl_intro/</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Lecture%201%20-%20Intro.pdf</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Lecture%202%20-%20C%20Programming.pdf</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Lecture%203%20-%20First%20Assignment.pdf</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Lecture%204%20-%20Big%20O.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Lecture%205%20-%20Reverse%20a%20Linked%20List.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Lectures%206%20and%207%20-%20Hash%20Tables.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Lecture%2010%20-%20Makefiles.pdf</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Lecture%2011%20-%20Tech%20Writing.pdf</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Lecture%2012%20-%20Sorting.pdf</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Lecture%2013%20-%20Sorting%202.pdf</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Lecture%2015%20-%20BSP.pdf</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Lecture%2015%20-%20Quicksort.pdf</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Lecture%2016%20-%20ADTs.pdf</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Lecture%2017%20-%20Search%201.pdf</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Lecture%2018%20-%20Heaps.pdf</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Lecture%2019%20-%20SetsBagsGraphs.pdf</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Lecture%2020%20-%20Graphs%20Metropolis.pdf</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Lecture%2021%20-%20Graph%20Search.pdf</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Lecture%2022%20-%20Dijkstras%20Algorithm.pdf</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Lecture%2024%20-%20Greedy%20Best-First%20Search.pdf</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Lecture%2025%20-%20A-Star.pdf</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Lecture%2026%20-%20Exam%20Review.pdf</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Lecture%2027%20-%20Libraries.pdf</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Lecture%2030%20-%20Graphics%20Intro.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Algorithms%20Revision%20Lecture.pdf</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Tutorial%202%20-%20Debugging.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Tutorial%204.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Tutorial%206.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Tutorial%207%20-%20static%20analysis.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs3d05a/Tutorial%209%20-%20LaTeX.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs7029/CS7029Models.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs7029/CS7029Textures.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs7029/CS7029Animation.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs7029/CS7029Assignmentsheet.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs4052/00_intro_anton.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs4052/01_3dprog_anton.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs4052/02_transformation.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs4052/03_virtual_camera.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs4052/04_texturing_lecture.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs4052/05_lighting_lecture.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs4052/06_lighting_lecture_pt_ii.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs4052/07_animation_lecture.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs4052/08_game_project.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs4052/09_tims_blender_cheat_sheet.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs4052/10_multipass.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs4052/11_optimised.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs4052/12_curves.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs4052/13_exam_revision.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs4052/14_finale.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs4052/00_assignment.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs4052/01_assignment.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs4052/02_assignment.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs4052/03_assignment.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs4052/04_assignment.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/cs4052/05_assignment.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/dv1413/datareps/lec-datareps.html</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/dv1413/dataproc/lec-dataprocessing.html</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/dv1413/latex/lec-latex.html</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/dv1413/gnuplotlab.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/dv1413/ass2.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/maths_cheat_sheet.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/greek.pdf</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/blog/index.html</loc>
+  <lastmod>2020-06-03T14:09:38+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/canvas2d3d/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/threejs_01/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/touch_test/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/ifc_2014/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/font_rendering/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/crazy_as_hell/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/vertex_displacement/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/colourpicker/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/editshaders/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/talkinghead/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/morphtargets/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/ifcview/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/ifcview2/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/virtualcamera/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/phong/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/textures/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/jsonmesh/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/basicshader/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/helloworld/less1.html</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/opengl/index.html</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/guest_lectures/webgl_intro/example/index.html</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/teaching/guest_lectures/webgl_intro/example2/index.html</loc>
+  <lastmod>2020-06-03T14:09:40+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.41</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/dissolve/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.33</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/engine/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.33</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/facetracka/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.33</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/greenscreen/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.33</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/helloworld/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.33</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/htmlformcontrols/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.33</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/jquerycontrols/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.33</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/matrices/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.33</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/mini/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.33</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/renderables/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.33</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/settingsfile/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.33</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/settingsJSON/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.33</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/webgl_depth_of_field/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.33</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/webgl_depth_of_field2/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.33</priority>
+</url>
+<url>
+  <loc>https://antongerdelan.net/demos/webxr_gltf/</loc>
+  <lastmod>2020-06-03T14:09:39+00:00</lastmod>
+  <priority>0.33</priority>
+</url>
+
+
+</urlset>

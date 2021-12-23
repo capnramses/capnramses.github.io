@@ -1,0 +1,184 @@
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+	<script src="cube-env-map.js"></script>
+</head>
+
+<body>
+	<!-- to interact with the scene from JavaScript create A-Frame 'components' here (basically the same as Unity GameObjects. -->
+	<script>
+
+		let cam_pos = new Object;
+
+		AFRAME.registerComponent('info-sphere', {
+			init: function () {
+				this.el.original_pos = this.el.object3D.position;
+			},
+
+			tick: function (time, timeDelta) {
+
+				// get distance to camera
+
+				var d = this.el.original_pos.distanceTo(cam_pos);
+
+				// check if text visible or sphere should be visible
+				if (d < 4.0) {
+					this.el.text_child.setAttribute("visible", "true");
+					this.el.setAttribute("visible", "false");
+					// billboard to face camera on y-axis
+					let yr_rad = -Math.atan2(this.el.original_pos.z - cam_pos.z, this.el.original_pos.x - cam_pos.x) - Math.PI * 0.5;
+					this.el.text_child.object3D.rotation.set(0, yr_rad, 0);
+				} else {
+					// if sphere visible then animate bobbing to attract attention
+					this.el.object3D.position.y = this.el.original_pos.y + Math.sin(time * 0.0015 + this.el.object3D.position.x * this.el.object3D.position.z) * 0.005;
+					this.el.text_child.setAttribute("visible", "false");
+					this.el.setAttribute("visible", "true");
+				}
+
+
+
+			}
+		});
+
+		function create_hotspot(hotspot, text, position_xyz, y_rotation) {
+			var sceneEl = document.querySelector('a-scene');
+
+			var entityEl = document.createElement('a-entity'); // can't seem to do a-sphere directly but...
+
+			{ 	// infopoint sphere part is the main object (text plane is its child)
+				entityEl.setAttribute('geometry', {
+					primitive: 'sphere',
+					radius: 0.33
+				});
+
+				entityEl.setAttribute("material", "opacity:0.75;transparent:true;color:#00FF00");
+
+				entityEl.setAttribute("position", position_xyz); // TODO(Anton) use same pos for this and infopoint
+				entityEl.setAttribute("info-sphere", "");
+
+
+
+				// TODO(Anton) also create plane for text and label invisible
+				//entityEl.setAttribute("rotation", "0 " + y_rotation + " 0"); // NOTE(Anton) degrees
+
+
+				//console.log(entityEl);
+				sceneEl.appendChild(entityEl);
+			}
+			///////////////////////////////////
+			{ // text part
+				var textEntityEl = document.createElement('a-entity'); // can't seem to do a-sphere directly but...
+
+				textEntityEl.setAttribute('geometry', {
+					primitive: 'plane',
+					width: 4,
+					height: "auto"
+				});
+				textEntityEl.setAttribute("material", "opacity:0.75;transparent:true;color:#007700");
+				textEntityEl.setAttribute("text", "value: " + text); // NOTE(Anton) use of "value:" here in text attrib
+
+				//	textEntityEl.setAttribute("visible", "false");
+
+				textEntityEl.setAttribute("position", position_xyz);
+				textEntityEl.setAttribute("rotation", "0 -90 0 "); // TODO(Anton) temp
+
+				//	textEntityEl.setAttribute("position", position_xyz); // TODO(Anton) use same pos for this and infopoint
+				sceneEl.appendChild(textEntityEl); // text plane is a child of the sphere
+
+
+				entityEl.text_child = textEntityEl; // HACK(Anton) i got sick of figuring out DOM structure
+			}
+		}
+
+		AFRAME.registerComponent('camera-tracker', {
+			init: function () {
+			},
+
+			tick: function (time, timeDelta) {
+				//console.log(this.el.object3D.position);
+				cam_pos = this.el.object3D.position;
+			}
+		});
+
+		let hotspots = new Array();
+
+		AFRAME.registerComponent('populate-hotspots', {
+			init: function () {
+
+				{ // LOAD THE JSON
+					var ajaxRequest = new XMLHttpRequest();
+					ajaxRequest.onreadystatechange = function () {
+						if (ajaxRequest.readyState == 4) {
+							//console.log("Ready state changed!");
+							var jsonObj = JSON.parse(ajaxRequest.responseText);
+
+							for (var i = 0; i < jsonObj.hotspots.length; i++) {
+
+								//console.log(jsonObj.hotspots[i].position_xyz);
+
+								create_hotspot(hotspots[i], jsonObj.hotspots[i].text, jsonObj.hotspots[i].position_xyz, jsonObj.hotspots[i].rotation_y_deg);
+
+							}
+						} // endif
+					} // endfunction
+					ajaxRequest.open("GET", "b2022_hotspots.json", true);
+					ajaxRequest.send();
+				} // endblock
+
+			}, // endinit
+
+			tick: function (time, timeDelta) {
+				//console.log(this.el.object3D.position);
+			}
+		});
+	</script>
+
+	<!-- colour management sets gamma correction etc that makes model less dark -->
+	<a-scene renderer="colorManagement: true" populate-hotspots>
+		<!-- this section pre-loads these assets before displaying anything -->
+		<a-assets>
+			<a-asset-item id="treasury" src="archive.glb"></a-asset-item>
+
+
+			<!-- NOTE(Anton) skies wouldn't load without the crossorigin tag 
+			<a-cubemap id="sky">
+				<img src="posx.jpg">
+				<img src="negx.jpg">
+				<img src="posy.jpg">
+				<img src="negy.jpg">
+				<img src="posz.jpg">
+				<img src="negz.jpg">
+			</a-cubemap>
+
+			<img id="sky" src="https://img.gs/bbdkhfbzkk/2048x2048,stretch/http://i.imgur.com/WqlqEkq.jpg"
+				crossorigin="anonymous" />
+			<img id="skyTexture" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/sechelt.jpg"
+				crossorigin="anonymous">
+			-->
+
+		</a-assets>
+
+		<a-entity id="rig">
+			<!-- "When moving or rotating the camera relative to the scene, use a camera rig. By doing so, the camera’s height offset can be updated by roomscale devices, while still allowing the tracked area to be moved independently around the scene." -->
+			<a-entity id="camera" camera look-controls wasd-controls="fly:true;acceleration:200;" position="-60 2 2"
+				camera-tracker></a-entity>
+		</a-entity>
+		<!--
+		<a-sky src="#sky"></a-sky>
+-->
+
+		<a-entity gltf-model="#treasury" cube-env-map></a-entity>
+		<!--
+		<a-sphere position="-56.82 4 -1.39" radius="0.5" color="#00FF00" material="opacity:0.75;transparent:true"
+			info-sphere>
+-->
+
+		</a-sphere>
+	</a-scene>
+</body>
+
+<!-- do not add javascript to interact with the scene out here -->
+
+</html>

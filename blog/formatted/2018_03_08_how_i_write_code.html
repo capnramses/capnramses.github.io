@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2018_03_08_how_i_write_code</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>Minimalism, or "How I Structure Code Quickly in C Without Getting Log-Jammed"</h2>
+
+	<p>
+		Because I was asked, here is an overview of how I code quickly in C without getting log-jammed in
+		structural mess. A lot of this should work for other languages too. Key concepts - keep it quick
+		to get stuff on screen, keep it fun, let structure emerge on it's own, write code that's low cost to
+		throw out if it doesn't work out, don't make refactoring work for yourself. Basically don't follow
+		any of the rules™!
+	</p>
+
+	<h3>Starting Off</h3>
+
+	<p>
+		I really like starting a new project with a blank page. Zen. Just think about the problem or what
+		you want to make.
+	</p>
+
+	<p>
+		I break jobs down into agile-like tasks of roughly <b>2 hour</b> duration - works well for me to
+		balance work vs. reward and keep things manageable. I have a glorified TODO list -
+		<a href="https://trello.com/b/4Yx0L0wO/project-storm">I like Trello</a>.
+		It's a TODO list with pictures. You can make a check-list to further break down a task.
+		Pick something do-able and non-scary to start off. This is usually comprised of one or two functions.
+	</p>
+
+	<h3>Writing Functions</h3>
+
+	<p>
+		If it's a mathematical or geometric problem I like to solve it on paper first against several key
+		test cases. I will then code these into a mini program to verify my code. eg:
+	</p>
+
+	<ul>
+		<li><i>Do we have the correct answer when our input data is empty?</i></li>
+		<li><i>When it has 1 item.</i></li>
+		<li><i>When it has 2 items.</i></li>
+		<li><i>When it has 3 items.</i></li>
+		<li><i>When it has a large number of items.</i></li>
+		<li><i>When it has the biggest number of items we reasonably expect to ever handle.</i></li>
+	</ul>
+
+	<p>
+		If you can write a stand-alone program with one function until you get it right - great! Then you can just
+		drop that function in to your program. It always helps to <u>concentrate on the <b>data</b> - not on
+			the structure of the program or function's components</u>. Any good Algorithms textbook will tell
+		you this. It's easy to do this with C as there isn't any sort of higher-level utility code to
+		distract you. To design a function (or algorithm):
+	</p>
+
+	<ul>
+		<li>What does the <b>input set</b> of data look like - be they characters, index numbers for
+			triangle vertices, or raw byte values?</li>
+		<li>What should the <b>output permutation</b> of data look like. You should know what to expect if
+			you look at the bytes in an output array. If you don't, you've gone wrong - start smaller, with just
+			one item.</li>
+		<li>What is the dumbest/easiest/quickest/dirtiest way to map the input to the output. It's okay to
+			have lots of clauses - the pattern will emerge later.</li>
+	</ul>
+
+	<p>
+		<b>Don't be afraid to make a mess</b> - you need to get a feel for the problem first. Allow time to
+		tidy up later after you have experience with the problem. Iterations where you rewrite things a few
+		times are fine. If you try to make "clean" structure first you are wasting time you could be using
+		to get experience with the problem. You'll almost always be wrong the first time. Write in such a
+		way that it's quick, and you don't mind scrapping it and starting again. Don't try to write generic
+		or future-proof code. This is almost never used, takes ages to write, isn't fun, and it's a
+		pain to clean up later. Wait until you need to reuse something several times before you do this -
+		you'll have a better idea of the ideal structure later. Just make a few iterations reducing the
+		amount of code and structure required. Small and unstructured is easy to make generic when you need
+		it. Multi-class-multi-function-multi-file stuff is pretty much doomed to be deleted. Allow yourself
+		to "go back to the drawing board" a few times.
+	</p>
+
+	<p>
+		So typically I have something like:
+	</p>
+
+	<pre>
+int some_test_data[1024];
+
+void my_function( int* data, int number_of_items ) {
+  if ( !data ) {
+    // handle empty list here
+  }
+  if ( 0 == number_of_items ) {
+    // handle no-op here - maybe just return
+  }
+  
+  // do stuff with data here
+}
+
+
+int main() {
+  // test case for empty data:
+  init_test_data( 3 ); // some function to set up my input data
+  my_function( NULL, 3 );
+  print_data( NULL, 3 ); // unit test to make sure output matches expected output
+
+  // test case for one item:
+  init_test_data( 1 );
+  my_function( some_test_data, 1 );
+  print_data( some_test_data, 1 );
+
+  // test case for 3 items:
+  init_test_data( 3 );
+  my_function( some_test_data, 3 );
+  print_data( some_test_data, 3 );
+
+  // ... and so on
+
+  return 0;
+}
+</pre>
+
+	<h3>Bigger Functions</h3>
+
+	<p>
+		Some functions will tend to be bigger. The "<i>update all the people in the simulation</i>" or "<i>draw all the
+			trees</i>"
+		function has several small jobs. That's right, I don't have: <tt>tree.draw()</tt>.
+		It's better to loop over arrays - not have separate, encapsulated items. Where possible. It's easier to
+		follow the flow of logic, and keep it in your head (I find). The computer hardware is designed to
+		be very efficient at iterating over arrays of data in start-to-finish contiguous order. If you force
+		access to be broken up across many small objects you don't get this advantage. You can make a small
+		program to test this theory and see just how much faster. It's worth doing.
+	</p>
+
+	<p>
+		For bigger functions it's a
+		pain to separate everything out into small functions, as they tell you to do, and it's then hard to follow
+		and you have to do this tedious step-through debugging to find what order things get called. Use long
+		functions. Split them up using <tt>{}</tt> blocks.
+	</p>
+
+	<pre>
+void draw_all_the_things() {
+  { // --- trees get drawn here
+
+    // set up GPU state etc for drawing trees - use the correct shaders etc
+
+    drawTreesInstanced( all the trees );
+
+    // or loop over and draw and at a time if required. in a loop:
+    for ( int i = 0; i < ntrees; i++ ) {
+      draw( trees_array[i] );
+    }
+
+  } // --- end of trees block
+  
+  
+
+  { // this block is something like draw all the rocks
+    // similar stuff
+  }
+  
+  
+
+  { // this block is something like draw the water
+    // similar stuff
+    // in
+    // here
+  }
+  
+  
+
+  // ...
+  
+}
+</pre>
+
+	<p>
+		Each block has its own scope for variables, so you don't need to worry about mixing them up. If I
+		find myself needing to copy-paste a block a few times it's really easy then, to do this:
+	</p>
+
+	<pre>
+// i just cut and pasted my block and gave it a name
+void draw_trees() {
+
+  // set up shader etc here
+
+  drawTreesInstanced( all the trees );
+
+  for ( int i = 0; i < ntrees; i++ ) {
+    draw( trees_array[i] );
+  }
+
+}
+
+void draw_all_the_things() {
+  draw_trees(); // was a block
+
+  // ...
+  
+  draw_trees(); // presumably i need to do this in a few places now
+
+  // ...
+}
+</pre>
+
+	<p>
+		This is a nice, quick way of slamming code down without getting too messy, splitting up sections,
+		and knowing when to split out into functions.
+	</p>
+
+	<h3>Multiple Files - Loose Coupling</h3>
+
+	<p>
+		I generally group related functions into a file. So when things get bigger I'll have <tt>trees.c</tt>
+		with all the functions related to trees. Probably just one <tt>graphics.c</tt> with all the graphics
+		functions. In past years the graphics stuff would have been a scene manager class in a scene manager
+		file, with some complex inter-class relationships with various other managers for meshes, lighting,
+		various inheritance for different types of mesh class... and so on. Now I'm old, tired, and grumpy,
+		and want my after-work time to put stuff on the screen, not be whittled away refactoring structure,
+		so I'll just have a floating <tt>load_ply_mesh()</tt> function that doesn't give a monkey's uncle
+		about any other structure, and there are no managers or special relationships. This is <b>loose-coupling</b>.
+		It's very important to building code that scales to a large size without getting tangled and log-jammed.
+		It's efficient to add new features to, and doesn't drive you insane. I spend zip-all time thinking about
+		the relationships between objects, which is the opposite of how we were trained to make software in college.
+	</p>
+
+	<p>
+		How long each file or function gets is entirely up to your experience and comfort preferences - more
+		experienced coders are happy with longer stuff. Small, elegant solutions to hard problems can be very
+		satisfying, but they usually start big and messy. I typically have one or two 'utility' files that
+		are used broadly - maybe mathematics, log functions, and so on. Read similar code from others, or
+		well known projects, to get improvement and reduction ideas after you've made an attempt.
+	</p>
+
+	<p>
+		You can do a pseudo-OOP in C if you like. Sometimes it fits, with the nice advantage that it's easy
+		to shuffle it around when it doesn't:
+	</p>
+
+	<ul>
+		<li><tt>trees.h</tt> - Headers are gross, but you have to use them. This is your interface or class
+			declaration equivalent, and comments/usage instructions. And nothing else.</li>
+
+		<li><tt>trees.c</tt> - All the functions and relevant data go in the source file. Globals are like class attributes.
+			If you want to make one public/externally accessible - also declare it in the header with the <tt>extern</tt>
+			keyword.
+			Functions are externally linkable in C (which is silly) - use the <tt>static</tt> keyword in front
+			of a function or global to say "private" (prevents linking clashes).</li>
+	</ul>
+
+	<h3>Build Systems</h3>
+
+	<p>
+		All are frustrating. I use the command line until it gets messy, then paste it into a BaSh script.
+		Then move to a simple, hand-written, human-readable Makefile. I never needed CMake, package management,
+		or other autotools because I don't use any dependencies unless I absolutely have to. You can waste a
+		huge amount of time farting about with libraries - it's often quicker to write them yourself if you
+		think small, or drop stuff in to your own source code if it's small utilities or libraries.
+	</p>
+
+	<h3>Validation and Tools</h3>
+
+	<p>
+		I validate all my function parameters, particularly pointers. You can use <tt>assert()</tt> to
+		guard any assumptions that you make about acceptable ranges of values. You should do this if eg
+		a parameter is going to be used as an index to an array. Strings, parsing functions,
+		and indices worth validating. Usually this catches things like when you add a new function two
+		weeks later and inadvertently break some assumptions you made earlier.
+	</p>
+
+	<pre>
+void my_func( int* some_ptr, int some_val ) {
+  // validation
+  assert( some_val >= 0 );
+  if ( !some_ptr ) {
+    return; // or do something else
+  }
+
+  *some_ptr = some_val + 1; // the function body
+}
+</pre>
+
+	<p>
+		A nice integrated debugger is handy to double check your code. I quite like the C/C++ plug-in for
+		Visual Studio Code these days:
+	</p>
+
+	<ul>
+		<li>Check the number of levels in your function stack - more than three or four at any one time suggests structure
+			is getting complex.</li>
+		<li>Double-check memory values versus expectations of your algorithm design.</li>
+		<li>Find crashes by looking at reverse order (back-trace) of function calls leading to crash.</li>
+		<li>Put break points in interesting places to make sure you can follow all your own code as it jumps around,
+			or to check when callbacks are called (but use callbacks extremely sparingly).</li>
+	</ul>
+
+	<p>
+		Clang-format is great for automatically tidying your code. Valgrind is great for finding memory
+		issues. Scan-build is a nice linter to find things like overlapping memory access or out-of-bounds
+		array indexing.
+	</p>
+
+	<p>
+		If you're making small memory allocations, consider <tt>alloca()</tt> (look it up, it's handy for
+		fast dynamic scratch memory that auto-frees). Otherwise, I use a big pre-allocated block and index into that
+		for assets that stay in memory. That way you can free them all in one operation between resets /
+		level loads etc, and don't waste time making sure every memory allocation is freed, or writing accounting code
+		to track everything or [shudder] a garbage collector.
+	</p>
+
+	<h3>Caveats</h3>
+
+	<p>
+		<i>"But it doesn't even have feature X from C++, how do you cope?"</i>. The answer is almost
+		certainly <i>"just use an array, it was a better choice anyway"</i>, or <i>"write it yourself, it
+			will only take a few minutes."</i>, or <i>"no, you don't need it - think simpler - much simpler"</i>.
+		Usually these are the right answers for small (and sometimes more complex) projects. Some things
+		though, are still god-awful, and you'll have to put up with them. Strings - small problem, big time
+		sink.
+	</p>
+
+	<h3>The Good Bits</h3>
+
+	<p>
+		Using C with no templates, virtual functions, or complex structures means your build times are super
+		fast, which is nice for working quickly on side projects. No boilerplate code or cladding code is
+		required - this stuff is very time consuming to write and maintain. No getters, setters, patterns,
+		etc. Just solve the bite-sized problems that gets your creativity to a visual state. This is very
+		motivating. Keep the iteration loop short like this.
+	</p>
+
+	<p>
+		Yes, you can work even more quickly in other set-ups - I had great fun in game jams with JavaScript + WebGL,
+		but I'm very fast at C now and would probably be on par.
+		Yes, you can use 'C++ but in C style'. Nobody
+		ever does though - it always gets a bit bogged down with the <tt>++</tt> bits getting quite heavy.
+		I like the Spartan approach and sacrificing a few comforts. It might make more sense to just show
+		live coding of how I work in my after-work hour or two to get a feel for pace and progress. I do
+		that sometimes. But I hope this made sense. Minimalism.
+	</p>
+
+</body>
+
+</html>

@@ -1,0 +1,7 @@
+data collection
+-real time
+-batched
+
+data collection toolchain
+-monitors
+-dump to file (csv, tabbed, whitespace, etc) x,y xerr, yerr

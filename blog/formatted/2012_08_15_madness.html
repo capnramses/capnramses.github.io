@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2012_08_15_madness</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2 id="15aug2012">15 August 2012.</h2>
+	<h3>Madness</h3>
+
+	<p>
+		I wrote a set of shaders that displayed the camera data in 3d by converting the angles that I'd processed from
+		the data into 3d positions (just along the x axis at the moment). It looked a bit boring as dots, so blew it up a
+		bit and drew a face on it. I tried to add a "history" idea by having several copies of the vertex buffer that
+		show the previous few states as a fading-to-transparency trail behind the current frame's data. I'm displaying it
+		in real-time but that's not actually necessary - it could be stepped through incrementally. Then something strange
+		happened...I'm very tired today and I accidentally uncommented the wrong line - and the experiment from a couple
+		of days ago appeared in the background, but the state machine had changed the texture over to the little face...
+		quite an unusual composition...I thought I'd have a play and uploaded some rather large mp3 and ogg audio files
+		to test out HTML5's audio tags. It's surprisingly good - much faster than streaming youtube, and much much faster
+		than downloading the whole file. It works well for big music tracks, but I'm not sure how useful it will be for
+		shorter on-demand sound samples i.e. generated speech clips.
+	</p>
+
+	<a href="https://antongerdelan.net/demos/crazy_as_hell/">
+		<img src="../images/crazy_as_hell.png" /><br />
+	</a>
+	<small><i>the background animation was a complete accident - but very amusing. click image for demo.</i></small>
+
+	<h3>Next</h3>
+
+	<ul>
+		<li>
+			I'll plot the 2nd person from the video as a face - maybe in a different colour or style.
+		</li>
+		<li>
+			I also need to convert the distance estimate into 3D - but only if the 3d scene will be viewed from above.
+			If viewed from the same perspective as the real camera then I can recreate the faces excatly, using the pixel
+			coords
+			and pixel area. hmmmmmm...then I can keep using the 2D ../images/icons.
+		</li>
+		<li>
+			More visualisation tools - I'll need to chat with people and see what other speech/communication research is doing
+			with realt-time visualisation.
+		</li>
+		<li>
+			Write more of this WebGL stuff into teaching material.
+		</li>
+		<li>
+			Start to infer some higher-level info: predict the positions so that the characters aren't mixed up, head nodding,
+			head
+			shaking, etc.
+		</li>
+	</ul>
+
+</body>
+
+</html>

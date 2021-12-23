@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2014_06_04_glmapbufferrange</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>Comparing glBufferSubData to glMapBufferRange</h2>
+
+	<p>
+		Yesterday I had a look at my demo code for OpenGL uniform buffer objects (UBO).
+		UBOs are pretty neat - they let you share blocks of uniform variable data
+		between multiple shaders. The other feature is that they behave like a GL buffer
+		object - the same way as a vertex buffer object (VBO). In my demo I was using
+		the older interface to put data into the buffer; <tt>glBufferData</tt> and
+		<tt>glBufferSubData</tt>. The newer way to do this, which is recommended by
+		the <i>aficionados</i>, is to use <tt>glMapBuffer</tt> and <tt>glMapBufferRange</tt>,
+		respectively.
+	</p>
+
+	<p>
+		In my opinion, OpenGL's major shortcoming isn't some technical or
+		programmatic thing, but its documentation, or rather, its style of
+		documentation. You can read <u>how</u> to use OpenGL functions in the online
+		pages;
+		<a href="http://www.opengl.org/sdk/docs/man/docbook4/xhtml/glMapBufferRange.xml">glMapBufferRange</a>,
+		but there's no indication as to <u>why</u>, or <u>when</u> to use the functions.
+		You can sort-of get hints to this in the extension documentation, but really,
+		no - we have to just try them all. My question here is <i>"What are the
+			technical and non-technical pros and cons of each alternative?"</i>.
+	</p>
+
+	<h3>Some Set Up</h3>
+
+	<p>
+		First, we create an empty buffer for the UBO. I'm going to store 2 4X4 camera
+		matrices in here. Now, I see the intention with UBOs and <tt>std140</tt> is to
+		set up an equivalent C <tt>struct</tt> that matches the block in the shaders,
+		but honestly I find that style a bit gross (I'm not an OO person), so I'm just
+		going to use simple pointers. I also suspect that it can easily come unstuck and
+		become an incorrect analogy if you're not using length-4 vectors.
+	</p>
+
+	<textarea rows=4>
+GLuint cam_block_buffer;
+glGenBuffers (1, &cam_block_buffer);
+glBindBuffer (GL_UNIFORM_BUFFER, cam_block_buffer);
+glBufferData (GL_UNIFORM_BUFFER, sizeof (float) * 32, NULL, GL_DYNAMIC_DRAW);</textarea>
+
+	<p>
+		I'm going to use this UBO in 2 shader programmes, so I'll give it an unique id,
+		and bind it to the shaders properly here.
+	</p>
+
+	<textarea rows=7>
+int block_id = 0;
+GLuint uniform_block_index_monkey =
+  glGetUniformBlockIndex (monkey_sp, "cam_block");
+glUniformBlockBinding (monkey_sp, uniform_block_index_monkey, block_id);
+GLuint uniform_block_index_cube_sp =
+  glGetUniformBlockIndex (cube_sp, "cam_block");
+glUniformBlockBinding (cube_sp, uniform_block_index_cube_sp, block_id);</textarea>
+
+	<p>
+		Right, enough about style. Onwards!
+	</p>
+
+	<h3>The Auld Way</h3>
+
+	<p>
+		Updating buffer data with <tt>glBufferSubData</tt> works like this. Assuming
+		that I just want to update my second matrix in the UBO:
+	</p>
+
+	<textarea rows=3>
+glBindBufferBase (GL_UNIFORM_BUFFER, block_id, cam_block_buffer);
+glBufferSubData (
+  GL_UNIFORM_BUFFER, sizeof (float) * 16, sizeof (float) * 16, view_mat.m);</textarea>
+
+	<p>
+		It's simple C-like pointer offsets, in the style of <tt>memcpy()</tt>. Easy to
+		screw-up when you're learning, but easy to fix once you've done that a few
+		times, and know what to look for.
+	</p>
+
+	<h3>The Map Way</h3>
+
+	<p>
+		So, converting the documentation into human language, what the map function does
+		is return a pointer to a new block of memory representing your UBO. You can tell
+		it to offset this pointer, so that we can have it point to the where the second
+		matrix starts. You then <u>modify that memory directly</u>, and call
+		<tt>glUnmapBuffer</tt> when you're done, and it should stream your changes into
+		the buffer memory on the graphics device. Really, this is the same type of
+		function as <tt>BufferSubData</tt> but with a slightly different way of
+		accessing the data.
+	</p>
+
+	<p>
+		I'm going to use <tt>memcpy</tt> here so that it's obvious what I'm doing with
+		the memory pointed to. I actually have some overloaded functions to do that
+		more concisely but it might be confusing to read.
+	</p>
+
+	<textarea rows=10>
+glBindBufferBase (GL_UNIFORM_BUFFER, block_id, cam_block_buffer);
+float* cam_ubo_ptr = (float*)glMapBufferRange (
+  GL_UNIFORM_BUFFER,
+  0,
+  sizeof (float) * 32,
+  GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT
+);
+memcpy (&cam_ubo_ptr[0], proj_mat.m, sizeof (float) * 16);
+memcpy (&cam_ubo_ptr[16], view_mat.m, sizeof (float) * 16);
+glUnmapBuffer(GL_UNIFORM_BUFFER);</textarea>
+
+	<p>
+		Okay, binding the block buffer is the same, and then we get this pointer to
+		memory. The format and offset parameters are pretty much the same. Just a note
+		about that - offsetting to isolate the second matrix didn't work. I'm not sure
+		what the point is here then with these offsets.
+	</p>
+
+	<p>
+		The
+		parameters at the end are of interest. We can actually set the map up to read
+		rather than write memory. In this case we want to write, so <tt>GL_MAP_WRITE_BIT</tt>.
+		The next flag seems to be required, but it doesn't seem to do anything in
+		effect. The docs say that it wipes <u>all</u> the data in the buffer but this
+		doesn't seem to be the case at all. If I only modify part of the buffer it still
+		retains the rest. If I take out this flag entirely it still works the same way.
+		Not clear.
+	</p>
+
+	<p>
+		Finally, you need to call <tt>glUnmapBuffer</tt> or everything will explode.
+	</p>
+
+	<h3>Comparison</h3>
+
+	<p>
+		In my environment mapping demo there was no noticeable performance difference. I
+		suspect that this might be different in much larger projects - perhaps the map
+		will scale better with more data. I didn't do any proper CPU/GPU timer queries.
+	</p>
+
+	<p>
+		In terms of amount of code, the map way is slightly more verbose here, but I've
+		deliberately not used any short-cuts for clarity - not a big difference then.
+	</p>
+
+	<p>
+		One thing I did notice - there are more possibilities for making a mistake
+		with the map interface, and really only one way to screw up the buffer sub-data
+		function (wrong memory offsets). The documentation for the map is also much more
+		convoluted - I'm not entirely sure which flags I need, and I can't really tell
+		what <tt>GL_MAP_INVALIDATE_BUFFER_BIT</tt> actually does in reality - perhaps
+		it's intended more as a hint to the GL to make more efficient use of memory. I
+		see that there are also explicit <tt>glInvalidateBufferSubData()</tt> functions
+		to point out parts of buffers that are no longer required, so this follows.
+	</p>
+
+	<p>
+		It's hard to say when one is better then, from this little test. The map
+		functions are core in 3.0, so perhaps that is the most important point of
+		difference.
+	</p>
+
+	<h3>Also To Try</h3>
+
+	<p>
+		OpenGL 4.4 has <tt>glBufferStorage</tt>, which is a newer alternative again to
+		<tt>glBufferData</tt>. That might be the next comparison to make! This whole set
+		of new functions seems to be from a new type of thinking about efficiency.
+	</p>
+
+</body>
+
+</html>

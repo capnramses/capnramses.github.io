@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2014_03_12_ifc_webgl</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>New Idea for Rendering IFC Files in WebGL</h2>
+
+	<div class="centre">
+		<a href="https://antongerdelan.net/demos/ifc_2014"><img src="../images/ifc_2014.png" /></a><br />
+		<small><i>My latest IFC renderer. This time in WebGL. Code is a bit crusty
+				and the file size can be a LOT smaller, but it works, and shows the different
+				components that can be interacted with as different colours. Click image for link
+				to WebGL page.</i></small>
+	</div>
+
+	<p>
+		Had a look at some more advanced IFC file renderers. There are some nice ones
+		around. Most use (crappy) Java to hook into the meta-data, or have a very very
+		slow WebGL implementation, which I suspect means that they are trying to
+		render each IFC component with a separate draw call, which is kind of the
+		obvious but horribly inefficient way to do it.
+	</p>
+
+	<p>
+		I have a different way of thinking about this - create a buffered graphics
+		version of the STEP stuff that has a proper look-up table of indexed meta-data.
+		Each vertex knows which numbered group it's in. These can be rendered as
+		unique colours to a separate framebuffer, which allows you to draw the whole
+		mesh in one highly-parallelised draw call, as well as "for-free" providing
+		mouse hover/click to get the IFC meta-data about the geometry underneath the
+		cursor. So in essence, just much better use of GPU data and shader parallelism.
+	</p>
+
+	<p>
+		I think a manual stage is still necessary to allow you to selectively choose
+		what parts of the hulking file are of relevance to your particular visualiation.
+		Do you want to show the interior or just the exterior? Do you want all the
+		detail of individual shower heads and for-scale furniture, or is that just
+		clutter? There are also some problems that require attention first -
+		triangulation issues, and masses of potentially redundant vertex data. The
+		file could a lot smaller if these were removed. I did all this manually in the
+		past (I didn't bother this time), but it could potentially be automated.
+	</p>
+
+	<p>
+		The different shades of colour in my demo are actually displaying the different
+		IFC components that can be interacted with separately. There's no need to
+		actually display these colours to the audience of course, but it might be neat
+		to, for example, highlight the component that's underneath the mouse cursor
+		with some special colouring or outline.
+	</p>
+
+</body>
+
+</html>

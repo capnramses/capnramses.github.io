@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2012_06_26_blending</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2 id="26june2012">26 June 2012</h2>
+	<h3>Rendering Multiple Objects, Blending</h3>
+	<p>
+		So, after a lot of pain I figured it out. I booted into Windows and used Chrome's debugging console, which gave me a
+		little
+		more feedback than Firefox's. This was the key. Using the new error message (attribs not setup properly, causing
+		failure of
+		<tt>drawArrays</tt>), I trawled the Intertubes. The official documentation was rubbish, but I found a forum post.
+	</p>
+	<ul>
+		<li>
+			after calling <tt>useProgram</tt> to enable a shader programme for rendering, you must explicitly call
+			<tt>enableVertexAttribArray</tt>
+			<green>for every and every per-vertex attribute used in the shader</green>
+		</li>
+		<li>
+			after finishing all your <tt>drawArray</tt> calls using that shader, and <green>before switching to a new shader
+			</green>,
+			you must <green>explicitly disable all vertex attributes that were previously enabled</green> with
+			<tt>disableVertexAttribArray</tt>
+		</li>
+	</ul>
+
+	<p>
+		Wow! How laborious. The on-line tutorials make a complete oversight of this, because they tend not to use a
+		different shader, or use a shader
+		with the same attributes, and therefore never need to make this switch-over. This is the problem with "<i>learn by
+			doing</i>"
+		examples, which don't generalise or scale-up well, rather than "<i>explain how each function works in detail</i>"
+		instructions.
+		My other issue is with Khronos - if the API really must use these antique "bind/unbind", "use", "enable" type of
+		functions
+		that affect other functions, then it is imperitive to state that in those dependent functions. So often you find
+		yourself unsure if a GL object should be bound or not bound when you call a certain function; it leads to (a)
+		mystery
+		bugs - an avoidable programming obstacle (b) badly written programmes of the "bind everything everywhere" sort.
+	</p>
+
+	<p>
+		Blending to fake transparency was pretty similar to other GL implementations, but I actually think that the
+		tutorials
+		on the web are, once again, misleading, and a little incorrect. The most popular series suggests disabled
+		depth-sorting,
+		which is not correct - disabling <b>depth masking</b> is appropriate technique to use. It also suggests using a
+		non-standard
+		blend mode. I upgraded my <a href="https://antongerdelan.net/demos/editshaders/">shaders editing demo</a> with these
+		new bits and pieces. I might write a tutorial to correct some
+		of these traps.
+	</p>
+
+	<div class="centre">
+		<img src="../images/blending.png" width="512" />
+	</div>
+
+</body>
+
+</html>

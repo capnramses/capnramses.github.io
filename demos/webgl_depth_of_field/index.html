@@ -1,0 +1,45 @@
+<!-- WebGL Depth-of-Field Prototype
+Anton Gerdelan 10 Mar 2015
+antongerdelan.net -->
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>WebGL Depth-of-Field Prototype - Anton Gerdelan</title>
+</head>
+<body onload="main()" style="font-family:monospace;">
+<p id="errors_id" style="color:red">
+</p>
+<table><tr><td>
+<canvas id="canvas" width=512 height=512></canvas>
+</td><td>
+<p id="mesh_info">
+mesh info
+</p>
+<p id="fps">
+fps
+</p>
+<p>
+Focus distance<br />(0.1 to 300.0):
+</p>
+<input type="text" id="distbox" value="100.0"></input>
+</td></tr></table>
+</body>
+</html>
+
+<script src="js/main.js"></script>
+<script src="js/obj_parser.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/webgl-utils.js"></script>
+<script src="js/maths_funcs.js"></script>
+
+<!-- Notes on features
+SSAA implemented with bi-linear framebuffer textures at 2x
+WebGL extension checks
+Depth texture ext replacing renderbuffer
+VAO ext less messy
+sRGB ext
+anisotropy ext
+comments on how unmanageable and problematic asynch ajax requests are
+-->

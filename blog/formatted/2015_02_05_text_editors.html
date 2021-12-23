@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2015_02_05_text_editors</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>Text Editors for Coding</h2>
+
+	<p>
+		This is a just a rambling post about some of the coding tools that I use
+		regularly. I'm
+		a big fan of minimalism in general, so perhaps this might be interesting to
+		read if you've only ever been exposed to the modern IDE way of programming.
+		If you're like me you have hobby projects but you probably only have an hour
+		per day to work on them. You can't wait 10 minutes for some IDE to finally
+		start. You want to be able to code on your antique laptop whilst hunched in an
+		impossible yoga position in a Ryanair plane seat. Your laptop doesn't even
+		have enough memory to install any of that visual anything stuff. You want instant light-weight
+		coding magic to happen. "Straight in - no kissing", as the sign on the restaurant on
+		O'Connell street said.
+	</p>
+
+	<h3>MS-DOS Editor - "edit"</h3>
+
+	<div class="centre">
+		<img src="../images/dos_edit.png" /><br />
+		<small><i>The MS-DOS text editor - the first editor I used - 1993.</i></small>
+	</div>
+
+	<p>
+		My first home computer was a or 486 IBM-Compatible with MS-DOS and Windows 3.1.
+		Windows was rubbish but I quite liked the DOS interface.
+		Some games in 1993 had configuration or batch files that needed editing so that
+		the game would have different allocations of memory in either EMS - expanded
+		memory - for programmes requiring > 640KB up to 8MB or so at the time
+		(we had 4MB at that time) or XMS - extended memory - a more modern version
+		which required editing a system file called <tt>HIMEM.SYS</tt>. The command-line
+		DOS text editor was invoked with <tt>edit</tt> which brought up the pictured
+		editor. I liked it because it was simple, and you had menus which would tell
+		you what the shortcut keys did. This would influence my future preferences.
+	</p>
+
+	<h3>JFE Editor When Learning C</h3>
+
+	<div class="centre">
+		<img src="../images/jfe.jpg" /><br />
+		<small><i>Jens' File Editor - this is how I learned programming in 2003.</i></small>
+	</div>
+
+	<p>
+		I first started learning programming in my first year of engineering undergrad.
+		We learned C, and used a basic text editor with syntax highlighting and the
+		GCC suite of compilers - a very, very minimal IDE. It had a little debugger
+		(presumably based on GDB) that generally worked well. Despite seeming
+		old-fashioned, this was without doubt <b>the best possible introduction to
+			programming</b>. I have taught in several places now that rely on
+		Microsoft Visual Studio or some Java-based IDE for learning programming, and
+		do object-oriented programming from the get-go. Students do not learn good
+		habits like this, get completely bamboozled by the insane menus and bizarre
+		errors (of VS in particular), have no idea how some of the basic concepts work
+		and are basically unable to do anything without the whole IDE from then on.
+	</p>
+
+	<p>
+		I regret now that it took me ten years to even start learning programming, as
+		I totally could have done that when I was 10. But hey, it's hard to know where
+		to start and easy to go the wrong way - what if I'd started with self-taught
+		Visual BASIC or something - I would have been doomed.
+	</p>
+
+	<h3>One Summer's Affair with IDEs</h3>
+
+	<p>
+		I'd been curious about the popular IDEs during my studies - Borland was pretty
+		big, and Visual Studio 2005 was very popular. I got into Microsoft's code
+		world when learning DirectX (the lure of 3d was strong already) from one of
+		those giant neon-green-and-black books
+		in my spare time. <b>I started and stopped using
+			Visual Studio in 2005</b>. Slow to load, slow to compile, slow to run,
+		grossly unreliable, full of invisible errors, custom compiler that allows
+		non-standard unportable code (anyone remember "<tt>BOOL</tt>"?),
+		"dll hell", IDE-dependent build systems,
+		bad conventions, completely insane menus, invisibly managed virtual memory that
+		silently fixes bad memory access and allocation, secret running modes - it was
+		and remains a pile of terrible, terrible grade-E software. Software I built
+		using it took too long to make, the "visual C" designer for user-interfaces
+		completely sucked compared to Visual Basic or C# or anything else,
+		and I missed the simplicity of JFE and GCC. If I was to design a programming
+		introduction course I would probably use a simple text editor but use GCC or
+		Clang externally from the command line. Having a debugger with a watch list and
+		memory debugging visually is pretty cool though - perhaps there's a modern tool
+		like JFE.
+	</p>
+
+	<p>
+		I branched out now-and-again to try other IDEs for C++. Eclipse was a disaster
+		of a thing, but it built portable code with Makefiles. Some of the other
+		multi-platform open-source kits were okay, but really not much more useful
+		than editing stuff by hand like in the old days, and all took longer to load,
+		slowed down to a crawl (or crashed) with the intelli-lookup/auto-completion
+		crap and used a monstrous allocation of memory. Fans would rave about plug-ins
+		and customisation and so on but this is all a load of crap really -
+		distractions from the actual task at hand - programming. Not a single one of
+		these gizmos has ever improved anyone's productivity beyond the illusory, and
+		all of them waste your time. We've all seen that person who takes 2 days
+		setting up their custom plug-ins on a new computer before they are capable of
+		putting code to file.
+	</p>
+
+	<h3>Linux/BSD/Mac Text Editors</h3>
+
+	<p>
+		I started experimenting with Linux distributions during the final year of my
+		engineering undergrad - 2006. I systematically tried pretty much all of them.
+		All were a bit flaky and unreliable. Ubuntu came out and beat them all with
+		Debian's nice repository system, much better hardware support, and mail-out
+		CD-ROMs with the system. This was a winner because it was incredibly difficult
+		to download and install a distribution on New Zealand's disgraceful 2006
+		Internet - we were barely one level beyond dial-up with a privatised monopoly
+		in charge all the telecoms infrastructure that had no real incentive to upgrade
+		it. So yes, mailing a CD-ROM over the entire globe from the Isle of Man was
+		lower latency broadband than the state of the national service. I immediately
+		liked the Unix terminal, which was like using DOS again, but it had far
+		superior and more powerful tools which beat all the advantages of using the
+		project-level tools in an IDE. I'm still mostly working on Ubuntu-derivatives
+		today. Mostly Xubuntu at the moment (the cut-down minimalist version).
+	</p>
+
+	<div class="centre">
+		<img src="../images/vim.png" /><br />
+		<small><i>Vim - what the heck is "visual mode" and what do I do now and how do
+				I quit? It's like being trapped inside King's Quest or Zork or something.</i></small>
+	</div>
+
+	<p>
+		I don't have the kind of brain that's good at remembering esoteric short-cuts
+		using non-standard key-combinations and interfaces so I was never going to like
+		using <tt>vi</tt> or <tt>vim</tt> text editors. I understand people have
+		started with them and are fanatical about using them but I have to look up the
+		commands for the interface every time and re-learn them just to quit a
+		document. No way.
+	</p>
+
+	<div class="centre">
+		<img src="../images/emacs.png" /><br />
+		<small><i>Emacs in windowed mode - it does have the Amiga look, doesn't it? It
+				usually looks considerably worse than this - I think my system has the nice
+				anti-aliased fonts package already.</i></small>
+	</div>
+
+	<p>
+		Emacs (originally from "editor macros") is by default a windowed editor, but
+		can be started on the command-line
+		with <tt>emacs -nw</tt>. For me it has a better interface than vi but it's
+		still a bit esoteric with double-commands to do things. Quit is <tt>Ctrl-x</tt>
+		followed by <tt>Ctrl-c</tt>. That's still a bit much for me. To add to this
+		it's also completely eccentric to a really extreme level, and is the very
+		definition of project bloat. To me, having Tetris and a circuit diagram
+		designer built in to a programme I want to just edit text with is terrible
+		over-engineering beyond scope - this is a negative for me, not a positive.
+		Adding to that it's also not installed by default and has something like a
+		300MB download minimum for something I just want to edit text with. There is a
+		huge cult that's obsessed with it or some specific branch versus the
+		other - probably another reason to steer clear. These are the plug-in people.
+		The windowed version, despite being heralded as beautiful and so on, looks like
+		it was made for the 1980s Amiga. Not for me.
+	</p>
+
+	<div class="centre">
+		<img src="../images/nano.png" /><br />
+		<small><i>Nano is a minimal terminal text editor that has a key reference on
+				the bottom. That's all I need.</i></small>
+	</div>
+
+	<p>
+		There's also GNU <tt>nano</tt> terminal editor, which is a copy of <tt>pico</tt>,
+		the text editor from the Pine email client. Either one of these is probably on
+		every Linux, BSD, and Mac distribution. It wasn't on my web server, but just
+		copying the tiny binary over to it was all I needed to do to get it on there.
+		Nano resembles the MS-DOS editor, and has a handy key reference on the bottom
+		for people like me. You can edit a file called <tt>.nanorc</tt> to set up some
+		defaults like always displaying the current line number, and never breaking
+		lines and so on if you really want. It's possible to have syntax highlighting
+		for code but actually I think this is a waste of time. I prefer to code in a
+		monochrome terminal - <i>auld shtyle boai [simultaneous wink and turn head]</i>.
+		The downside is that navigation through text
+		can be a little clunky - you can't use the familiar Ctrl+arrows to move through
+		words. That behaviour is bound to Ctrl+space by default which is usually the
+		command to swap windows on the OS or something so you can't use it. I also
+		can't be bothered finding out how to remap that every time I get on a new
+		computer. Cut-and-paste is limited to whole lines, which is both very quick,
+		and a bit limited/easy to screw-up. It's my most commonly-used text editor in
+		a terminal. I feel it could be a little bit better. It starts immediately, it
+		uses basically no memory, it never crashes, it never slows down - it is the
+		Terminator of text editors.
+	</p>
+
+	<p>
+		Note that the terminal, by default, is the 80-char
+		wide Unix terminal size. This is a good thing. A lot of high-profile
+		programmers whine about this 80-char limit because we have wide-screen monitors
+		now and suggest writing super wide text. They are totally wrong for the same
+		reason that Wikipedia HTML looks like crap on a full-screen browser window.
+		We (human beings) have an optimal reading paragraph width about <a
+			href="http://baymard.com/blog/line-length-readability">50-80
+			characters</a>. Book publishers have known this for centuries. I therefore suggest
+		not dragging your terminal window wider, but certainly dragging it taller.
+		It's better to have a
+		terminal to the side for programme debug output, another for coding into, and
+		you still have screen space to display a running programme window.
+	</p>
+
+	<div class="centre">
+		<img src="../images/gedit.png" /><br />
+		<small><i>gedit is pretty much my most-used graphical text editor.</i></small>
+	</div>
+
+	<p>
+		For a little bit more precision using the mouse, or better spell-checking I'll
+		sometimes use a graphical editor. Minimalist editors I use are <tt>gedit</tt>
+		(Gnome-based), <tt>kate</tt> (KDE-based). Gedit is pretty good with tab-width 2
+		and line numbers always visible on the side. I set a column margin to
+		GNU-standard 79 characters and break lines manually at this point. That's it!
+		Gedit has a nice as-you-type spell checker but it's incredibly resistant to
+		you having this on by default. Otherwise it's pretty nice. You can visualise
+		spaces and tabs, which helps improve your formatting a bit. Don't get drawn
+		in to installing the plug-ins.
+	</p>
+
+	<p>
+		On OSX any text editor is fine but just double-check that you are saving in
+		plain text mode for code - as the default rich-text format can introduce
+		unexpected character codes that break everything. I never really spent a lot of
+		time in XCode - it was a bit big and scary for me. You do need to install it to
+		get all the command-line build tools and compilers though. The terminal isn't
+		as nice on OSX so once I finally borrowed a laptop to give it a good try I
+		found that I was slower to do the same tasks than on Linux - it's just a step
+		or two more hidden away to get to the hard-core tools.
+	</p>
+
+	<p>
+		On any Windows you can use Wordpad. Avoid Notepad - it won't respect
+		non-MS conventions for line endings. On modern Windows a really nice tool is
+		Notepad++. The preserving-all-tabs-open default behaviour is very overwhelming
+		but you can disable that somewhere.
+	</p>
+
+	<h3>Summary</h3>
+
+	<p>
+		So that was an odd ramble about learning programming and review of text
+		editors. I feel like I'm only moments away from finding a new favourite. This
+		is a strange phase of my life.
+	</p>
+
+	<h3>Semi-Related - BASH tips</h3>
+
+	<p>
+		A lot of the powerful Unix terminal commands are listed for the BASH terminal
+		in this guide
+		<a
+			href="https://developer.atlassian.com/blog/2015/02/ten-tips-for-wonderful-bash-productivity/">ten-tips-for-wonderful-bash-productivity</a>
+		- the downside being that the powerful tools have command-line interfaces of
+		many different styles, all of which are impossible to remember. The most
+		commonly-used one isn't listed there - just using <tt>fgrep</tt> for a quick
+		global "find this text/variable in all files in my project". Perhaps I shall
+		do another post one day just listing helpful command-line tricks for use whilst
+		coding (and accumulating them as I find more).
+	</p>
+
+</body>
+
+</html>

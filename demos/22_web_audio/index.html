@@ -1,0 +1,29 @@
+<html>
+
+<head>
+  <title>PoC Interactive Slides (audio)</title>
+  <!-- nice reference: https://www.html5rocks.com/en/tutorials/getusermedia/intro/ -->
+</head>
+
+<body>
+  <canvas id="canvas" width="512" height="512"></canvas>
+  <p>above is a placeholder canvas area to display images/texures/items retrieved/3d scene etc</p>
+  <p>on load this page should ask for access to your mic (if you have one) using html's web audio API</p>
+
+  <!-- TODO(Anton) audio playback -->
+  <button onclick="play_sound()">button text</button>
+  <p>this button demonstrates playing a .wav file with web audio</p>
+
+  <p>you should also hear any voice from your mic being automatically played through web audio</p>
+  <audio autoplay id="mic_audio">mic audio</audio>
+
+  <!-- TODO(Anton) display a single slide's stuff -->
+</body>
+<script src="js/apg_gfx.js"></script>
+<script src="js/main.js"></script>
+<script>
+  console.log("starting app...");
+  main("canvas");
+</script>
+
+</html>

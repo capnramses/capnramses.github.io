@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-US">
+<head>
+<meta name="generator" content=
+"HTML Tidy for Linux/x86 (vers 1st November 2003), see www.w3.org" />
+<title>Morph Target Animation / Quaternions</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="duration" content="45" />
+
+<!-- style -->
+<link rel="stylesheet" href="styles/slidy.css" type="text/css" />
+<link rel="stylesheet" href="styles/burntorange.css" type="text/css" />
+<script src="scripts/slidy.js" charset="utf-8" type="text/javascript">
+
+</script>
+</head>
+<body>
+
+<div class="background" />
+
+
+<!-- THE FIRST SLIDE -->
+<div class="slide">
+<h1>Morph Target Animation / Quaternions<small><grey>
+<br/>Dr Anton Gerdelan gerdela@scss.tcd.ie
+</grey></small>
+</h1>
+
+<table>
+<tr>
+<td>
+<h2>About Me</h2>
+<ul>
+<li>Working on smart buildings EU project with WebGL visualisation</li>
+<li>Lectured in Karlskrona, Sweden. 3d programming, games, visualisation</li>
+<li>Did most of PhD with GV2. Vehicle simulation, AI, graphics.</li>
+<li>Have a sort of blog about WebGL project and 3d stuff https://antongerdelan.net/ </li>
+</ul>
+</td>
+<td>
+<img src="images/zones.png" width=300 />
+</td>
+</tr>
+</table>
+
+</div>
+
+<div class="slide">
+<h1>Morph Target Animation</h1>
+<table>
+<tr>
+<td>
+<ul>
+<li>Alternative to skinning/skeletal animation</li>
+<li>Good for detailed, "squishy" animations like faces, explosions, voluminous liquids, transformers...</li>
+<li>Can be hooked up with lip sync etc. "ah" "oh" "bee" etc.</li>
+<li>Technical artist creates copies of mesh in several "target" poses</li>
+<li>Our code blends smoothly between targets <i>via</i> <b>linear interpolation</b></li>
+<li>
+Can blend final pose from several targets; neutral, happy, sad, eyes left, eyebrows...
+</li>
+</ul>
+</td>
+<td>
+<img src="images/shapekeys.png" />
+</td>
+</tr>
+</table>
+<p align="right">
+<small>image source: "Shape Keys", wiki.blender.org</small>
+</p>
+</div>
+
+<div class="slide">
+<h1>Here's One That I Prepared Earlier</h1>
+<ul>
+<li>
+Demos in WebGL:<ul>
+<li>Door
+<a href="https://antongerdelan.net/blog/morphtargets/">https://antongerdelan.net/blog/morphtargets/</a>
+</li>
+<li>Face and Shaders
+<a href="https://antongerdelan.net/blog/editshaders/">https://antongerdelan.net/blog/editshaders/</a>
+</li>
+</ul>
+</li>
+<li>
+I used a free mesh from Turbosquid and exported it to several meshes.</li>
+<li>Vertices <b>must
+be in same order</b> in all targets or they will be mixed up during interpolation.
+</li>
+<li>
+Instead of using several meshes, we could store 1 mesh, and export a <b>morph map</b>
+texture for each pose. <ul><li>Each texel rgb gives the <b>scaled offset xyz</b> of a vertex.</li>
+<li>512x512 supports ~260,000 vertices.</li>
+<li>Sample textures in a vertex shader and interpolate as normal.</li>
+</ul>
+</li>
+</ul>
+</div>
+
+<div class="slide">
+<h1>Interpolation of Targets</h1>
+<ul>
+<li>
+Each target has a <b>weight</b> of value 0 to 1
+</li>
+<li>
+Set position of <b>each vertex</b> with interpolation function. Do this each frame
+of rendering.
+</li>
+<li>
+If using shaders, put this function in vertex shader.
+</li>
+<li>
+For smooth animations, remember to multiply change in each weight by elapsed time
+</li>
+</ul>
+<pre>
+<blue>// assume we have set weights for happy and sad faces and have meshes
+// work out how much of "neutral" pose to show</blue>
+float w_neutral = 1.0 - w_happy - w_sad;
+clamp (w_neutral, 0.0, 1.0);
+
+<blue>// get each weight as a factor of total of weights</blue>
+float w_sum = w_happy + w_sad + w_neutral;
+float happy_factor = w_happy / w_sum;
+float sad_factor = w_sad / w_sum;
+float neutral_factor = w_neutral / w_sum;
+
+<blue>// work out final position by doing weighted average of each target</blue>
+vec3 mixed_xyz = mix (default_pos, happy_pos, happy_factor);
+mixed_xyz = mix (mixed_xyz, sad_pos, sad_factor);
+</pre>
+</div>
+
+<div class="slide">
+<h1>Quick Intro to Quaternions</h1>
+<table>
+<tr><td>
+<ul>
+<li>Very hard to get a simple explanation ... until now</li>
+<li>Contriving a rotation from Rz * Ry * Rx matrices
+<ul>
+  <li>is cumbersome (order is important)</li>
+  <li>some representations can have issues at extreme angles</li>
+</ul>
+</li>
+<li>1843. Enter: William Rowan Hamilton. Brougham Bridge (Royal Canal).<br />
+<img src="images/brogham.png" />
+</li>
+<li>Extension of complex numbers that gives us an elegant way of representing 3d rotations</li>
+  <li>Can represent rotation between <u>any</u> 2 poses with 1 quaternion</li>
+  <li>Some nice methods for interpolating. Think skeleton hierarchy or IK</li>
+</ul>
+</td>
+<td>
+<img src="images/hamilton.png" height=400/>
+<center><small>Studied at Trinity</small></center>
+</td>
+</tr>
+</table>
+</div>
+
+<div class="slide">
+<h1>Rotation Quaternion</h1>
+<ul>
+<li>A quaternion used for rotation is called a <b>versor</b></li>
+<li><b>Predates vector calculus</b> - so notation looks strange:<br />
+<img src="images/versor.png" />
+</li>
+<li>Note - this is just 4 input numbers</li>
+<li>Most 3d maths libraries have quaternion functions; WildMagic, D3DX, GLM, Ogre3D ... etc.</li>
+<li>If you want to use a library, then use it something like:
+<ul>
+	<li>create <tt>quat (angle, x, y, z);</tt> this creates a versor which is used for calculations</li>
+	<li>interpolate between key-frames <tt>q = slerp (q1, q2, t);</tt> rotation is in-between q1 (when t = 0) and q2 (when t =1)</li>
+	<li>produce a final rotation matrix <tt>mat4 R = q.get_matrix ();</tt></li> 
+	<li>model/world matrix created as normal e.g. <tt>mat4 M = S * T * R;</tt></li>
+</ul>
+</li>
+<li>We will briefly look at the maths behind these main functions...</li>
+</ul>
+</div>
+
+<div class="slide">
+<h1>Step 1: Build a Versor</h1>
+<ul>
+<li>We know the components of our quaternion but we can't use it in equations yet</li>
+<li>A <b>versor</b> is the expression of the rotation in a 4d rotation vector</li>
+<li>A little bit like making a rotation matrix. Inputs: angle, axis</li>
+<li>Now we can do various maths operations with our quaternion</li>
+</ul>
+<img src="images/versorbuild.png" />
+</div>
+
+<div class="slide">
+<h1>When Ready: Quaternion to Matrix</h1>
+<img src="images/versortomatrix.png" />
+<ul>
+<li>Double-check that quaternion is still normalised first (floating point errors)<br /></li>
+<li>Note: w,x,y,z here are the versor components q0,q1,q2,q3; not the original input axis and angle</li>
+<li>Now we can use it to rotate vectors</li>
+<li>Q. What does the transposed matrix look like?</li>
+<li>Q. How can we rotate <u>around</u> a point?</li>
+</ul>
+<small>Ref: Ken Shoemake, "Animating Rotation with Quaternion Curves", SIGGRAPH '85.</small>
+</div>
+
+<div class="slide">
+<h1>Re-normalise Quaternion</h1>
+<img src="images/normalise.png" />
+<ul>
+<li>May need to re-normalise before output</li>
+<li>Almost the same as vector normalisation. Component-wise</li>
+<li>Only compute sqrt if interior sum does not add to 1</li>
+</ul>
+<small>Ref: http://www.cprogramming.com/tutorial/3d/quaternions.html</small>
+</div>
+
+<div class="slide">
+<h1>Combine Rotations with Quaternion Multiplication</h1>
+<img src="images/mult.png" />
+<ul>
+<li>Q' = Q1 * Q2<br />
+<li>Means "rotate Q2 first, then rotate Q1". <b>Non-commutative</b></li>
+<li>But when animating we want to <u>interpolate</u> a rotation part-way between key-frames...</li>
+</ul>
+</div>
+
+<div class="slide">
+<h1>Interpolation with LERP and SLERP</h1>
+<ul>
+<li>Animations key-frames have position, scale, rotation keys.</li>
+<li>Time between key-frames is 0-1.<ul>
+    <li>Interpolate between scale, positions with LERP</li>
+    <li>Interpolate between rotations with SLERP</li>
+</ul></li>
+<li>Slerp goes shortest direction, circular arc (uniform velocity)</li>
+<li>.: Slerping wheels to rotate them can result in crazy animations</li>
+</ul>
+<img src="images/slerp.png" /><img src="images/slerpdiag.png" width=256/><br />
+<small>Ref: Code discussion; Jonathan Blow, "Understanding Slerp, Then Not Using It" (Google it)</small>
+</div>
+
+<div class="slide">
+<h1>Issues with Skinning (Forward and Inverse Kinematics)</h1>
+<img src="images/dualquats.png" />
+</div>
+
+</body>
+</html>

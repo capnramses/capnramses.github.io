@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Book Information - Anton's OpenGL 4 Tutorials</title>
+	<link rel="stylesheet" type="text/css" href="../greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="index.html">[index]</a>
+	<h1>Anton's OpenGL 4 Tutorials - Book Information</h1>
+
+	<p>
+		I try to collect all known typos and errors in the book and any known code
+		problems here. I regularly update the online edition of the e-book as well as
+		the source code.
+	</p>
+
+	<h2>Errata and Known Typos</h2>
+
+	<p>
+		I wait until a list of outstanding issues here gets reasonably large and then
+		update the on-line volume. You may get a notification that you can update the
+		e-book.
+	</p>
+
+	<ul>
+		<li>Reminder to call <tt>glUseProgram()</tt> before any calls to <tt>glUniform...</tt> in Matrices and Vectors
+			chapter.</li>
+		<li>"vertex attribute object" &rarr; "vertex array object" in several places.</li>
+		<li>optimise early section reworded in chap2</li>
+		<li>intialising &rarr; initialising - chap2 (3x)</li>
+		<li>movment &rarr; movement - chap2 (3x)</li>
+		<li>"log" variable names to "shader_log" and "program_log"</li>
+		<li>Cube maps section "Sky Box" wording changed.</li>
+		<li>Cube maps - "is called times" &rarr; is called 6 times</li>
+		<li>Several small typos "a a" in Quaternions</li>
+	</ul>
+
+	<h2>Source Code</h2>
+
+	<p>
+		All of the demo code can be found online at
+		<a
+			href="https://github.com/capnramses/antons_opengl_tutorials_book">https://github.com/capnramses/antons_opengl_tutorials_book</a>.
+	</p>
+
+	<h3>31 August 2015</h3>
+
+	<p>
+		The latest version of the GLFW links against some new external libraries. If
+		you are linking against the static build you'll need to update your Makefiles
+		accordingly.
+	</p>
+
+	<p>
+		Dynamic libraries on 64-bit GNU/Linux with C99:
+	</p>
+
+	<pre>
+DYN_LIBS = -lGL -lX11 -lXxf86vm -lXrandr -lpthread -lXi -lXinerama -lXcursor \
+-ldl -lrt -lm</pre>
+
+	<p>
+		Frameworks on OS X:
+	</p>
+
+	<pre>
+FRAMEWORKS = -framework Cocoa -framework OpenGL -framework IOKit \
+-framework CoreVideo</pre>
+
+	<h3>7 August 2015</h3>
+
+	<p>
+		I got a Mac Mini and personally tested all the demos on OS X Yosemite.
+		I updated the Makefiles to make Apple builds easier - you no longer have to
+		uncomment the version hint section, it's defined in the Makefile.
+	</p>
+
+	<p>
+		I found and
+		fixed one or two bugs that only the Apple implementation picked up - the
+		Kernel demo used an undefined shader variable, for some reason shader
+		validation requires that a valid VAO is bound (!!), one or two shaders had
+		keywords in the wrong order, and the texture shadows demo had some shader
+		uniform location variables mixed up (that accidentally had correct values on
+		other implementations!). The geometry shader demo was using a deprecated
+		vertex count variable instead of <tt>gl_in.length()</tt>.
+	</p>
+
+	<p>
+		Note that one or two demos are designed for GLSL 420, which isn't supported by
+		Apple - I added some commented-out code blocks to make it easy to see how to
+		retrograde these so that they run on OS X with 410.
+	</p>
+
+	<h3>28 January 2015</h3>
+
+	<p>
+		Added explicit <tt>glReadBuffers (GL_NONE)</tt> to 38_texture_shadows to
+		protect against invalid framebuffer error on Apple. Note that this isn't
+		actually valid in GL4 (seems to be from ES2/3).
+	</p>
+
+	<h3>26 November 2014 </h3>
+
+	<p>
+		Updated all the shaders' version tags to <tt>#version 410</tt> to properly
+		support <tt>layout (location=x)</tt> keywords for attributes. The Hello
+		Triangle demo is also updated to run OpenGL 4.1 instead of 4.0. I have not
+		tested the Visual Studio demos yet.
+	</p>
+
+	<p>
+		I also noticed that the texture coordinates for <tt>15_phong_textures</tt> were
+		wrong, so generated a new mesh, and a new ambient occlusion map. I left the
+		.blend file in that folder.
+	</p>
+
+	<h3>26 August 2014 </h3>
+
+	<p>
+		Updated the code for Extension Checking and the Debug Callback to use switches
+		to get error strings rather than arrays, which were slightly wrong (thanks
+		Kenneth!).
+	</p>
+
+	<h3>31 July 2014</h3>
+
+	<p>
+		I moved the demo source code to GitHub <a
+			href="https://github.com/capnramses/antons_opengl_tutorials_book">https://github.com/capnramses/antons_opengl_tutorials_book</a>.
+		Hopefully this will eliminate problems due to unreliable downloads from my web
+		server.
+	</p>
+
+	<p>
+		I have a few updates to make and small issues to fix, so expect this to change a
+		bit over the next week.
+	</p>
+
+	<h3>4 July 2014</h3>
+
+	<p>
+		Found some shader calls to deprecated <tt>texture2D()</tt> and replaced with
+		<tt>texture()</tt>. Also removed texture binding keywords from the
+		<tt>#version 400</tt> shaders (required 420). Left a few shaders at 420 for
+		comparison - note at top of shader files in question.
+	</p>
+
+	<h3>3 July 2014</h3>
+
+	<p>
+		My hosted server is occasionally <b>aborting downloads too early</b> - it might
+		take a few attempts to get the files. Sorry about that - I'll move the code
+		over to a reliable host after the holidays!
+	</p>
+
+	<p>
+		Uploaded quite a few <b>Makefiles for Apple OSX</b>. I haven't been able to
+		test all of the demos on Apple yet (I don't have a Macbook myself), but most of
+		them should work! There is no Apple build of the Freetype library. I'll get
+		there eventually!
+	</p>
+
+	<p>
+		Found and fixed a bug in 02_shaders - thanks Andrea!
+	</p>
+
+	<h3>2 July 2014</h3>
+
+	<p>
+		The original code download was getting download errors (finishing too early)
+		from my web host, Godaddy. Their support people said that it was too large
+		(107MB), and getting time-outs, which I think is probably rubbish. I got rid of
+		the protected download settings, which I suspect Godaddy was mis-managing. In
+		any case, to get around this for now I have made the download smaller,
+		and moved the Blender mesh files and Visual Studio project files into separate
+		downloads:
+	</p>
+
+	<ul>
+		<li><a
+				href="https://antongerdelan.net/opengl/book_code/book_code.zip">https://antongerdelan.net/opengl/book_code/book_code.zip</a>
+			(30.3MB) - Main source-code download. Includes Makefiles.</li>
+		<li><a
+				href="https://antongerdelan.net/opengl/book_code/book_code_vs.zip">https://antongerdelan.net/opengl/book_code/book_code_vs.zip</a>
+			(27.9MB) - Visual Studio 2012 Projects</li>
+		<li><a
+				href="https://antongerdelan.net/opengl/book_code/book_code_blender.zip">https://antongerdelan.net/opengl/book_code/book_code_blender.zip</a>
+			(286kB) - Blender mesh files</li>
+	</ul>
+
+	<p>
+		After the summer holidays I'll look at moving all the code to a more stable
+		host (potentially on Github or a professional source-code host). I'll also be
+		revising my main OpenGL website so that the book is the main source of content
+		for tutorials, and the site has articles for new and interesting things that
+		I work on - I have Compute Shaders and some low-level optimisation techniques
+		on my "after summer" list, powered by all the coffees that get :D. By all means
+		send requests.
+	</p>
+
+	<h3>30 June 2014</h3>
+
+	<p>
+		I updated the source code download and revised and tested all
+		of the project files. You should now find:
+	</p>
+
+	<ul>
+		<li>Linux Makefiles for 64-bit GCC for all projects</li>
+		<li>Windows Makefiles for 32-bit MinGW GCC for all projects</li>
+		<li>32-bit Visual Studio 2012 Solution for all projects</li>
+		<li>Linux Makefiles for 32-bit GCC for some projects</li>
+	</ul>
+
+	<p>
+		I intend to add a set of OS X Makefiles, but I need to borrow an Apple machine
+		first to make sure that they work properly. For now, this is the general format
+		that you should expect for an OS X Makefile. Note the use of Apple frameworks
+		for the OS libraries, as well as for OpenGL itself:
+	</p>
+
+	<pre>
+BIN = hellot
+CC = gcc
+FLAGS = -Wall -pedantic -mmacosx-version-min=10.5 -arch x86_64 \
+-fmessage-length=78 -UGLFW_CDECL -fprofile-arcs -ftest-coverage
+INC = -I ../common/include -I/sw/include -I/usr/local/include
+LIB_PATH = ../common/osx_64/
+LOC_LIB = $(LIB_PATH)libGLEW.a $(LIB_PATH)libglfw3.a
+FRAMEWORKS = -framework Cocoa -framework OpenGL -framework IOKit
+SRC = main.c
+
+all:
+  @echo ~~~~~~~~~~~~~~~~~~~~~~Building OS/X 64-bit~~~~~~~~~~~~~~~~~~~~~~~~~
+  ${CC} ${FLAGS} ${FRAMEWORKS} -o ${BIN} ${SRC} ${INC} ${LOC_LIB}</pre>
+
+	<h2>Fixes and Updates Made to e-book</h2>
+
+	<h3>4 May 2016 (Edition 6 &rarr; Edition 7)</h3>
+
+	<ul>
+		<li>
+			typo - Hello Triangle - Drawing - "to update things non-graphical events" &rarr; "to update non-graphical events"
+		</li>
+		<li>
+			errata - Extended Init - Frame Rate Counter - "70Hz" is no longer true - all
+			modern flat-panel displays use 60Hz. the next paragraph needs a clarification,
+			and I should really suggest adding millisecond timers and mention GPU timer
+			queries.
+		</li>
+		<li>
+			errata/typos - Extended Init - talking about texture dimensions: 16384x16384
+			etc. The numbers are wrong here - must have had much larger dims originally.
+			The bit about not fitting into memory .: does not hold. The biggest size there
+			(16k) is 1GB, everything else is just big.
+		</li>
+		<li>
+			errata - Vertex Buffer Objects - "bottleneck is the bus" &rarr; "bottleneck created by queuing commands to send to
+			gpu" (bus is actually very large)
+		</li>
+		<li>
+			errata - Phong - explain why I did the <tt>dot_p = max (0.0, dot_p)</tt>,
+			add it to the Blinn code sample, and add it to the Common Mistakes list.
+		</li>
+	</ul>
+
+	<h3>18 January 2016 (Edition 5 &rarr; Edition 6)</h3>
+
+	<p>Shaders chapter:</p>
+
+	<ul>
+		<li>Re-drew the first diagram for clarity</li>
+		<li>Clarified the paragraphs too - removed the overly-specific advice</li>
+		<li>A complete shader programme controls comprises &rarr; -controls</li>
+		<li>shader slots &rarr; processors on the GPU</li>
+		<li>table says slots - cores</li>
+		<li>"For example:..." &rarr; just delete this paragraph, it's misleading</li>
+		<li>attribute or uniform variables &rarr; variable</li>
+		<li>shader slots will be empty &rarr; GPU cores will be idle</li>
+	</ul>
+
+	<p>Alpha Blending:</p>
+
+	<ul>
+		<li>would completely replaces &rarr; replace</li>
+	</ul>
+
+	<h3>13 January 2016 (Edition 4 &rarr; Edition 5)</h3>
+
+	<ul>
+		<li>Extended Init; Anti-Aliasing: "the edges our meshes and triangles" --> "of"</li>
+		<li>Kindle Location: 1377 ; Description: "The are all" should be "They are all "</li>
+		<li>Kindle Location: 1206 ; Description: "It you want " should be "If you want "</li>
+		<li>Kindle Location: 252 ; Description: "ask GLFW is the " should be "ask GLFW if the "</li>
+		<li>Various repeated-word typos e.g. "and and"</li>
+	</ul>
+
+	<h3>31 August 2015 (Edition 3 &rarr; Edition 4)</h3>
+
+	<ul>
+		<li>Typo in preface &rarr; "Kernighan".</li>
+		<li>Updated Intel/Linux/OS X info in preface</li>
+		<li>Fixed Texture Mapping Mip-Map an an-isotropy wording "largest/smallest"
+			&rarr; "closest fitting"</li>
+		<li>Updated Geometry Shaders built-in variables <tt>gl_VerticesIn</tt> to
+			<tt>gl_in.length()</tt>.</li>
+	</ul>
+
+	<h3>Fixed - 26 November 2014 (Edition 2 &rarr; Edition 3)</h3>
+
+	<ul>
+		<li>Formatting - TOC tag for online viewer</li>
+		<li>Extended Initialisation - Improved <tt>_update_fps_counter()</tt> code for
+			strict C compilation.</li>
+		<li>Extended Initialisation - <tt>char msg[256];</tt> under "Printing
+			Parameters from the GL Context" is unused &rarr; removed.</li>
+		<li>OpenGL Extensions and the Debug Callback - Code for error messages was not
+			totally correct - changed from arrays of strings to switch statements.</li>
+	</ul>
+
+	<h3>Fixed - 26 November 2014 (Edition 1 &rarr; Edition 2)</h3>
+
+	<p>
+		I re-worded several sections in the "Discussion" chapter to clarify the guide
+		to building larger programmes, and reduce the functions listed from my utility
+		file.
+	</p>
+
+	<h3>Fixed - 1 August 2014 (Edition 0 &rarr; Edition 1)</h3>
+
+	<ul>
+		<li>Source Code - maths_funcs.h &rarr; matrix constructor comment says "row
+			major", is actually column major</li>
+		<li>Source Code - sprite sheets &rarr; sprite_index unused</li>
+		<li>Source Code - UBO demo - commented line 456 means code differs from article
+			- seems like a mistake, because this affects camera code. view matrix
+			unused?</li>
+		<li>Preface - Hogsk&ouml;la &rarr; H&ouml;gskola</li>
+		<li>Downloading Source Code - Change download information to GitHub address
+		</li>
+		<li>Hello Triangle - "The main libraries that you need is" &rarr; "library that
+			you need is"</li>
+		<li>Hello Triangle - "that latest version of GL" &rarr; "the latest version of
+			GL"</li>
+		<li>Hello Triangle - linking on Linux &rarr; libraries have different names
+			<tt>-lOpenGL32</tt> becomes <tt>-lGL</tt></li>
+		<li>Hello Triangle - linking libs image has <tt>-lglu32</tt> in it</li>
+		<li>Hello Triangle - MinGW not explained &rarr; should maybe say a windows
+			version of gcc</li>
+		<li>Hello Triangle - will replace with comparison of linking on different
+			systems</li>
+		<li>Hello Triangle - "Both are be written" &rarr; "Both are written"</li>
+		<li>
+			Extended Init - "are nicely filtered, the edges our our meshes and triangles"
+			&rarr; "are nicely filtered, the edges of our meshes and triangles"
+		</li>
+		<li>Vertex Buffers - "We will copy this chunk of memory onto the graphics
+			cards" &rarr; card</li>
+		<li>Vertex Buffers - "output variable called, which I called" &rarr; "output
+			variable, which I called"</li>
+		<li>Shaders - "contains the operators in C" &rarr; "has the same operators as
+			C"</li>
+		<li>Shaders - clip space &rarr; should say what this is briefly when first used
+			(first described later in text).</li>
+		<li>Phong - "specular power" variable used - should be "specular exponent"</li>
+		<li>Phong - affect/effect backwards a few times</li>
+		<li>Phong - "shader is data" &rarr; "shader has data"</li>
+		<li>Phong - 1 or 2 more broken phrasings due to editing</li>
+		<li>Textures - "OpenGL does not properly set default" &rarr; "defaults"</li>
+		<li>Textures - "Next check the..." &rarr; missing a bullet</li>
+		<li>Normal Maps - "except that we converting" &rarr; "convert"</li>
+		<li>Normal Maps - "for quick approach" &rarr; "a quick solution"</li>
+		<li>Cube Maps - "Then glTexImage2D() is called times &rarr; "is called 6
+			times"</li>
+		<li>Cube Maps - "use the texture() function, but older..." &rarr; "we use the
+			texture() function here"</li>
+		<li>UBOs - Why is the view matrix not used in the shader snippet?</li>
+		<li>Tessellation - Needs example snippet of C code to show what patch numbers
+			are / how they relate to a triangle.</li>
+		<li>Bitmap Fonts - "First texture, coordinate," &rarr; remove commas</li>
+		<li>Bitmap Fonts - "too big for the vertex buffer" &rarr; "too big"</li>
+		<li>Bitmap Fonts - glPointSize() &rarr; deprecated, remove?</li>
+		<li>Fonts from Files - A code snippet is missing line breaks</li>
+		<li>Fonts from Files - "we us a" &rarr; "we use a"</li>
+		<li>Particles - "is which lets" &rarr; "which lets"</li>
+		<li>Skinning Pt.1 - "The are used" &rarr; "These are used"</li>
+		<li>Skinning Pt.1 - "Will that the" &rarr; delete</li>
+		<li>Skinning Pt.1 - "and my copy" &rarr; -my</li>
+		<li>
+			Skinning Pt.3 - "TODO explain SLERP fix here." &rarr; "This is a problem with
+			SLERP, as
+			explained in the Quaternions article. We correct this by checking if the dot
+			product of the 2 versors is negative before calling SLERP. If so we negate one
+			versor".
+		</li>
+		<li>
+			Skinning Pt.3 - Finalising the animation, animation matrix maths is incorrect
+			&rarr; correct in
+			demo code, needs update.
+		</li>
+		<li>Shadows - "Hello World example" &rarr; "Hello Triangle example"</li>
+		<li>Building Larger Programmes - Code comment in first snippet about GL
+			versions can be deleted</li>
+	</ul>
+</body>
+
+</html>

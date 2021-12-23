@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2014_04_15_archicad</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>3d Viewer for Revit and ArchiCAD Plans</h2>
+
+	<p>
+		I've been playing around with architectural software and file formats lately.
+		I had a go at IFC models, FBX models, Obj models, and a few other things with
+		ArchiCAD and Revit. Their integrated 3d viewers really suck - I don't know how
+		anyone puts up with that software. The slowness and camera controls in Revit are
+		particularly bad. I had a got at making a Revit architectural plan viewer in
+		OpenGL.
+	</p>
+
+	<div class="centre">
+		<img src="../images/revit_view1.png" /><br />
+		<small><i>The sample project from Revit 2014 viewed in OpenGL. It mostly worked.
+				The normals from Revit were all wrong so I recalculated them manually for flat
+				shading.</i></small>
+	</div>
+
+	<p>
+		It looks like one or two of the downstairs kitchen walls weren't exported
+		properly - maybe they are a special type. Not sure yet. All of the exported
+		normals from the FBX file were wildly incorrect and invalid, so I wrote some
+		code to recalculate them all. That lets me do some awesome logarithmic-based
+		shading so that it looks like Solidworks or something - no Phong lighting, but
+		still nice perceptual differentiation of surfaces.
+	</p>
+
+	<div class="centre">
+		<img src="../images/revit_view2.png" /><br />
+		<small><i>Exterior view of the Revit 2014 sample project, viewed in OpenGL. It's
+				several bazillion times faster than Revit's own viewer.</i></small>
+	</div>
+
+	<p>
+		I wonder if it's possible to get a nice set of matching materials so that the
+		doors can be brown, and the windows know to be slightly transparent, for
+		example.
+	</p>
+
+	<p>
+		An observation is that the file formats are too large and do not scale well to
+		levels of detail. There is huge amount of detail on the washing machine's
+		control knobs that could easily be simplified out and reduce the file size. I
+		wonder if there's a nice way to do that.
+	</p>
+
+	<div class="centre">
+		<img src="../images/revit_view3.png" /><br />
+		<small><i>
+				Colours and transparency worked surprisingly well.
+			</i></small>
+	</div>
+
+</body>
+
+</html>

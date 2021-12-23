@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2015_02_10_bresenham</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>Bresenham's Line-Drawing Algorithm (1962)</h2>
+
+	<div class="centre">
+		<img src="../images/bresenhams_example.png" /><br />
+		<small><i>It's immediately obvious what one application of this algorithm is
+				from my little test programme's output here, but it can also be used for
+				determining things like line-of-sight paths through lattice-based environments
+				with some limitations. I draw two separate lines here of thickness 3.</i></small>
+	</div>
+
+	<p>
+		First of all, the Wikipedia article for this algorithm, like all Wikipedia
+		articles for mathematics, is unreadable rubbish. The nicest article is at this
+		website: <a
+			href="http://www.falloutsoftware.com/tutorials/dd/dd4.htm">http://www.falloutsoftware.com/tutorials/dd/dd4.htm</a>,
+		where I find the listing there to be the most robust and general to different
+		line types also. I re-implement a version of that here and explain my
+		understanding.
+	</p>
+
+	<p>
+		Bresenham's algorithm is a nice way to interpolate a line of pixels between any
+		two 2d points. Nice because it's fast. You don't need to check every pixel in
+		each column of the image for its distance from the line equation at a given x
+		or something to find which pixels to colour. The general idea is:
+	</p>
+
+	<ol>
+		<li>
+			The line to draw is defined by two image locations (start and end x and y in
+			pixels).
+		</li>
+		<li>
+			Work out which is the "major" axis - i.e. is the line mostly changing in either
+			x, or y axis.
+		</li>
+		<li>
+			An "error" value is initialised to <u>double</u> the distance |end-start| along
+			the major axis minus the distance |end-start| along the minor axis.
+		</li>
+		<li>
+			Step (loop) along the major axis, one pixel at a time, from the start to the
+			end of the line.<br /><br />
+			<ul>
+				<li>
+					We plot a pixel at the current x and y point (initialised to the start point).
+				</li>
+				<li>
+					We add double the total line distance along the minor axis to the error value
+					at every step.
+				</li>
+				<li>
+					If the error value is positive we subtract double the total line distance
+					along the major axis from the error accumulation, and we also increment the
+					current minor-axis value by 1 in the direction of the slope e.g. y++ if the
+					major axis is x, and the line is sloping positively in y.
+				</li>
+			</ul>
+		</li>
+	</ol>
+
+	<p>
+		The error accumulation is a bit odd. Basically what it does is factor the slope
+		of the line into the decision whether to increment the minor-axis pixel or not
+		for the next plot point. If we have a slope of 1 then we will get a positive
+		error value at every step, and therefore the y value of the pixel will increase
+		by 1 for every increase in x value; a 45 degree diagonal line. If we have a
+		slope of 0.5 then the error value will only be positive in every second step. I
+		feel like this could be expressed more naturally with a more traditional slope
+		calculation evident.
+	</p>
+
+	<p>
+		The reason that we use the curious 2 * distance values is because this lets us
+		use integers for the entire algorithm. Otherwise we have to use floats, and
+		deal with fractions in the loop.
+	</p>
+
+	<p>
+		A limitation of this algorithm is that the line only ever has one pixel in the
+		minor axis for
+		any major-axis value. That's okay, but sometimes the mathematical line would
+		cut through two pixel's boxes within one major-axis pixel
+		width. In this case it might make sense to colour both pixels, rather than just
+		the closest one - especially if we are calculating the line for collision
+		detection or something, rather than just drawing a simple line.
+	</p>
+
+	<p>
+		Another limitation is that the line is only ever one pixel thick, and there is
+		no anti-aliasing. I easily added a thickness to the line by plotting extra
+		points adjacent to the centre pixel at each plot location - this adds basically
+		no extra computational cost to the algorithm. Anti-aliasing can easily be added
+		in as a post-process or even by making the thickness-plots a half-way colour.
+	</p>
+
+	<h3>Listing: My First Implementation of the Algorithm</h3>
+
+	<p>
+		I used C and Sean Barrett's stb_image_write.h library to write to a PNG.
+		There's no particular need for this though - the memory can be dumped directly,
+		as-is to a binary file and converted at the command line from raw format with
+		ImageMagick or a similar tool, or copied directly into an OpenGL texture or
+		something like that for interactive rendering.
+	</p>
+
+	<textarea rows=142>
+/*
+Bresenham's Algorithm, Jack Bresenham 1962.
+Definition:
+An efficient algorithm to render a line with pixels. The long dimension is
+incremented for each pixel, and the fractional slope is accumulated.
+
+Implemented by Anton Gerdelan 10 Feb 2015
+*/
+
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
+#include <stdio.h>
+#include <string.h> // memset
+
+//
+// plot colour
+#define R 34
+#define G 207
+#define B 50
+// secondary plot colour
+#define R2 41
+#define G2 184
+#define B2 55
+
+// rgb
+unsigned char img[256*256*3];
+
+//
+// draws an RGB pixel into the image buffer
+//
+void plot (int x, int y, int r, int g, int b) {
+  int index = y * 256 + x;
+  int red = index * 3;
+  img[red] = r;
+  img[red + 1] = g;
+  img[red + 2] = b;
+}
+
+//
+// plots a line from i to f
+//
+void plot_line (int x_i, int y_i, int x_f, int y_f) {
+  // current plot points
+  int x = x_i;
+  int y = y_i;
+  // original deltas between start and end points
+  int d_x = x_f - x_i;
+  int d_y = y_f - y_i;
+  // increase rate on each axis
+  int i_x = 1;
+  int i_y = 1;
+  // remember direction of line on each axis
+  if (d_x < 0) {
+    printf ("x is negative direction\n");
+    i_x = -1;
+    d_x = abs (d_x);
+  }
+  if (d_y < 0) {
+    printf ("y is negative direction\n");
+    i_y = -1;
+    d_y = abs (d_y);
+  }
+  // scaled deltas (used to allow integer comparison of <0.5)
+  int d2_x = d_x * 2;
+  int d2_y = d_y * 2;
+  printf ("double errors are %i x and %i y\n", d2_x, d2_y);
+  
+  // identify major axis (remember these have been absoluted)
+  if (d_x > d_y) {
+    printf ("x axis is major\n");
+    // initialise error term
+    int err = d2_y  - d_x;
+    for (int i = 0; i <= d_x; i++) {
+      plot (x, y, R, G, B);
+      //
+      // uncomment these for line-thickness of 3
+      //
+      plot (x, y + 1, R2, G2, B2);
+      plot (x, y - 1, R2, G2, B2);
+      printf ("%i,%i. 2*err is now %i\n", x, y, err);
+      if (err >= 0) {
+        err -= d2_x;
+        y += i_y;
+      }
+      err += d2_y;
+      x += i_x;
+    } // endfor
+  } else {
+    printf ("y axis is major\n");
+    // initialise error term
+    int err = d2_x  - d_y;
+    for (int i= 0; i <= d_y; i++) {
+      plot (x, y, R, G, B);
+      //
+      // uncomment these for line-thickness of 3
+      //
+      plot (x + 1, y, R2, G2, B2);
+      plot (x - 1, y, R2, G2, B2);
+      printf ("%i,%i. 2*err is now %i\n", x, y, err);
+      if (err >= 0) {
+        err -= d2_y;
+        x += i_x;
+      }
+      err += d2_x;
+      y += i_y;
+    } // endfor
+  } // endif
+} // endfunc
+
+int main () {
+  // grey
+  memset (img, 255, 256 * 256 * 3);
+  // add some grid lines every 32 pixels
+  for (int y = 0; y < 256; y++) {
+    for (int x = 0; x < 256; x++) {
+      if ((x % 32 == 0) || (y % 32 == 0)) {
+        plot (x, y, 200, 200, 200);
+      }
+    }
+  }
+  int x_i = -1;
+  int y_i = -1;
+  int x_f = -1;
+  int y_f = -1;
+  printf ("domain is positive range 256x256\n");
+  printf ("enter line start x,y\n>");
+  scanf ("%i,%i", &x_i, &y_i);
+  printf ("you entered %i,%i\n", x_i, y_i);
+  printf ("enter line end x,y\n>");
+  scanf ("%i,%i", &x_f, &y_f);
+  printf ("you entered %i,%i\n", x_f, y_f);
+  printf ("plotting...\n");
+  plot_line (x_i, y_i, x_f, y_f);
+  
+  // draw a second line
+  plot_line (10, 10, 200, 128);
+  
+  printf ("writing output.png...\n");
+  stbi_write_png ("output.png", 256, 256, 3, img, 0);
+
+  return 0;
+}</textarea><br />
+
+
+</body>
+
+</html>

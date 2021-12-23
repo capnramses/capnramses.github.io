@@ -1,0 +1,97 @@
+<html>
+
+<head>
+	<title>Demo of web speech API</title>
+</head>
+
+<body>
+	<h1>demo of web speech API</h1>
+
+	<p>
+		Click the button then wait a bit for a response with a transcript.
+	</p>
+
+	<button id="begin_button" onclick="begin(this)">begin</button>
+
+	<button id="record_button" onclick="record_me(this)" hidden>start recording</button>
+
+	<p id="response_text">
+
+	</p>
+
+</body>
+
+</html>
+
+<script>
+	var current_sequence_number = 1;
+	var max_sequence_number = 5;
+
+	{
+		var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+		var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList;
+		var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent;
+
+		var look_for_list = ['anton', 'hello', 'world', 'speech', 'grammar'];
+
+		// create a grammar
+		var grammar = '#JSGF V1.0; grammar colors; public <look_for_list> = ' + look_for_list.join(' | ') + ' ;';
+		var speechRecognitionList = new SpeechGrammarList();
+		speechRecognitionList.addFromString(grammar, 1);
+
+		// set up recognition with grammar and language
+		var recognition = new SpeechRecognition();
+		recognition.grammars = speechRecognitionList;
+		recognition.continuous = false;
+		recognition.lang = 'en-US';
+		recognition.interimResults = false;
+		recognition.maxAlternatives = 1;
+		recognition.onresult = function (event) {
+			var response_text = event.results[0][0].transcript;
+			document.getElementById("response_text").innerHTML = "Transcript (confidence " + event.results[0][0].confidence + "):<br />" + response_text;
+
+			console.log(" curr sequence number is " + current_sequence_number);
+			if (current_sequence_number < max_sequence_number) {
+				current_sequence_number++;
+				play_wav(current_sequence_number);
+				document.getElementById("record_button").hidden = false;
+			}
+		}
+		recognition.onspeechend = function () {
+			//recognition.stop();
+			document.getElementById("record_button").hidden = false;
+		}
+		recognition.onnomatch = function (event) {
+			document.getElementById("response_text").innerHTML = "I didn't recognise that word.";
+		}
+
+		recognition.onerror = function (event) {
+			document.getElementById("response_text").innerHTML = 'Error occurred in recognition: ' + event.error;
+		}
+	}
+
+	function play_wav(number) {
+		var url = "wavs/" + number + ".wav";
+		console.log("playing " + url);
+		var aud = new Audio(url);
+		if (aud) {
+			aud.play();
+		} else {
+			console.error("couldn't play audio " + url);
+		}
+	}
+
+	function begin(button_el) {
+		play_wav(current_sequence_number);
+		button_el.hidden = true;
+		document.getElementById("record_button").hidden = false;
+	}
+
+	function record_me(button_el) {
+		recognition.start();
+		console.log("user pressed start button " + button_el.id);
+		document.getElementById("record_button").hidden = true;
+		document.getElementById("response_text").innerHTML = "processing...";
+	}
+
+</script>

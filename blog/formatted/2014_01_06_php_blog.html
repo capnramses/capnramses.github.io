@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2014_01_06_php_blog</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>6 Jan 2014</h2>
+	<h3>Made a PHP Blog Thingy</h3>
+
+	<p>
+		I wanted to resurrect my research notes because I have stuff to put up, but they
+		had gotten a bit big and unwieldy. I didn't want to install a big Wordpress or
+		other plug-in solution OTT thing because yuck, so I made my own with a bit of
+		PHP. I wanted to just have a folder, where if I dropped a file of text in it
+		would auto-magically appear in a list of links on the left-hand side of this
+		page. Then you click on them, but instead of taking you to a new page it just
+		grabs the contents of the file and smacks them onto another part of the page.
+		They are just alphabetically ordered by file name, so I name them with the date
+		in European format; <i>YYYY-MM-DD</i>. This also means that I can find the
+		latest one easily to use as the default post to display. Super simple. Anyway,
+		it worked. I used this PHP code:
+	</p>
+
+	<textarea rows=38>
+<h1>Anton's Research Ramblings</h1>
+
+<?php
+print "
+<table><tr><td valign=\"top\"><small>
+";
+// read all the posts from index file
+$blatest = true;
+$content_file = "";
+$dir = "posts";
+$files = scandir ($dir, 1);
+$arrayLength = count($files);
+for ($i = 0; $i < $arrayLength - 2; $i++) {
+	$fn = $files[$i];
+	echo "<a href=\"#\" onclick=\"return pop_content('$fn');\">$fn<br />";
+	if ($blatest) {
+		$blatest = false;
+		$content_file = "posts/$fn";
+	}
+}
+print "</small></td>";
+// display the content of default post
+$param_post = $_GET['post'];
+// allow ?post=2014_01_06
+$len = strlen ($param_post);
+if ($len == 10) {
+	$content_file = "posts/$param_post";
+}
+$content = file_get_contents ($content_file);
+print "
+</small></td><td td valign=\"top\" id=\"content_td\">
+";
+print $content;
+print "
+</td></tr>
+</table>
+";
+?></textarea>
+
+	<p>
+		And I have a couple of JavaScript functions that pull out the content of a given
+		post's file as a string and drop it into the appropriate part of the page. I can
+		just write plain HTML into the post files to do formatting and insert images. No
+		markdown nonsense or anything like that.
+	</p>
+
+	<textarea rows=16>
+<script type="text/javascript">
+	function get_string_from_URL(url) {
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.open("GET", url, false);
+		xmlhttp.send();
+		return xmlhttp.responseText;
+	}
+
+	function pop_content(file) {
+		var path = "posts/" + file;
+		var str = get_string_from_URL(path);
+		var content_td = document.getElementById("content_td");
+		content_td.innerHTML = str;
+		return false;
+	}
+</script></textarea>
+
+	<h3>Technical Report on Vertex Buffer Layouts</h3>
+
+	<p>
+		Another thing that I did recently was complete a technical report documenting
+		my experiments with different vertex buffer layouts in OpenGL. There exist only
+		vague notions that interleaving mesh data memory should draw faster than other
+		layouts, so I put it to the test, and recorded about a week's worth of drawing
+		time on a couple of different machines.
+		I wrote it up in a LaTeX PDF:
+		<a href="https://antongerdelan.net/opengl/buffers.pdf">buffers.pdf</a>.
+		Note sure if/where to publish it yet.
+	</p>
+
+	<div class="centre">
+		<img src="../images/gpu_output_6_attrib.png" />
+	</div>
+
+	<p>
+		I managed to measure the time that GL took on the CPU with <tt>glDrawArrays()</tt>,
+		and also used a neat tool called APItrace to gather the corresponding GPU times
+		taken on two different commodity graphics processors. I see afterwards that
+		there's actually a GL extension to query to GPU time taken by a function, but
+		API trace is nice in that it gives you some visualisations too, which can show
+		how much one is lagging the other. The short story was that
+		the different memory layouts alternatives don't make any significant difference
+		to performance.
+	</p>
+
+	<h3>WebGL Entry for Ludum Dare</h3>
+
+	<div class="centre">
+		<img src="http://www.ludumdare.com/compo/wp-content/compo2/thumb/97c71073228f46a61369a6f462fe1f99.jpg" />
+	</div>
+
+	<p>
+		I wanted to put my WebGL skills to the test so made an entry for the Ludum Dare
+		48-hour game making competition. It's called Dolphin Rescue. The
+		<a href="http://www.ludumdare.com/compo/ludum-dare-28/?action=preview&uid=30024">
+			entry page is here
+		</a>, and you can play it on-line at:
+		<a href="https://antongerdelan.net/dolphin_rescue/">https://antongerdelan.net/dolphin_rescue/</a>
+	</p>
+
+
+</body>
+
+</html>

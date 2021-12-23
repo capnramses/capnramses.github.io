@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2017_05_30_doom_wad</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<div class="centre">
+		<img src="../images/opengl_e1m1.png" width="512" />
+	</div>
+
+	<h2>Cracking Open Doom .wad Files - Part I: Hexin'</h2>
+
+	<p>
+		A hobby project that has been on my list since about 1994 was to figure out
+		Doom's (Id Software, 1993) data file format - the vaunted <tt>DOOM.WAD</tt> file. My brother
+		and I used to enjoy making maps with 3rd-party editing tools around 1994/5,
+		which was a nice way to get a grip on the 3D technology involved in the game.
+		When I started programming I occasionally looked at the Doom source code to see
+		if I was at a level where I could have understood or made some of it. It took me
+		many years. I tested my mettle a few years ago porting Doom - see
+		<a href="https://antongerdelan.net/blog/formatted/2014_09_24_doom_src.html"> this blog post</a>,
+		but left figuring out the WAD file for a future code expedition. There it remained.
+		<i>But something happened that the WAD did not intend. It was picked up by the
+			most unlikely creature imaginable...</i>
+	</p>
+
+	<p>
+		I was coding late one night and thought <i>"Hmm, it would be nice to play the
+			original Doom music while I code".</i>. Nothing on Youtube is the same, original "MIDI playing on an original
+		Soundblaster" sound
+		that I [lying] told myself I remembered differently.
+		So I thought <i>"Well, I
+			have Doom, why don't I just pull the music out of the game data directly?"</i>
+		Thus, my tale begins. This will probably be a series of posts. <b>Aside:</b> Look, if you
+		don't know me, then what I'm like is I'll intend to do one little thing and then
+		I'll get completely obsessed, and binge code on the heavy metal for several days without sleeping
+		(record code binge 38 hours, but that's another story), and it will get completely out of hand until a
+		friend slaps me back to reality, which happened in this case. Guilty your Honour!
+		This blog post will be a crazy journey to the centre of my mind - but - I'm also going
+		to explain all the tools and techniques in such a way that a student should be able
+		to follow easily enough.
+	</p>
+
+	<h3>Where <i>is</i> All the Data? (WAD)</h3>
+
+	<p>
+		The WAD is a binary file with a custom layout that smushes together all of the
+		game's data assets - images, sounds, music. There are two types of WAD - the
+		main IWAD (Id software WAD I guess) [note: I wrote it stands for "internal WAD"
+		in my source, but I may have made that up], and PWAD - patch WAD. This allows players to
+		make a little third-party custom add on like their own map, that overwrites one
+		of the game's maps at start-up so that they can play it. We made PWADs of our
+		own maps in 1994. I probably still have them on a mouldering floppy disk in New
+		Zealand, but I couldn't find them last time I was there, sadly.
+	</p>
+
+	<h3>Hexin'</h3>
+
+	<p>
+		Unlike plain-text files, binary files are a little tricky to read because you
+		can't just open them in a text editor and see the data. You can open them in a
+		hex-editor though and inspect the value of each byte of data. Hex editors display
+		each byte as a two-digit hexadecimal number. A byte can store 256 combinations,
+		so e.g. the numbers 0-255, or representing an ASCII character from that numbered
+		set of 128 characters 'a' (value 97), 'B', etc. Hexadecimal represents 16 values
+		per digit, rather than decimal 10 - so 0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F, where
+		"F" corresponds to decimal 15. Hex is used because you only need 2
+		digits/characters to display each byte of data, thus 255 in decimal is rendered
+		as "FF" in hex. If you've ever edited a web-page you may have seen colours
+		expressed in hex like <tt>0xFFFFFF</tt>. That's actually 3 bytes, one after the
+		other, not one huge number. One for red, one for green, and one for the blue
+		component of the colour, respectively. If all are set to 255 or FF then you get
+		white, as we would here. <tt>0xFF0000</tt> would be bright red.
+	</p>
+
+	<p>
+		I use <tt>hexedit</tt>
+		on GNU/Linux from the terminal. I wanted to go in cold and see if I could figure
+		everything out myself with no starter information. People have done this many
+		times over the years, and I didn't want them to spoil the challenge for me
+		(horrifying and shameful discovery about this later).
+		The first task in inspecting a binary file in a hex-editor is to find some
+		strings of ASCII text. Usually you have a column on the right-hand side that
+		shows what the ASCII characters are or would be for each byte's value. In this
+		way you can scan for some named sections in the file, which is a nice hint.
+		By the way, never encode anything in a string if it's meant to be kept <i>secret</i> or <i>safe</i>,
+		even in a compiled program - these will show up here.
+	</p>
+
+	<div class="centre">
+		<img src="../images/hexedit.png" width="512" /><br />
+		<small>Finding strings in the DOOM.WAD file with Hexedit.</small>
+	</div>
+
+	<p>
+		You can see in the above image what hex editing looks like. In the image you can
+		see I've found a section in the binary with consecutive byte values
+		corresponding to valid strings of English text. You can tab between the two
+		columns (hex and strings) to see which byte corresponds to each character. You
+		can see that the
+		bytes above the strings sometimes hold numbers that correspond to an 'a', but
+		this is not intentional. You can also use hexedit to modify the data in the
+		binary file directly. I showed my class how to hack [redacted]ents in [redacted] last
+		year with this approach.
+	</p>
+
+	<p>
+		A good string to search for in Doom might be the name of the first map/level:
+		"E1M1". To search for strings in hexedit you press TAB to switch over to the
+		ASCII column, then press the '/' key and type in the string (case sensitive - try
+		upper-case).
+	</p>
+
+	<p>
+		Once we've found something to grab onto in the file like strings, we can start
+		to determine the structure of the file. You'll note that each string:
+	</p>
+
+	<ul>
+		<li>Actually reads like a section heading or title.</li>
+		<li>They all appear in a cluster.</li>
+		<li>There are some bytes of non-string data in the same region.</li>
+	</ul>
+
+	<p>
+		There are two nice ways of structuring files; inline section headings, and
+		a file directory that is stored in the header or footer of the file.
+		I used the inline approach in <a href="https://github.com/capnramses/apg_mesh">my 3D mesh file format</a>.
+		These are designed so that you can parse all of the data in the file in one pass
+		from top to bottom. Each block of data or variables has a little header separator
+		that says how much and what type of data follows, so that the user can allocate
+		memory on the fly and just gobble it in without pause.
+		Directories, on the other hand, store all the little headers in a block. These typically are
+		structured like this:
+	</p>
+
+	<pre>
+DIRECTORY
+ ->entry
+   ->entry name string or type ID
+   ->size of section blocks in bytes
+   ->number or composition of section blocks
+   ->offset into file data where section starts
+</pre>
+
+	<p>
+		We can tell that Doom used the directory type, except this is stored at the end
+		of the file rather than in a header at the start. There are other types of file
+		structure but we will not speak of those, lesser, formats here. Reading through
+		the directory strings you can get a sense of the structure - certain repeating
+		strings in-between each map name indicate bits and pieces of each map. After the
+		maps we see other sections - <tt>D_E1M1</tt> is probably the music track for the
+		first map. At this point what we can do is parse the directory in a little
+		program. Then we can read whatever we want out...why not spit out all the sounds,
+		music, images, and so on whilst we are at it? Why not recreate all the maps in
+		3D...crawl right into the heads of the people who made the game and see how they
+		were wired...argh! You can see my problem. But first - how do we jump down to
+		where the directory starts? There must be a little header at the top of the file
+		that tells us where to start reading it from.
+	</p>
+
+	<h3>Reading The Header</h3>
+
+	<p>
+		I wrote a little program in C to read the WAD. Most people would lean towards
+		a scripting language, but I actually find most of these tend to be a bit too
+		high level - I don't care about containers and iterators, I just want direct
+		access to the bytes I'm reading. And I'm very, very quick at writing in C
+		(I listen to heavy metal remember), so away with your scripts!
+		Our basic tools of the trade in reading binary files are:
+	</p>
+
+	<ul>
+		<li><tt>fread()</tt> - read a given amount of binary data into whatever.</li>
+		<li><tt>fwrite()</tt> - write a given amount of binary data into whatever.</li>
+		<li><tt>fseek()</tt> - jump file pointer to a given offset in a file for future reads.</li>
+		<li>String comparison functions like <tt>strncmp()</tt> or <tt>strcmp()</tt>.</li>
+	</ul>
+
+	<p>
+		The file pointer is like a cursor where you are currently reading from. It starts
+		at the top of the file, but you can shift it around before calling <tt>fread()</tt>
+		again so that it reads from an earlier or later location. If you are on Linux or
+		Mac and want to bring up the API manual pages for a particular function from
+		the standard headers type into a terminal window:
+	</p>
+
+	<pre>
+man 3 fread
+</pre>
+
+	<p>
+		Where `3` indicates that you want to look up a library function name, not a
+		command line program of the same name, if both exist.
+	</p>
+
+	<p>
+		We can quickly determine the header for the WAD format from hexedit. The very
+		left-hand column of hexedit gives you the address or offset of the start of each
+		row of bytes. If we note down where the directory starts - the start of the row
+		in the image above, where the strings start, is <tt>00 BC C5 C0</tt>. We can look
+		for a similar value stored near the start of the file. You can also search for a byte value too, if you tab back to
+		the hex
+		section. CTRL+X quits, by the way. You can type <tt>man hexedit</tt> to bring up
+		the man pages for hexedit.
+	</p>
+
+	<div class="centre">
+		<img src="../images/hexeditb.png" width="512" /><br />
+		<small>Finding the directory offset in the header (highlighted).</small>
+	</div>
+
+	<p>
+		Near the start of the file we see <tt>C4 C5 BC 00</tt> which is a backwards version
+		of our directory row start offset, but just 4 bytes off. Why backwards? Most
+		binary data files are stored in "little endian" order - the smallest bytes
+		appear first / on the left. Here we have an integer value that spans 4 bytes.
+		The "little endian" name is a reference to Gulliver's Travels. Some special
+		architectures still prefer big-endian (but most are compatible with little-endian).
+		Notably socket programming packets still use big-endian, and you would use a
+		set of functions to convert your data to and from this. We don't need to do anything
+		here - our <tt>fread</tt> function already knows to expect little-endian. If you
+		look up info on binary file reading on "helpful" Q&A websites everybody will try
+		to get you to make your code more portable or something by being excessively
+		pedantic about this. This is a load of garbage - I actively avoid these websites/<i>besser-wisserer</i>.
+	</p>
+
+	<textarea rows="34">
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <assert.h>
+
+char pwad_iwad[5]; // "IWAD" or "PWAD"
+int dir_nentries;
+int dir_location; // integer holding pointer
+
+int main() {
+	// open the file in "read binary" mode
+	FILE *f = fopen( "DOOM.WAD", "rb" );
+	if ( !f ) {
+		fprintf( stderr, "ERROR opening `%s`\n", DOOM.WAD );
+		return 1;
+	}
+	{ // READ WAD HEADER (12-bytes)
+		size_t ritems = 0;
+		ritems = fread( pwad_iwad, 1, 4, f );
+		assert( ritems == 4 );
+		printf( "WAD type = `%s`\n", pwad_iwad );
+
+		ritems = fread( &dir_nentries, 4, 1, f );
+		assert( ritems == 1 );
+		printf( "dir entries = %i\n", dir_nentries );
+
+		ritems = fread( &dir_location, 4, 1, f );
+		assert( ritems == 1 );
+		printf( "dir location = %i\n", dir_location );
+	}
+	fclose( f ); // close the file
+	
+	return 0;
+}</textarea>
+
+	<p>
+		The above code is my starting snippet.
+		The header is just 3 groups of 4-byte values. We can see the first is the
+		string of chars saying what type of file it is (note: no null-terminator
+		character here, so I added an extra char at the end of my string for this).
+		The third group of 4-bytes is our directory offset. And an educated guess suggests
+		that the middle holds the number of items in the directory. I should point out
+		that I didn't get this right first time - there was some trial and error and
+		sailor-language. Note that
+		you can use <tt>fread()</tt> to read any number of bytes into any sort of
+		variable or array. They don't work so well at reading and writing structs though,
+		for various reasons - be warned! It's easy to make mistakes reading from binary
+		files, so I always assert that the number of items read (the return values)
+		matches my expectations.
+	</p>
+
+	<h3>Reading the Directory</h3>
+
+	<p>
+		We can add another block to read in the directory into a generic structure
+		before we close the file. We can see that the directory starts a few bytes ahead
+		of our first string, but it took a bit of fiddling around, with much the same
+		match-and-guess method to get this right. You can sort-of confirm this data
+		layout by looking at some slightly unreliable info in old docs <a
+			href="http://www.gamers.org/dhs/helpdocs/dmsp1666.html">from 1994</a>,
+		or the various Doom wikis. I should probably mention that I was too lazy to
+		verify most of this - so there may be errors in my binary data layout assumptions.
+		I stored each directory entry's meta-data in a struct. I call each block of data
+		referred to by the directory entry a "lump" (certain song instantly stuck in head?). There's a whole blob (binary
+		large object),
+		lump, wad... silly naming thing going on in the binary file world. For
+		<a href="http://store.steampowered.com/app/467790/Crongdor_the_Barbarian/">Crongdor</a>
+		I had to binary-up all the music files for licensing reasons. I called these files "VOM"
+		(volume of music). Yeah...
+	</p>
+
+	<textarea rows="31">
+typedef struct Lump {
+	int location; // integer holding pointer
+	int bytes;
+	char name[9];
+} Lump;
+Lump *lumps; // a buffer for all directory entries
+
+{ // DIRECTORY (usually this is at end of WAD file)
+	// SEEK_SET is offset from start of file. SEEK_CUR is from current fptr
+	int ret = fseek( f, (long)dir_location, SEEK_SET );
+	assert( ret != -1 );
+
+	lumps = (Lump *)malloc( sizeof( Lump ) * dir_nentries );
+	assert( lumps );
+
+	printf( "lump names =\n" );
+	size_t ritems = 0;
+	for ( int i = 0; i < dir_nentries; i++ ) {
+		ritems = fread( &lumps[i].location, 4, 1, f );
+		assert( ritems == 1 );
+
+		ritems = fread( &lumps[i].bytes, 4, 1, f );
+		assert( ritems = 1 );
+
+		ritems = fread( lumps[i].name, 1, 8, f );
+		assert( ritems = 8 );
+		lumps[i].name[8] = '\0';
+		printf( "%s ", lumps[i].name );
+	}
+	printf( "\n" );
+}</textarea>
+
+	<p>
+		You can see that I use <tt>fseek</tt> to jump to reading from the directory,
+		using the location that we read from the header. I allocate memory so that each
+		directory entry has its own struct, and then read them all in in a loop. Now we
+		hold the Keys to the Kingdom!
+	</p>
+
+	<p>
+		If you print the lump names as you read them in you can get a pretty good idea
+		of what the contents are.
+	</p>
+
+	<h3>Plopping Out the WAD Contents</h3>
+
+	<p>
+		If you want to you can extract most lumps from the WAD directly now - you just
+		<tt>fseek</tt> to their location, <tt>fread</tt> their number of bytes out into
+		a buffer of that size, and <tt>fwrite</tt> them into a new file, using their
+		name as the filename. This is where I discovered my first hurdle.
+	</p>
+
+	<ul>
+		<li>The music files are not typical '90s MIDI files.</li>
+		<li>The sound files also use a proprietary format.</li>
+		<li>Some images are in a custom [slightly] compressed format.</li>
+		<li>All of the images use the older, palette-based colour format.</li>
+	</ul>
+
+	<p>
+		At this point I decided that I really needed to extract all the data, not just
+		the music files. Of course!
+	</p>
+
+	<h3>Colour Palette</h3>
+
+	<p>
+		I'd actually come across Doom's palette system before in my porting project, so
+		I knew how to deal with that already. The walls and floors are all very simple
+		N*M pixels of raw data, except that each pixel stores an index into a palette
+		instead of an RGB colour (red-blue-green channels, like the HTML colours). The palette index holds the RGB colour.
+		This allowed
+		for smaller image sizes, worked on older <a href="https://en.wikipedia.org/wiki/8-bit_color">VGA 320x200</a>
+		devices that didn't have Truecolor (RGB rather than palettes) support yet, and enabled some nifty colour
+		shifting special effects because you could just modify the palette being used
+		to change the shades of all the colours on screen.
+	</p>
+
+	<div class="centre">
+		<img src="../images/doom_palette.gif" />
+	</div>
+
+	<p>
+		If you printed out the directory entry names you'd see that there are actually
+		a series of colour palette stored in the WAD. Only one can be used for the
+		screen at a time - the others were swapped in for special effects. One palatte
+		tints everything green for when the player is
+		wearing the radiation suit. There are a series of red shades for producing an
+		animated "hurt" effect, based on how much damage the player takes, and some
+		flashes for item pickups, etc. The best way to demonstrate this was to write
+		them all out as images, and animate the series as a GIF.
+	</p>
+
+	<p>
+		Other games based on the Doom engine (Heretic, Hexen, Strife, Doom II...) also
+		had colour palettes, and similar WAD formats. Here I also animate Heretic's
+		palettes - you can see the different choice of colours for a different mood.
+	</p>
+
+	<div class="centre">
+		<img src="../images/heretic_palette.gif" />
+	</div>
+
+	<p>
+		If you store the palettes (the first one is the default - you really only want
+		this) then you can write out the images as raw data files, or convert them to
+		e.g. PNG - I used <a href="https://github.com/nothings/stb/blob/master/stb_image_write.h">stb_image_write</a>,
+		because it's simple. Palettes are in the <tt>PLAYPAL</tt> lump.
+	</p>
+
+	<textarea rows="22">
+byte_t *palettes[PAL_MAX];
+
+{ // read palettes
+	int ret = fseek( f, (long)lumps[dir_idx].location, SEEK_SET );
+	assert( ret != -1 );
+	// i think we can write them out as images
+	for ( int palette_idx = 0; palette_idx < PAL_MAX; palette_idx++ ) {
+		const size_t palette_sz = 768;
+		palettes[palette_idx] = (byte_t *)malloc( palette_sz );
+		assert( palettes[palette_idx] );
+
+		size_t ritems = fread( palettes[palette_idx], 1, palette_sz, f );
+		assert( ritems == palette_sz );
+
+		if ( dump_palette ) {
+			char fname[1024];
+			sprintf( fname, "palette%i.png", palette_idx );
+			ret = stbi_write_png( fname, 16, 16, 3, palettes[palette_idx], 0 );
+			assert( ret != 0 );
+		}
+	}
+}</textarea>
+
+	<p>
+		I wrote some convenience types to represent the RGB colours, and a function to
+		look up an RGB from a palette index:
+	</p>
+
+	<textarea rows="14">
+// for convenience
+typedef struct rgb_t { byte_t r, g, b; } rgb_t;
+
+// for convenience/safety
+rgb_t rgb_from_palette( byte_t colour_idx ) {
+	assert( colour_idx < 256 && colour_idx >= 0 );
+
+	rgb_t rgb;
+	rgb.r = palettes[0][colour_idx * 3];
+	rgb.g = palettes[0][colour_idx * 3 + 1];
+	rgb.b = palettes[0][colour_idx * 3 + 2];
+
+	return rgb;
+}</textarea>
+
+	<h3>Writing out "Flats"</h3>
+
+	<p>
+		The floor and ceiling images are called "flats", and stored between lumps named
+		<tt>F_START</tt> and <tt>F_END</tt>. Names vary a bit depending on the version
+		of the WAD. They are pretty easy to write out - we just need to look up the
+		RGB value of each pixel from our palette.
+	</p>
+
+	<textarea rows=29>
+	// look up palette RGB for each bytes and draw with stb_image
+	const size_t flat_sz = 4096;
+	byte_t *index_buff = alloca( flat_sz );
+	assert( index_buff );
+
+	byte_t *pixel_buff = alloca( flat_sz * 3 ); // rgb
+	assert( pixel_buff );
+
+	int ret = fseek( f, (long)lumps[dir_idx].location, SEEK_SET );
+	assert( ret != -1 );
+	size_t ritems = fread( index_buff, 1, flat_sz, f );
+	if ( ritems != lumps[dir_idx].bytes ) {
+		printf( "%s\n", curr_lump_name );
+		assert( 0 );
+	}
+
+	// use pixel in palette[0] (normal view) as o/p pixel RGB
+	for ( int j = 0; j < flat_sz; j++ ) {
+		rgb_t rgb = rgb_from_palette( index_buff[j], PAL_DEFAULT );
+		pixel_buff[j * 3] = rgb.r;
+		pixel_buff[j * 3 + 1] = rgb.g;
+		pixel_buff[j * 3 + 2] = rgb.b;
+	}
+
+	// write image file
+	char fname[1024];
+	sprintf( fname, "%s.png", curr_lump_name );
+	ret = stbi_write_png( fname, 64, 64, 3, pixel_buff, 0 );
+	assert( ret != 0 );</textarea>
+
+	<p>
+		I used <tt>alloca</tt> rather than <tt>malloc</tt> because it can allocate small
+		amounts of memory on the stack that are freed when the function that called alloca ends. Kind of
+		convenient dynamic scratch memory if under a MB or two.
+	</p>
+
+	<p>
+		This wrote out almost all of the simple images - well, all of the images that were 64x64
+		pixels anyway. There are just a few exceptions. Sprites and images that can have
+		transparent bits use a different format, which I'll come back to later.
+		I won't display these here, because it's probably a bit naughty, but it indeed works.
+	</p>
+
+	<h3>Next Time</h3>
+
+	<p>
+		Next time I'll show you the bizarre hurdles I went through to crack into the music
+		and sounds - which are in a proprietary format that was never documented anywhere.
+		I got it working, of course. Then - ladies and gentlemen, I will show you how I
+		rendered the maps in OpenGL.
+	</p>
+
+	<h3>Source Code</h3>
+
+	<p>
+		My rather messy "de-wad" tool with all this code in it is available <a
+			href="https://github.com/capnramses/doom_projects/blob/master/doom_dewad/">on GitHub</a>.
+	</p>
+
+</body>
+
+</html>

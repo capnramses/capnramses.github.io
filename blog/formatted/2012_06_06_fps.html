@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2012_06_06_fps</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2 id="6june2012">6 June 2012</h2>
+	<h3>Frames per Second</h2>
+
+		<p>
+			Added a frequency of rendering output to the <a href="https://antongerdelan.net/demos/virtualcamera/">virtual
+				camera demo</a>. I'm geting about 70-80 Hz on my little machine with Chrome and integrated graphics.
+			It will be interesting to see the difference when I set up the other computer with a new graphics board. I should
+			have made this first, so I could figure out what the hungry
+			bits were as I added them in!
+		</p>
+		<table cellpadding="3">
+			<tr>
+				<td></td>
+				<td><small><b>Intel Integrated</b></small></td>
+				<td><small><b>AMD HD 7570</b></small></td>
+			</tr>
+			<tr>
+				<td><small><b>Chrome 32</b></small></td>
+				<td><small>70-80 Hz</small></td>
+				<td><small>60 Hz</small></td>
+			</tr>
+			<tr>
+				<td><small><b>Firefox 32</b></small></td>
+				<td><small>60 Hz</small></td>
+				<td><small>?</small></td>
+			</tr>
+			<tr>
+				<td><small><b>Chrome 64</b></small></td>
+				<td><small>n/a</small></td>
+				<td><small>60 Hz</small></td>
+			</tr>
+			<tr>
+				<td><small><b>Firefox 64</b></small></td>
+				<td><small>n/a</small></td>
+				<td><small>60 Hz</small></td>
+			</tr>
+		</table>
+
+		<p>
+			<b>
+				<i>
+					Edit: 12 July 2012: Chrome has a built in frame-limiter (vsynch) to prevent tearing. You can turn this off in
+					<tt>about:flags</tt> to get it to run at higher rates.
+				</i>
+			</b>
+		</p>
+
+		<h3>Facial Animation and Talking Heads</h3>
+
+		<p>
+			Had a look at <a href="http://stickmanventures.com/labs/demo/webgl-threejs-morph-target/">this demo</a> which uses
+			morph targets. Works pretty well. There's a read-later article
+			on speech synthesis with a talking head in Italian with WebGL <a
+				href="http://www.isca-speech.org/archive/avsp11/papers/av11_123.pdf">here</a>.
+		</p>
+
+</body>
+
+</html>

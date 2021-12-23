@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2012_06_12_optimisations</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2 id="12june2012">12 June 2012</h2>
+
+	<h3>Optimisations and Uniforms</h3>
+	<p>
+		Profiling JS and WebGL is almost impossible. I went back to OpenGL and C
+		to try some optimisations that I think will work inside the browser as
+		well. Profiling showed me that I was wasting the majority of my CPU time
+		on two things:
+	</p>
+	<ol>
+		<li>
+			Sending uniform variables from the CPU to the GPU.
+		</li>
+		<li>
+			Constructing 3D vector objects.
+		</li>
+	</ol>
+	<p>
+		The first problem was a two-step fix. First, I was updating <b>all</b>
+		of my uniform variables, every time that I rendered an object. This is
+		not necessary, because uniforms are particular to shader programmes, not
+		to vertex buffers. Many of the objects to be rendered will re-use the
+		same shader programme. I sprinkled a few boolean flags around so that
+		uniforms were only sent using <tt>glUniform...</tt> when the shader
+		programme being used had changed, or the values in the uniforms needed
+		to be changed. My objects are loaded in clumps, so I can be fairly
+		confident that those using the same shader will all pop up in contiguous
+		order in my rendering loop.
+	</p>
+	<p>
+		The second problem was not made clear anywhere, and I just discovered it
+		by profiling. Each call to <tt>glUniform</tt> requires that
+		you give it the 'location' of the uniform variables in the
+		shader programme. This is just an unique unsigned integer
+		identifier. I was getting these, by name (by string),
+		immediately before each call to set the uniform. But, as I
+		discover, <b>Getting uniform locations during the main loop is incredibly
+			slow</b>. I changed my engine to fetch all of these in the loading
+		phase.
+	</p>
+	<p>
+		<orange>The result of these uniform changes? 150% faster rendering
+			rate.</orange>
+	</p>
+	<p>
+		The other problem relates to 3D vector objects. The constructor for
+		GLM's <tt>vec3</tt> was sucking up a huge chunk of my CPU time. Why? I
+		wasn't using vec3s throughout the code-base, and had to make lots of
+		conversions. Even so, it seemed like a trivial constructor, so I was
+		surprised. Rather than give up on GLM, I just used vec3 whereever
+		humanly possible, and passed vec3s by reference in every function
+		parameter rather than re-assembling objects. INSERT POST HERE
+		- it looks like this problem is considerably worse in Javascript.
+	</p>
+	<p>And the result of these few, seeminly minor, improvements? My OpenGL
+		engine runs <orange>more than 2x faster</oranage>. The rendering alone
+			has gone from a humble 30Hz to a fantastic 80Hz!</p>
+
+	<h3>Future Optimisations</h3>
+	<p>
+		More event-driven engines are key I think. Making clever use of
+		callbacks might be nice. With larger engines I suspect that a lot of my
+		time is wasted cycling through loops that check if things should be on
+		screen or not. Often they are not, which is a great saving for the GPU, but checking
+		the entire list of renderables every frame is not ideal for the CPU. I think it's time to try
+		managing separate lists of "visible" and "invisible" objects to reduce
+		the length of loops.
+	</p>
+
+</body>
+
+</html>

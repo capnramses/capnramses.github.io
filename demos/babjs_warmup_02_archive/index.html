@@ -1,0 +1,77 @@
+<!--
+https://github.com/KhronosGroup/glTF-Sample-Models
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Babylon.js Warmup 02 - GLTF - Archive</title>
+
+  <script src="../js/babylonjs/babylon.js"></script>
+  <!-- To quickly add support for all loaders the following script can be added to your page: -->
+  <script src="../js/babylonjs/loaders/babylonjs.loaders.min.js"></script>
+  <!-- This loader supports both glTF 1.0 and 2.0 and will use the correct loader based on the glTF version string. 
+  <script src="js/babylonjs/loaders/babylon.glTFFileLoader.js"></script>
+  -->
+  <script src="../js/pep/pep.js"></script>
+</head>
+
+<body>
+  <h1>Babylon.js Warmup 02 - GLTF - Archive</h1>
+  <canvas id="my_canvas" touch-action="none" width="800" height="800"></canvas>
+  <!-- Note: lots more sliding window options from https://doc.babylonjs.com/api/classes/babylon.performancemonitor -->
+  <p>PGUP/PGDN,cursor keys</p>
+</body>
+
+</html>
+
+<script>
+  var canvas = document.getElementById("my_canvas");
+  var engine = new BABYLON.Engine(canvas, true);
+  /* canvas.addEventListener("click", function () { // Going fullscreen can only be done on an user request:
+     engine.switchFullscreen(true);
+   }); doesn't work well with XR mode switch*/
+  var createScene = function () {
+    var scene = new BABYLON.Scene(engine);
+    var camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2, 2, new BABYLON.Vector3(0, 0, 5), scene);
+    camera.attachControl(canvas, true);
+    // default HDR environment map -- required to make PBR meshes not be dark
+    var env = scene.createDefaultEnvironment({
+      createSkybox: false // stops big blue box
+    });
+    var light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 0), scene);
+    var light2 = new BABYLON.PointLight("light2", new BABYLON.Vector3(0, 1, -1), scene);
+    var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 2 }, scene);
+    // Loads all babylon assets from the file and appends them to the scene
+    // WARNING: do not apply a rotation since a quaternion may already be applied
+    // NOTE(Anton) you can also use .Load(): Loads all babylon assets from the file and creates a new scene
+    // OR .ImportMesh() Loads the meshes from the file and appends them to the scene https://doc.babylonjs.com/how_to/load_from_any_file_type
+    // OR just get the assets LoadAssetContainer(), ImportAnimations()...
+    // ALSO there are async versions of each function: AppendAsync()
+    // For assistance when load multiple assets the AssetsManager class can be used. See https://doc.babylonjs.com/how_to/how_to_use_assetsmanager
+    var mesh = BABYLON.SceneLoader.Append("../assets/meshes/archive/", "archive.glb", scene, function (scene) {
+      // do something with the scene
+    });
+    var shadowGenerator = new BABYLON.ShadowGenerator(1024, light2);
+    shadowGenerator.getShadowMap().renderList.push(sphere);
+    env.ground.receiveShadows = true;
+
+    // Enable VR, use XR when possible
+    var vrHelper = scene.createDefaultVRExperience({
+      //createDeviceOrientationCamera: false,
+      useXR: true, // This will enable XR if supported
+      //floorMeshes: [env.ground]
+    });
+
+    scene.debugLayer.show();
+    return scene;
+  };
+  var scene = createScene();
+  engine.runRenderLoop(function () {
+    scene.render();
+  });
+  window.addEventListener("resize", function () {
+    engine.resize();
+  });
+</script>

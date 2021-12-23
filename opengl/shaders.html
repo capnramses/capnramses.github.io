@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Shaders - Anton's OpenGL 4 Tutorials</title>
+	<link rel="stylesheet" type="text/css" href="../greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+
+	<p><a href="index.html">[index]</a></p>
+
+	<h1>OpenGL 4 Shaders</h1>
+	<h4>Anton Gerdelan. Last edited: 2 October 2016</h4>
+
+	<p>
+		Shaders tell OpenGL <u>how</u> to draw, but we don't have anything to draw yet - we will
+		cover that in the vertex buffers article. If you would rather skip the introduction, you
+		can jump straight to the <a href="#example_shaders">Example Shaders</a> and get them
+		loaded into GL with the <a href="#minimal_example">Minimal C Code</a>.
+	</p>
+
+	<h2>Overview</h2>
+
+	<p>
+		Shaders are mini-programmes that define a <b>style</b> of rendering. They are compiled
+		to run on the specialised GPU (graphics processing unit). The GPU has lots of
+		processors specialised for floating-point operations.
+		Each rendering stage can be split into many separate calculations - with one calculation
+		done on each GPU processor; transform each vertex,
+		colour each tiny square separately, etc. This means that we can compute a lot of the
+		rendering in parallel - which makes it much faster than doing it with a CPU-based
+		<b>software renderer</b> where we only have 1-8 processors (in the graphics world, "hardware" implies the graphics
+		adapter).
+		Example:
+	</p>
+
+	<div class="centre">
+		<img src="images/shaders_2016_redo_512.png" /><br />
+		<small><i>Common drawing operations such as transforming each vertex and
+				colouring each fragment can be done independently. We write a shader (mini programme) to
+				compute these operations, and the GPU's highly parallel architecture will
+				attempt to compute them all concurrently.</i></small>
+	</div>
+
+	<p>
+		Shaders are a way of re-programming the graphics pipeline. If we wanted to use a different
+		colouring method for the cube in the image, or have an animated, spinning cube, we could tell OpenGL
+		to switch to using a different shader programme. The rendering process has several
+		distinct stages of transforming a 3d object in a final 2d image. We call this staged
+		process the <b>graphics pipeline</b>.
+		All of the stages of the graphics pipeline that happen on the GPU are called the
+		<b>[programmable] hardware pipeline</b>. Older OpenGL APIs had pre-canned functions like
+		<tt>glLight()</tt> for driving the rendering model. We call this the <b>fixed-function
+			pipeline</b> ("fixed" because it's not re-programmable). These functions no longer exist,
+		and we have to write the lighting equations ourselves in shaders. In OpenGL 4 we can
+		write a shader to control many different stages of the graphics pipeline:
+	</p>
+
+	<div class="centre">
+		<img src="images/hwpipe2.png" width="512px" />
+	</div>
+
+	<p>
+		A complete shader programme comprises a set of separate shader
+		(mini-programmes) - one to control each stage. Each mini-programme - called a <tt><b>shader</b></tt>
+		by OpenGL - is compiled, and the whole set are linked together to form the executable
+		shader programme - called a <tt><b>program</b></tt> by OpenGL. Yes, that's the worst
+		naming convention ever. If you look at the Quick
+		Reference Card (or further down the page) you can see that the API differentiates
+		functions into <tt>glShader</tt> and <tt>glProgram</tt> (note US spelling of "programme").
+	</p>
+
+	<p>
+		Each individual shader has a different job. At minimum, we usually have 1
+		vertex shader and 1 fragment shader per shader programme, but OpenGL 4 allows us to use
+		some optional shaders too.
+	</p>
+
+	<h2>Shader Parallelism</h2>
+
+	<p>
+		Shader programmes run on the GPU, and are highly parallelised. Each vertex shader only
+		transforms 1 vertex. If we have a mesh of 2000 vertices, then 2000 vertex shaders will
+		be launched when we draw it. Because we can compute each one separately, we can also run them
+		all in parallel. Depending on the number of processors on the GPU, you might
+		be able to compute all of your mesh's vertex shaders simultaneously.
+	</p>
+
+	<table>
+		<caption><b>Comparison of Selected OpenGL4-Capable GPUs</b></caption>
+		<tr>
+			<td><b>GPU type</b></td>
+			<td><b>GPU cores</b></td>
+		</tr>
+		<tr>
+			<td>GeForce 605</td>
+			<td>48</td>
+		</tr>
+		<tr>
+			<td>Radeon HD 7350</td>
+			<td>80</td>
+		</tr>
+		<tr>
+			<td>GeForce GTX 580</td>
+			<td>512</td>
+		</tr>
+		<tr>
+			<td>Radeon HD 8750</td>
+			<td>768</td>
+		</tr>
+		<tr>
+			<td>GeForce GTX 690</td>
+			<td>1536</td>
+		</tr>
+		<tr>
+			<td>Radeon HD 8990</td>
+			<td>2304</td>
+		</tr>
+	</table>
+
+	<p>
+		Because there is a lot of variation in user GPU hardware, we can only make very general
+		assumptions about the ideal number of vertices or facets each mesh should have for
+		best performance. Because we only draw one mesh at a time, keeping the number of
+		<u>separate meshes drawn</u> per-scene to a low-ish level is more beneficial
+		(reducing the <b>batch count</b> <i>per</i> rendered frame) - the idea is to keep as
+		many of the processors in use at once as possible.
+	</p>
+
+	<h2>Difference Between Fragments and Pixels</h2>
+
+	<p>
+		A <b>pixel</b> is a "picture element". In OpenGL lingo, pixels are the
+		elements that make up the final 2d image that it draws inside a window on your
+		display. A <b>fragment</b> is a pixel-sized area of a surface. A fragment
+		shader determines the colour of each one. Sometimes surfaces overlap - we then
+		have more than 1 fragment for 1 pixel. <b>All of the fragments are drawn, even
+			the hidden ones</b>.
+	</p>
+
+	<p>
+		Each fragment is written into the framebuffer image that will be displayed as
+		the final pixels. If <b>depth testing</b> is enabled it will paint the
+		front-most fragments on top of the further-away fragments. In this case, when
+		a farther-away fragment is drawn after a closer fragment, then the GPU is
+		clever enough to skip drawing it, but it's actually quite tricky to organise
+		the scene to take advantage of this, so we'll often end up executing huge
+		numbers of redundant fragment shaders.
+	</p>
+
+	<h2>Shader Language</h2>
+
+	<p>
+		OpenGL 4 shaders are written in OpenGL Shader Language version 4.00.9. The GLSL language
+		from OpenGL versions 3 to 4 is almost identical, so we can port between versions
+		without changing the code. OpenGL version 3.2 added a new type of shader: geometry
+		shaders, and version 4.0 added tessellation control and tessellation evaluation shaders.
+		These, of course, can not be rolled back to earlier versions. The first line in a GLSL
+		shader should start with the simplified version tag:
+	</p>
+
+	<p><tt>
+			#version 400
+		</tt></p>
+
+	<p>
+		The different version tags are:
+	</p>
+
+	<table>
+		<caption><b>Version Tags for OpenGL and GLSL Versions</b></caption>
+		<tr>
+			<td><b>OpenGL Version</b></td>
+			<td><b>GLSL Version</b></td>
+			<td><b><tt>#version</tt> tag</b></td>
+		</tr>
+		<tr>
+			<td>1.2</td>
+			<td>none</td>
+			<td>none</td>
+		</tr>
+		<tr>
+			<td>2.0</td>
+			<td>1.10.59</td>
+			<td>110</td>
+		</tr>
+		<tr>
+			<td>2.1</td>
+			<td>1.20.8</td>
+			<td>120</td>
+		</tr>
+		<tr>
+			<td>3.0</td>
+			<td>1.30.10</td>
+			<td>130</td>
+		</tr>
+		<tr>
+			<td>3.1</td>
+			<td>1.40.08</td>
+			<td>140</td>
+		</tr>
+		<tr>
+			<td>3.2</td>
+			<td>1.50.11</td>
+			<td>150</td>
+		</tr>
+		<tr>
+			<td>3.3</td>
+			<td>3.30.6</td>
+			<td>330</td>
+		</tr>
+		<tr>
+			<td>4.0</td>
+			<td>4.00.9</td>
+			<td>400</td>
+		</tr>
+		<tr>
+			<td>4.1</td>
+			<td>4.10.6</td>
+			<td>410</td>
+		</tr>
+		<tr>
+			<td>4.2</td>
+			<td>4.20.6</td>
+			<td>420</td>
+		</tr>
+		<tr>
+			<td>4.3</td>
+			<td>4.30.6</td>
+			<td>430</td>
+		</tr>
+	</table>
+
+	<h3>GLSL Operators</h3>
+
+	<p>
+		GLSL contains the operators in C and C++, with the exception of pointers. Bit-wise
+		operators were added in version 1.30.
+	</p>
+
+	<p>
+		If you leave out the version tag, OpenGL fall back to an earlier default - it's
+		always better to specify the version.
+	</p>
+
+	<h3>GLSL Data Types</h3>
+
+	<p>
+		The most commonly used data types in GLSL are in the table below. For a complete list
+		see any of the <a href="http://www.opengl.org/documentation/glsl/">official reference documents</a>.
+	</p>
+
+	<table>
+		<caption><b>Commonly-Used GLSL Data Types</b></caption>
+		<tr>
+			<td><b>Data Type</b></td>
+			<td><b>Description</b></td>
+			<td><b>Common Usage</b></td>
+		</tr>
+		<tr>
+			<td><tt>void</tt></td>
+			<td>nothing</td>
+			<td>Functions that do not return a value</td>
+		</tr>
+		<tr>
+			<td><tt>bool</tt></td>
+			<td>Boolean value as in C++</td>
+		</tr>
+		<tr>
+			<td><tt>int</tt></td>
+			<td>Signed integer as in C</td>
+		</tr>
+		<tr>
+			<td><tt>float</tt></td>
+			<td>Floating-point scalar value as in C</td>
+		</tr>
+		<tr>
+			<td><tt>vec3</tt></td>
+			<td>3d floating-point value</td>
+			<td>Points and direction vectors</td>
+		</tr>
+		<tr>
+			<td><tt>vec4</tt></td>
+			<td>4d floating-point value</td>
+			<td>Points and direction vectors</td>
+		</tr>
+		<tr>
+			<td><tt>mat3</tt></td>
+			<td>3x3 floating-point matrix</td>
+			<td>Transforming surface normals</td>
+		</tr>
+		<tr>
+			<td><tt>mat4</tt></td>
+			<td>4x4 floating-point matrix</td>
+			<td>Transforming vertex positions</td>
+		</tr>
+		<tr>
+			<td><tt>sampler2D</tt></td>
+			<td>2d texture loaded from an image file</td>
+		</tr>
+		<tr>
+			<td><tt>samplerCube</tt></td>
+			<td>6-sided sky-box texture</td>
+		</tr>
+		<tr>
+			<td><tt>sampler2DShadow</tt></td>
+			<td>shadow projected onto a texture</td>
+		</tr>
+	</table>
+
+	<h3>File Naming Convention</h3>
+
+	<p>
+		Each shader is written in plain text and stored as a character array (C string).
+		It is usually convenient to read each shader from a separate plain text file. I
+		use a file naming convention like this;
+	</p>
+
+	<table>
+		<caption><b>My GLSL File Naming Convention</b></capation>
+		<tr>
+			<td><tt>texturemap.vert</tt></td>
+			<td>the vertex shader for my texture-mapping shader programme</td>
+		</tr>
+		<tr>
+			<td><tt>texturemap.frag</tt></td>
+			<td>the fragment shader for my texture-mapping shader programme</td>
+		</tr>
+		<tr>
+			<td><tt>particle.vert</tt></td>
+			<td>the vertex shader for my particle system shader</td>
+		</tr>
+		<tr>
+			<td><tt>particle.geom</tt></td>
+			<td>the geometry shader for my particle system shader</td>
+		</tr>
+		<tr>
+			<td><tt>particle.frag</tt></td>
+			<td>the fragment shader for my particle system shader</td>
+		</tr>
+	</table>
+
+	<p>
+		Some text editors (notepad++, gedit, ...) will do syntax highlighting for GLSL
+		if you end with a ".glsl" extension. The GLSL reference compiler;
+		<a href="http://www.khronos.org/opengles/sdk/tools/Reference-Compiler/">Glslang</a>
+		can check your shaders for bugs if they end in ".vert" and ".frag".
+	</p>
+
+	<h2 id="example_shaders">Example Shaders</h2>
+
+	<p>
+		GLSL is designed to resemble the C programming language. Each shader resembles a small
+		C programme. Let us examine a very minimal shader programme that has only a vertex
+		shader and a fragment shader. Each of these shaders can be stored in a C string, or in
+		a plain text file.
+	</p>
+
+	<p>
+		In this case we just want to be able to accept a buffer of points and place them
+		directly onto the screen. The hardware will draw triangles, lines, or points using these,
+		depending on the draw mode that we set. Every pixel-sized piece (fragment) of triangle,
+		line, or point goes to a fragment shader. Just for the sake of example, we want to be
+		able to control the colour of each fragment by updating a <tt><b>uniform</b></tt>
+		variable in our C programme.
+	</p>
+
+	<h3>Vertex Shader</h3>
+
+	<p>
+		The vertex shader is responsible for transforming vertex positions into clip space. It
+		can also be used to send data from the vertex buffer to fragment shaders. This vertex
+		shader does nothing, except take in vertex positions that are already in clip space, and
+		output them as final clip-space positions. We can write this into a plain text file
+		called: <tt>test_vs.glsl</tt>.
+	</p>
+
+	<pre>
+#version 420
+
+in vec3 vertex_position;
+
+void main() {
+  gl_Position = vec4(vertex_position, 1.0);
+}</pre>
+
+	<p>
+		GLSL has some built-in data types that we can see here:
+	</p>
+	<ul>
+		<li><tt>vec3</tt> is a 3d vector that can be used to store positions, directions, or colours.</li>
+		<li><tt>vec4</tt> is the same but has a fourth component which, in this variable, is used
+			to determine perspective. We will examine this in the <a href="virtualcamera">virtual
+				camera</a> article, but for now we can leave it at 1.0, which means "don't calculate any
+			perspective".</li>
+	</ul>
+
+	<p>
+		We can also see the <tt><b>in</b></tt> key-word for input to the programme from the
+		previous stage. In this case the <tt>vertex_position_local</tt> is one of the vertex
+		points from the object that we are drawing. GLSL also has an <tt><b>out</b></tt> key-word for
+		sending a variable to the next stage.
+	</p>
+
+	<p>
+		The entry point to every shader is a <tt><b>void main()</b></tt> function.
+	</p>
+
+	<p>
+		The <tt><b>gl_Position</b></tt> variable is a built-in GLSL variable used to set the
+		final <b>clip-space</b> position of each vertex.
+	</p>
+
+	<p>
+		The input to a vertex buffer (the <tt>in</tt> variables) are called per-vertex
+		<b>attributes</b>, and come from blocks of memory on
+		the graphics hardware memory called <b>vertex buffers</b>. We usually copy our vertex
+		positions into vertex buffers before running our main loop. We will look at vertex
+		buffers in the next tutorial. This vertex shader will run one instance for every vertex
+		in the vertex buffer.
+	</p>
+
+	<h3>Fragment Shader</h3>
+
+	<p>
+		Once all of the vertex shaders have computed the position of every vertex in clip space,
+		then the fragment shader is run once for every pixel-sized space (fragment) between
+		vertices. The fragment shader is responsible for setting the colour of each fragment.
+		Write a new plain-text file: <tt>test_fs.glsl</tt>.
+	</p>
+
+	<pre>
+#version 420
+
+uniform vec4 inputColour;
+out vec4 fragColour;
+
+void main() {
+  fragColour = inputColour;
+}</pre>
+
+	<p>
+		The <tt><b>uniform</b></tt> key-word says that we are sending in a variable to the
+		shader programme from the CPU. This variable is global to all shaders within the
+		programme, so we could also access it in the vertex shader if we wanted to.
+	</p>
+
+	<p>
+		The hardware pipeline knows that the first <tt>vec4</tt> it gets as output from the
+		fragment shader should be the colour of the fragment. The colours are <b>rgba</b>, or
+		red, green, blue, alpha. The values of each component are floats between 0.0 and 1.0,
+		(not between 0 and 255). The alpha channel output can be used for a variety of effects,
+		which you define by setting a <b>blend mode</b> in OpenGL. It is commonly used to
+		indicate opacity (for transparent effects), but by default it does nothing.
+	</p>
+
+	<h2 id="minimal_example">Minimal C Code</h2>
+
+	<p>
+		Note that there is a distinction between a shader, which is a mini-programme for just
+		one stage in the hardware pipeline, and a shader programme which is a GPU programme
+		that comprises several shaders that have been linked together.
+	</p>
+
+	<p>
+		To get shaders up and running quickly you can bang this into a minimal GL programme:
+	</p>
+
+	<ol>
+		<li>load a vertex shader file and fragment shader file and store each in a separate C string</li>
+		<li>call <tt>glCreateShader</tt> twice; for 1 vertex and 1 fragment shader index</li>
+		<li>call <tt>glShaderSource</tt> to copy code from a string for each of the above</li>
+		<li>call <tt>glCompileShader</tt> for both shader indices</li>
+		<li>call <tt>glCreateProgram</tt> to create an index to a new program</li>
+		<li>call <tt>glAttachShader</tt> twice, to attach both shader indices to the program</li>
+		<li>call <tt>glLinkProgram</tt></li>
+		<li>call <tt>glGetUniformLocation</tt> to get the unique location of the variable called "<tt>inputColour</tt>"</li>
+		<li>call <tt>glUseProgram</tt> to switch to your shader before calling...
+		<li><tt>glUniform4f(location, r,g,b,a)</tt> to assign an initial colour to your fragment shader (e.g.
+			<tt>glUniform4f(colour_loc, 1.0f, 0.0f, 0.0f, 1.0f)</tt> for red)</li>
+	</ol>
+
+	<p>
+		The only variables that you need to keep track of are the index created by <tt>glCreateProgram</tt>, and any uniform
+		locations.
+		Now we are ready to draw - we will look at drawing geometry with <tt><b>glDrawArrays</b></tt> in the next tutorial.
+		To set or change uniform variables you can use the various <tt>glUniform</tt> functions, but they <u>only affect the
+			shader programme
+			that has been switched to with <tt>glUseProgram</tt></u>.
+	</p>
+
+	<h2>OpenGL Shader Functions</h2>
+
+	<p>
+		For a complete list of OpenGL shader functions see the
+		<a href="http://www.opengl.org/documentation/glsl/">Quick Reference Card</a>. The most
+		useful functions are tabulated below. We will implement all of these:
+	</p>
+
+	<table>
+		<caption><b>OpenGL "Shader" (Separate Shader Code) Functions</b></caption>
+		<tr>
+			<td><b>Function Name</b></td>
+			<td><b>Description</b></td>
+		</tr>
+		<tr>
+			<td><tt>glCreateShader()</tt></td>
+			<td>create a variable for storing a shader's code in OpenGL. returns <tt>unsigned int</tt> index to it.</td>
+		</tr>
+		<tr>
+			<td><tt>glShaderSource()</tt></td>
+			<td>copy shader code from C string into an OpenGL shader variable</td>
+		</tr>
+		<tr>
+			<td><tt>glCompileShader()</tt></td>
+			<td>compile an OpenGL shader variable that has code in it</td>
+		</tr>
+		<tr>
+			<td><tt>glGetShaderiv()</tt></td>
+			<td>can be used to check if compile found errors</td>
+		</tr>
+		<tr>
+			<td><tt>glGetShaderInfoLog()</tt></td>
+			<td>creates a string with any error information</td>
+		</tr>
+		<tr>
+			<td><tt>glDeleteShader()</tt></td>
+			<td>free memory used by an OpenGL shader variable</td>
+		</tr>
+	</table>
+	<br />
+	<table>
+		<caption><b>OpenGL "Program" (Combined Shader Programme) Functions</b></caption>
+		<tr>
+			<td><b>Function Name</b></td>
+			<td><b>Description</b></td>
+		</tr>
+		<tr>
+			<td><tt>glCreateProgram()</tt></td>
+			<td>create a variable for storing a combined shader programme in OpenGL. returns <tt>unsigned int</tt> index to
+				it.</td>
+		</tr>
+		<tr>
+			<td><tt>glAttachShader()</tt></td>
+			<td>attach a compiled OpenGL shader variable to a shader programme variable
+			<td></td>
+		</tr>
+		<tr>
+			<td><tt>glLinkProgram()</tt></td>
+			<td>after all shaders are attached, link the parts into a complete shader programme</td>
+		</tr>
+		<tr>
+			<td><tt>glValidateProgram()</tt></td>
+			<td>check if a program is ready to execute. information stored in a log</td>
+		</tr>
+		<tr>
+			<td><tt>glGetProgramiv()</tt></td>
+			<td>can be used to check for link and validate errors</td>
+		</tr>
+		<tr>
+			<td><tt>glGetProgramInfoLog()</tt></td>
+			<td>writes any information from link and validate to a C string</td>
+		</tr>
+		<tr>
+			<td><tt>glUseProgram()</tt></td>
+			<td>switch to drawing with a specified shader programme</td>
+		</tr>
+		<tr>
+			<td><tt>glGetActiveAttrib()</tt></td>
+			<td>get details of a numbered per-vertex attribute used in the shader</td>
+		</tr>
+		<tr>
+			<td><tt>glGetAttribLocation()</tt></td>
+			<td>get the unique "location" identifier of a named per-vertex attribute</td>
+		</tr>
+		<tr>
+			<td><tt>glGetUniformLocation()</tt></td>
+			<td>get the unique "location" identifier of a named uniform variable</td>
+		</tr>
+		<tr>
+			<td><tt>glGetActiveUniform()</tt></td>
+			<td>get details of a named uniform variable used in the shader</td>
+		</tr>
+		<tr>
+			<td><tt>glUniform{1234}{ifd}()</tt></td>
+			<td>set the value of a uniform variable of a given shader (function name varies by dimensionality and data type)
+			</td>
+		</tr>
+		<tr>
+			<td><tt>glUniform{1234}{ifd}v()</tt></td>
+			<td>same as above, but with a whole array of values</td>
+		</tr>
+		<tr>
+			<td><tt>glUniformMatrix{234}{fd}v()</tt></td>
+			<td>same as above, but for matrices of dimensions 2x2,3x3, or 4x4</td>
+		</tr>
+	</table>
+
+	<h2>Adding Error-Checking Functionality</h2>
+
+	<p>
+		The first thing to do is extend the minimal code with some error-checking.
+	</p>
+
+	<h3>Check for Compilation Errors</h3>
+
+	<p>
+		Right after calling <tt>glCompileShader</tt>:
+	</p>
+
+	<pre>
+glCompileShader(shader_index);
+// check for compile errors
+int params = -1;
+glGetShaderiv(shader_index, GL_COMPILE_STATUS, &amp;params);
+if (GL_TRUE != params) {
+  fprintf(stderr, "ERROR: GL shader index %i did not compile\n", shader_index);
+  _print_shader_info_log(shader_index);
+  return false; // or exit or something
+}</pre>
+
+	<p>
+		I call a user-defined function here to print even more information from the shader. See
+		next section.
+	</p>
+
+	<h3>Print the Shader Info Log</h3>
+
+	<pre>
+void _print_shader_info_log(GLuint shader_index) {
+  int max_length = 2048;
+  int actual_length = 0;
+  char shader_log[2048];
+  glGetShaderInfoLog(shader_index, max_length, &amp;actual_length, shader_log);
+  printf("shader info log for GL index %u:\n%s\n", shader_index, shader_log);
+}</pre>
+
+	<p>This is the most useful shader debugging function; it will tell you which line in
+		which shader is causing the error.</p>
+
+	<h3>Check for Linking Errors</h3>
+
+	<p>Right after calling <tt>glLinkProgram</tt>:</p>
+
+	<pre>
+// check if link was successful
+int params = -1;
+glGetProgramiv(programme, GL_LINK_STATUS, &amp;params);
+if (GL_TRUE != params) {
+  fprintf(stderr,
+    "ERROR: could not link shader programme GL index %u\n",
+    programme);
+  _print_programme_info_log(programme);
+  return false;
+}</pre>
+
+	<p>
+		I call a user-defined function here to print even more information from the shader. See
+		next section.
+	</p>
+
+	<h3>Print the Program Info Log</h3>
+
+	<pre>
+void _print_programme_info_log(GLuint programme) {
+  int max_length = 2048;
+  int actual_length = 0;
+  char program_log[2048];
+  glGetProgramInfoLog(programme, max_length, &amp;actual_length, program_log);
+  printf("program info log for GL index %u:\n%s", programme, program_log);
+}</pre>
+
+	<p>
+		Where <tt>programme</tt> is printing the index of my programme.
+	</p>
+
+	<h3>Print All Information</h3>
+
+	<p>
+		One of the more common errors is mixing up the "location" of uniform variables.
+		Another is where an attribute or uniform variable is not "active"; not
+		actually used in the code of the shader, and has been optimised out by the
+		shader compiler. We can check this by printing it,
+		and we can print all sorts of other information as well. Here, <tt>programme</tt>
+		is the index of my shader programme.
+	</p>
+
+
+	<pre>
+void print_all(GLuint programme) {
+  printf("--------------------\nshader programme %i info:\n", programme);
+  int params = -1;
+  glGetProgramiv(programme, GL_LINK_STATUS, &amp;params);
+  printf("GL_LINK_STATUS = %i\n", params);
+  
+  glGetProgramiv(programme, GL_ATTACHED_SHADERS, &amp;params);
+  printf("GL_ATTACHED_SHADERS = %i\n", params);
+  
+  glGetProgramiv(programme, GL_ACTIVE_ATTRIBUTES, &amp;params);
+  printf("GL_ACTIVE_ATTRIBUTES = %i\n", params);
+  for (int i = 0; i < params; i++) {
+    char name[64];
+    int max_length = 64;
+    int actual_length = 0;
+    int size = 0;
+    GLenum type;
+    glGetActiveAttrib (
+      programme,
+      i,
+      max_length,
+      &amp;actual_length,
+      &amp;size,
+      &amp;type,
+      name
+    );
+    if (size > 1) {
+      for(int j = 0; j < size; j++) {
+        char long_name[64];
+        sprintf(long_name, "%s[%i]", name, j);
+        int location = glGetAttribLocation(programme, long_name);
+        printf("  %i) type:%s name:%s location:%i\n",
+          i, GL_type_to_string(type), long_name, location);
+      }
+    } else {
+      int location = glGetAttribLocation(programme, name);
+      printf("  %i) type:%s name:%s location:%i\n",
+        i, GL_type_to_string(type), name, location);
+    }
+  }
+  
+  glGetProgramiv(programme, GL_ACTIVE_UNIFORMS, &amp;params);
+  printf("GL_ACTIVE_UNIFORMS = %i\n", params);
+  for(int i = 0; i < params; i++) {
+    char name[64];
+    int max_length = 64;
+    int actual_length = 0;
+    int size = 0;
+    GLenum type;
+    glGetActiveUniform(
+      programme,
+      i,
+      max_length,
+      &amp;actual_length,
+      &amp;size,
+      &amp;type,
+      name
+    );
+    if(size > 1) {
+      for(int j = 0; j < size; j++) {
+        char long_name[64];
+        sprintf(long_name, "%s[%i]", name, j);
+        int location = glGetUniformLocation(programme, long_name);
+        printf("  %i) type:%s name:%s location:%i\n",
+          i, GL_type_to_string(type), long_name, location);
+      }
+    } else {
+      int location = glGetUniformLocation(programme, name);
+      printf("  %i) type:%s name:%s location:%i\n",
+        i, GL_type_to_string(type), name, location);
+    }
+  }
+  
+  _print_programme_info_log(programme);
+}</pre>
+
+	<p>
+		The interesting thing here are the printing of the attribute and uniform "locations".
+		Sometimes uniforms or attributes are themselves arrays of variables - when this happens
+		<tt>size</tt> is > 1, and I loop through and print each index' location separately. I
+		also have a home-made function for printing the GL data type as a string (normally it
+		is an enum which doesn't look very meaningful when printed as an integer) - see next
+		section.
+	</p>
+
+	<h3>GLenum Data Type to C String</h3>
+
+	<p>
+		This function converts a GL enumerated data type to a C string (for readable printing).
+	</p>
+
+	<pre>
+const char* GL_type_to_string(GLenum type) {
+  switch(type) {
+    case GL_BOOL: return "bool";
+    case GL_INT: return "int";
+    case GL_FLOAT: return "float";
+    case GL_FLOAT_VEC2: return "vec2";
+    case GL_FLOAT_VEC3: return "vec3";
+    case GL_FLOAT_VEC4: return "vec4";
+    case GL_FLOAT_MAT2: return "mat2";
+    case GL_FLOAT_MAT3: return "mat3";
+    case GL_FLOAT_MAT4: return "mat4";
+    case GL_SAMPLER_2D: return "sampler2D";
+    case GL_SAMPLER_3D: return "sampler3D";
+    case GL_SAMPLER_CUBE: return "samplerCube";
+    case GL_SAMPLER_2D_SHADOW: return "sampler2DShadow";
+    default: break;
+  }
+  return "other";
+}</pre>
+
+	<p>
+		I only included the most-commonly used data types - I don't use the others so I just
+		called them "other". Look up <tt>glGetActiveUniform</tt> to get the rest of the list.
+	</p>
+
+	<h3>Validate Programme</h3>
+
+	<p>
+		You can also "validate" a shader programme before using it. Only do this during development,
+		because it is quite computationally expensive. When a programme is not valid, the details
+		will be written to the program info log. <tt>programme</tt> is my shader programme
+		index.
+	</p>
+
+	<pre>
+bool is_valid(GLuint programme) {
+  glValidateProgram(programme);
+  int params = -1;
+  glGetProgramiv(programme, GL_VALIDATE_STATUS, &amp;params);
+  printf("program %i GL_VALIDATE_STATUS = %i\n", programme, params);
+  if (GL_TRUE != params) {
+    _print_programme_info_log(programme);
+    return false;
+  }
+  return true;
+}</pre>
+
+	<h2>General Conventions</h2>
+
+	<ul>
+		<li>
+			All uniform variables are intitialised to 0 when a programme links, so you only need to
+			initialise them if the initial value should be something else. Example: you might want to set
+			matrices to the identity matrix, rather than a zeroed matrix.
+		</li>
+		<li>
+			Calling <tt>glUniform</tt> is quite expensive during run-time. Structure your programme
+			so that <tt>glUniform</tt> is only called when the value needs to change. This might be
+			the case every time that you draw a new object (e.g. its position might be different),
+			but some uniforms may not change often (e.g. projection matrix).
+		</li>
+		<li>
+			Calling <tt>glGetUniformLocation</tt> during run-time can be expensive. It is best to
+			do this during intialisation of the component that updates the uniform e.g. the virtual
+			camera for the projection and view matrices, or a renderable object in the scene for
+			the model matrix. Store the uniform locations once, then call <tt>glUniform</tt> as
+			needed, rather than updating everything every frame.
+		</li>
+		<li>
+			When calling <tt>glGetUniformLocation</tt>, it returns -1 if the uniform
+			variable wasn't found to be active. You can check for this. Usually it means
+			that either you've made a typo in the name, or the variable isn't actually used
+			anywhere in the shader, and has been "optimised out" by the compiler/linker.
+		</li>
+		<li>
+			Modifying attributes (vertex buffers) during run-time is extremely expensive. Avoid.
+		</li>
+		<li>
+			Get your shaders to do as much work as is possible; because of their parallel nature
+			they are much faster than looping on the CPU for most tasks.
+		</li>
+		<li>
+			Drawing lots of separate, small objects at once does not make efficient use of the GPU,
+			as most parallel shader slots will be empty, and separate objects must be drawn in series.
+			Where possible, merge many, smaller objects into fewer, larger objects.
+		</li>
+	</ul>
+
+	<h2>Possible Extensions</h2>
+	<ul>
+		<li>
+			Create a log file system, rather than a print-out system, so that you can scan through
+			large volumes of information from each loaded shader.
+		</li>
+		<li>
+			Larger projects will use many different shader programmes. It would make sense to have
+			a <var>Shader Manager</var> interface or class to load shaders, and to make sure that
+			shaders are re-used, rather than loaded multiple times.
+		</li>
+		<li>
+			In the future we will sometimes use geometry and tessellation shaders, so we can
+			consider upgrading our shader functions to handle more than just vertex and fragment shaders. We
+			can just set some boolean flags to true or false to indicate which types of shader
+			have been loaded before attaching and linking.
+		</li>
+
+		<li>
+			If you have a shader manager, and have written a function along the lines of <tt>setUniform(shader_index,
+				value)</tt>
+			from the manager, it could then check to make sure that shader is <u>in use</u> first (a common
+			cause of error).
+		</li>
+	</ul>
+</body>
+
+</html>

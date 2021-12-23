@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2012_05_23_webgl</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2 id="23may2012">23 May 2012.</h2>
+	<h3>The Demo Was Easy</h3>
+
+	<p class="small">
+		Yesterday, I had a play with the intro code on <a href="http://learningwebgl.com/">http://learningwebgl.com/</a>.
+		I made this: <i>(click image to run)</i>.
+	</p>
+
+	<div class="centre">
+		<a href="https://antongerdelan.net/demos/helloworld/less1.html">
+			<img src="https://antongerdelan.net/demos/helloworld/shot1.png" width="512" />
+		</a><br />
+		<small><i>Pgup, Pgdn to control. No sweat - it took 30mins to get this running from scratch.</i></small>
+	</div>
+
+	<p class="small">
+		Pgup/pgdn turns out to be not the best
+		keys to use in a browser for interacting with the thing.
+		Some things were surprising:
+	</p>
+	<ul>
+		<li><i>I heard that WebGL <b>uses</b> HTML5</i>. Reality: just write 1 pair of <tt>canvas</tt> tags.</li>
+		<li><i>Javascript will take ages to learn</i>. Reality: it's just a slack version of C.</li>
+		<li><i>It will be too slow</i>. Wasn't.</i>
+		<li>The structure of a Javascript GL programme is almost identical to a C GL programme using GLUT.</li>
+		<li>Keyboard input was even easier to get working than with GLUT.</li>
+		<li>It's much faster to write programmes with WebGL because you don't need to waste all that time linking and
+			re-compiling</li>
+	</ul>
+
+	<h3>I have a few concerns</h3>
+	<p class="small">
+		Firstly, <b>loading meshes and texture data</b> looks like it could be problematic and/or slow. Many mesh-loader
+		demos don't work properly. Most wrappers seem to load Wavefront (.obj format) data but then convert it to JSON using
+		a Python script
+		before reading into Javascript.
+	</p>
+	<p class="small">
+		Secondly, I doubt that Javascript, which is interpreted, can handle any real <b>simulation processing</b>. Perhaps
+		threads are feasible.
+		In this case, it might be necessary to use WebGL as a client-side <b>rendering service</b> only (which is okay),
+		but still use a server-based or locally compiled simulation for doing any grunt work. There is still the problem
+		of sending large chunks of texture and geometry data to the client and/or updating the data regularly, so there is
+		a new bus/pipe that could be a weak link in a real-time rendering chain. This might even be an ideal arrangement
+		for large scientific or medical simulation; terminals with a GPU connected to a big processing farm, but is it
+		reasonable to do this for games and entertainment? Certainly, it would be great for platform-independence of
+		software. <a href="http://media.tojicode.com/q3bsp/">This</a> Quake 3 demo works (and fast), but nothing happens
+		on the CPU - it's just a level viewer really. But then this is good: <a
+			href="http://playwebgl.com/games/quake-2-webgl/">http://playwebgl.com/games/quake-2-webgl/</a>.
+	</p>
+	<p class="small">
+		Thirdly, I don't know how <b>debugging and profiling</b> will work with Javascript. I have been profiling my C
+		OpenGL programmes
+		and discovered that a huge amount of time is sucked up when uniform variables are frequently sent to the GPU. I've
+		redesigned my programmes to only send uniform updates when a value has actually changed. All the WebGL samples
+		that I've seen so far have got this completely backwards. This could be because it's still web-developer hobbyists
+		making most of the demos, or because not a lot of processing is done in Javascript compared to their shader
+		programmes,
+		but I suspect it might be that the profiling tools aren't great or just aren't as readily accessible as people
+		prefer to
+		code JS in a text editor. Will try.
+	</p>
+
+	<h3>Next Steps</h3>
+	<p class="small">
+		Some of the <a href="http://weblog.benjaminsommer.com/blog/2012/05/13/comparison-of-webgl-framework-apis/">
+			recent criticisms</a> of the most popular WebGL wrappers is that they either don't have a proper shader class, or
+		that you are forced
+		to use the same set of per-vertex attributes for every renderable - more like the last decade's computer graphics.
+		So it looks like a good start will be:
+	</p>
+	<ul>
+		<li>Write a shader class .js file that I can include. It should replicate all of the functionality of my
+			<a href="https://antongerdelan.net/opengl/index.php?title=Shaders">C version</a>.</li>
+		<li>Write a renderable class .js file that can load different options from a script (same as my OpenGL version).
+		</li>
+	</ul>
+</body>
+
+</html>

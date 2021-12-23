@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<h1>here is a heading</h1>
+<p id = "para">
+Here is a paragraph of text.
+</p>
+<input onclick="top_click()" type="radio" name="mybutton" checked="checked">top button<br/>
+<input onclick="bottom_click()" type="radio" name="mybutton">bottom button
+</body>
+</html>
+
+<script>
+var p = document.getElementById ("para");
+p.innerHTML = "changed the content";
+console.log ("some text");
+console.log ("the value of para is: " + p.innerHTML);
+console.error ("an error occurred here");
+var count = 10;
+counts = 111;
+p.innerHTML = "count = " + count;
+
+function top_click () {
+	var p = document.getElementById ("para");
+	p.innerHTML = "the top button was clicked";
+}
+
+function bottom_click () {
+	var p = document.getElementById ("para");
+	p.innerHTML = "the bottom button was clicked";
+}
+
+</script>

@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2017_09_04_dissolve</title>
+	<link rel="stylesheet" type=text/css href="..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>Latest Posts:</h2>
+
+	<h2>2021-12-17: Screen Melt Shader</h2>
+
+	<img src="../demos/111_screen_melt/doomgif.gif" alt="Animation of the recreated screen melt effect from Doom." />
+	<p>
+	<ul>
+		<li>
+			<a href="../demos/111_screen_melt/index.html">Interactive WebGL shader</a>.
+		</li>
+		<li>
+			<a href="https://github.com/capnramses/gfx_expmts/tree/master/111_screen_melt">Source code</a>.
+		</li>
+	</ul>
+	<a href=formatted/2021_12_17_screen_melt.html>[
+		<i>read more...</i>]</a>
+	</p>
+
+	<h2>2021-04-12: The Platonic Solids</h2>
+
+	<p>
+		For testing and debugging 3D rendering it is convenient to have the ability to generate some three-dimensional
+		<i>"primitive"</i> shapes from code.
+		You might think of a placeholder mesh to use when a mesh file doesn't load properly, or a variety of generic mesh
+		shapes to test a new shader on.
+		I didn't have this in my graphics helper code. I remembered reading about generation of the Platonic Solids in
+		<i>Jim Blinn's Corner: A Trip Down the Computer Graphics Pipeline</i>, Chapter Four, 1996. I have the book, so
+		thought this might be an interesting exercise to start with.
+	</p>
+
+	<img src="images/platonic.png"
+		alt="A screen capture of a demo rendering the 5 platonic solids as wireframe meshes." />
+	<p>
+		<a href=formatted/2021_04_12_platonic_solids.html>[
+			<i>read more...</i>]</a>
+	</p>
+
+	<h2>2020-04-03: Software Rasterisation</h2>
+
+	<img src="images/raster_final_coloured_verts.png" alt="a rasterised 3D model" />
+
+	<p>I talked about building a software 3D rasteriser in some of my recent live streams, and people asked if I could
+		share my resources.
+		If you start with a program that can write out an image then you can progressively add features one by one, which is
+		quite fun.
+		If you find a <b>triangle fill</b> algorithm to rasterise one triangle (colour the correct pixels between 3 corner
+		points) then you're on the right path.
+		It's easier, and arguably more fun, to write a simple software rasteriser than get a modern 3D API started, which is
+		kind of silly. Yes, it is a good way to learn 3D graphics concepts, much like writing a software ray tracer. Here is
+		some of my demo code.
+	</p>
+
+	<p>
+		<a href=formatted/2020_04_03_rasterisation.html>[
+			<i>read more...</i>]</a>
+	</p>
+
+	<h2>2020-03-25: Live Stream Schedule</h2>
+
+	<p>
+		During virus lock-in I'm doing some streaming of educational/hobby coding. My warm-up was an introduction to
+		computer programming using the C programming language.
+		Other requested topics are an intro to 3D programming with OpenGL, some bits relevant to a book I'm working on -
+		especially how to use <b>fuzzers</b> - and just me coding some 3D game stuff.</p>
+
+	<p>Here is a tentative schedule...</p>
+
+	<p>
+		<a href=formatted/2020_03_25_streams.html>[
+			<i>read more...</i>]</a>
+	</p>
+
+
+	<h2>2020-03-24: My <tt>apg_bmp</tt> Mini-Library</h2>
+
+	<p>
+		This week Binomial LLC adopted my little BMP image loader library into <a
+			href="https://github.com/BinomialLLC/basis_universal">Basis Universal</a>, which is a Google partner project.
+		Here is a <a href="https://opensource.googleblog.com/2020/03/google-and-binomial-partner-to-open.html">Google blog
+			post</a> from 20 March 2020, which provides more information.
+	</p>
+	<p>
+		<a href=formatted/2020_03_24_apg_bmp.html>[
+			<i>read more...</i>]</a>
+	</p>
+
+	<h2>2019-03-10: Managing Code Projects Part One: Header Files</h2>
+
+	<p>
+		I'll write a few blog posts to share some experience about working on larger projects or coordinating with teams. I
+		want
+		to start out easy so here's a little aside about avoiding code tangles. Even projects that start off simple can
+		quickly
+		become quite complicated to follow as they grow, and as more people work on parts of them.
+	</p>
+
+	<p>
+		<a href=formatted/2019_03_10_header_files.html>[
+			<i>read more...</i>]</a>
+	</p>
+
+	<h2>2018-12-20: Anton's OpenGL Stuff End of Year Sale</h2>
+
+	<p>
+		I'm on holidays since yesterday! I have a bit of time get back to side projects (and lifting weights). What better
+		to celebrate
+		this auspicious occasion than to bundle my OpenGL learning resources together in a sale.
+	</p>
+
+	<p>
+		<a href=formatted/2018_12_20_opengl_sale.html>[
+			<i>read more...</i>]</a>
+	</p>
+
+
+	<h2>2018-07-11: Rendering Multilingual Text</h2>
+
+	<p>
+		I have always been interested in languages. I have been adding multilingual text rendering support to my kick-around
+		hobby
+		game project over the last year or so. The project is written in C99 and OpenGL. Here's an overview of rendering
+		text and
+		how I support various other languages.
+
+	<div class="centre">
+		<img src="https://antongerdelan.net/blog/images/arabic.png" width="512" />
+	</div>
+	</p>
+	<p>
+		<a href=formatted/2018_07_11_rendering_arabic_text.html>[
+			<i>read more...</i>]</a>
+	</p>
+
+	<h2>2018-03-08: Minimalism, or "How I Structure Code Quickly in C Without Getting Log-Jammed"</h2>
+
+	<p>
+		Because I was asked, here is an overview of how I code quickly in C without getting log-jammed in structural mess. A
+		lot
+		of this should work for other languages too. Key concepts - keep it quick to get stuff on screen, keep it fun, let
+		structure
+		emerge on it's own, write code that's low cost to throw out if it doesn't work out, don't make refactoring work for
+		yourself.
+		Basically don't follow any of the rules™!
+	</p>
+	<p>
+		<a href=formatted/2018_03_08_how_i_write_code.html>[
+			<i>read more...</i>]</a>
+	</p>
+
+	<h2>2017-09-04: Dissolve Effect</h2>
+
+	<p>
+		I made a simple dissolve effect in WebGL. The idea was to replicate something like the
+		<i>dematerialisation</i> shader effect you see in video games as a way of removing 3D models of dead monsters.
+	</p>
+
+	<div class="centre">
+		<img src="https://antongerdelan.net/blog/images/dissolve_peek.gif" />
+	</div>
+	</p>
+	<p>
+		<a href=formatted/2017_09_04_dissolve.html>[
+			<i>read more...</i>]</a>
+	</p>
+
+	<h2>2017-07-11: 3D Graphics Optimisation Resources</h2>
+
+	<p>
+		I am collecting optimisation guides, tools, and resources for 3D graphics programming, with particular focus on
+		OpenGL. I'll
+		put these on my OpenGL page in a little article when I have collected a few resources. I'll update this post as I
+		get more
+		things. Send me a message if you have a suggestion!
+	</p>
+
+	<p>
+		<a href=formatted/2017_07_11_optim.html>[
+			<i>read more...</i>]</a>
+	</p>
+
+	<h2>Cracking into Doom WAD Files - Part ][</h2>
+
+	<p>
+		A did a short talk about rendering the WAD files from DOOM (1993) in OpenGL. The previous blog post discusses
+		extracting
+		the contents of the WAD files with some hexedit hackery. The slides should be embedded here:
+	</p>
+
+	<iframe src="//www.slideshare.net/slideshow/embed_code/key/J9SflDme8zQ5cm" width="595" height="485" frameborder="0"
+		marginwidth="0" marginheight="0" scrolling="no"
+		style="border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;" allowfullscreen>
+	</iframe>
+	<div style="margin-bottom:5px">
+		<strong>
+			<a href="//www.slideshare.net/AntonGerdelan/cracking-into-doom-1993-wad-files"
+				title="Cracking into Doom (1993) WAD Files" target="_blank">Cracking into Doom (1993) WAD Files</a>
+		</strong> from
+		<strong>
+			<a target="_blank" href="https://www.slideshare.net/AntonGerdelan">Anton Gerdelan</a>
+		</strong>
+	</div>
+	<br />
+	<br />
+	<a href=formatted/2017_06_22_doom_wad_][.html>[
+		<i>read more...</i>]</a>
+	<br />
+	<br />
+	<div class="centre">
+		<img src="images/opengl_e1m1.png" width="512" />
+	</div>
+
+	<h2>Cracking Open Doom .wad Files - Part I: Hexin'</h2>
+
+	<p>
+		A hobby project that has been on my list since about 1994 was to figure out Doom's (Id Software, 1993) data file
+		format -
+		the vaunted
+		<tt>DOOM.WAD</tt> file. My brother and I used to enjoy making maps with 3rd-party editing tools around 1994/5,
+		which was
+		a nice way to get a grip on the 3D technology involved in the game. When I started programming I occasionally
+		looked
+		at the Doom source code to see
+		<br />
+		<br />
+		<a href=formatted/2017_05_30_doom_wad.html>[
+			<i>read more...</i>]</a>
+		<br />
+		<br />
+
+	<h2>Archive Index</h2>
+
+	<a href=formatted/2017_02_12_maths_textbooks.html>2017_02_12_maths_textbooks.html </a>
+	<br />
+	<br />
+	<a href=formatted/2017_01_04_new_book.html>2017_01_04_new_book.html </a>
+	<br />
+	<br />
+	<a href=formatted/2016_12_02_algorithms.html>2016_12_02_algorithms.html </a>
+	<br />
+	<br />
+	<a href=formatted/2016_09_25_web_hosting.html>2016_09_25_web_hosting.html </a>
+	<br />
+	<br />
+	<a href=formatted/2016_06_19_map_editor.html>2016_06_19_map_editor.html </a>
+	<br />
+	<br />
+	<a href=formatted/2016_04_20_texture_manager.html>2016_04_20_texture_manager.html </a>
+	<br />
+	<br />
+	<a href=formatted/2016_04_08_game_on_greenlight.html>2016_04_08_game_on_greenlight.html </a>
+	<br />
+	<br />
+	<a href=formatted/2016_03_24_game_finished.html>2016_03_24_game_finished.html </a>
+	<br />
+	<br />
+	<a href=formatted/2016_03_04_review_templ.html>2016_03_04_review_templ.html </a>
+	<br />
+	<br />
+	<a href=formatted/2015_12_08_didnt_learn_in_school.html>2015_12_08_didnt_learn_in_school.html </a>
+	<br />
+	<br />
+	<a href=formatted/2015_09_25_unreal_udk.html>2015_09_25_unreal_udk.html </a>
+	<br />
+	<br />
+	<a href=formatted/2015_07_07_broken_opengl.html>2015_07_07_broken_opengl.html </a>
+	<br />
+	<br />
+	<a href=formatted/2015_06_16_debug_draw.html>2015_06_16_debug_draw.html </a>
+	<br />
+	<br />
+	<a href=formatted/2015_06_03_python.html>2015_06_03_python.html </a>
+	<br />
+	<br />
+	<a href=formatted/2015_05_20_skills.html>2015_05_20_skills.html </a>
+	<br />
+	<br />
+	<a href=formatted/2015_04_15_libraries.html>2015_04_15_libraries.html </a>
+	<br />
+	<br />
+	<a href=formatted/2015_03_18_interpolation.html>2015_03_18_interpolation.html </a>
+	<br />
+	<br />
+	<a href=formatted/2015_03_11_webgl_extensions.html>2015_03_11_webgl_extensions.html </a>
+	<br />
+	<br />
+	<a href=formatted/2015_03_03_2d_colour_vis.html>2015_03_03_2d_colour_vis.html </a>
+	<br />
+	<br />
+	<a href=formatted/2015_02_26_static_analysis.html>2015_02_26_static_analysis.html </a>
+	<br />
+	<br />
+	<a href=formatted/2015_02_25_canvas2dcube.html>2015_02_25_canvas2dcube.html </a>
+	<br />
+	<br />
+	<a href=formatted/2015_02_23_svg_d3.html>2015_02_23_svg_d3.html </a>
+	<br />
+	<br />
+	<a href=formatted/2015_02_20_netsoc.html>2015_02_20_netsoc.html </a>
+	<br />
+	<br />
+	<a href=formatted/2015_02_17_canvas2d.html>2015_02_17_canvas2d.html </a>
+	<br />
+	<br />
+	<a href=formatted/2015_02_10_bresenham.html>2015_02_10_bresenham.html </a>
+	<br />
+	<br />
+	<a href=formatted/2015_02_09_gpu_mem.html>2015_02_09_gpu_mem.html </a>
+	<br />
+	<br />
+	<a href=formatted/2015_02_05_text_editors.html>2015_02_05_text_editors.html </a>
+	<br />
+	<br />
+	<a href=formatted/2015_02_03_c99.html>2015_02_03_c99.html </a>
+	<br />
+	<br />
+	<a href=formatted/2015_01_12_2015.html>2015_01_12_2015.html </a>
+	<br />
+	<br />
+	<a href=formatted/2014_12_10_test_drive.html>2014_12_10_test_drive.html </a>
+	<br />
+	<br />
+	<a href=formatted/2014_09_24_doom_src.html>2014_09_24_doom_src.html </a>
+	<br />
+	<br />
+	<a href=formatted/2014_09_15_webgl_server.html>2014_09_15_webgl_server.html </a>
+	<br />
+	<br />
+	<a href=formatted/2014_09_05_compute_raytrace.html>2014_09_05_compute_raytrace.html </a>
+	<br />
+	<br />
+	<a href=formatted/2014_09_03_books_games.html>2014_09_03_books_games.html </a>
+	<br />
+	<br />
+	<a href=formatted/2014_08_12_acronyms.html>2014_08_12_acronyms.html </a>
+	<br />
+	<br />
+	<a href=formatted/2014_06_04_glmapbufferrange.html>2014_06_04_glmapbufferrange.html </a>
+	<br />
+	<br />
+	<a href=formatted/2014_05_21_c_cpp.html>2014_05_21_c_cpp.html </a>
+	<br />
+	<br />
+	<a href=formatted/2014_05_20_inline_asm.html>2014_05_20_inline_asm.html </a>
+	<br />
+	<br />
+	<a href=formatted/2014_05_14_renderbuffer.html>2014_05_14_renderbuffer.html </a>
+	<br />
+	<br />
+	<a href=formatted/2014_05_06_binary_mesh.html>2014_05_06_binary_mesh.html </a>
+	<br />
+	<br />
+	<a href=formatted/2014_04_24_gamma.html>2014_04_24_gamma.html </a>
+	<br />
+	<br />
+	<a href=formatted/2014_04_15_archicad.html>2014_04_15_archicad.html </a>
+	<br />
+	<br />
+	<a href=formatted/2014_04_14_gimbal_lock.html>2014_04_14_gimbal_lock.html </a>
+	<br />
+	<br />
+	<a href=formatted/2014_03_25_game_boy.html>2014_03_25_game_boy.html </a>
+	<br />
+	<br />
+	<a href=formatted/2014_03_13_touch_webgl.html>2014_03_13_touch_webgl.html </a>
+	<br />
+	<br />
+	<a href=formatted/2014_03_12_ifc_webgl.html>2014_03_12_ifc_webgl.html </a>
+	<br />
+	<br />
+	<a href=formatted/2014_03_11_webgl.html>2014_03_11_webgl.html </a>
+	<br />
+	<br />
+	<a href=formatted/2014_03_10_talks.html>2014_03_10_talks.html </a>
+	<br />
+	<br />
+	<a href=formatted/2014_02_16_mesa3d.html>2014_02_16_mesa3d.html </a>
+	<br />
+	<br />
+	<a href=formatted/2014_01_24_vbo_layouts.html>2014_01_24_vbo_layouts.html </a>
+	<br />
+	<br />
+	<a href=formatted/2014_01_21_bin_mesh.html>2014_01_21_bin_mesh.html </a>
+	<br />
+	<br />
+	<a href=formatted/2014_01_13_ifc.html>2014_01_13_ifc.html </a>
+	<br />
+	<br />
+	<a href=formatted/2014_01_10_ifc_conv.html>2014_01_10_ifc_conv.html </a>
+	<br />
+	<br />
+	<a href=formatted/2014_01_08_blender_plugin.html>2014_01_08_blender_plugin.html </a>
+	<br />
+	<br />
+	<a href=formatted/2014_01_07_custom_mesh.html>2014_01_07_custom_mesh.html </a>
+	<br />
+	<br />
+	<a href=formatted/2014_01_06_php_blog.html>2014_01_06_php_blog.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_12_14_webgl_fonts.html>2012_12_14_webgl_fonts.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_09_30_deferred.html>2012_09_30_deferred.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_09_08_batching.html>2012_09_08_batching.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_09_03_maths_cheat.html>2012_09_03_maths_cheat.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_08_17_cam_plot.html>2012_08_17_cam_plot.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_08_15_madness.html>2012_08_15_madness.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_08_14_vertex_displ2.html>2012_08_14_vertex_displ2.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_08_13_vertex_displ.html>2012_08_13_vertex_displ.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_08_10_omni_cam.html>2012_08_10_omni_cam.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_07_16_multi_pass.html>2012_07_16_multi_pass.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_07_12_webgl.html>2012_07_12_webgl.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_07_11_colour_pick.html>2012_07_11_colour_pick.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_07_09_open_source.html>2012_07_09_open_source.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_07_05_3d_portfolio.html>2012_07_05_3d_portfolio.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_07_03_vis_todo.html>2012_07_03_vis_todo.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_06_29_talking_head.html>2012_06_29_talking_head.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_06_27_3d_picking.html>2012_06_27_3d_picking.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_06_26_blending.html>2012_06_26_blending.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_06_25_rt_shaders.html>2012_06_25_rt_shaders.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_06_18_morph_anim.html>2012_06_18_morph_anim.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_06_15_ifc_render.html>2012_06_15_ifc_render.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_06_12_optimisations.html>2012_06_12_optimisations.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_06_08_js_timers.html>2012_06_08_js_timers.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_06_06_fps.html>2012_06_06_fps.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_05_31_phong.html>2012_05_31_phong.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_05_30_webgl_textures.html>2012_05_30_webgl_textures.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_05_29_json_mesh.html>2012_05_29_json_mesh.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_05_28_webgl_js.html>2012_05_28_webgl_js.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_05_25_javascript.html>2012_05_25_javascript.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_05_23_webgl.html>2012_05_23_webgl.html </a>
+	<br />
+	<br />
+	<a href=formatted/2012_05_22_blog.html>2012_05_22_blog.html </a>
+	<br />
+	<br />
+</body>
+
+</html>

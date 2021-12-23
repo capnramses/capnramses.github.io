@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+	<title>Demo - Babylon.js XR</title>
+	<!--- Link to the last version of BabylonJS --->
+	<script src="https://cdn.babylonjs.com/babylon.js"></script>
+	<script src="https://cdn.babylonjs.com/loaders/babylon.glTFFileLoader.js"></script>
+	<style>
+		html,
+		body {
+			overflow: hidden;
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			padding: 0;
+		}
+
+		#renderCanvas {
+			width: 100%;
+			height: 100%;
+			touch-action: none;
+		}
+	</style>
+</head>
+
+<body>
+	<canvas id="renderCanvas"></canvas>
+	<script>
+		window.addEventListener('DOMContentLoaded', function () {
+			// get the canvas DOM element
+			var canvas = document.getElementById('renderCanvas');
+
+			// load the 3D engine
+			var engine = new BABYLON.Engine(canvas, true);
+
+			// createScene function that creates and return the scene
+			var createScene = function () {
+
+				// create a basic BJS Scene object
+				var scene = new BABYLON.Scene(engine);
+				//var env = scene.createDefaultEnvironment(); // for eg ground used in VR bit BUT INCLUDES A BIG BLUE BOX
+
+				var env = scene.createDefaultEnvironment({
+					createSkybox: false // stops big blue box
+				});
+
+				var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
+				camera.setTarget(BABYLON.Vector3.Zero());
+				camera.attachControl(canvas, true);
+
+				// create a basic light, aiming 0,1,0 - meaning, to the sky
+				var light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), scene);
+
+				/* ARCHIVE MODEL APPEND TO SCENE */
+				// Append glTF model to scene.
+				BABYLON.SceneLoader.Append("./", "archive.glb", scene, function (scene) {
+					// Create a default arc rotate camera and light.
+					//scene.createDefaultCameraOrLight(true, true, true);
+
+					// The default camera looks at the back of the asset.
+					// Rotate the camera by 180 degrees to the front of the asset.
+					//scene.activeCamera.alpha += Math.PI;
+				});
+
+
+				// add XR to scene
+				//const xr = await scene.createDefaultXRExperienceAsync({
+				//	floorMeshes: [env.ground]
+				//});
+				var xr = scene.createDefaultVRExperience({
+					floorMeshes: [env.ground]
+				});
+				// return the created scene
+				return scene;
+			}
+
+			// call the createScene function
+			var scene = createScene();
+
+			// run the render loop
+			engine.runRenderLoop(function () {
+				scene.render();
+			});
+
+			// the canvas/window resize event handler
+			window.addEventListener('resize', function () {
+				engine.resize();
+			});
+		});
+	</script>
+</body>
+
+</html>

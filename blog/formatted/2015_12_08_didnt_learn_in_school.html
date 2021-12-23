@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2015_12_08_didnt_learn_in_school</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>"[Game] Programming I Didn't Learn in School" Talk</h2>
+
+	<p>
+		This is a post about the talk that I gave in Sweden, 11th November 2015, with
+		programming advice for students from experienced game programmers;
+		Niklas Lundberg, John Romero, and Ivan-Assen Ivanov. Slides:
+		<a href="https://antongerdelan.net/teaching/guest_lectures/2015_11_11_bth/progamming_i_didnt.pdf">pdf</a> <a
+			href="https://antongerdelan.net/teaching/guest_lectures/2015_11_11_bth/progamming_i_didnt_PRESENTER_NOTES.pdf">pdf
+			with presenter's notes</a>.
+	</p>
+
+	<h3>Background</h3>
+
+	<div class="centre">
+		<img src="../images/svet_dragso.jpg" width=512 /><br />
+		<small><i>A picture of Drags&ouml; across the water from the
+				university (image borrowed from Svetlana Zivanovic).</i></small>
+	</div>
+
+	<p>
+		The talk was for about 60 3rd and 5th level students taking engineering,
+		games, and technical artist courses, as well as staff, from the
+		<a href="http://www.bth.se/departments/dikr.nsf/pages/dikr">Department of Creative Technologies</a>
+		at Blekinge Tekniska H&ouml;gskola in Karlskrona, in the south-east of Sweden.
+		I was hoping to be a bit provocative and start an argu-scussion by being a bit
+		challenging, but they just kind of liked it in the end.
+	</p>
+
+	<p>
+		I used to work at BTH and I know the staff involved in
+		the programme are very good. I made a note in the preface of my
+		<a href="https://antongerdelan.net/opengl/">OpenGL tutorials</a> book that I
+		actually learned shader programming there when working with the graphics
+		course. So, I felt my go-to topic of graphics programming was covered very well
+		already, and I scratched my head thinking of another good topic that I'd given
+		a lot of thought to and might be interesting.
+	</p>
+
+	<p>
+		I was introduced to programming in my second year of university which means
+		that I've been programming for 13~14 years. I really enjoyed the subject right
+		away and found myself spending a lot more time with it and fancied myself pretty good at
+		the topic. Then came the years in the wilderness. I wrote a lot of code, a lot
+		of grossly over-complicated code, and tried all of the design stuff that was in
+		<i>vogue</i>. I suppose around the 10-years threshold I could see the gulf
+		between where I was in terms of experience and where I wanted to be. So I
+		consciously (and very critically) re-evaluated the way I was working. I could
+		see that high talent and achievement didn't come from some innate ability but
+		from thousands and thousands of hours of experience - far higher than what I'd
+		earlier expected. I started putting in a <i>lot</i> more hours. About 4 hours coding a day at work,
+		then 2-8 more every evening during the week, and some weekends for game jams and the
+		like. I spend more time programming than anybody I know (and I work in Computer
+		Science departments). That amount adds up really quickly over a couple of years. During this time I
+		wrote the e-book of OpenGL tutorials which has sold about 3000 copies, and taught
+		the graphics course for a semester at Trinity College. Teaching and explaining
+		seems to double the skill value of your hours of experience. I think I'm about 13k
+		hours of coding at this stage.
+	</p>
+
+	<p>
+		There has been a
+		return to simplicity in my code - weekend game jams taught me to code very, very
+		quickly indeed.
+		I challenged myself to make an entire game from scratch in
+		these game jams (some of them are <a href="https://antongerdelan.net/games/">playable online here</a>) - WebGL and
+		OpenGL, not using some game maker toolkit or engine
+		like everyone uses.
+		OpenGL and WebGL taught me to master memory organisation
+		and addressing,
+		parallel programming, asynchronous programming, and respecting low-level
+		hardware operation and pipelines. These kinds of tasks are enormously time-intensive
+		and if you want to finish anything at all then there is no room for whimsical on-paper designs,
+		abstract factories, UML, methodical wrappers and interfaces, etc. none of which
+		actually line-up to the kind of abstractions we use at this level of programming
+		(or any good programming, really). Everyone learning graphics starts making some forced, awkward
+		class wrapper functions framework-engine three-ring circus that eventually gets all tangled
+		and catches on fire before they give up and write in blocks of plain code.
+		I felt like I'd broken through a <i>plateau</i> anyway,
+		(if you'll allow me to appropriate an analogy which we use in physical training)
+		because I was making huge bounds forward in progress again.
+		<b>I had rediscovered the early joy of spending all my time writing the actual
+			logic of the problems I want to solve, and none of it on the laborious structure
+			and refactoring that we're taught to do.</b>
+	</p>
+
+	<p>
+		I have completely
+		thrown out all the advanced design [bullshit] that my university made me spend
+		approximately 1/2 ~ 3/4 of my degree learning. One gets the impression that
+		academics create these over-engineered fantasy subjects as an intellectual safe haven
+		from scary and hard pragmatic programming topics. It's really annoying for me
+		to find this out after a huge amount of learning-the-hard-way time because they were really
+		damned expensive and we have to mortgage our futures on good faith against
+		these courses - I've been in really deep student loan debt since I was 18. Experience has
+		not been kind to their evaluation as financial investments. One thing that nags
+		me is that these subjects are seldom challenged - they are all
+		taught as law. Perhaps I would have changed degree if I had an authoritative
+		source challenge these things early. The fact is that people get their feathers
+		majorly ruffled if we so much as dare to question the tenets of orthodox
+		software design - how ridiculous!
+	</p>
+
+	<p>
+		Of course, we
+		students and programmers are not blameless - <b>our own obsessions with needlessly
+			organising and adding complexity are central to our problem</b>, and it seems
+		<b>deeper insight must really be learned from experience, and can not be taught</b>,
+		but perhaps I could at least suggest early on that these tendencies are a problem.
+		So this was my idea! This was something genuinely valuable I could
+		impart - I could be that dissenting voice that introduced some different
+		thinking - <b>Programming I Didn't Learn in School</b>.
+	</p>
+
+	<p>
+		I was
+		happy styling myself as the one eccentric Luddite programmer in
+		department, but it seems to be a common
+		phenomenon.
+		I discovered a lot of very interesting talks and articles by game
+		programmers on the same topic of getting to this point of experience where
+		you realise it's all overcomplicated and simplify, or that there's some
+		threshold period of time before you are ready to write good software. I heard Brenda and John Romero talk at Dublin
+		Institute of
+		Technology, and one of John's remarks stuck with me - that the fresh-faced
+		students in the audience
+		should be spending <b>four hours a night coding</b> in addition to their
+		studies. That they would
+		need <b>ten years</b> experience before they could break through - I could see
+		from the look on their faces that that wasn't their plan or expectation! I
+		read <a href="http://www.amazon.com/Masters-Doom-Created-Transformed-Culture/dp/0812972155">Masters of Doom</a> and
+		found that actually, those early 20-somethings had
+		all been coding for ten years before they got together to make games. I will
+		link a few more interesting sources at the bottom of this post.
+	</p>
+
+	<h3>Execution</h3>
+
+	<p>
+		To reduce my personal bias and avoid just presenting a rant of my latest
+		academic's opinions (as above) to students interested in the game industry,
+		I decided to rather ask some very experienced, active game programmers
+		for their views on the topic of keeping it simple, on working expediently, and
+		for advice that students wouldn't get at school. I tried to ask programmers I knew
+		would have somewhat different, yet strong, opinions weighted with some industry
+		experiences.
+	</p>
+
+	<div class="centre">
+		<img src="../images/bth_talk.jpg" width=512 /><br />
+		<small><i>Presenting the talk in my ridiculous Thulsa Doom t-shirt.</i></small>
+	</div>
+
+	<p>
+		I've been working on a hobby game called "Crongdor the Barbarian" for about 5
+		years as my kind of deep-learning background project, so I tried to shoehorn in
+		a few barbarian-related bits for a bit of theme. I recited (in my best
+		James Earl Jones impression) a scene from Conan the Barbarian (1987 movie). I
+		made a very tenuous talk subject connection to Thulsa Doom (Jones' character)
+		condescending to Conan, who he sees as a foolish young upstart <i>"Ah, it must
+			have been when I was younger!"</i> I liked the idea of comparing the quest for the
+		philosophical Riddle of Steel from the movie to the quest for the ultimate
+		over-complicated structure of programming that we have in our hot-headed
+		university years, and this older character saying that it was all folly -
+		<i><b>"What is steel compared to the hand that wields it?"</b></i>
+		<i><b>"That is strength boy, that is power!"</b></i>
+	</p>
+
+	<p>
+		So the central point I wrapped around my mini-interviews was that programmers
+		are very vulnerable to getting "carried away" with sorting and ordering - in
+		fact that's part of the buzz we get from programming - but that it isn't
+		necessarily productive work, and we should rather try to get that same buzz
+		from simplifying and reducing the complexity our code, rather than adding to
+		it.
+	</p>
+
+	<p>
+		The class representative asked if I would do another talk for their society! It takes
+		a whole day to get to Karlskrona from Dublin unfortunately, but it was a fun
+		trip.
+	</p>
+
+	<h3>Interesting Further Reading and Resources</h3>
+
+	<ul>
+		<li>
+			The book John suggested -
+			<a href="http://gladwell.com/outliers/">Malcolm Gladwell, "Outliers"</a>.
+		</li>
+		<li>
+			Niklas and Ivan-Assen both suggested the video series -
+			<a href="https://handmadehero.org/">Handmade Hero</a>. Further, this is an
+			interesting
+			<a href="http://mollyrocket.com/casey/stream_0019.html">code simplification article</a>
+			by the presenter, Casey Muratori.
+		</li>
+		<li>
+			Keith O'Conor, who has talked for students here at Trinity College Dublin several
+			times, has some great articles (many aimed at students) and talks on
+			<a href="http://fragmentbuffer.com/">his website</a>.
+		</li>
+		<li>
+			Some of Johnathan Blow's talks are very challenging and interesting, especially
+			those <a href="https://youtu.be/JjDsP5n2kSM">given to students</a>, which very
+			much gave me the idea for my talk. Around about 9:00 some typical University
+			teaching and graduate ideas are challenged. Around 23:00 he points out the
+			massive bias fallacy underpinning most published computer science research,
+			which also gave me a moral dilemma when I was writing my PhD thesis. Around
+			28:00 there's an interesting discussion of simplifying basic code structure.
+		</li>
+		<li>
+			Mike Acton's
+			"<a href="https://www.youtube.com/watch?v=rX0ItVEVjHc">Data Oriented Design and C++</a>"
+			talk from CppCon 2014 is very thought provoking and challenges some norms of
+			what we teach in software design.
+		</li>
+		<li>
+			If you want to learn C (as suggested), this is <u>the book</u>,
+			<a href="http://www.amazon.com/The-Programming-Language-Brian-Kernighan/dp/0131103628">The C Programming
+				Language</a> by Kernighan and Ritchie. There is a cheaper
+			print in circulation for the Indian market.
+		</li>
+		<li>
+			id Software has most of their source code
+			<a href="https://github.com/id-Software">on GitHub</a>.
+			It's <a href="http://kotaku.com/5975610/the-exceptional-beauty-of-doom-3s-source-code">very well regarded</a>
+			for its elegant, simple, style - worth studying and playing with. I learned
+			some tricks from playing around with the original Doom source code to get it
+			running on my Linux machine.
+		</li>
+		<li>
+			Fabian Sanglard's <a href="http://fabiensanglard.net/">website</a> has lots of
+			great, in-depth, reviews of the source code and
+			design of famous games.
+		</li>
+		<li>
+			A <a href="http://realtimecollisiondetection.net/blog/?p=81">wonderfully
+				quotable scathing response</a> by Christer Ericson to an assertion about learning design
+			patterns. This would have warmed my soul if I'd read it
+			when we were frustrated and impressionable students being force-fed this stuff.
+		</li>
+	</ul>
+
+	<p>
+		I'm sure I've forgotten something - if I find more interesting links to
+		thought-provoking stuff I'll add it to this page later.
+	</p>
+</body>
+
+</html>

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2016_04_20_texture_manager</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>How Textures are Managed in Crongdor the Barbarian</h2>
+
+	<p>
+		In this post I'm going to show you how I managed textures in the "Crongdor"
+		video game, which I made with OpenGL. Crongdor the Barbarian has 152 textures.
+	</p>
+
+	<h3>The Limitation of Tutorials</h3>
+
+	<p>
+		Readers of my <a href="https://antongerdelan.net/opengl/">OpenGL tutorials e-book</a>
+		often ask me how to <u>manage</u> large collections of assets; shaders,
+		textures, 3d meshes, in larger projects. This is a very valid problem that
+		tutorials usually don't talk about. It's pretty common for students to master
+		loading one asset, but get into trouble when trying to load multiple assets and
+		switch them in and out for drawing different things.
+	</p>
+
+	<p>
+		Because OpenGL uses a <b>global state machine</b> with a series of overlapping, and
+		<b>very confusing</b>, handles this makes it actually quite a difficult problem. The
+		other side of the problem is that students tend to make far <b>too much structure</b>
+		with their experimental software, and <b>paint themselves into a corner</b>, so
+		to speak, when they find out that their assumptions about relationships between
+		data weren't convenient for later use.
+	</p>
+
+	<h3>A Disclaimer on Structure</h3>
+
+	<p>
+		Most game engines will have some complex structured convention, so my code in
+		general is not really industry standard, but because I just have loose
+		functions and arrays it should be pretty easy to follow and apply to your own
+		structure ideas. The main things that motivate my code structure are:
+	</p>
+
+	<ol>
+		<li>Writing speed.</li>
+		<li>Clarity from simplicity.</li>
+	</ol>
+
+	<p>
+		I dropped the conventional OOP structural stuff quite early in this "deep
+		learning" project because I was tracking my hours in a notebook. After the
+		first thousand hours I had to do some deep thinking about time efficiency - this
+		was a hobby project that I really wanted to get done in my wee small spare hours.
+		It quickly
+		became clear that it was taking me far too long to write structure. My 2~8 hours
+		a night, on nights that I can get them, are <u>sacrosanct</u>. I need to get a
+		feedback buzz that I've made something significant, that works within
+		that window, or I would never have kept motivated for 4+ years on one project.
+		You have to manage your own psychology - I planned all my TODO list tasks
+		around <i><b>"How can I get this done in 2 hours?"</b></i>. I got really fast
+		after applying that thinking.
+		Far too many programmers get foaming-at-the-mouth furious if I suggest that I don't use
+		all that complex OOP stuff, which I don't really understand. That's a silly attitude to
+		have - I finished a game. I think you should be able to do what works for you,
+		and <b>I encourage you to try keeping an hours diary</b> when you finish a day, with
+		some sort of task estimates.
+	</p>
+
+	<h3>I Separated Textures from Other Data</h3>
+
+	<p>
+		Most modern game engines tend to bundle textures with shaders and other shading
+		properties into a higher-level concept called a <i>material</i>. You can do
+		this if you prefer - for me it didn't really appeal. I was quite happy to
+		specify separate shaders and textures for each mesh. I therefore have
+		completely separate shader and texture data arrays and functions. It reduces
+		the complexity of the code a little bit, and makes it easier to render all of the
+		items using a particular shader consecutively, then all of the items within that using the
+		same texture in a row - mimimising state switching. I don't think these things
+		are going to be a major game-changer in a small project - most state switches
+		seem to take microseconds - so personal preference territory.
+	</p>
+
+	<h3>The Interface</h3>
+
+	<p>
+		I wrote the game in C++, but write in C-style code (I'll explain why in a
+		future post about build systems). So, I have a header file of texture functions, and one matching
+		implementation file. My header looks like this:
+	</p>
+
+	<pre>
+//
+// Crongdor the Barbarian
+// Texture loader and manager
+// First version Anton Gerdelan, 2013?
+// Latest code review 14 Sep 2015
+//
+
+#ifndef _TEXTURE_MANAGER_H_
+#define _TEXTURE_MANAGER_H_
+
+#include "game_utils.h"
+#include "gl_utils.h"
+
+// A texture that has already been loaded from file and into GL
+struct Loaded_Texture {
+  char file_name[256];
+  GLuint tex_id;
+  bool has_mipmaps;
+};
+
+extern float g_anisotropy_factor;
+
+// wraps activetexture and bindtexture2d to remove redundant calls
+void bind_texture (int slot, GLuint tex);
+
+void bind_cube_texture (int slot, GLuint tex);
+
+// reserve memory for texture meta-data and grab GL caps
+bool init_texture_manager ();
+
+// free memory, but most importantly print stats on any reallocs/actual usage
+// call at end of programme or if textures are unlikely to be used between
+// levels
+bool free_texture_manager ();
+
+// use stb_image to load a texture 
+// NOTE: does dynamic malloc/free inside
+bool load_image_to_texture (const char* file_name, GLuint& tex, bool gen_mips,
+  bool use_srgb);
+
+const char* get_file_name_of_texture_id (GLuint t_i);
+
+// called when user changes texture filtering quality
+void refilter_textures ();
+
+#endif
+</pre>
+
+	<p>
+		If you're a Java or C++ programmer proper this is the exact same thing as
+		having a "<tt>TextureManager</tt>" class with some interface methods.
+	</p>
+
+	<p>
+		I have a <tt>struct</tt> which I use to remember some meta-data about each
+		loaded OpenGL texture. I like to keep track of the name of the file each
+		texture was loaded from. This way if I try to re-use the same texture again for
+		something else I can check if it's already loaded and skip wasting time making
+		a duplicate. I remember the OpenGL handle, and also if the texture has mipmaps,
+		which is important to know if the user wants to globally change the texture
+		filtering levels later - mipmapped textures have separate function arguments
+		for this.
+	</p>
+
+	<p>
+		The <tt>init_texture_manager()</tt> and <tt>free_texture_manager()</tt>
+		functions are called at the start and end of the program. Managing dynamic
+		memory is a pain, and one of my "deep learning" lessons from this, longer,
+		project is that it's much safer to predictably allocate all of your required
+		memory at the start of the program. It's better to ring-fence your memory
+		pool right at the start, and only change later if really, really necessary.
+		There are a few advantages to this:
+	</p>
+
+	<ul>
+		<li>It's easier for you, and the user, to predict the system requirements. It
+			really sucks to get most of the way into a game experience and realise you
+			don't have enough RAM free to run properly.</li>
+		<li>It's quicker to re-use pre-allocated memory than to keep asking the
+			operating system for small blocks.</li>
+		<li>With big blocks (arrays) of dynamic memory, you'll get better data
+			alignment and better cache-fetch performance when you loop over it than if you
+			had many little, fragmented, pieces.</li>
+		<li>If you see your program's memory usage grow at run time you know a library
+			is to blame, and is operating poorly (or leaking).</li>
+		<li>The fewer pointers you have to manage at run time, the less likely you are
+			to run into an unpredicted segfault (crash) mid-game.</li>
+	</ul>
+
+	<h3>Initialisation and Shutdown</h3>
+
+	<p>
+		So the initialisation function does allocation of space, with the freeing
+		function responsible for <i>"All resources present and accounted for, sir!"</i>
+		checking, which comes in handy during the debugging process. Initialisation
+		also asks for some of the relevant OpenGL capabilities of the user's machine.
+		It looks like this:
+	</p>
+
+	<pre>
+bool init_texture_manager () {
+  game_log ("------------------------------INIT TEXTURE MANAGER---------------"
+    "--------------\n");
+  if (!g_loaded_textures) {
+    game_log ("allocating space for %i textures\n", MAX_TEXTURES);
+    g_loaded_textures = (Loaded_Texture*)malloc (MAX_TEXTURES * sizeof (
+      Loaded_Texture));
+    g_loaded_texture_count_allocd = MAX_TEXTURES;
+    memset (g_loaded_textures, 0, 256 * sizeof (Loaded_Texture));
+    g_loaded_texture_count = 0;
+  } else {
+    game_log ("WARNING: texture space already allocated\n");
+  }
+  if (!g_loaded_textures) {
+    game_log_err ("ERROR: out of memory - can not alloc texture space\n");
+    return false;
+  }
+  glGetFloatv (GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &g_max_aniso);
+  game_log ("anisotropy max %f\n", g_max_aniso);
+  game_log ("anisotropy user %i\n", g_sett.aniso);
+  if ((float)g_sett.aniso < g_max_aniso) {
+    g_anisotropy_factor = (float)g_sett.aniso;
+  } else {
+    g_anisotropy_factor = g_max_aniso;
+  }
+  game_log ("anisotropy set to %f\n", g_anisotropy_factor);
+  // create a default texture
+  if (!_create_default_texture ()) {
+    game_log_err ("ERROR: init_texture_manager failed\n");
+    return false;
+  }
+  return true;
+}
+</pre>
+
+	<p>
+		Rather than use <tt>printf</tt>, I intermittently write messages to a log file.
+		This is mostly so I can get a user to send me a file after the game crashes to
+		see at which stage it blew up, and if there was anything special about that
+		machine's capabilities - "<i>Are all the crashes on one particular GPU or CPU?</i>"
+	</p>
+
+	<p>
+		The most interesting thing about the above function is that it calls the
+		curious-looking <tt>_create_default_texture()</tt>.
+	</p>
+
+	<h3>Bullet-Proofing: The Default Texture</h3>
+
+	<div class="centre">
+		<img src="../images/pinkcrong.png" width="512" /><br />
+		<small><i>The game with the entire textures folder removed - a pink paradise!</i></small>
+	</div>
+
+	<p>
+		I actually picked up this little tip watching John Romero tweet about coding
+		his Dangerous Dave remake. It's possible that a file fails to load into the game.
+		During development this happens a lot - someone will modify or rename something.
+		You don't want this to stop the game running completely whilst you test something
+		else that you're working on, but you do want an indication that
+		something didn't load properly.
+	</p>
+
+	<p>
+		After shipping software this can also happen - usually
+		when a user is trying to run a program off of a networked drive and there's
+		some networking problem. It might also be a file that got corrupted during
+		download, some disk issue, the folder structure got flattened during an
+		unzip, or simply that a user is trying to modify something for fun, and it
+		didn't quite work. The user's perception of the quality of the software is
+		going to be much higher if it will keep running even if some of the parts are
+		missing.
+	</p>
+
+	<p>
+		If a texture fails to load from a file it is replaced with this fall-back.
+		If you delete the entire texture folder from Crongdor the game will
+		still run. Some groups use a silly picture for their default texture. I went
+		for a garish hot pink checkerboard that would stand out. I don't load this
+		image from a file - I hard-code the pink-and-black pattern into memory.
+	</p>
+
+	<pre>
+bool _create_default_texture () {
+  game_log ("creating default texture\n");
+  int dt_pixel_c = 16 * 16;
+  char* dt_data = (char*)malloc (4 * dt_pixel_c);
+  if (!dt_data) {
+    game_log_err ("ERROR: out of memory. malloc default texture\n");
+    return false;
+  }
+  // gen RGBA pixels
+  for (int i = 0; i < dt_pixel_c * 4; i += 4) {
+    int sq_ac = i / 16;
+    if ((sq_ac / 2) * 2 == sq_ac) {
+      dt_data[i] = 0;
+      dt_data[i + 1] = 0;
+      dt_data[i + 2] = 0;
+      dt_data[i + 3] = (char)255;
+    } else {
+      dt_data[i] = (char)255;
+      dt_data[i + 1] = 0;
+      dt_data[i + 2] = (char)255;
+      dt_data[i + 3] = (char)255;
+    }
+    int sq_dn = i / (16 * 16);
+    if ((sq_dn / 2) * 2 == sq_dn) {
+      dt_data[i] = (char)255 - dt_data[i];
+      dt_data[i + 2] = (char)255 - dt_data[i + 2];
+    }
+  }
+  { // GL
+    GLuint tex = 0;
+    glGenTextures (1, &tex);
+    glActiveTexture (GL_TEXTURE0);
+    glBindTexture (GL_TEXTURE_2D, tex);
+    g_bound_textures[0] = tex;
+    glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA,
+      GL_UNSIGNED_BYTE, dt_data);
+    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    strcpy (g_loaded_textures[g_loaded_texture_count].file_name, "default");
+    g_loaded_textures[g_loaded_texture_count].tex_id = tex;
+    g_loaded_textures[g_loaded_texture_count].has_mipmaps = false;
+    g_default_texture_index = g_loaded_texture_count;
+    g_loaded_texture_count++;
+    game_log ("texture loaded\n");
+  }
+  free (dt_data);
+  dt_data = NULL;
+  return true;
+}
+</pre>
+
+	<h3>Additional State Accounting</h3>
+
+	<p>
+		Rather than bind textures directly with OpenGL commands I call my own
+		functions. This isn't necessary with small projects, but when you're debugging
+		it's nice to be able to quickly dig into which textures are bound into which
+		active texture units. I added these wrappers in late development when I started
+		getting paranoid about random errors on other machines. I generally dislike
+		function wrappers because they're usually done foolishly and hide important
+		code that should not be hidden.
+	</p>
+
+	<p>
+		I keep a <tt>GLuint g_bound_textures[32];</tt> variable to track the bindings.
+		You can use <tt>glGet...()</tt> to check these things too - just as good. I
+		wouldn't track GL states manually in a new project. The downside is that if you
+		use a library or piece of code that doesn't use your wrapping functions then
+		your accounting is wrong, and probably all your texture bindings will break.
+	</p>
+
+	<p>
+		If I find I'm trying to make a redundant binding call I increment a counter - I
+		like to know if I'm making lots of pointless bindings per frame. This way I
+		know some restructuring is probably warranted. I would have gotten away
+		without doing this.
+	</p>
+
+	<h3>Loading Textures</h3>
+
+	<p>
+		I used <a href="https://github.com/nothings/stb">stb_image</a> to load images
+		because it's fairly small and easy to use, and can load lossless PNGs.
+		Cartoon-ish graphics can look terrible with <a href="https://en.wikipedia.org/wiki/Lossy_compression">lossy</a>
+		compression. The official libpng is not such a nice library to link against.
+		There's no justification whatsoever for using one of the OpenGL-specific image
+		loaders because images aren't OpenGL-specific, and most of them hide important
+		OpenGL commands from you - <b>don't let a library make any OpenGL calls in your
+			software!</b> You need to track them all. You'll see a lot of OpenGL helper
+		libraries using antique OpenGL calls or generating their own mipmaps, which is
+		really slow and usually not what you want anyway. The only downside with stb is
+		that decompressing PNGs with it is pretty slow. It's the slowest part of the
+		program. It might have been worth using a different or even uncompressed image
+		format as disk space is not a big deal these days anyway, and I'm not using
+		that much.
+	</p>
+
+	<p>
+		I load textures the same way as in my tutorial code, except that I check if the
+		file has already been loaded first against my meta-data array. If not I'll load
+		it and store its file name in said array.
+	</p>
+
+	<h3>Re-Filtering Textures</h3>
+
+	<div class="centre">
+		<img src="../images/cronggfxmenu.png" width="512" /><br />
+		<small><i>In Crongdor you can fiddle with all the graphics settings!</i></small>
+	</div>
+
+	<p>
+		Users like to be able to fiddle with all the advanced graphics options. It's
+		quite interesting to see, live, how much quality and performance difference
+		different graphics settings make. I have quite an involved graphics sub-menu,
+		and I let the user change the texture filtering level. I think it's worth
+		spending time coding in as much active visualisation as you can during
+		development so you're not stabbing in the dark with performance/quality
+		analysis.
+	</p>
+
+	<p>
+		To make this work I have a <tt>refilter_textures()</tt> function that gets
+		called if menu changes are made. This attempts to set the new anisotropy
+		factor, after checking against the machine's maximum level. It then loops
+		over all of the textures, which I'm tracking in my little meta-data array.
+		I simplify different levels of texture filtering in the menu. What this
+		actually means is defined in my function. Mipmaps have complicated filtering
+		options, so I choose a sensible-ish match if we recorded the texture as having
+		mipmaps.
+	</p>
+
+	<pre>
+// called when user changes texture filtering quality
+void refilter_textures () {
+  if ((float)g_sett.aniso < g_max_aniso) {
+    g_anisotropy_factor = (float)g_sett.aniso;
+  } else {
+    g_anisotropy_factor = g_max_aniso;
+  }
+  if (!g_gl_started) { return; }
+  glActiveTexture (GL_TEXTURE0);
+  for (long int i = 0; i < g_loaded_texture_count; i++) {
+    glBindTexture (GL_TEXTURE_2D, g_loaded_textures[i].tex_id);
+    g_bound_textures[0] = g_loaded_textures[i].tex_id;
+    if (g_loaded_textures[i].has_mipmaps) {
+      if (g_sett.texf == 2) {
+        glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+          GL_LINEAR_MIPMAP_LINEAR);
+      } else if (g_sett.texf == 1) {
+        glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+          GL_NEAREST_MIPMAP_LINEAR);
+      } else {
+        glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+          GL_NEAREST_MIPMAP_NEAREST);
+      }
+    } else {
+      if (g_sett.texf > 0) {
+        glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      } else {
+        glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+      }
+    }
+    if (g_sett.texf > 0) {
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    } else {
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    }
+    if (g_sett.aniso > 0) {
+      glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT,
+        g_anisotropy_factor);
+    }
+  }
+}
+</pre>
+
+	<p>
+		That's it - quite simple really, but with some additional management and
+		accounting functionality.
+	</p>
+
+	<p>
+		If you enjoyed this let me know over on
+		<a href="http://steamcommunity.com/sharedfiles/filedetails/?id=658730138">Crongdor's Steam Greenlight page</a>!
+	</p>
+
+</body>
+
+</html>

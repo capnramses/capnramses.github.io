@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2015_09_25_unreal_udk</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>Setting Up Unreal UDK</h2>
+
+	<p>
+		I'm trying out the Unreal Development Kit for a project. I'm just going to add some notes to this page every
+		now and again. You may be on this page because you're looking for my previous post about debuggers on Linux.
+	</p>
+
+	<h3>The Blasted Proxy</h3>
+
+	<p>
+		Distribution has not considered organisation-wide proxy servers, which unfortunately are still a real thing in
+		2015. Official docs suggest that you ask your IT people to add *epicgames to the exception list [chortles].
+	</p>
+
+	<p>
+		To get around this you can download and build the source from Epic's github page. There is a
+		<tt>setup.bat</tt> that needs to download a large wad of files. You can feed this a proxy address with:
+	</p>
+
+	<p>
+		<tt>Setup.bat -proxy=http://my.proxy.address.here:port</tt>
+	</p>
+
+	<h3>Visual Studio 2013</h3>
+
+	<p>
+		The <tt>GenerateProjectFiles.bat</tt> claims to require VS2012, 2013, or 2015.
+		I had 2012 installed and tried 2015 next - both were too much hassle. It's
+		primarily set up for 2013 - use 2013. Check the VS install options and be sure
+		that the C++ build packages and MFC (Microsoft Foundation Classes) are selected
+		.
+	</p>
+
+	<h3>Compiling</h3>
+
+	<p>
+		Compiling the source code for the Editor project went very smoothly. It said it
+		would take a up to 45 minutes. I had to leave it compiling over night. By
+		comparison, my 20k line 3d game project rebuilds in just over 1 second. This is
+		by far the biggest project I've ever built. Does it do enough to justify the
+		size? We'll see! I hope so.
+	</p>
+
+	<h3>Buy a New PC</h3>
+
+	<p>
+		Going through the editor tutorials I notice that my (fairly new) work machine
+		just can't cope - it's incredibly sluggish to do basic editor tasks. Changing
+		textures or materials can incur up to a minute wait. The modern engine model
+		of building a new shader for every slightly different material property or
+		setting means that even trivial scenes require up to a thousand shaders to
+		be built. This takes a huge amount of time even on better PCs than mine.
+	</p>
+
+	<h3>Quake-like Engine</h3>
+
+	<p>
+		Using the level editor brings back a lot of fond memories of playing with the
+		Quake editor in the 90s. I'm somewhat surprised to see that BSP (binary space
+		partition) brushes are still the main prefabs, as a lot of scene management
+		design in graphics has moved to other ideas lately. The Doom/Quake/etc. engines
+		were very quick to work with in editor, and had a very slow BSP and lighting
+		compliation stage before you could test them in game. There's no obvious BSP
+		compilation phase any more but there are certainly lighting build phases.
+	</p>
+
+	<h3>Swarm</h3>
+
+	<p>
+		An external process launches to compute lighting builds. I'm going to take a
+		wild guess and assume that "swarm" is a parallel processor using CUDA or OpenCL
+		or something. Interestingly, you can choose from a number of detail levels to
+		build your light model with - "production" build presumably takes a lot longer,
+		and you'd use the less accurate models to keep your workflow at a reasonable
+		pace. This as far as I've got so far - Swarm hangs on my machine at about 96%
+		built. I might try to get a faster machine.
+	</p>
+
+</body>
+
+</html>

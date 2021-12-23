@@ -1,0 +1,228 @@
+<html>
+<head>
+<title>Killer Joke</title>
+</head>
+<!-- when loaded the javascript programme will start -->
+<style>
+
+.node {
+  stroke: #fff;
+  stroke-width: 1.0px;
+}
+
+.link {
+  stroke: #999;
+  stroke-opacity: .6;
+}
+#cityView {
+	 position: absolute;
+    left: 1035px;
+    top: 10px;
+}
+
+</style>
+<body onload="main()">
+<canvas id="canvas" width="1024" height="768"></canvas>
+<div id = cityDiv>
+<svg id="cityView" width="384" height="384"></svg>
+
+</div>
+</div>
+</body>
+
+<script id="font.glsl" type="text/glsl">
+#vert // this part is the vertex shader.
+
+attribute vec2 vp;
+attribute vec2 vt;
+varying vec2 st;
+uniform vec2 pos;
+
+void main () {
+	st = vt;
+	gl_Position = vec4 (vp + pos, 0.0, 1.0);
+}
+
+#frag // this part is the fragment shader
+
+precision mediump float;
+
+varying vec2 st;
+uniform sampler2D tex;
+uniform vec4 text_colour;
+
+void main () {
+	gl_FragColor = texture2D (tex, st) * text_colour;
+}
+</script>
+
+<script id="city.glsl" type="text/glsl">
+#vert // this part is the vertex shader.
+
+attribute vec3 vp;
+attribute vec2 vt;
+attribute vec3 vn;
+
+uniform mat4 PV, M;
+
+varying vec2 st;
+varying vec3 n;
+
+void main () {
+	st = vt;
+	n = vec3 (PV * M * vec4 (vn, 0.0));
+	gl_Position = PV * M * vec4 (vp, 1.0);
+}
+
+#frag // this part is the fragment shader
+
+precision mediump float;
+
+varying vec2 st;
+varying vec3 n;
+uniform sampler2D dm;
+uniform sampler2D palette;
+uniform vec3 team_col;
+uniform vec3 highlight;
+
+void main () {
+	vec4 texel = texture2D (dm, st);
+	vec4 ptexel = texture2D (palette, st);
+
+	vec3 nn = normalize (n);
+	vec3 fwd = normalize (vec3 (1.0, 1.0, -5.0));
+	
+	// team colour
+	float pfac = (ptexel.x + ptexel.y + ptexel.z) * 0.33;
+	gl_FragColor.rgb = mix (texel.rgb, team_col, pfac);
+	
+	gl_FragColor.rgb = gl_FragColor.rgb * dot (nn, fwd) + 0.2 * gl_FragColor.rgb;
+	
+	float f = highlight.r + highlight.g;
+	gl_FragColor.rgb = mix (gl_FragColor.rgb, highlight, f * 0.75);
+	
+	gl_FragColor.a = texel.a;
+}
+</script>
+
+<script id="map.glsl" type="text/glsl">
+#vert // this part is the vertex shader.
+
+attribute vec2 vp;
+uniform mat4 PV, M;
+varying vec2 st;
+
+void main () {
+	st = vp * 0.5 + 0.5;
+	gl_Position = PV * M * vec4 (vp.x, vp.y, 0.0, 1.0);
+}
+
+#frag // this part is the fragment shader
+
+precision mediump float;
+
+varying vec2 st;
+uniform sampler2D dm;
+
+void main () {
+	gl_FragColor = texture2D (dm, st);
+}
+</script>
+
+<script id="title.glsl" type="text/glsl">
+//
+// a test shader to see if #include works
+//
+
+#vert // this part is the vertex shader.
+
+attribute vec2 vp;
+varying vec2 st;
+
+void main () {
+	st = vp * 0.5 + 0.5;
+	gl_Position = vec4 (vp.x, vp.y, 0.0, 1.0);
+}
+
+#frag // this part is the fragment shader
+
+precision mediump float;
+
+varying vec2 st;
+uniform sampler2D dm;
+
+void main () {
+	gl_FragColor = texture2D (dm, st);
+}
+</script>
+
+<script id="foot.glsl" type="text/glsl">
+//
+// a test shader to see if #include works
+//
+
+#vert // this part is the vertex shader.
+
+attribute vec2 vp;
+uniform float y;
+varying vec2 st;
+
+void main () {
+	st = vp * 0.5 + 0.5;
+	gl_Position = vec4 (vp.x, vp.y + y, 0.0, 1.0);
+}
+
+#frag // this part is the fragment shader
+
+precision mediump float;
+
+varying vec2 st;
+uniform sampler2D dm;
+
+void main () {
+	gl_FragColor = texture2D (dm, st);
+}
+</script>
+
+<!-- javascript to include
+* general GL utilities to start the context etc.
+* code to load shaders and check compile logs etc.
+* some maths functions for matrices and vectors
+* main entry point to loops etc.
+-->
+<!-- game logic graphs -->
+<script src="js/game_graph.js" type="text/javascript"></script>
+<!-- City Grpah vis -->
+<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="js/city_viewer.js" type="text/javascript"></script>
+<!-- html5 audio lib -->
+<script src="js/howler.min.js" type="text/javascript"></script>
+<!-- start webgl, hook up to canvas, etc. -->
+<script src="js/gl_utils.js" type="text/javascript"></script>
+<!-- shader parsing-->
+<script src="js/apg_glsl.js" type="text/javascript"></script>
+<!-- 3d maths -->
+<script src="js/apg_maths.js" type="text/javascript"></script>
+<!-- 3d camera -->
+<script src="js/camera.js" type="text/javascript"></script>
+<!-- font rendering -->
+<script src="js/font.js" type="text/javascript"></script>
+<!-- score and stuff -->
+<script src="js/gui.js" type="text/javascript"></script>
+<!-- mesh loader -->
+<script src="js/obj_parser.js" type="text/javascript"></script>
+<!-- render title screen -->
+<script src="js/title.js" type="text/javascript"></script>
+<!-- render world map -->
+<script src="js/map.js" type="text/javascript"></script>
+<!-- render cities -->
+<script src="js/city_icon.js" type="text/javascript"></script>
+<!-- render cities -->
+<script src="js/agent_icons.js" type="text/javascript"></script>
+<!-- user interaction -->
+<script src="js/clicking.js" type="text/javascript"></script>
+<!-- enemy player -->
+<script src="js/ai_player.js" type="text/javascript"></script>
+<!-- programme entry point -->
+<script src="js/main.js" type="text/javascript"></script>
+</html>

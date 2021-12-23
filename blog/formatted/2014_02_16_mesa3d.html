@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2014_02_16_mesa3d</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>Mesa3D</h2>
+
+	<p>
+		I'm absolutely ruined from the weekend/last week's training and having a very
+		early Sunday night, so jotting some notes while I'm having a rare quiet moment.
+		I got a refurbished Lenovo laptop for doing slides and a bit of away-from-desk
+		work because my previous laptop met with an unfortunate accident. It doesn't
+		have a graphics chip, of course, but I thought I'd take a look at the
+		<a href="http://www.mesa3d.org/‎">mesa3d</a> project. This is an open-source
+		implementation of OpenGL, which provides up to OpenGL 3.1 support, and also
+		does software emulation.
+	</p>
+
+	<p>
+		I took my OpenGL 4 "Hello Triangle" demo, and built
+		that with some locally compiled GLFW and GLEW libraries. If I leave out the
+		hint to GLFW to which version it should use, it reports "OpenGL 2.1". If I
+		explicitly say "use 3.1" it crashes - I guess the software emulation doesn't
+		extend that far. Using the default 2.1, it does open an OpenGL window, and
+		clears the screen with no errors, but it doesn't show my triangle. The shaders
+		needed a few minor changes to back-port to the GLSL version used by OpenGL 2.1.
+	</p>
+
+	<ul>
+		<li><tt>#version 420</tt> &rarr; <tt>#version 120</tt></li>
+		<li>delete <tt>out vec4 frag_colour</tt>, use built-in <tt>gl_FragColor</tt></li>
+		<li>rename <tt>in</tt> keyword in vertex shader to <tt>attribute</tt></li>
+		<li>if I had an out/in from vertex shader to fragment shader, these both become
+			<tt>varying</tt></li>
+	</ul>
+
+	<div class="centre">
+		<img src="../images/hellotriangle21.png" />
+	</div>
+
+	<p>
+		And it works. These are pretty much the same shaders as are used in the current
+		generation of WebGL, and OpenGL ES 1 and 2. Haven't looked at 3 yet.
+		Interestingly, the per-pixel shading works on a computer with no graphics
+		adaptor (I think), which I guess is mesa doing a fine job of emulating things.
+		I wasn't able to do anything with shaders on previous PCs, even though they
+		had early Nvidia adapters. I just checked, and I can also run
+		<a href="https://antongerdelan.net/dolphin_rescue/">https://antongerdelan.net/dolphin_rescue/</a>
+		on this laptop, which is all shader-based. Interesting. I probably would have
+		gotten away with making my full-on OpenGL game in OpenGL 2.1 - none of the
+		advanced shader techniques are at all reliable anyway, but it's probably a lot
+		of hassle for little return at this stage. I have no idea if Windows would
+		then require a mesa build - I guess so, as the built-in stuff is still MS'
+		horrible OpenGL 1.1 implementation, if I recall correctly.
+	</p>
+
+	<p>
+		So Mesa is really very good these days. I haven't speed tested it, but I
+		wouldn't doubt that I could run my game on it. It looks like it's still
+		GNU/Linux focused, but does a good job of running OpenGL 2.1 with shaders.
+	</p>
+
+	<h2>Some Things to Try This Week</h2>
+
+	<p>
+		I've been taking advantage of a quiet period at work to reformat my tutorials
+		for Kindle, and revising tutorials as I go. It's a long, long slow process. I
+		am also building a collection of stand-alone demos - one for each tutorial.
+		I've nearly nearly finished them. I want to add some extra material for the
+		e-book that I don't have in the tutorial series - related topics and opinion
+		pieces/suggestions. I have a few neat tricks that didn't really fit quite well
+		into the tutorial series, but are still useful as appendix stuff I think;
+		code structure, handling meshes/buffers/arrays, some optimisations, etc.
+		Things to try this week:
+	</p>
+
+	<ul>
+		<li>OS-detecting GNU Makefiles for OpenGL demos</li>
+		<li>Uniform Buffer Objects</li>
+		<li>Writing/reading a simplified, binary version of my custom mesh format</li>
+		<li>Upgrading my Android port of our WebGL simulation</li>
+		<li>Try some simple Arduino projects</li>
+	</ul>
+
+	<p>
+		I got into Android NDK programming last year, and I never really finished off
+		the little 3d demo that I made. The Android development kit is the most
+		over-complicated horrible programming that I've ever done. Java is just a
+		disgusting waste of time, so I used the NDK ("native" development kit) instead,
+		which gives you a way to write more efficient code for things like OpenGL ES,
+		which I wanted to do. The whole kit of tools and things for Android is
+		absolutely horrific, and I really don't enjoy using it at all. Apple has a much
+		more pleasant kit. The main problem is that you can't just load a file, or use
+		<tt>printf</tt>...or compile locally on the machine...or ssh to the machine...
+		or do anything really outside of the custom framework. It took me a week of
+		hair-pulling to redirect <tt>printf</tt> to the custom Android log manager, and
+		hook up the asset manager so that I could parse plain ASCII files from C. All
+		the files in your app .apk get compressed, so you either have to hand-write a
+		decompressor with <tt>libz</tt>, or use the built-in Asset Manager, which is
+		Java only. To do this you use a C-Java binding called "JNI", which stands for
+		"an abomination that crawled out of the Pit". Once you finally get all this set
+		up you are okay and can code into OpenGL ES. I couldn't get C++ working nicely
+		so I just ported my maths library to C'89, which was kind of cleaner than the
+		C++ version. The disappointing thing is that you still need to use a mixed bag
+		of semi-broken custom Android tools - and at least occasionally use Eclipse and
+		Java (burrrgh).
+	</p>
+
+	<p>
+		I ordered a whole bunch of Arduino stuff a couple of months ago. Hopefully that
+		will actually arrive this week, and I can get into some micro-controller
+		programming.
+	</p>
+
+</body>
+
+</html>

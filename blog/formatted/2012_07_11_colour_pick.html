@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2012_07_11_colour_pick</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2 id="11july2012">11 July 2012</h2>
+	<h3>3D Picking Based on a Colour Buffer</h3>
+	<p>
+		I took me exactly 1 day yesterday to implement colour picking. I worked from the chapter in the book that I reviewed
+		in the last post. It's an alternative approach to the ray-casting method. I have to say, it is actually more
+		involved to set up than the ray casting method, so I disagree with the book authors, but it's also a nice exercise
+		because it shows you how to render to intermediate buffers.
+	</p>
+
+	<div class="centre">
+		<a href="https://antongerdelan.net/demos/colourpicker/">
+			<img src="../images/colourpicker.png" width="512"><br />
+		</a>
+		<small>
+			<i>
+				Click on the image to go to the demo. I implemented a terminal using a text box, which turned out to be rather
+				handy. It's still hard to find those really annoying errors that GL catches when you call a function
+				incorrectly, but at least you can see at what point it gets up to.
+			</i>
+		</small>
+	</div>
+
+	<h3>Next Steps</h3>
+
+	<p>
+		I want to try to modify my colour picker demo to display both buffers at once - either with separate viewports, or
+		with separate HTML5 canvas'.
+	</p>
+
+	<p>
+		I would like to try a post-processing demo from the WebGL book. I think it should be similar to how I used 2 buffers
+		in the picking demo, but I'd like to see if there are any implementation differences when it comes to editing the
+		image. What can you use to do image processing? This might actually be a nice approach to do things like appending
+		labels to visualisations - who knows.
+	</p>
+
+	<p>
+		I want to start building some scientific-quality visualisation tools. I'll start with a WebGL programme that
+		displays 2D line plot charts, and build up from there. I want to make sure that I have all of the important bits
+		like scales, axes, and error bars. I think when I move into 3D that I will need to work in a couple of different
+		camera spaces. It would be nice to have these things interactive - loading plots from your hard disk, allowing you
+		to manipulate colour, styles and, and ranges of plots, etc.
+	</p>
+
+
+</body>
+
+</html>

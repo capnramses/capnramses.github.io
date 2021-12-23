@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-US">
+<head>
+<meta name="generator" content=
+"HTML Tidy for Linux/x86 (vers 1st November 2003), see www.w3.org" />
+<title>WebGL Introduction</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="duration" content="90" />
+
+<!-- style -->
+<link rel="stylesheet" href="styles/slidy.css" type="text/css" />
+<link rel="stylesheet" href="styles/burntorange.css" type="text/css" />
+<script src="scripts/slidy.js" charset="utf-8" type="text/javascript">
+
+</script>
+</head>
+<body>
+
+<div class="background" />
+
+
+<!-- THE FIRST SLIDE -->
+<div class="slide">
+<h1>WebGL Quick Introduction<small><grey>
+<br/>Dr Anton Gerdelan gerdela@scss.tcd.ie
+</grey></small>
+</h1>
+
+<table>
+<tr>
+<td>
+<h2>About Me</h2>
+<ul>
+<li>Working on Knoholem smart buildings with Dave and Kris</li>
+<li>Lectured in Karlskrona, Sweden. 3d, games, visualisation</li>
+<li>Did most of PhD with GV2. Vehicle simulation, AI, graphics.</li>
+</ul>
+</td>
+<td>
+<img src="images/showcase.png" />
+</td>
+</tr>
+</table>
+<p>
+<a href="https://antongerdelan.net/3dmodelviewer/">https://antongerdelan.net/3dmodelviewer/</a>
+</p>
+
+</div>
+
+<div class="slide">
+<h1>Some Examples</h1>
+"Deferred Irradiance Volumes" <a href="http://codeflow.org/webgl/deferred-irradiance-volumes/www/">http://codeflow.org/webgl/deferred-irradiance-volumes/www/</a>
+<img src="images/wow.png" />
+</div>
+
+<div class="slide">
+<h1>Some Examples</h1>
+<ul>
+<li>
+Some sort of video game promo <a href="http://battlelog.medalofhonor.com/mohw/nations/">http://battlelog.medalofhonor.com/mohw/nations/</a>
+</li>
+<li>
+Lots of science visualisations <a href="https://github.com/xtk/X#readme">https://github.com/xtk/X#readme</a>
+</li>
+<li>
+Brain Surface Tractography Viewer <a href="http://www.nmr.mgh.harvard.edu/~rudolph/webgl/brain_viewer/brain_viewer.html">http://www.nmr.mgh.harvard.edu/~rudolph/webgl/brain_viewer/brain_viewer.html</a>
+</li>
+<li>
+"Meincraft" <a href="http://dev.pocoo.org/~mitsuhiko/webglmc/w/">http://dev.pocoo.org/~mitsuhiko/webglmc/w</a>
+</li>
+<li>
+</li>
+</ul>
+
+<img src="images/meincraft.png" />
+</div>
+
+<div class="slide">
+<h1>HTML5 Canvas: "Where" to Draw</h1>
+<table>
+<tr>
+<td>
+<img src="images/canvas.png" />
+<img src="images/canvas2.png" />
+</td>
+<td>
+<ul>
+<li>
+regular HTML page
+</li>
+<li>
+can use HTML+jQuery user interface
+</li>
+<li>
+can give dimensions
+</li>
+</ul>
+</td>
+</tr>
+</table>
+</div>
+
+<div class="slide">
+<h1>Start GL with JavaScript</h1>
+
+<h2>Include some JS at end of web page</h2>
+<pre>
+&lt;script src=&quot;<b>webgl-utils.js</b>&quot;&gt;&lt;/script&gt; // Google's helper file
+&lt;script src=&quot;<b>main.js</b>&quot;&gt;&lt;/script&gt; // our JS file
+</pre>
+
+<h2>Start GL Context and Hook Up to Canvas</h2>
+<pre>
+// get canvas using DOM
+var canvas = document.getElementById ("mycanvas");
+
+// hook up WebGL to the canvas
+gl = WebGLUtils.setupWebGL (canvas);
+
+// make background red when cleared
+gl.clearColor (0.5, 0.2, 0.0, 1.0);
+</pre>
+
+</div>
+
+<div class="slide">
+<h1>Vertex Buffers: "What" to Draw</h1>
+<img src="images/vertex_buffer.png" />
+<img src="images/vertex_buffer2.png" />
+<pre>
+// create empty vertex buffer object in GL
+var vbo_index = gl.createBuffer ();
+
+// enable the VBO in GL state machine
+gl.bindBuffer (gl.ARRAY_BUFFER, vbo_index);
+
+// copy points into currently enabled buffer
+gl.bufferData (gl.ARRAY_BUFFER, new Float32Array (points), gl.STATIC_DRAW);
+</pre>
+</div>
+
+<div class="slide">
+<h1>Shader Programmes: "How" to Draw</h1>
+<ul>
+<li>Determine a <b>style</b> of rendering</li>
+<li>Can have several programmes and switch between them</li>
+<li>Compile into a single GPU programme from 2 parts;
+<ol>
+<li>vertex shader - <b>position each vertex</b>, animate</li>
+<li>fragment shader - <b>colour each pixel</b>-sized surface area, transparency</li>
+</ol>
+</li>
+</ul>
+<h2>Vertex Shader</h2>
+<pre>
+attribute vec3 vp;
+void main () {
+  gl_Position = vec4 (vp, 1.0);
+}
+</pre>
+<h2>Fragment Shader</h2>
+<pre>
+attribute vec3 vp;
+precision mediump float;
+void main () {
+  gl_FragColor = vec4 (0.0, 0.0, 1.0, 1.0);
+}
+</pre>
+</div>
+
+<div class="slide">
+<h1>Render</h1>
+<pre>
+// draw with shaders and vertex buffers
+function render () {
+  // wipe canvas to background colour
+  <green>gl.clear (gl.COLOR_BUFFER_BIT);</green>
+  
+  // "use" shader for drawing all subsequent geometry
+  gl.useProgram (<red>shader_programme_index</red>);
+  // enable the first attribute in the vertex shader
+  gl.enableVertexAttribArray (0);
+  
+  // set our vertex buffer as the one to be drawn
+  gl.bindBuffer (gl.ARRAY_BUFFER, <red>vbo_index</red>);
+  // map the buffer to shader attribute 0 (as enabled above)
+  gl.vertexAttribPointer (0, 3, gl.FLOAT, false, 0, 0);
+  
+  // draw
+  var number_of_points = 3;
+  <green>gl.drawArrays (gl.TRIANGLES, 0, number_of_points);</green>
+}
+</pre>
+
+Result: <a href="example/index.html">index.html</a>
+</div>
+
+
+<div class="slide">
+<h1>Moving Things</h1>
+<table>
+<tr>
+<td>
+<img src="images/translate.png">
+</td>
+<td>
+<h2>JavaScript</h2>
+<ul>
+<li>get handle to "M" variable in shader <tt><b>gl.getUniformLocation()</b></tt></li>
+<li>"use" (enable) the shader programme <tt><b>gl.useProgram()</b></tt></li>
+<li>update value of variable in shader <tt><b>gl.uniformMatrix4fv()</b></tt></li>
+<li>Result: <a href="example2/index.html">index.html</a></li>
+</ul>
+</td>
+</tr>
+</table>
+<h2>Vertex Shader Again</h2>
+<pre>
+attribute vec3 vp;
+uniform mat4 M;
+void main () {
+  gl_Position = M * vec4 (vp, 1.0);
+}
+</pre>
+</div>
+
+<div class="slide">
+<h1>GPU Parallelism</h1>
+<image src="images/how_shaders_work.png" />
+</div>
+
+<div class="slide">
+<h1>Summary</h1>
+<h2>Advantages</h2>
+<ul>
+<li>3d for the web that uses parallelised GPU processing (<u>super fast</u>)</li>
+<li>Web distribution of visualisation</li>
+<li>Opera, FF, Chrome, Android, Safari</li>
+<li>Much easier to learn than raw OpenGL</li>
+<li>No compilation</li>
+</ul>
+<h2>Limitations</h2>
+<ul>
+<li>No IE, iOS yet</li>
+<li>Code is visible</li>
+<li>No geometry, tessellation shaders</li>
+<li>JavaScript's "silent errors", no profiling</li>
+</ul>
+<h2>These slides/code</h2>
+<p><u>https://antongerdelan.net/teaching/webgl_intro/</u></p>
+</div>
+
+<div class="slide">
+<h1>Going Further</h1>
+<ul>
+<li>Bigger canvas area</li>
+<li>2 triangles</li>
+<li>2 shaders</li>
+<li>Loading a mesh from a file with AJAX and JSON https://github.com/capnramses/.obj-to-.json-converter</li>
+<li>Virtual Camera - view and projection matrices</li>
+<li>Using the <tt>Image.src</tt> object to load a texture from an image</li>
+</ul>
+</div>
+
+<div class="slide">
+<h1>Quiz</h1>
+<ul>
+<li>Describe the relationship between HTML5, DOM, and JavaScript</li>
+<li>Does WebGL run on the client or the server? Why is this important?</li>
+<li>What parts of a WebGL programme execute on, or are interpreted on:
+<ol>
+<li>the server</li>
+<li>the client's web browser (2 things)</li>
+<li>the client's graphics hardware/GPU</li>
+</ol>
+</li>
+<li>Maybe something about what AJAX and JSON do, or an example of how we might use it</li>
+</ul>
+</div>
+
+</body>
+</html>

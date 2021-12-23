@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Babylon.js Warmup</title>
+
+  <!-- get latest versions from here https://doc.babylonjs.com/babylon101/how_to_get -->
+  <script src="../js/babylonjs/babylon.js"></script>
+  <script src="../js/babylonjs/loaders/babylonjs.loaders.min.js"></script>
+  <script src="../js/pep/pep.js"></script>
+</head>
+
+<body>
+  <h1>Babylon.js Warmup</h1>
+  <canvas id="my_canvas" touch-action="none" width="800" height="800"></canvas>
+  <!-- touch-action="none" for best results from PEP -->
+</body>
+
+</html>
+
+<!--
+* Go here https://doc.babylonjs.com/babylon101/first "Your Own HTML"
+"
+When writing your own HTML you just need to embed the createScene function into an HTML page structure with
+a < script > tag along with a few other items. You will need to load the BabylonJS JavaScript code. Also for
+use on tablets and mobiles BabylonJS uses pointer events rather than mouse events and so the PEP event system
+needs to be loaded as well.
+
+In addition a canvas element will have to be added to the body as this is where the 3D scene will be rendered
+and a reference variable canvas added to it in the code. You also need to generate the BabylonJS engine before
+the function for creating the scene.
+
+Finally, add code to call the scene. This enables the engine to continually render the scene in a loop and to
+resize it if the browser is ever resized.
+"
+-->
+<script>
+  var canvas = document.getElementById("my_canvas"); // Get the canvas element
+  var engine = new BABYLON.Engine(canvas, true); // Generate the BABYLON 3D engine
+  /******* Add the create scene function ******/
+  var createScene = function () {
+
+    // Create the scene space
+    var scene = new BABYLON.Scene(engine);
+
+    // Add a camera to the scene and attach it to the canvas
+    //var camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2, 2, new BABYLON.Vector3(0, 0, 5), scene);
+    //camera.attachControl(canvas, true);
+    // turn camera around to see plane
+    var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 4, BABYLON.Vector3.Zero(), scene);
+    camera.attachControl(canvas, true);
+
+    // Add lights to the scene
+    var light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 0), scene);
+    var light2 = new BABYLON.PointLight("light2", new BABYLON.Vector3(0, 1, -1), scene);
+
+    // Add and manipulate meshes in the scene
+    //var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 2 }, scene);
+
+    { // get Loris image for texture
+      // i just do this to get img w and h
+      var my_img = new Image();//document.getElementById("my_img");
+      var query_str = "https://beyond2022.ie/loris/1882_DKPRI14__(7).jpg/full/full/0/default.jpg";
+      my_img.src = query_str;
+
+      var myMaterial = new BABYLON.StandardMaterial("myMaterial", scene);
+      myMaterial.diffuseTexture = new BABYLON.Texture(query_str, scene);
+      myMaterial.specularTexture = new BABYLON.Texture(query_str, scene);
+      myMaterial.emissiveTexture = new BABYLON.Texture(query_str, scene);
+      myMaterial.ambientTexture = new BABYLON.Texture(query_str, scene);
+
+      var myPlane = BABYLON.MeshBuilder.CreatePlane("myPlane", { width: my_img.width, height: my_img.height }, scene);
+
+      myPlane.material = myMaterial;
+      //myPlane.material.diffuseTexture = new BABYLON.Texture(query_str, scene);
+    }
+
+    return scene;
+  };
+  /******* End of the create scene function ******/
+
+  var scene = createScene(); //Call the createScene function
+
+  // Register a render loop to repeatedly render the scene
+  engine.runRenderLoop(function () {
+    scene.render();
+  });
+
+  // Watch for browser/canvas resize events
+  window.addEventListener("resize", function () {
+    engine.resize();
+  });
+</script>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2012_06_29_talking_head</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2 id="29june2012">29 June 2012</h2>
+	<h3>Talking Head Weighted Average</h3>
+	<p>
+		After doing some reading about complicated interpolation methods for morph target animations, I thought "Ah for
+		goodness sake - this is going nowhere!" and wrote a very simple weighted average function. That fixed it. I had 2
+		targets as well as a kind of default shape that I was unconsciously intending to show up as the sum of the other
+		targets was < 1.0. This was my hitch. I threw in a little <tt>clamp</tt> function to turn this into a sensible
+			value, and tested it in my very handy <a href="https://antongerdelan.net/demos/editshaders/">shader editing
+				demo</a>. That worked:
+	</p>
+
+	<small><b>Generic GLSL code</b></small>
+	<form>
+		<textarea rows="10" cols="69">
+// total of factors
+float totalfactors = morphtimefactor + madfactor;
+float defaultfacefactor = 1.0 - totalfactors;
+defaultfacefactor = clamp (defaultfacefactor, 0.0, 1.0);
+totalfactors = totalfactors + defaultfacefactor;
+float smilefactor = morphtimefactor / totalfactors;
+float angryfactor = madfactor / totalfactors;
+vec3 localPos = mix (lc_vp, mad_loc, smilefactor);
+localPos = mix (localPos, mtarget_loc, angryfactor);
+</textarea>
+	</form>
+
+	<p>I updated my <a href="https://antongerdelan.net/demos/talkinghead/">talking head demo</a> with the new shader.</p>
+
+	<h3>3D Picking with Rays</h3>
+
+	<p>
+		I want to implement a few different 3D picking algorithms and try them all; at least ray-casting based and
+		colour-picking methods.
+		I just finished coding up my 3D picking algorithm from the earlier journal entry. It seems to be working in my
+		off-line test programme.
+		Once again, a lot of misleading half-knowledge on the web, and lots of out-dated OpenGL 2.1 information that no
+		longer applies.
+		This <a href="http://www.opengl.org/archives/resources/faq/technical/selection.htm#sele0010">older info</a> was a
+		handy reference to make sure that I was on the right track (the first part anyway).
+		Need to try it in a 3D programme now;
+	</p>
+
+	<small><b>C code using the glm maths library</b></small>
+	<form>
+		<textarea rows="10" cols="88">
+// convert 2D coords into clip space. remembering that y should be negated from up->down to down->up
+float mousex_cli = mousex_px / viewwidth_px * 2.0f - 1.0f;
+float mousey_cli = -(mousey_px / viewheight_px * 2.0f - 1.0f);
+
+// create 3D ray in eye space
+// (on near clip plane so clip z = 0
+// x and y are not altered between clip z=0 and eye.
+// eye space z is just the distance from 0 to near clip plane) 
+glm::vec3 ray_eye (mousex_cli, mousey_cli, -gCam.mNearClip);
+
+// convert ray to world coords
+glm::vec4 ray_wor = glm::inverse (gCam.mViewMat) * glm::vec4 (ray_eye.x, ray_eye.y, ray_eye.z, 0.0f);
+ray_wor = glm::normalize (ray_wor);
+
+// seems to work!
+</textarea>
+	</form>
+
+	<p>
+		The next step is to add in the ray vs sphere code to see if I can click on things. I plan to debug this part
+		visually, so I have been building a function to display a renderable's bounding sphere as a semi-transparent mesh.
+		If I can check against the bounding spheres with the ray, then perhaps change their colour when a hit is detected,
+		it should be pretty easy to verify if the code is working properly and not giving false positives or false
+		negatives.
+	</p>
+
+	<div class="centre">
+		<img src="../images/boundingspheres.png" width="512" /><br />
+		<small><i>I plan to render these blue spheres around each object. They are of unit size, so I should be able to
+				scale each one based on the greatest (absolute) x, y, or z position value from each object's origin. If the
+				spheres are too big and clumsy versus the shape and proximity of the objects, then we can also tell if we need a
+				more precise algorithm</i></small>
+	</div>
+
+	<h3>Next Week</h3>
+
+	<p>I plan to get the 3D ray picking working with spheres, then implement a colour-based picking algorithm and compare
+		the results. I'll get them both working in WebGL as well.</p>
+
+
+</body>
+
+</html>

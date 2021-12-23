@@ -1,0 +1,21 @@
+{
+	"hotspots": [
+		{
+			"name": "name",
+			"location": "location",
+			"text": "text
+"
+		}
+		{
+			"name": "the thing",
+			"location": "exterior",
+			"text": "some text
+"
+		}
+		{
+			"name": "curious item",
+			"location": "reading room",
+			"text": "more text"
+		}
+	]
+}

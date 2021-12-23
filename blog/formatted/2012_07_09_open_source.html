@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2012_07_09_open_source</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2 id="9july2012">9 July 2012</h2>
+	<h3>Open-Source Releases.</h3>
+	<p>
+		Well, I've got a lot done over the weekend. I had some interest in my WebGL 3D model portfolio tool, so I
+		created a GitHub account and open-sourced it. I also open-sourced the tool that I made to convert .obj files to a
+		use-able .json format.
+	</p>
+
+	<div class="centre">
+		<table>
+			<tr>
+				<td>
+					<a href="https://github.com/capnramses/webgl-3d-model-viewer">
+						<img src="https://a248.e.akamai.net/assets.github.com/../images/modules/about_page/github_logo.png" /><br />
+						<div class="centre">
+							webgl-3d-model-viewer
+						</div>
+					</a>
+				</td>
+				<td>
+					<a href="https://github.com/capnramses/.obj-to-.json-converter">
+						<img src="https://a248.e.akamai.net/assets.github.com/../images/modules/about_page/octocat.png" /><br />
+						<div class="centre">
+							.obj-to-.json-converter
+						</div>
+					</a>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+	<h3>3D Mouse Picking with Ray Casting</h3>
+
+	<p>
+		Well, I got this working properly. It was easier than I thought. I should have gone with my first hunch (the one
+		that I scribbled down on paper in an earlier post). I got totally misinformed by the Internet (again). I think this
+		exercise makes a really good introduction to 3D programming in general, so I will make a tutorial explaining this
+		demo on my
+		<a href="../opengl/">OpenGL4 tutorials wiki</a>.
+	</p>
+
+	<div class="centre">
+		<img src="../images/raypickingthingyworking.png" width="512" /><br />
+		<small>
+			<i>
+				I create a ray from the mouse pointer's x and y pixel coordinates, and project it into world space. Here I am
+				testing it against spheres. All are the same size, but one is farther in the distance - this lets me make sure
+				that the closest sphere is selected if 2 spheres are along the path of the ray. I update a uniform variable that
+				makes the currently selected sphere appear pink. <B><i>EDIT: don't try clicking on this, it's just an image.
+						hahaha</i></b>.
+			</i>
+		</small>
+	</div>
+
+	<p>
+		To dis-spell some Intertubes mis-information, <b>
+			<orange>this</orange>
+		</b> is how to do 3D ray picking:
+	</p>
+
+	<form>
+		<textarea rows="20" cols="82">
+// <STEP 0> 2D VIEWPORT SPACE [0:width, height:0]
+// get mouse position e.g. from a GLUT callback. something like:
+void mouse_click_callback (int b, int s, int mousex_vps, int mousey_vps);
+
+// <STEP 1> 3D NORMALISED DEVICE SPACE [-1:1, -1:1, 0:1]
+// don't forget to reverse the y direction here for GL. some people do...
+float x = (2.0f * mousex_vps) / width - 1.0f;
+float y = 1.0f - (2.0f * mousey_vps) / height;
+float z = 1.0f; // not used, but I left it in for the craic
+vec3 ray_nds = vec3 (x, y, z);
+
+// <STEP 2> 4D CLIP SPACE [-1:1, -1:1, -1:1, -1:1]
+vec4 ray_cli = vec4 (ray_nds.xy, -1.0, 1.0);
+
+// <STEP 3> 4D EYE SPACE [-x:x, -y:y, -z:z, -w:w]
+vec4 ray_eye = inverse (projection_matrix) * ray_clip;
+ray_eye / ray_eye.w; // perspective division, just to be on the safe side
+
+// <STEP 4> 3D WORLD SPACE [-x:x, -y:y, -z:z]
+vec3 ray_wor = (inverse (view_matrix) * ray_eye).xyz;
+// don't forget to normalise the vector at some point
+ray_wor = normalize (ray_wor);
+
+// <STEP 5> INTERSECTION TESTS
+bool hitsomething = false;
+float closestdistance = 0.0;
+for (all things to test against) {
+  use either ray vs. sphere or some other test
+  if (!hit) {
+    continue;
+  } else {
+    work out distance to intersection d
+    if (!hitsomething || d < closestdistance) {
+      hitsomething = true;
+      closestdistance = d;
+      closestthing = currentthing;
+    }
+  }
+}
+return hitsomething;
+</textarea>
+	</form>
+
+	<p>
+		You can use any of the various intersection tests with the ray. I used ray vs. sphere in my demo. That bit is fairly
+		straight-forward.
+	</p>
+
+	<h3>Book Review - "WebGL Beginners Guide"</h3>
+
+	<img src="https://www.packtpub.com/sites/default/files/imagecache/productview/1727OT_cov_1.jpg" />
+
+	<p>
+		On Friday I received a copy of the WebGL Beginners Guide. It's written by Diego Cantor and Brandon Jones. I've been
+		looking forward to this book because I've been following Brandon's excellent <a
+			href="http://www.tojicode.com/">WebGL demos/blog</a>. I first got started with WebGL a few months ago, and there
+		were no books at all. Official documentation for GL-related things is typically fairly unhelpful, so I was dying for
+		a decent book.
+	</p>
+
+	<p>
+		<b><i>Edit: I just wrote a giant review and the web proxy here ate it. ARGH! Short version:</i></b>
+	</p>
+
+	<p>
+		<b>
+			<orange>The bad:
+		</b></orange> It's a bit short. It took only a work day day to read it all. The authors skip a lot of things that
+		they really ought to have discussed by just giving the reader a link to a demo. :-/ The 3D programming theory is a
+		bit dubious in places - index buffers are used without a good explanation of when not to use them, normals are
+		always smoothed without any discussion of when not to smooth them. An entire chapter is dedicated to transparency
+		with depth writing turned off. I can't help but think that this is a bit of a misconception - you just don't need to
+		do this in practice to get decent transparency. There's no discussion of shadows at all - but this could be because
+		there wasn't proper support for them at the time of writing <a
+			href="http://blog.tojicode.com/2012/07/using-webgldepthtexture.html">http://blog.tojicode.com/2012/07/using-webgldepthtexture.html</a>.
+		Proper animation (hardware skinning, morph targets, etc.) is totally avoided.
+	</p>
+
+	<p>
+		<b>
+			<orange>The good:
+		</b></orange> This book would be excellent for someone just starting on WebGL. Don't read the [misleading] web
+		tutorials - just go straight to this book. It also explains basic Javascript and how to read and write objects with
+		JSON and AJAX properly. There's a chapter of mouse picking using a colour buffer :-D. There's a whole chapter on
+		post-processing effects. Gold star for that. The author's do not explicitly explain it as well as they could, but
+		they do tell you how to properly use vertex pointers (and enable them) in WebGL, which I found very frustrating to
+		figure out compared to OpenGL4's Vertex Attribute Objects.
+	</p>
+
+	<p>
+		<b>
+			<orange>Would have benefited from:
+		</b></orange> A discussion of debugging techniques, diagnosing problems, and optimisations. A "Common Mistakes"
+		chapter would have been great. A discussion chapter at the end was missing - what are the up-and-coming features to
+		watch out for? What are the limitations? What should we (currently) avoid doing with WebGL? Will there be
+		commercialised WebGL app stores or games? A deferred rendering chapter. Web Workers were mentioned - but a chapter
+		on them would be great.
+	</p>
+
+	<p>
+		<b>
+			<orange>Overall:
+		</b></orange> It's definitely not going to show you how to "Become a master of 3D", as the tag-line claims but it's
+		the only book out there at the moment. It feels a bit rushed, but perhaps it was better to get something out now,
+		than something more substantial out in 6 months! It's a good start for a hobbyist. Not enough to use as a classroom
+		textbook. It will almost get you fully around some of the more annoying traps in the API. There are one or two
+		rather valuable chapters (mouse picking, deferred rendering, ray-tracing in fragment shaders).
+	</p>
+
+	<p>
+		I will have a go at implementing the mouse picking chapter tomorrow as I've just finished making a ray casting
+		picker.
+	</p>
+
+</body>
+
+</html>

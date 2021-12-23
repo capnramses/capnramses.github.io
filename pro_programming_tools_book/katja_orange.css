@@ -1,0 +1,135 @@
+body {
+	font-family: 'Ubuntu', sans-serif;
+	line-height: 1.4;
+	background-color: #131926;
+	/*background-image: url(https://antongerdelan.net/images/white_bar.png), url(https://antongerdelan.net/images/checkerboard_dark.png);*/
+	background-image: url(images/orange_bar.png);
+	background-repeat: repeat-y, repeat;
+	background-position: center, top;
+	background-size: 750px 8px, 256px 256px;
+	width: 700px;
+	margin: auto;
+}
+h1, h2, h3, h4 {
+	color:#131926;
+	margin-top: 0.6em;
+	margin-bottom: 0.6em;
+}
+p + p { margin-top: 0.4em; }
+
+a {
+	color:#000060;
+}
+textarea {
+	font-family: 'Ubuntu Mono', monospace;
+	line-height: 1.2;
+	background-color: rgb(238, 238, 238);
+	border: 1px solid #ddd;
+	border-left: 3px solid #383838;
+	tab-size: 2;
+	width: 100%;
+	min-height: 50px;
+	max-height: 1024px;
+	page-break-inside: avoid;
+	max-width: 100%;
+	overflow: auto;
+	display: block;
+	word-wrap: break-word;
+	padding-left: 2px;
+}
+tt {
+	font-family: 'Ubuntu Mono', monospace;
+	line-height: 1.2;
+	color: rgb(22,128,22);
+	background-color: rgb(238, 238, 238);
+}
+code {
+	font-family: 'Ubuntu Mono', monospace;
+	line-height: 1.2;
+	background-color: rgb(238, 238, 238);
+}
+code span.co { color: #0b8a00; } /* Comment */
+pre {
+	font-family: 'Ubuntu Mono', monospace;
+	line-height: 1.2;
+	background-color: rgb(238, 238, 238);
+	border: 1px solid #ddd;
+	border-left: 3px solid #383838;
+	tab-size: 2;
+	page-break-inside: avoid;
+	max-width: 100%;
+	overflow: auto;
+	display: block;
+	word-wrap: break-word;
+	padding: 0.3em 0.3em 0.3em 0.1em;
+}
+img {
+	max-width: 100%;
+}
+
+div.centre {
+  display: block;
+  width: 100%;
+  text-align:center;
+  margin: auto;
+}
+
+div.whitecolumn {
+	background-color:#f9f9f9;
+	padding: 10px 10px;
+	border-style:solid;
+	border-width:1px;
+}
+
+div.sidepanel {
+	position: absolute;
+	left:0px;
+	z-index:2;
+}
+
+table {
+	min-width: 50%;
+	max-width: 100%;
+}
+
+table.compact {
+	border: 0px solid #FFFFFF;
+	min-width: 50%;
+	max-width: 100%;
+	text-align: left;
+}
+
+table.compact td, table.compact th {
+	border: 0px solid #FFFFFF;
+	padding: 1px 1px;
+}
+
+table.compact td {
+	font-size: 11px;
+}
+table.compact thead {
+}
+table.compact thead th {
+	font-size: 12px;
+	font-weight: bold;
+}
+
+div.widetable table {
+  background-color: #FFFFFF;
+  width: 1024px;
+  position: relative;
+}
+
+ul, ol {
+    padding: 0;
+    margin: 1.2em 0 1.2em 1.2em;
+}
+ 
+ul > li > ul, ul > li > ol, ol > li > ul, ol > li > ol {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+ 
+span.smallcaps {
+    font-variant: small-caps;
+}

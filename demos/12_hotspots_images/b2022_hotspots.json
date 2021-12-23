@@ -1,0 +1,224 @@
+{
+	"hotspots": [
+		{
+			"name": "Outside the Record House, Front Portico",
+			"hotspot_type": "Explore",
+			"location": "Outside the Front Protico",
+			"title": "The Record House",
+			"caption": "Welcome to the Public Record Office of Ireland, which opened its doors in 1867. ",
+			"audio": "",
+			"picture": "08_31a_PROI_Exterior",
+			"position_xyz": "-56.82 2 -1.39",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "Stairwell",
+			"hotspot_type": "Explore",
+			"location": "Inside the Front Door",
+			"title": "The Stairwell",
+			"caption": "The rooms round this central hall [Search Room] were given up to searchers, officials and clerks, together with a library, whilst some of the top rooms and all the basement were allocated to the fore and and office keeper for a residence.'",
+			"audio": "",
+			"picture": "04_NAI_OPW_5HC_1_106_8_-_Copy",
+			"position_xyz": "-38.30 10.81 0.75",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "Stairwell",
+			"hotspot_type": "Explore",
+			"location": "The Search Room",
+			"title": "The Search Room ",
+			"caption": "Old Photo of Wood and Chart / Description of what it was like in 1922 / 3-D photo of modern Court of Appeal",
+			"audio": "The rooms round this central hall [Search Room] were given up to searchers, officials and clerks, together with a library, whilst some of the top rooms and all the basement were allocated to the fore and and office keeper for a residence.'",
+			"picture": "09_32a_PROI_Reading_Room",
+			"position_xyz": "-34.88 4.53 0.07",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "Reading Room, Archivist's Desk",
+			"hotspot_type": "Explore",
+			"location": "The Search Room",
+			"title": "The Archivist's Desk",
+			"caption": "Herbert Wood, Deputy Keeper of the Records in 1922, described the collection in his care as the 'great untilled field' of Irish history.",
+			"audio": "",
+			"picture": "NAI_Caricature",
+			"position_xyz": "-41.72 5.42 8.12",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "Strong-Room",
+			"hotspot_type": "Explore",
+			"location": "The Search Room",
+			"title": "The Strong Room",
+			"caption": "Some records survived the blaze because they wre held overnight in the Strong Room, which had iron bars across the windows for added security. ",
+			"audio": "",
+			"picture": "",
+			"position_xyz": "-12.78 3.11 1.69",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "Firebreak",
+			"hotspot_type": "Explore",
+			"location": "The Search Room",
+			"title": "The Firebreak ",
+			"caption": "An isolation space separated the Search Room from the Record Treasury. This worked as a firebreak and it saved the front of the building from destruction in 1922.",
+			"audio": "",
+			"picture": "13_Irish_Architectural_Archive_010_035_X_005_-_Copy",
+			"position_xyz": "-30.17 3.53 25.28",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "",
+			"hotspot_type": "Explore",
+			"location": "The Record Treasury",
+			"title": "The Record Treasury",
+			"caption": "This six-storey building held the accumulated public records dating back to 1174.",
+			"audio": "",
+			"picture": "10_33a__PROI_Interior_of_the_Treasury",
+			"position_xyz": "2 4 2",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "Wood's Guide",
+			"hotspot_type": "Locate",
+			"location": "Search Room: Archivist's Desk",
+			"title": "Herbert Wood's Guide to the Public Records (1919)",
+			"caption": "Wood's Guide",
+			"audio": "",
+			"picture": "",
+			"position_xyz": "-43.56 4.77 -5.80",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": " Green Dolls-House",
+			"hotspot_type": "Locate",
+			"location": "Search Room: Archivist's Desk",
+			"title": "The Dolls House",
+			"caption": "19th-Century Schematic in 21st-Century Version",
+			"audio": "",
+			"picture": "",
+			"position_xyz": "-41.88 5.08 5.03",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "",
+			"hotspot_type": "Locate",
+			"location": "Search Room: Archivist's Desk",
+			"title": "Cross-Section of the Record Treasury",
+			"caption": "List of the 4 items that can be located",
+			"audio": "",
+			"picture": "",
+			"position_xyz": "-33.51 4.84 -5.22",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "Transport to Location in Repository",
+			"hotspot_type": "Teleport",
+			"location": "From Desk to Repository (Location 1, 2, 3, 4)",
+			"title": "",
+			"caption": "",
+			"audio": "",
+			"picture": "",
+			"position_xyz": "",
+			"rotation_y_deg": ""
+		},
+		{
+			"name": "Summary of Source 1",
+			"hotspot_type": "Connect",
+			"location": "Record Treasury Location 1",
+			"title": "",
+			"caption": "map",
+			"audio": "",
+			"picture": "",
+			"position_xyz": "-7.58 12.68 -3.48",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "Summary of Source 2",
+			"hotspot_type": "Connect",
+			"location": "Record Treasury Location 2",
+			"title": "",
+			"caption": "book",
+			"audio": "",
+			"picture": "",
+			"position_xyz": "21.32 18.93 0.81",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "Summary of Source 3",
+			"hotspot_type": "Connect",
+			"location": "Record Treasury Location 3",
+			"title": "",
+			"caption": "Printed Names 1766",
+			"audio": "",
+			"picture": "",
+			"position_xyz": "2.82 3.0 9.55",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "Summary of Source 4",
+			"hotspot_type": "Connect",
+			"location": "Record Treasury Location 4",
+			"title": "",
+			"caption": "roll",
+			"audio": "",
+			"picture": "",
+			"position_xyz": "-23.62 12.27 -2.25",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "Transport to Desk",
+			"hotspot_type": "Navigation: Teleport",
+			"location": "Desk Space",
+			"title": "",
+			"caption": "Engage with materials: you will be able to search etc.",
+			"audio": "",
+			"picture": "",
+			"position_xyz": "-40.39 5.30 2.72",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "Read Source 1",
+			"hotspot_type": "Discover",
+			"location": "Back at reader's desk 1",
+			"title": "PRONI, D 207/10/19. 'Observations on utility of Act of Union' by [Jn. Foster?], e.g.",
+			"caption": "c.1800. '[it] depends on the completion of the expected benefits expressed in Parliament previous to the passing that Act'. Reproduced courtesy of the Deputy Keeper of the Records and Viscount Massereene.",
+			"audio": "",
+			"picture": "PRONI_D207/10/19",
+			"position_xyz": "-7.58 12.68 -3.48",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "Read Source 2",
+			"hotspot_type": "Discover",
+			"location": "Back at reader's desk  2",
+			"title": "",
+			"caption": "book",
+			"audio": "",
+			"picture": "",
+			"position_xyz": "21.32 18.93 0.81",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "Read Source 3",
+			"hotspot_type": "Discover",
+			"location": "Back at reader's desk 3",
+			"title": "",
+			"caption": "Printed Names 1766",
+			"audio": "",
+			"picture": "",
+			"position_xyz": "2.82 3.0 9.55",
+			"rotation_y_deg": "0"
+		},
+		{
+			"name": "Read Source 4",
+			"hotspot_type": "Discover",
+			"location": "Back at reader's desk  4",
+			"title": "",
+			"caption": "roll",
+			"audio": "",
+			"picture": "",
+			"position_xyz": "-23.62 12.27 -2.25",
+			"rotation_y_deg": "0"
+		}
+	]
+}

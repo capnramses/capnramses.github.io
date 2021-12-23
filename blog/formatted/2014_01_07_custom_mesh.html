@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2014_01_07_custom_mesh</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>Custom Animated Mesh Format</h2>
+
+	<p>
+		Parsing an animated mesh to use in a graphics programme is far more complex
+		than it need be. If you're in a large team, for example on a computer game
+		project, you'll likely have one or more <b>technical artists</b>, who will be
+		responsible for handling this area in-between the different 3d modelling
+		and end-product software. They'll more than likely decide on a mesh file format,
+		and write plug-in scripts in Python to handle import and export for all the
+		different software tools. That's all good and well, but what if you just want
+		to try something out in a little demo, or are working by yourself? Should you
+		really have to learn the Blender Python API? Can't you just use one of the
+		existing file formats?
+	</p>
+
+	<h3>Why Existing Animated Mesh Formats All Suck</h3>
+
+	<p>
+		Writing shaders to do skinning, and a recursive function to animate a mesh
+		isn't that hard if you've got a grasp of matrix transformation. Making an
+		animated mesh in modelling software isn't all that difficult either, once
+		you've got the hang of the user interfaces. The actual input data that you
+		need is fairly simple, and if you structure your code cleanly, will just go
+		into a few simple arrays. Why are all of the available mesh file formats so
+		ridiculously over-complicated then? Why can't they just be plain text that can
+		be readily parsed with <tt>fscanf()</tt>? Some of the transgressions of common
+		animated formats include:
+	</p>
+
+	<ul>
+		<li>ambiguous specifications</li>
+		<li>nested nests of trees of nested trees</li>
+		<li>bizarre and ambiguous naming conventions</li>
+		<li>gluts of extra-fluff, cameras, lights, and useless meta-data</li>
+		<li>strings as identifiers</li>
+		<li>support for graphics library components that don't exist any more</li>
+		<li>lack of support for modern graphics library components</li>
+		<li>whole trees just to map other trees to other trees</li>
+		<li>identifiers for elements at different levels of trees to where the data reside</li>
+		<li>optional attributes that are actually required and meaningful</li>
+		<li>element names that are reused for different types of data</li>
+		<li>unnecessary indentations and white-space</li>
+		<li>poorly implemented rotations and interpolations</li>
+		<li>indexed lists of things mean assembly and memory juggling is required after parsing</li>
+	</ul>
+
+	<p>
+		The short story is that you don't want to deal with parsing any of these
+		abominations directly. Parsing an ambiguous format like COLLADA is not worth
+		your effort - you'll get it to work for Blender's export script, and it won't
+		support one from another modeller. A similar problem exists for Autodesk's .fbx
+		because of the multitude of different, and incompatible, versions in play. XML
+		files are not nice to parse in C, and aside from wasting time traversing trees
+		and string-based keys, they typically require a parsing library, and require
+		an enormous amount of validation code to guard against pointer errors - every
+		time that you fetch a new element. The non-XML formats in trees are even worse,
+		because you'll need to write custom tree-parsing code too. There are other,
+		simpler, formats around like Id's .md5, but good luck finding a reliable set of
+		exporters and importers!
+	</p>
+
+	<h3>Assimp</h3>
+
+	<p>
+		The Open Asset Import Library; "Assimp"
+		(<a href="http://assimp.sourceforge.net/">http://assimp.sourceforge.net/</a>)
+		offers a beacon of hope, because it does all of the dirty work of parsing
+		various versions of various different mesh formats, and represents their
+		contents with a single interface. It has bindings for various languages. I
+		made a tutorial that used Assimp to do animation directly in OpenGL, but
+		basically everyone that's used it got stuck on the Assimp part. Assimp is very
+		painful to build locally, has a very big compiled size to link against, meaning
+		that it will slow down your compile times. It doesn't seem to build well to
+		deploy on different systems (different Mac OS versions were not happy), and the
+		interface is incredibly confusing and not at all efficient for run-time use.
+		So it's not really great as an end-use tool in your graphics programme. What it
+		is very good for, however, is building a stand-alone mesh converter. Suddenly
+		we have the means of making a many formats&rarr;custom format converter.
+	</p>
+
+	<h3>Export Scripts</h3>
+
+	<p>
+		Ultimately, what we really want is a set of export scripts, for different
+		versions of different 3d modelling tools. We could then skip the building of
+		the mesh converter, and go straight to a custom format. This is too much work
+		to expect one person to do just to get a small demo to work, but would be ideal
+		to have available for class assignments and that sort of thing.
+	</p>
+
+	<h3>Custom Format Design</h3>
+
+	<p>
+		With a working Assimp-based importer we can write out again to any format, and
+		our graphics programme doesn't need to do any difficult parsing, or require
+		any sort of parsing library. We can also leverage some of Assimp's extra
+		functionality like generation of per-vertex tangents, and include these in the
+		actual mesh file. These are used for normal-mapping. My ideal mesh format, for
+		C, would have the following properties:
+	</p>
+
+	<ol>
+		<li>
+			All lines in file are easily parsed with <tt>fgets()</tt> or <tt>fscanf()</tt>,
+			without needing to use <tt>strtok()</tt> to tokenise lines into components.
+		</li>
+		<li>
+			No indents, braces, named nodes, or other sorts of structures appear in file.
+		</li>
+		<li>
+			No materials, textures, lighting, scene, or camera information is stored in the
+			file. This is more appropriately handled separately.
+		</li>
+		<li>
+			A special tag line precedes sections of data.
+		</li>
+		<li>
+			The zeroth [0] character in this line is a reserved character, '@'.
+		</li>
+		<li>
+			The line gives; type of data following, count of lines following, and size of
+			memory to allocate to fit the following data.
+		</li>
+		<li>
+			Lines of data are always given in memory order, with no 'face' or 'polygon'
+			lists that require assembly. The first vertex point line, or bone matrix line
+			is therefore also always index number 0, the next line is always index number
+			1, and so on. This increases file and memory size slightly, but for quicker
+			and simpler parsing, and better human readibility and problem debugging.
+		</li>
+		<li>
+			Able to store per-vertex tangents.
+		</li>
+		<li>
+			Per-vertex bone indices given only by index number of that bone.
+		</li>
+		<li>
+			Support for multiple animations per-mesh, and ease of pasting in additional
+			animation sections after mesh file is first created.
+		</li>
+		<li>
+			Root skeleton transform, and bone offset transformation sections clearly
+			marked as such.
+		</li>
+		<li>
+			Joints in the skeleton hierarchy are called "animated nodes". These do not have
+			to be weighted to any vertices, but can be intermediate nodes that still
+			contribute to the final animations.
+		</li>
+		<li>
+			Nodes that are weighted to vertices have a "bone index", which index the bone
+			offset matrices, and match the per-vertex "bone index".
+		</li>
+		<li>
+			Animation keys are given in separate sections for each animation node.
+		</li>
+		<li>
+			Animation keys are given separately for rotations, translations, and scales.
+		</li>
+	</ol>
+
+	<p>
+		I went ahead and made such a format, and it worked flawlessly without any
+		confusion. It is a great relief to have memory allocation requirements given
+		up-front, so that the entire mesh can be allocated and created in one pass
+		over the file, with very minimal parsing code. The only construction required
+		is due to the simple format for the skeleton hierarchy. Each node only gives
+		its parent, but when animating we typically want a list of all its children
+		instead. In this case I opted for simplicity in mesh format at the expense
+		of a little searching - perhaps giving a list of children might have been a
+		slightly better idea, if messier.
+	</p>
+
+	<p>
+		The first part of the per-vertex section of an example mesh is given below. This
+		is my "dungeon door" test mesh.
+	</p>
+
+	<textarea rows=8>
+@Anton's custom mesh format v.3JAN2014 https://antongerdelan.net/
+@vert_count 288
+@vp comps 3
+0.298388 2.503322 -0.224913
+-0.298635 2.503061 -0.224913
+-0.000002 2.702191 -0.224913
+-0.000002 2.702191 -0.012033
+-0.298635 2.503061 -0.012032</textarea>
+
+	<p>
+		The animation section of an example mesh using my format is given below. There's
+		no need to re-assemble to vertex points into the correct triangle order as with
+		.obj or .dae formats - they are always given in triangles order.
+	</p>
+
+	<textarea rows=43>
+@skeleton bones 2 animations 1
+@root_transform comps 16
+1.000000 0.000000 0.000000 0.000000 0.000000 -0.000000 -1.000000 0.000000 0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 0.000000 1.000000
+@offset_mat comps 16
+1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000
+1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.727390 -0.475569 0.236947 1.000000
+@hierarchy nodes 5
+parent -1 bone_id -1
+parent 0 bone_id -1
+parent 1 bone_id 0
+parent 2 bone_id 1
+parent 0 bone_id -1
+@animation name TODO duration 1.000000
+@tra_keys node 2 count 6 comps 3
+t 0.040000 TRA 0.000000 0.000000 0.000000
+t 0.281117 TRA 0.000000 0.000000 0.000000
+t 0.445874 TRA 0.000000 0.000000 0.000000
+t 0.627053 TRA 0.000000 0.000000 0.000000
+t 0.797642 TRA 0.000000 0.000000 0.000000
+t 1.000000 TRA 0.000000 0.000000 0.000000
+@tra_keys node 3 count 6 comps 3
+t 0.040000 TRA -0.727390 0.475569 -0.236947
+t 0.281117 TRA -0.727390 0.475569 -0.236947
+t 0.445874 TRA -0.727390 0.475569 -0.236947
+t 0.627053 TRA -0.727390 0.475569 -0.236947
+t 0.797642 TRA -0.727390 0.475569 -0.236947
+t 1.000000 TRA -0.727390 0.475569 -0.236947
+@rot_keys node 2 count 6 comps 4
+t 0.040000 ROT 0.707107 0.707107 0.000000 0.000000
+t 0.281117 ROT 0.707107 0.707107 0.000000 0.000000
+t 0.445874 ROT 0.707107 0.707107 0.000000 0.000000
+t 0.627053 ROT 0.707107 0.707107 0.000000 0.000000
+t 0.797642 ROT 0.707107 0.707107 0.000000 0.000000
+t 1.000000 ROT 0.707107 0.707107 0.000000 0.000000
+@rot_keys node 3 count 6 comps 4
+t 0.040000 ROT 1.000000 0.000000 0.000000 0.000000
+t 0.281117 ROT 0.635871 0.000000 0.771795 0.000000
+t 0.445874 ROT 0.772563 -0.000000 0.634938 0.000000
+t 0.627053 ROT 0.645267 0.000000 0.763958 0.000000
+t 0.797642 ROT 0.672515 0.000000 0.740084 0.000000
+t 1.000000 ROT 0.635381 0.000000 0.772199 0.000000</textarea>
+
+	<p>
+		I give the "comps", or "number of components" for each data structure. This is
+		in case you want to use it for 2d graphics, for example, and also to indicate,
+		with the "count" of lines, the amount of memory to allocate for storage.
+	</p>
+
+	<div class="centre">
+		<img src="../images/customformat.png" /><br />
+		<small><i>Testing an animation after importing from my custom format. The white
+				squares indicate bone offset positions, and the different colours indicate
+				different bone index numbers to which each part of the mesh is bound.</i></small>
+	</div>
+
+	<h3>Further Projects</h3>
+
+	<p>
+		I'm already using the format in my game "Crongdor the Barbarian". If it stands
+		the test of a month or two I'll look at writing export scripts and publishing a
+		little specification and simple skinned mesh with importer demo. I know for sure
+		that this is going to be welcomed by people learning 3d graphics.
+	</p>
+
+	<p>
+		It would also be trivial to create a matching JSON (JavaScript Object Notation)
+		version of this format for use in WebGL. There are already JSON formats in use
+		in big WebGL projects like Three.js, so it might be a bit less useful for
+		others.
+	</p>
+
+	<p>
+		It's also worth keeping an eye on the Patrick Cozzi's gITF project of the
+		Khronos Group, which
+		is building a JSON mesh format and set of tools for solving much the same sort
+		of problem across different graphics libraries. The Github page is
+		<a href="https://github.com/KhronosGroup/glTF/">https://github.com/KhronosGroup/glTF/</a>.
+	</p>
+
+</body>
+
+</html>

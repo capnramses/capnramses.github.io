@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2012_06_08_js_timers</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2 id="8june2012">7th and 8th of June 2012</h2>
+	<h3>Timers</h2>
+
+		<p>
+			So I set up the new computer and tried my WebGL demo only to discover that Chrome is deactivating my timer when
+			I'm
+			not actively moving the mouse around! I thought at first that it was rendering really slowly but no, same FPS
+			rate,
+			and the time is correct in Firefox or when giving it mouse input. Must be some sort of browser-based optimisation
+			against time-wasting scripts. Looks like I'll need a better timer...glad I spotted that one.
+		</p>
+
+		<p><b>[FIXED] Update: 8 June.</b> On closer inspection... the borrowed timer code turned that I was using turned out
+			to be just a simple wrapper around JS' <tt>Date()</tt>
+			function. I suspected the accuracy wasn't very high; giving me values of 0 when it was running on a faster
+			computer.
+			I just wrote a little safety catch around the timer, so that it never restarts until it collects 10ms or more.
+			Fixed.
+		</p>
+
+		<p>The frame rate seems to cap at 60Hz, which is odd considering that it was rendering fast enough to give me 0 time
+			between frames. Perhaps there is an internal limit somewhere.</p>
+
+		<h3>Morph Animation</h3>
+
+		<p>
+			I don't think that ES 2 shaders let you do texture sampling in vertex shaders, so I'm not sure that morph
+			animation
+			can use rgb textures as xyz delta position maps for key-frames. Perhaps I actually need to use a different
+			state-storing
+			mechanism. Best idea is to reverse engineer some examples and gather some ideas. Another one <a
+				href="http://www.webgl.com/2012/04/webgl-demo-morph-targets-quake-2-ogro/">here</a>.
+		</p>
+
+		<h3>Knobs and Dials</h3>
+
+		<p>
+			I might hold off on animation code for the minute, because I just saw <a
+				href="http://games.greggman.com/game/webgl-3d-part-1-orthographic-3d/">this tutorial</a>,
+			which is complemented with some excellent sliders for affecting the WebGL demos. One of the great irritations of
+			3D
+			programming in general is the difficulty to get good real-time user input and output (GUIs and buttons). I mostly
+			give up
+			for desktop programmes (especially Direct3D which also lacks the linux-like console), and just use settings and
+			log files. But - web controls! Suddenly I see the
+			enormous potential of HTML5 + WebGL. I have already used HTML fields for debug output (FPS counters etc.), but
+			perhaps
+			it is time to master using them for input as well.
+		</p>
+
+		<ul>
+			<li>
+				Controlling HTML <tt>form</tt>s with JS: <a
+					href="http://www.javaworld.com/javaworld/jw-06-1996/jw-06-javascript.html">http://www.javaworld.com/javaworld/jw-06-1996/jw-06-javascript.html</a>
+			</li>
+			<li>
+				JQuery UI (which I used for my demo): <a href="http://jqueryui.com/">http://jqueryui.com/</a>. Very easy to get
+				working (about 30 mins)
+			</li>
+			<li>
+				JQuery Tools (a nice-looking alternative): <a href="http://jquerytools.org/">http://jquerytools.org/</a>.
+			</li>
+		</ul>
+
+
+		<div class="centre">
+			<a href="https://antongerdelan.net/webgl/jquerycontrols/">
+				<img src="../images/jqueryshot.png" width="512" /></a>
+			<br />
+			<small>
+				<i>
+					It was very easy to get HTML forms and also JQuery-based sliders working - a huge advantage over regular
+					OpenGL. Click image for demo.
+				</i>
+			</small>
+		</div>
+
+</body>
+
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2017_07_11_optim</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>3D Graphics Optimisation Resources</h2>
+
+	<p>
+		I am collecting optimisation guides, tools, and resources for
+		3D graphics programming, with particular focus on OpenGL. I'll put these on
+		my OpenGL page in a little article when I have collected a few resources.
+		I'll update this post as I get more things. Send me a message if you have a
+		suggestion!
+	</p>
+
+	<p>
+		Nicholas Guillemot's "Programmable Pulling" (<a
+			href="https://twitter.com/nlguillemot/status/884581084448542722">tweet)(<a
+				href="https://t.co/dNphDLmLqL">github</a>)
+			comparison tool caught my eye, and he mentions optimisation guides from
+			vendors. I think this is a good start!
+	</p>
+
+	<h3>Vendor Optimisation Guides</h3>
+
+	<ul>
+		<li>Intel - <a href="https://software.intel.com/en-us/articles/intel-graphics-developers-guides">html</a></li>
+		<li>Intel - Praveen K., "OpenGL Performance Tips", Aug 2016 - <a
+				href="https://software.intel.com/en-us/articles/opengl-performance-tips-avoid-opengl-calls-that-synchronize-cpu-and-gpu">html/pdf</a>
+		</li>
+		<li>Apple - pretty sure there are guides on their developer pages (TODO)</li>
+		<li>Apple - Tech Note TN2093 - 2013-06-07 - <a
+				href="https://developer.apple.com/library/content/technotes/tn2093/_index.html">html</a> - is there a more
+			recent one?</li>
+		<li>Apple - Best Practices for Working with Vertex Data (OpenGL ES) <a
+				href="https://developer.apple.com/library/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/TechniquesforWorkingwithVertexData/TechniquesforWorkingwithVertexData.html">html</a>
+		</li>
+	</ul>
+
+	<h3>Tools and Tool Guides</h3>
+
+	<p>
+		I will also collect profilers, tracers etc. I think it would be better to have
+		a guide/tutorial for how to optimise with a tool than just a list of tools.
+		e.g. I recently followed a guide on how to check for overdraw with RenderDoc.
+	</p>
+
+	<p>
+		I might write a little tutorial on how I do on-screen CPU + GPU timers/queries
+		for different engine subsystems.
+	</p>
+
+	<h3>Programmatic Techniques</h3>
+
+	<p>
+		It might be nice to have a list of articles about e.g. culling and spatial
+		data structures but perhaps pointing to collections of these is better e.g.
+		which books cover a range of these.
+	</p>
+
+	<ul>
+		<li>[OpenGL] Daniel Rákos, <i>"Programmable Vertex Pulling"</i> OpenGL Insights chapter 21 <a
+				href="http://openglinsights.com/">book website</a>.</li>
+		<li>[OpenGL] Cass Everitt <i>et al. "Approaching Zero Driver Overhead"</i>, GDC 14 - <a
+				href="http://gdcvault.com/play/1020791/">video</a>.</li>
+	</ul>
+
+	<h3>Benchmarks and Comparisons</h3>
+
+	<p>
+		Things like Nicolas' project would be a nice thing to link here. I also think
+		eg slides of presentations comparing vertex data arrangement strategies would
+		be a good fit. It's hard to get hard data on which techniques actually do offer
+		some improvement - and how much - so that we can tell if it's worth the time
+		investment or extra code. Anything like that can go here.
+	</p>
+
+</body>
+
+</html>

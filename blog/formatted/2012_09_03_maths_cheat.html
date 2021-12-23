@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2012_09_03_maths_cheat</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2 id="3sep2012">3 September 2012.</h2>
+	<h3>3d Maths Cheat Sheet</h3>
+	<p>
+		After failing to correctly remember some vector/angle conversion formula and going back to re-read my own lecture
+		slides (this happens all the time...) I decided that it was time to write a look-up cheat sheet for these things;
+	</p>
+
+	<div class="centre">
+		<a href="../teaching/3dprog1/maths_cheat_sheet.pdf">
+			<img src="../images/cheatsheet.png" width="512">
+		</a><br />
+		<i><small>
+				A set of commonly used 3d maths and linear algebra formulae for those like me - with a brain that tends to
+				delete this stuff from memory immediately. Click image for .pdf.
+			</small></i>
+	</div>
+
+	<h3>3d camera vis</h3>
+
+	<p>
+		I have to switch back to working on buildings again soon, so my tie-it-up plan for the 3d camera visualisation is:
+	</p>
+	<ul>
+		<li>
+			switch from 2d particles to 3d meshes (or maybe resize the particles with z) for the faces so that you can see the
+			depth
+		</li>
+		<li>
+			detect nods (y) and shakes (x) of heads and derive the frequency and amplitude. then I can say "if f > some
+			threshold then head is nodding 'Yes'".
+		</li>
+		<li>
+			print out these tracking stats either in text or with some sort of real-time graph
+		</li>
+		<li>
+			clean up the camera feed and track the face positions so that the characters are never mixed up
+		</li>
+		<li>
+			write up a technical report as a workshop style "this is how you visualise 3d data with webgl, and this is how
+			hard it is to do" sort of thing.
+		</li>
+	</ul>
+
+</body>
+
+</html>

@@ -1,0 +1,657 @@
+<html>
+	<head>
+		<link rel=stylesheet type="text/css" href="https://antongerdelan.net/greysans.css">
+		<title>WebGL Run-Time Shader Editing</title>
+		<script src="webgl-utils.js"></script> <!-- include initialisation helper -->
+		<script src="webgl-debug.js"></script> <!-- include debugging helper (prints to javascript console) -->
+		<script type="text/javascript" src="initGL.js"></script>
+		<script type="text/javascript" src="settings.js"></script>
+		<script type="text/javascript" src="shaderProgramme.js"></script>
+		<script type="text/javascript" src="gl-matrix.js"></script>
+		<script type="text/javascript" src="timer.js"></script>
+		<script type="text/javascript" src="mesh.js"></script>
+		<script type="text/javascript" src="camera.js"></script>
+		
+		<link type="text/css" href="css/ui-lightness/jquery-ui-1.8.21.custom.css" rel="stylesheet" />
+		<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+		<script type="text/javascript" src="js/jquery-ui-1.8.21.custom.min.js"></script>
+		<script type="text/javascript">
+			$(function(){
+
+				// Slider
+				$('#slider').slider({
+					range: true,
+					values: [0, 255]
+				});
+
+				//hover states on the static widgets
+				$('#dialog_link, ul#icons li').hover(
+					function() { $(this).addClass('ui-state-hover'); },
+					function() { $(this).removeClass('ui-state-hover'); }
+				);
+
+			});
+		</script>
+		<style>
+	#red, #green, #blue, #alpha, #t, #mad {
+		clear: left;
+		width: 236px;
+		margin: 10px;
+	}
+	#red .ui-slider-range { background: #ef2929; }
+	#red .ui-slider-handle { border-color: #ef2929; }
+	#green .ui-slider-range { background: #8ae234; }
+	#green .ui-slider-handle { border-color: #8ae234; }
+	#blue .ui-slider-range { background: #729fcf; }
+	#blue .ui-slider-handle { border-color: #729fcf; }
+	#alpha .ui-slider-range { background: #333333; }
+	#alpha .ui-slider-handle { border-color: #ff5500; }
+	#t .ui-slider-range { background: #FFA500; }
+	#t .ui-slider-handle { border-color: #ff5500; }
+	#mad .ui-slider-range { background: #FFA500; }
+	#mad .ui-slider-handle { border-color: #ff5500; }
+
+	</style>
+	<script>
+	function hexFromRGB(r, g, b) {
+		var hex = [
+			r.toString( 16 ),
+			g.toString( 16 ),
+			b.toString( 16 )
+		];
+		$.each( hex, function( nr, val ) {
+			if ( val.length === 1 ) {
+				hex[ nr ] = "0" + val;
+			}
+		});
+		return hex.join( "" ).toUpperCase();
+	}
+	
+	$(function () {
+		$( "#t" ).slider({
+			orientation: "horizontal",
+			range: "min",
+			max: 255,
+			value: 0,
+			slide: refreshSwatch,
+			change: refreshSwatch
+		});
+	});
+	
+	$(function () {
+		$( "#mad" ).slider({
+			orientation: "horizontal",
+			range: "min",
+			max: 255,
+			value: 0,
+			slide: refreshSwatch,
+			change: refreshSwatch
+		});
+	});
+	
+	$(function () {
+		$( "#red, #green, #blue, #alpha" ).slider({
+			orientation: "horizontal",
+			range: "min",
+			max: 255,
+			value: 51,
+			slide: refreshSwatch,
+			change: refreshSwatch
+		});
+
+	});
+	
+	$(function () {
+		$( "#alpha" ).slider({
+			orientation: "horizontal",
+			range: "min",
+			max: 255,
+			value: 255,
+			slide: refreshSwatch,
+			change: refreshSwatch
+		});
+	});
+	
+	
+	
+	</script>
+	</head>
+	<body onload="main();">
+		<h1>WebGL Run-Time Shader Editing</h1>
+		
+		<canvas id="mainCanvas" style="border: none;" width="800" height="800"></canvas>
+		<p align="right"><small><small id="FPS">...</small> Hz</small></p>
+
+		<small><i>angry</i></small><div id="t"></div><br />
+		<small><i>happy</i></small><div id="mad"></div><br />
+		<br />
+
+		
+		<h3>Shaders</h3>
+		
+		<form name="shadersform" action="" method="get">
+			<h4>Vertex Shader</h4>
+			<textarea name="vertextextarea" rows="6" cols="88">vertex shader code here</textarea>	
+			<h4>Fragment Shader</h4>
+			<textarea name="fragmenttextarea" rows="6" cols="88">fragment shader code here</textarea><br />
+			<input type="button" name="shadersformbutton" Value="compile" onClick="recompileShaders(this.form)">
+			<input type="button" name="shadersformbutton" Value="reset" onClick="resetShaders(this.form)">
+		</form>
+		
+		<h3>JQueryUI Controls</h3>		
+		<div id="red"></div>
+		<div id="green"></div>
+		<div id="blue"></div>
+		<div id="alpha"></div>
+		
+		<h3>HTML Form Control</h3>
+		
+		<p id="warningzone"></p>
+		
+		<FORM NAME="myform" ACTION="" METHOD="GET">
+			<p>r<INPUT TYPE="text" NAME="inputboxr" VALUE="" size="2">g<INPUT TYPE="text" NAME="inputboxg" VALUE="" size="2">b<INPUT TYPE="text" NAME="inputboxb" VALUE="" size="2">a<INPUT TYPE="text" NAME="inputboxa" VALUE="" size="2">
+			<INPUT TYPE="button" NAME="button" Value="Apply" onClick="testResults(this.form)">
+			</p>
+		</FORM>
+
+		<FORM NAME="radioForm" ACTION="" METHOD="GET">
+		<p>
+			<input type="radio" name="rotydir" value="pos" onClick="radioChange(this.form)" checked="checked"/> turn <i>this</i> way<br />
+			<input type="radio" name="rotydir" value="neg" onClick="radioChange(this.form)"/> no, turn <i>that</i> way
+			<input type="radio" name="rotydir" value="stop" onClick="radioChange(this.form)"/> stop the turning!
+		</p>
+		</FORM>
+
+		<h3>Cam Pos</h3>
+		
+		<table>
+		<tr>
+		<td><small>Cam World Pos</small></td><td id="campos"><small>...</small></td>
+		</tr><tr>
+		<td><small>Cam Direction</small></td><td id="camdir"><small>...</small></td>
+		</tr><tr>
+		<td><small>Mouse Deltas</small></td><td id="mousedeltas"><small>...</small></td>
+		</tr><tr>
+		<td><small>Yaw</small></td><td id="currentyaw"><small>...</small></td>
+		</tr>
+		</table>
+		
+		<h3>Settings</h3>
+		<p id="summaryP">summary details appear here</p>	
+
+		<script type="text/javascript">
+			// vertex buffer objects (can be standardised and put into renderable object)
+			var vboHandle, vboVNHandle, happyVBO, madVBO;
+			// backdrop buffers
+			var backdropVPVBO, backdropVTVBO;
+			// shader attribute location indices (can be standardised and put into shader programme object)
+			
+			var neutral_vp_loc, happy_vp_loc, angry_vp_loc, vn_loc;
+			var angry_w_loc, happy_w_loc;
+			var M_loc, V_loc, P_loc;			
+
+			// attribs in plane shader
+			var basicShaderVPAttribLoc, basicShaderVTAttribLoc;
+			// shader programme objects
+			var myShaderProg, planeShaderProg;
+			
+			// degrees
+			var degrees = 0.0;
+			var frameTimer;
+			var glContext;
+			var stepTimeAccum = 0;
+			var stepSize = 0.02;
+			var myMesh;
+			var texture, backdropTexture;
+			var gCam;
+			var currentlyPressedKeys = {};
+			var mouseHasMovedEver = false;
+			var lastMouseX = 0;
+			var lastMouseY = 0;
+			var mousedown = false;
+			var frameCount = 0;
+			var frameCounterTime = 0.0;
+			var turnPos = true;
+			var stopTurning = false;
+			var animRunningTime = 0.0;
+			var pauseRendering = false;
+			var graphicsStarted = false;
+			
+			function radioChange (form) {
+				if (form.rotydir[0].checked) {
+					turnPos = true;
+					stopTurning = false;
+				}
+				if (form.rotydir[1].checked) {
+					turnPos = false;
+					stopTurning = false;
+				}
+				if (form.rotydir[2].checked) {
+					stopTurning = true;
+				}
+			}
+			
+			function testResults (form) {
+				var r = form.inputboxr.value;
+				var g = form.inputboxg.value;
+				var b = form.inputboxb.value;
+				var a = form.inputboxa.value;
+				if (r > 1 || g > 1 || b > 1 || a > 1 || r < 0 || g < 0 || b < 0 || a < 0) {
+					document.getElementById('warningzone').innerHTML="<green>* ERROR: values must be between 0.0 and 1.0</green>";
+				} else {
+					document.getElementById('warningzone').innerHTML="";
+				}
+				$( "#red" ).slider( "value", r * 255 );
+				$( "#green" ).slider( "value", g * 255 );
+				$( "#blue" ).slider( "value", b * 255 );
+				$( "#alpha" ).slider( "value", a * 255 );
+				glContext.clearColor (r, g, b, a);
+			}
+			
+			function refreshSwatch() {
+				var r = $( "#red" ).slider( "value" ) / 255.0;
+				var g = $( "#green" ).slider( "value" ) / 255.0;
+				var b = $( "#blue" ).slider( "value" ) / 255.0;
+				var a = $( "#alpha" ).slider( "value" ) / 255.0;
+				var t = $( "#t" ).slider( "value" ) / 255.0;
+				var mad = $( "#mad" ).slider( "value" ) / 255.0;
+				document.myform.inputboxr.value = r;
+				document.myform.inputboxg.value = g;
+				document.myform.inputboxb.value = b;
+				document.myform.inputboxa.value = a;
+				if (graphicsStarted) {
+					glContext.clearColor (r, g, b, a);
+					if (!pauseRendering) {
+						//console.log ("t is " + t + "and mad is " + mad);
+						myShaderProg.setUniformFloatByLocation (glContext, happy_w_loc, t);
+						myShaderProg.setUniformFloatByLocation (glContext, angry_w_loc, mad);
+					}
+				}
+			}
+			
+			// rebuilt shader programme based on text area user input
+			function recompileShaders (form) {
+				pauseRendering = true; // safety catch in case of error in shader code, so can resume rendering when fixed
+				// build a new shader. hope that garbage collection is okay
+				myShaderProg = new ShaderProgramme (glContext);
+				if (!myShaderProg.loadVertexShader (glContext, form.vertextextarea.value)) {
+					return false;
+				}
+				if (!myShaderProg.loadFragmentShader (glContext, form.fragmenttextarea.value)) {
+					return false;
+				}
+				myShaderProg.link (glContext);
+				// renable because I don't do this in a generic way later
+				myShaderProg.use (glContext);
+				// get the attribute locations again, in case of memory reshuffle
+				refreshUniformLocations ();
+				resetUniforms ();
+				pauseRendering = false;
+				return true;
+			}
+			
+			function refreshUniformLocations () {
+				angry_w_loc = myShaderProg.getUniformLocation (glContext, "angry_w");
+				if (angry_w_loc < 0) {
+					alert ("angry_w not valid uniform");
+				}
+				happy_w_loc = myShaderProg.getUniformLocation (glContext, "happy_w");
+				if (happy_w_loc < 0) {
+					alert ("happy_w not valid uniform");
+				}
+				M_loc = myShaderProg.getUniformLocation (glContext, "M");
+				V_loc = myShaderProg.getUniformLocation (glContext, "V");
+				P_loc = myShaderProg.getUniformLocation (glContext, "P");
+			}
+			
+			function resetUniforms () {
+				myShaderProg.setUniformFloatByLocation (glContext, angry_w_loc, 0.0);
+				myShaderProg.setUniformFloatByLocation (glContext, happy_w_loc, 0.0);
+				var modelMat = mat4.create();
+				mat4.identity (modelMat);
+				myShaderProg.setUniformMat4ByLocation(glContext, M_loc, modelMat);
+				myShaderProg.setUniformMat4ByLocation (glContext, P_loc, gCam.mProjMat);
+				myShaderProg.setUniformMat4ByLocation (glContext, V_loc, gCam.mViewMat);
+			}
+			
+			// use default url for shaders
+			function resetShaders (form) {
+				pauseRendering = true;
+				// create a shader programme
+				myShaderProg = new ShaderProgramme (glContext);
+				if (!myShaderProg.loadVertexShaderFromURL (glContext, "talker_vs.glsl", true)) {
+					return false;
+				}
+				if (!myShaderProg.loadFragmentShaderFromURL (glContext, "talker_fs.glsl", true)) {
+					return false;
+				}
+				myShaderProg.link (glContext);
+				// enable the shader
+				myShaderProg.use (glContext);
+				refreshUniformLocations ();
+				resetUniforms ();
+				pauseRendering = false;
+				return true;
+			}
+			
+			function main() {
+				// get handle to the HTML5 canvas that we made
+				var canvas = document.getElementById ("mainCanvas");
+		
+				// start GL
+				var debugging = true;
+				var withLogging = false;
+				glContext = initGL (canvas, debugging, withLogging);
+				// validate
+				if (!glContext) {
+					alert("failed to start GL");
+					return;
+				}
+				// create global settings object from JSON file
+				gGLSettings.loadFromFile("glsettings.json");
+				// update HTML section
+				gGLSettings.printAll();
+				graphicsStarted = true; // allow sliders to affect graphics now
+				
+				// CAMERA!
+				gCam = new Camera (45, 1024 / 1024, 0.1, 100, [0, 3, 8], [0, 0, -1]);
+				
+				// load background plane shader
+				planeShaderProg = new ShaderProgramme (glContext);
+				if (!planeShaderProg.loadVertexShaderFromURL (glContext, "basic_vs.glsl", true)) {
+					return false;
+				}
+				if (!planeShaderProg.loadFragmentShaderFromURL (glContext, "basic_fs.glsl", true)) {
+					return false;
+				}
+				planeShaderProg.link (glContext);
+				// enable the shader
+				planeShaderProg.use (glContext);
+				// create indices for attribs in basic shader
+				basicShaderVPAttribLoc = planeShaderProg.getAttributeLocation (glContext, "vp_loc");
+				basicShaderVTAttribLoc = planeShaderProg.getAttributeLocation (glContext, "vt");
+				
+				resetShaders ();
+				
+				// load mesh data from JSON
+				myMesh = loadMeshFromJSON ("headbasis.json");
+				// send default value for timeFactor and save location
+				morphTimeFactorLoc = myShaderProg.getUniformLocation (glContext, "morphtimefactor");
+				myShaderProg.setUniformFloatByLocation (glContext, morphTimeFactorLoc, 0.0);
+				// send default value for timeFactor and save location
+				madFactorLoc = myShaderProg.getUniformLocation (glContext, "madfactor");
+				myShaderProg.setUniformFloatByLocation (glContext, madFactorLoc, 0.0);
+				
+				// get indices (locations) for each attribute in the shader
+				neutral_vp_loc = myShaderProg.getAttributeLocation (glContext, "neutral_vp");
+				vn_loc = myShaderProg.getAttributeLocation (glContext, "vn");
+				angry_vp_loc = myShaderProg.getAttributeLocation (glContext, "angry_vp");
+				happy_vp_loc = myShaderProg.getAttributeLocation (glContext, "happy_vp");
+				
+				// create buffer indices
+				vboHandle = glContext.createBuffer (); // create a vertex buffer
+				vboVNHandle = glContext.createBuffer ();
+				happyVBO = glContext.createBuffer ();
+				madVBO = glContext.createBuffer ();
+				
+				// backdrop create buffers
+				backdropVPVBO = glContext.createBuffer ();
+				backdropVTVBO = glContext.createBuffer ();
+				
+				// load data into buffers
+				glContext.bindBuffer (glContext.ARRAY_BUFFER, vboHandle); // enable buffer
+				glContext.bufferData (glContext.ARRAY_BUFFER, new Float32Array (myMesh.mVertexPoints), glContext.STATIC_DRAW); // put data into buffer
+				glContext.bindBuffer (glContext.ARRAY_BUFFER, vboVNHandle);
+				glContext.bufferData (glContext.ARRAY_BUFFER, new Float32Array (myMesh.mVertexNormals), glContext.STATIC_DRAW);
+				glContext.bindBuffer (glContext.ARRAY_BUFFER, happyVBO);
+				var keyFrameMesh = loadMeshFromJSON ("headsmile.json");
+				glContext.bufferData (glContext.ARRAY_BUFFER, new Float32Array (keyFrameMesh.mVertexPoints), glContext.STATIC_DRAW);
+				glContext.bindBuffer (glContext.ARRAY_BUFFER, madVBO);
+				var madmesh = loadMeshFromJSON ("headmad.json");
+				glContext.bufferData (glContext.ARRAY_BUFFER, new Float32Array (madmesh.mVertexPoints), glContext.STATIC_DRAW);
+				
+				// backdrop load data into buffers
+				glContext.bindBuffer (glContext.ARRAY_BUFFER, backdropVPVBO); // enable buffer
+				// HAHA! opengl hom. clip space uses z=0 to closest and 1 to mean farthest depth, so far away = .99999 and very close = .9
+				var backdropVPs = [
+				 1,  1, .99,
+				-1,  1, .99,
+				-1, -1, .99,
+				 1,  1, .99,
+				-1, -1, .99,
+				 1, -1, .99
+				];
+				glContext.bufferData (glContext.ARRAY_BUFFER, new Float32Array (backdropVPs), glContext.STATIC_DRAW); // put data into buffer
+				glContext.bindBuffer (glContext.ARRAY_BUFFER, backdropVTVBO); // enable buffer
+				var backdropVTs = [
+					1, 1,
+					0, 1,
+					0, 0,
+					1, 1,
+					0, 0,
+					1, 0
+				];
+				glContext.bufferData (glContext.ARRAY_BUFFER, new Float32Array (backdropVTs), glContext.STATIC_DRAW); // put data into buffer
+				
+				// goes into a separate looping function later
+				glContext.clearColor (gGLSettings.mBackgroundColour.r, gGLSettings.mBackgroundColour.g, gGLSettings.mBackgroundColour.b, 1.0);
+				glContext.blendFunc (glContext.SRC_ALPHA, glContext.ONE_MINUS_SRC_ALPHA); // 1 minus alpha is what we want
+				glContext.enable (glContext.BLEND); // enable transp
+				glContext.enable (glContext.DEPTH_TEST); // stupid tutorial said to disable this -- wrong
+				glContext.enable (glContext.CULL_FACE); // enable culling
+				glContext.cullFace (glContext.BACK);
+				glContext.frontFace (glContext.CCW);
+				
+				// load texture
+				texture = glContext.createTexture();
+				texture.image = new Image();
+				texture.image.onload = function() {
+					//alert("loaded texture");
+					glContext.bindTexture(glContext.TEXTURE_2D, texture);
+					glContext.pixelStorei(glContext.UNPACK_FLIP_Y_WEBGL, true);
+					glContext.texImage2D(glContext.TEXTURE_2D, 0, glContext.RGBA, glContext.RGBA, glContext.UNSIGNED_BYTE, texture.image);
+					glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_MAG_FILTER, glContext.LINEAR); // bi-linear filtering
+					glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_MIN_FILTER, glContext.LINEAR); // tri-linear filtering
+				//	glContext.bindTexture(glContext.TEXTURE_2D, null); // unbind -- this was screwing me up
+				}
+				texture.image.src = "skin.png";
+				
+				// also bind texture (hopefully this is not too soon)
+				myShaderProg. use (glContext);
+				glContext.activeTexture(glContext.TEXTURE0);
+				glContext.bindTexture(glContext.TEXTURE_2D, texture);
+				var samplerLocation = myShaderProg.getUniformLocation (glContext, "tex");
+				myShaderProg.setUniformIntByLocation(glContext, samplerLocation, 0); // texture location 0 in shader
+				
+				// load backdrop texture
+				backdropTexture = glContext.createTexture();
+				backdropTexture.image = new Image();
+				backdropTexture.image.onload = function() {
+					//alert("loaded texture");
+					glContext.bindTexture(glContext.TEXTURE_2D, backdropTexture);
+					glContext.pixelStorei(glContext.UNPACK_FLIP_Y_WEBGL, true);
+					glContext.texImage2D(glContext.TEXTURE_2D, 0, glContext.RGBA, glContext.RGBA, glContext.UNSIGNED_BYTE, backdropTexture.image);
+					glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_MAG_FILTER, glContext.LINEAR); // bi-linear filtering
+					glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_MIN_FILTER, glContext.LINEAR); // tri-linear filtering
+				//	glContext.bindTexture(glContext.TEXTURE_2D, null); // unbind -- this was screwing me up
+				}
+				backdropTexture.image.src = "dungeon1.png";
+				
+				// also bind texture (hopefully this is not too soon)
+				planeShaderProg.use (glContext);
+				glContext.activeTexture (glContext.TEXTURE0);
+				glContext.bindTexture (glContext.TEXTURE_2D, backdropTexture);
+				var samplerLocation = planeShaderProg.getUniformLocation (glContext, "tex");
+				planeShaderProg.setUniformIntByLocation (glContext, samplerLocation, 0); // texture location 0 in shader
+				
+				var mousedownincanvas = false;
+				
+				// add keyboard handling callbacks
+				document.onkeydown = function (event) {
+					// protect from disrupting text input
+					if (mousedownincanvas) {
+						currentlyPressedKeys[event.keyCode] = true;
+					}
+				}
+				canvas.onmousedown = function () {
+					mousedownincanvas = true;
+				}
+				
+				document.onkeyup = function (event) {
+					currentlyPressedKeys[event.keyCode] = false;
+					
+				}
+				
+				document.onmousedown = handleMouseDown = function (event) { // only do when cursor inside scene -- want this????
+					mousedown = true;
+				}
+				document.onmouseup = handleMouseUp = function (event) { // do this on document so it can be detected when cursor outside scene
+					mousedown = false;
+					// reset to avoid springy warping mouse when next clicking
+					mouseHasMovedEver = false;
+					mousedownincanvas = false;
+				}
+				document.onmousemove = handleMouseMove = function (event) {
+					if (!mousedown) {
+						return;
+					}
+					//// could only do when mouse down for sub-window stuff
+					// change to positive and negative coords
+					var newX = event.clientX;
+					var newY = event.clientY;
+
+					// avoid annoying first time mouse move jump
+					if (mouseHasMovedEver == false) {
+						mouseHasMovedEver = true;
+						lastMouseX = newX;
+						lastMouseY = newY;
+						return;
+					}
+					
+					var deltaX = newX - lastMouseX;
+					var deltaY = newY - lastMouseY;
+					lastMouseX = newX
+					lastMouseY = newY;
+					
+					var yawSpeed = 0.1;
+					//gCam.deltaYaw (deltaX * yawSpeed);
+					 
+					
+					/*var newRotationMatrix = mat4.create();
+					mat4.identity(newRotationMatrix);
+					mat4.rotate(newRotationMatrix, degToRad(deltaX / 10), [0, 1, 0]);
+					mat4.rotate(newRotationMatrix, degToRad(deltaY / 10), [1, 0, 0]);
+					mat4.multiply(newRotationMatrix, moonRotationMatrix, moonRotationMatrix);*/
+					
+					myShaderProg.setUniformMat4ByLocation (glContext, V_loc, gCam.mViewMat);
+				}
+				
+				// create a frame timer
+				frameTimer = new Timer();
+				frameTimer.start();
+				
+				// render loop
+				render (canvas);
+			}
+
+			// rendering loop
+			function render (canvas) {
+				// update matrix based on timer
+				var milliSeconds = frameTimer.milliseconds();
+				var deltaSeconds = milliSeconds / 1000.0;
+				if (milliSeconds > 10) {
+					stepTimeAccum += deltaSeconds;
+					frameCounterTime += deltaSeconds;
+					frameTimer.start();
+				}
+				
+				// morph animations
+				animRunningTime += deltaSeconds;
+				if (animRunningTime > 3.0) {
+					animRunningTime = 0.0;
+				}
+				
+				// compute time steps
+				while (stepTimeAccum > stepSize) {
+					// update matrix for shader
+					var modelMat = mat4.create();
+					mat4.identity (modelMat);
+					/*if (!stopTurning) {
+						if (turnPos) {
+							degrees += stepSize * 0.5;
+						} else {
+							degrees -= stepSize * 0.5;
+						}
+					}*/
+					degrees = 3.14;
+					
+					var axis = vec3.createFrom(0, 1, 0);
+					vec3.normalize (axis);
+					mat4.rotate (modelMat, degrees, axis);
+					mat4.scale (modelMat, [15, 15, 15]);
+					// enable the shader
+					if (!pauseRendering) {
+						myShaderProg.use (glContext);
+						myShaderProg.setUniformMat4ByLocation(glContext, M_loc, modelMat);
+					}
+					
+					// TODO there are functions in glmatrix to get the normal matrix
+					
+					// camera movement
+					var camMove = [0, 0, 0];
+					var camspeed = 5.0;
+					var updateMove = false;
+					// keys listed by code: http://stackoverflow.com/questions/1465374/javascript-event-keycode-constants
+					if (currentlyPressedKeys[87] == true) { // w
+						//camMove[2] = -1.0 * camspeed * stepSize;
+						gCam.moveInCamDirBy (camspeed * stepSize);
+						updateMove = true;
+					}
+					if (currentlyPressedKeys[83] == true) { // s
+						//camMove[2] = 1.0 * camspeed * stepSize;
+						gCam.moveInCamDirBy (-camspeed * stepSize);
+						updateMove = true;
+					}
+					if (currentlyPressedKeys[65] == true) { // a
+						//camMove[0] = -1.0 * camspeed * stepSize;
+						gCam.slideCamBy (-camspeed * stepSize);
+						updateMove = true;
+					}
+					if (currentlyPressedKeys[68] == true) { // d
+						//camMove[0] = 1.0 * camspeed * stepSize;
+						gCam.slideCamBy (camspeed * stepSize);
+						updateMove = true;
+					}
+					if (currentlyPressedKeys[69] == true) { // d
+						camMove[1] = -1.0 * camspeed * stepSize;
+						gCam.moveBy (camMove);
+						updateMove = true;
+					}
+					if (currentlyPressedKeys[81] == true) { // d
+						camMove[1] = 1.0 * camspeed * stepSize;
+						gCam.moveBy (camMove);
+						updateMove = true;
+					}
+					if (updateMove == true) {
+						//gCam.moveBy (camMove);
+						if (!pauseRendering) {
+							myShaderProg.setUniformMat4ByLocation (glContext, V_loc, gCam.mViewMat);
+						}
+					}
+					
+					stepTimeAccum -= stepSize;
+				}
+				
+				// draw geometry (the suggest order of functions on the webgl wiki was wrong)
+				drawScene (glContext);
+				frameCount++;
+				if (frameCount > 9) {
+					frameCount = 0;
+					document.getElementById('FPS').innerHTML="<small>" + (10.0 / frameCounterTime).toFixed(2) + "</small>";
+					frameCounterTime = 0.0;
+				}
+				window.requestAnimFrame(render, canvas); // this function is from webgl-utils
+			}
+		</script>
+	</body>
+</html>

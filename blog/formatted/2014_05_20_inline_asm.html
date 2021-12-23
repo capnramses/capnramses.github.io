@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2014_05_20_inline_asm</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>Inline Assembler</h2>
+
+	<p>
+		The only time that I've ever seriously used assembler code was for an assignment
+		at university. That was 8086 assembly if I recall. It was quite fun writing
+		the entire move/copy/add/ifjump sequence to replicate a <tt>for</tt> loop.
+		Eventually you start to <b>see</b> your way through the logical process in the
+		same way as you do with a more familiar higher-level language. It sits somewhere
+		between digital electronics and full programming languages. It's a lot easier
+		than designing electronics actually, because you have a limited set of
+		instructions, and a limited set of resources (registers) to work with. Also
+		you can't screw up soldering.
+	</p>
+
+	<p>
+		I had another little hobby bash recently using GCC directly as an x86 assembly
+		compiler, and pulled apart generated assembly code, compiled in separate stages,
+		and that kind of thing. It's not really as enlightening as some old salts
+		would have you think.
+	</p>
+
+	<p>
+		Something that I never tried, but saw in a tweet today, was a reference that
+		harks back to the mist-shrouded early days of video games programming: using
+		assembly <b>in-line</b> with C. This was often done to optimise performance.
+		I read that it's not so useful these days as the compilers are better at
+		optimising code, and yours is probably going to be worse. Is that true? Do
+		people still do this? Probably not - it's not going to help improve GPU
+		performance anyway. Well I gave it a go anyway - it's quite easy. GCC has it's
+		own style, based on the AT&T assembler. Apparently there is also Intel style
+		which has operands around the other way, and ever so slightly different special
+		characters. Here's my test programme:
+	</p>
+
+	<textarea rows=17>
+#include <stdio.h>
+
+int main () {
+  int in_val = 69;
+  int out_val = 42;
+
+  asm (
+    "movl %1, %%ebx;" // copy input val to ebx
+    "movl %%ebx, %0;" // copy ebx to output val
+    : "=r" (out_val)
+    : "r" (in_val) // r means use any GP register
+    : "%ebx" // clobbered register
+  );
+  printf ("out value was 42, now %i\n", out_val);
+
+  return 0;
+}</textarea>
+
+	<p>
+		So, you enclose your block of assembler with either <tt>asm()</tt> or
+		<tt>__asm__()</tt>, which I guess implies that it's GCC-specific, and not
+		part of the language. I'll see what the C book says about this tomorrow.
+		The bit at the end of the enclosure has three lines beginning with a semi-colon.
+		These are output C variables, input C variables, and a list of registers to
+		"clobber".
+		The two instructions are both <tt>movl</tt> (copy using 32-bit longs). The
+		first copies the value in %1 (the input variable) into a register called ebx.
+		The second instruction copies ebx into %0 (the output variable). I haven't
+		quite figured out all of the special formatting thingies so I won't attempt to
+		describe some of them here. That's it - compile as normal and it works!
+	</p>
+
+	<div class="centre">
+		<img src="../images/gdb0.png" /><br />
+		<small><i>Here I used cgdb (the GNU debugger + a text editor to set breakpoints
+				in your files) to debug my in-line assembler.</i></small>
+	</div>
+
+	<p>
+		You can use the GNU debugger (gdb) to debug your assembler if you compile with
+		the <tt>-g</tt> flag. I prefer a programme called "cgdb" (pictured), which
+		includes a text editor for interactively setting break-points on particular
+		lines in your code. You press ESC to get into the text edtior and "i" to go
+		back to the gdb console. In the text editor use cursor keys to scroll text,
+		and press the space bar to toggle a break-point. If I remember correctly "o"
+		opens a different file. With a break-point where my in-line assembler starts,
+		you invoke "run" in the gdb console. Then you can type in "info registers" to
+		get a list of the values in all the built-in registers. Pgup/pgdn to scroll.
+		to step through assembler lines you can use "stepi" (also "si"). This may take
+		a couple of steps before you see the registers flick over to the new values.
+		Splendid! Well, that's easy enough to do, but is it actually useful? Hmmm...
+	</p>
+
+	<p>
+		Next - I had my first go at Arduino tinkering, have a couple of book reviews to
+		make, and maybe some details about graphics stuff.
+	</p>
+
+</body>
+
+</html>

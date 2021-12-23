@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<style>
+body {
+font-family:sans,sans-serif;
+font-size: 150%;
+}
+p {
+margin-left:50px;
+margin-right:50px;
+}
+ul {
+margin-left:50px;
+margin-right:50px;
+}
+ol {
+margin-left:50px;
+margin-right:50px;
+}
+h3 {
+margin-left:25px;
+margin-right:25px;
+}
+img {
+margin-left:25px;
+margin-right:25px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Fancy Web Graphics<br /><small>Dr Anton Gerdelan <tt>(gerdela@tcd.ie)</tt></small></h1>
+
+<p><i>
+Some reflections on how website design has changed in the last 5 years.
+</i></p>
+
+<p>
+Slides at <a href="https://antongerdelan.net/teaching/">https://antongerdelan.net/teaching/</a>,
+and I'll put them on the course page (when I figure out how...).
+</p>
+
+<h2>About Me</h2>
+
+<ul>
+<li>From New Zealand. Did part of my PhD here with GV2 (<b>graphics, vision, visualisation</b>) group.</li>
+<li>Lectured <b>3d graphics</b> and <b>visualisation</b> in Sweden last year (Blekinge Tekniska H&ouml;gskola).</li>
+<li>Have a series of <b>OpenGL tutorials</b> on my website:
+<a href="https://antongerdelan.net/opengl/">https://antongerdelan.net/opengl/</a></li>
+<li>Labs for 4th-year <b>graphics</b> this year.</li>
+<li>Making a <b>video game</b> in my spare time.</li>
+<li>PostDoc for Dave Lewis. <b>WebGL visualisation</b> interface for smart buildings.</li>
+</ul>
+
+<hr />
+
+<h2>Modern Website Design</h2>
+
+<ul>
+<li>Lots of examples on <a href="http://www.awwwards.com/">www.awwwards.com</a></li>
+</ul>
+
+<img width=800 src="images/nba.png" /><br />
+
+<ul>
+<li><b>Minimalist</b>, <b>"clean"</b> looks.</li>
+<li>Giant, <b>hi-res image</b> backgrounds - bandwidth no longer a bottleneck - <b>4G mobile networks</b></li>
+<li>"<b>All-on-one-page</b>" design with swipe/scroll transitions - <b>tablet swipe/intuitive</b> - coffee-table
+book format.</li>
+<li><b>Interactive elements</b> - information visualisations - entertainment (micro-games) - gimmicks</li>
+</ul>
+
+<img width=800 src="images/nba2.png" /><br />
+
+<ul>
+<li>People are sick of <b>annoying, invasive</b>, trashy-looking (and sometimes offensive) targeted (Google/Amazon/Facebook) advertisements - <b>Adblock</b> plug-ins</li>
+<li>How do these websites <b>commercialise</b> in an elegant way? (Without disrupting the "<b>user experience</b>").</li>
+</ul>
+
+<img width=800 src="images/londonreal.png" /><br />
+
+<ul>
+<li><b>Number-of-clicks-to-payment</b></li>
+<li><b>Video</b> promotions with <b>real people</b> in them (Kickstarters etc.)</b></li>
+<li>Meaningful connected deals (i.e. vouchers) and promotions.</li>
+<li><b>User opt-in</b> to email and mobile/txt <b>notifications</b> of "watched" deals</li>
+</ul>
+
+<h3>Recent Web Technology Changes</h3>
+
+<ul>
+<li>
+<b>Flash</b> (and Silverlight) is on the way out. <b>HTML5</b> is dominating
+<li>Better audio/video playback with HTML5 - <b>Youtube</b> - no plug-ins</li>
+<li>HTML5 more pervasive because it has less restrictions (i.e. Flash on Apple devices)</li>
+<li>Plugins that use graphics hardware (<b>much much much faster</b>)</li>
+<li>Browser-side stuff is more useful because dual-core/quad-core CPUs</li>
+<li>Nobody uses Java web-applets any more</li>
+</li>
+</ul>
+
+<h3>Web Technology that is Still Horrible</h3>
+
+<table><tr><td>
+<table border=1>
+<tr><td><b>Name</b></td><td><b>Score (/100)</b></td></tr>
+<tr><td>Ron</td><td>101</td></tr>
+<tr><td>Brick</td><td>-100</td></tr>
+<tr><td>Brian</td><td>8</td></tr>
+<tr><td>Champ</td><td>1</td></tr>
+</table></td><td>
+<textarea rows=7 cols=80>
+<table border=1>
+<tr><td><b>Name</b></td><td><b>Score (/100)</b></td></tr>
+<tr><td>Ron</td><td>101</td></tr>
+<tr><td>Brick</td><td>-100</td></tr>
+<tr><td>Brian</td><td>8</td></tr>
+<tr><td>Champ</td><td>1</td></tr>
+</table></textarea></td></tr></table>
+
+<ul>
+<li>HTML is still a <b>terrible</b> formatting tool.
+	<ul>
+	<li>Tables</li>
+	<li>Paragraph margins</li>
+	<li>Margins in general</li>
+	<li>Fonts</li>
+	<li>Multi-column layouts</li>
+	</ul>
+</li>
+<li>You will need to use bits and pieces of <b>hacked-in</b> technology to help:
+<ul>
+	<li>CSS (also horrible)</li>
+	<li>JavaScript DOM with AJAX etc. (<u>very</u> prone to errors, messy)</li>
+	<li>PHP</li>
+</ul></li>
+<li>Use minimally</li>
+</ul>
+
+<h3>Change in Mode of Use of Websites</h3>
+
+<ul>
+<li>"experiences" to promote exhibitions of new work or new products.</li>
+<li>tablet-friendly browsing</li>
+<li>less Wordpress, more interactive thingies/widgets, audio</li>
+<li>3d previews and architectural walk-throughs</li>
+<li>design-in-browser - furniture, clothing colours, custom designs, 3d printing</li>
+</ul>
+
+<hr />
+<p><i><b>Are we half way through the time? If so break.</b></i></p>
+<hr />
+
+<h2>WebGL and the GPU</h2>
+
+<h3>The Little Black Jacket - Coco Chanel</h3>
+
+<ul>
+<li>See live version <a href="http://thelittleblackjacket.chanel.com/webgl/en">http://thelittleblackjacket.chanel.com/webgl/en</a></li>
+<li>"e-experience" (with creepy audio)</li>
+<li>Why is this using WebGL and HTML5 audio rather than Flash?</li>
+</ul>
+
+<img width=800 src="images/chanel1.png" />
+
+<h3>Audi "One Million Reasons"</h3>
+
+<img width=800 src="images/audi1.png" />
+
+<ul>
+<li>Interactive 3d advertisement (also with creepy audio)</li>
+<li><a href="http://onemillionreasons.audi.de/index.html">http://onemillionreasons.audi.de/index.html</a></li>
+<li>How does this work?</li>
+<li>Twitter integration - tweets from the public <a href="https://dev.twitter.com/">https://dev.twitter.com/</a></li>
+</ul>
+
+<img width=800 src="images/audi2.png" />
+
+<h3>What is a GPU? Why is WebGL Good?</h3>
+
+<ul>
+<li>My little model viewer thingy <a href="https://antongerdelan.net/3dmodelviewer/">https://antongerdelan.net/3dmodelviewer/</a></li>
+<li>Google maps/Google earth</li>
+<li>WebGL lets us access the graphics programming unit (GPU) to draw</li>
+<li>Massively parallel processing (up to 2000 points of a mesh or colours at once)</li>
+<li>Put an HTML5 canvas onto webpage. Tell WebGL to draw onto canvas</li>
+<li>Graphics programmes run on GPU are called "Shaders" - written in GLSL</li>
+<li><b>Super super super fast</b> compared to Flash etc.</li>
+<li>Use a bit of JavaScript to tie it together</li>
+</ul>
+
+<h3>Shader Toy</h3>
+
+<ul>
+<li><a href="https://www.shadertoy.com/">https://www.shadertoy.com/</a></li>
+<li>Tool to play with shaders directly in browser</li>
+<li>Gives feedback on any errors and mistakes under relevant lines</li>
+<li>Can publish cool demos - sort of reminiscent of 1980s/90s Demoscene</li>
+</ul>
+<img width=800 src="images/shadertoy.png" />
+
+<h3>Three.js API</h3>
+
+<ul>
+<li><a href="http://threejs.org">http://threejs.org</a></li>
+<li>API to make it easy to get into WebGL without years of experience</li>
+<li>Some JavaScript background would be helpful</li>
+<li>Lots of demos on website</li>
+</ul>
+
+<img width=800 src="images/threejs.png" />
+
+<h2>Lab Next Wednesday</h2>
+
+<ol>
+<li>JavaScript debugging example (I'll put one up)</li>
+<li>I can also help with projects</li>
+</ol>
+
+<h2>My Plan for Next Time - Helpful?</h2>
+
+<ol>
+<li>Three.js - Intro to 3d on the Web</li>
+<li>Something else that would help? - email me <b>gerdela@scss.tcd.ie</b></li>
+</ol>
+
+<!--
+How debugging works in general. Breakpoints. Run, Step over, Step into.
+Point-of-interest. console.log() console.error() alert(). Watch variable.
+Backtrace or stacktrace on errors.
+Chrome, FF, and firebug plugin.
+-->
+
+</body>
+</html>

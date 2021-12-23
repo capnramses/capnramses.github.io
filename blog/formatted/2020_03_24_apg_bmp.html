@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2020_03_24_apg_bmp</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>My <tt>apg_bmp</tt> Mini-Library</h2>
+
+	<p>You can find my current library's code in my <a href="https://github.com/capnramses/apg">apg</a> repository.</p>
+
+	<h3>Used in Basis Universal</h3>
+
+	<p>
+		This week Binomial LLC adopted my little BMP image loader library into <a
+			href="https://github.com/BinomialLLC/basis_universal">Basis Universal</a>, which is a Google partner project.
+		Basis Universal is a <i>supercompression</i> GPU image compression system, and introduces a new <tt>.basis</tt>
+		intermediate image format. It is also a suite of image converter and compression tools.
+		Initially targeting video games, where "texture" images make up the bulk of a game's data, it now has interesting
+		tie-ins to web technology, and if widely adopted,
+		may end up producing a successor to the venerable JPEG, and other web-delivered image and video content. In prior
+		releases Basis Universal only supported PNG images as inputs.
+		Here is a <a href="https://opensource.googleblog.com/2020/03/google-and-binomial-partner-to-open.html">Google blog
+			post</a> from 20 March 2020, which provides more information.
+	</p>
+
+	<h3>Background to <tt>apg_bmp</tt> Development</h3>
+
+	<p>
+		I maintain a <i>ToDo</i> list of interesting play-around side projects, and I try to knock out one or two every week
+		as practice.
+		One of those was <i>"Hey, I've never manually loaded an old-school Windows bitmap (BMP) image before, how does that
+			work?"</i>.
+	</p>
+
+	<p>
+		I ended up doing fairly well at loading a range of different sub-formats of BMP image in my little demo. I
+		discovered that actually
+		most professionally-used BMP loaders couldn't handle as many formats as I was testing with, which included some
+		strange old bit-encoded variants, which I
+		dug up from old internet archives from my own curiosity. A few benchmarks showed that I was actually loading faster
+		than the popular libraries I was testing against.
+		I was chatting about that on <a href="https://twitter.com/capnramses">Twitter</a>, and it provoked some interest.
+	</p>
+
+	<div class="centre">
+		<img src="../images/LAND3.BMP" /><br />
+		<small>Really old BMP images that look like pointillism artworks were very interesting. I was quite happy when I
+			cracked the formula for loading these. I had to use a hex editor to work out the real formats used, as the
+			specification documents often disagreed with
+			the common implementations. This, and similar BMP images, can be found <a
+				href="https://www.fileformat.info/format/bmp/sample/index.htm">here</a>.</small>
+	</div>
+
+	<h3>Fuzzing and Licences</h3>
+
+	<p>
+		Partner projects have to be extremely strict about use of licences for third-party software. Commercial software
+		should be too, but they often avoid audit!
+		I usually dual-licence my free and open source utility software because there's a great benefit to being flexible
+		for yourself - it's ridiculous having to reinvent and reimplement your own utilities every time you change jobs.
+		Really, companies should be more open to releasing things open source. But since they are not, if I dual-licence my
+		own work with both a suitable open source licence, and an optional public domain declaration, then I have the
+		flexibility to take that to any job I work on, and be much more productive with my time.
+		I was able to set up licence options for my mini-libraries that made them easy to incorporate in other projects.
+		Most imaging libraries have some technicality or other that makes that difficult.
+	</p>
+
+	<p>
+		Google requires all its work to be fuzzed. It's a good idea to do this with any software that loads user-provided
+		content, such as an image loader. I have recently been educated on fuzzers by my friend Saija, who is a security
+		professional who has worked for some
+		pretty major companies. Fuzzers are programs that take a set of inputs you provide and generate pseudo-random
+		permutations of those, trying to find invalid files that make your program crash or become unstable. It doesn't take
+		very long to generate a huge folder of
+		images that blow up your program in interesting ways. Saija fuzzed <tt>apg_bmp</tt> with AFL, which let me easily
+		reproduce issues and fix a huge number of surprising bugs. After fixing and re-fuzzing, if it reports no issues you
+		can try seeding it with a new test
+		set. You can be pretty confident then that your software has been hardened to handle both invalid or corrupted
+		source images, as well as deliberately malicious files. It's like having the most persistent and evil QA tester ever
+		working around the clock ruining your day!
+		Most image loaders are not fuzzed, which kind of left me in a nice position of being a kind of winner-by-default for
+		use in security-conscious applications. I tried the previous crashing results on popular image loaders (libraries
+		and software). Almost all of them
+		crashed. Some were very robust, but none supported as wide a range of BMP sub-formats. I got some really wild
+		outputs between default image viewers for different platforms and the tools file explorers use to produce
+		thumbnails. They mostly didn't crash, but they generated
+		some bizarre output images. Oddly it seems they don't all use the same BMP reading code on the same operating
+		systems.
+	</p>
+
+	<p>If you're wondering about how to get started with fuzzers and fuzzing I am just about to publish a book
+		<i>Professional Programing Tools for C and C++</i> with my friend Katja. It has a whole chapter on getting started
+		with fuzzing.
+		I may also do a tutorial stream in the next week or two.</p>
+
+	<h3>Next Steps</h3>
+
+	<p>Let's see what a very large user base reports in terms of bugs and feature requests! I would also like to attack my
+		mini-lib with some different fuzzing tools. There were a few BMP features I didn't implement support for because I
+		couldn't find real examples of
+		them being used, so let's wait and see if people ask about it.</p>
+</body>
+
+</html>

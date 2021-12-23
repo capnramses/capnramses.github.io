@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2012_07_16_multi_pass</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2 id="16july2012">16 July 2012.</h2>
+	<h3>Post-Processing and Computer Vision Algorithms on the GPU</h3>
+	<p>
+		Well, it looks like post-processing image techniques are a lot easier than I had envisioned. It's more or less the
+		same set-up as the colour-picker demo that I did last week, but the intermediate buffer's texture gets re-used as an
+		input to a simple full-screen quad. The quad samples the texture, and performs whatever image technique within the
+		fragment shader. Things like changing the colour range are pretty straight-forward. I was interested in OpenCV-like
+		computer vision techniques. The trick here is just to do several texture samples around the fragment's texture
+		coordinates to create your sliding window/image kernel. e.g. for a 3x3 kernel:
+	</p>
+
+	<small>
+		<b>
+			<i>
+				<orange>
+					GLSL Fragment Shader. Warning: Untested code fragment
+				</orange>
+			</i>
+		</b>
+	</small>
+	<br />
+	<textarea rows="10" cols="90">
+// interpolated texture coordinates from vertex shader
+varying vec2 texcoord;
+
+// texture that was created in normal rendering to an intermediate frame-buffer
+uniform sampler2D tex;
+
+// get the dimensions of the texture (should be same as viewport size)
+uniform float texture_height;
+uniform float texture_width;
+
+// work out size of 1 pixel in terms of 0:1 texture coordinates
+float texel_height = 1.0 / texture_height;
+float texel_width = 1.0 / texture_width;
+
+vec4 texels[9];
+texel[0] = texture2D (tex, vec2 (texcoord.s - texel_width, texcoord.t + texture_height));
+texel[1] = texture2D (tex, vec2 (texcoord.s, texcoord.t + texture_height));
+texel[2] = texture2D (tex, vec2 (texcoord.s + texel_width, texcoord.t + texture_height));
+texel[3] = texture2D (tex, vec2 (texcoord.s - texel_width, texcoord.t));
+texel[4] = texture2D (tex, vec2 (texcoord.s, texcoord.t));
+texel[5] = texture2D (tex, vec2 (texcoord.s + texel_width, texcoord.t));
+texel[6] = texture2D (tex, vec2 (texcoord.s - texel_width, texcoord.t - texture_height));
+texel[7] = texture2D (tex, vec2 (texcoord.s, texcoord.t - texture_height));
+texel[8] = texture2D (tex, vec2 (texcoord.s + texel_width, texcoord.t - texture_height));
+</textarea>
+
+	<p>
+		So, probably not a lot of use for post-processing techniques out side of entertainment, but I wonder if it's
+		worth-while to look at doing some of our computer vision tasks (currently done in OpenCV) on the GPU. I am thinking
+		that this might be handy for the special case of analyse-visualise. The question there is - what is the best way to
+		grab camera frames and feed them to GL? Do I want to stream them in one-at-a-time (slow), or do a bunch at a time?
+		This raises some interesting questions (and possibilities) in a web set-up. Perhaps the camera can talk to a web
+		server, and WebGL can fetch frames interactively from the server (and skip anything non-current). Must try.
+	</p>
+
+	<h3>Depth of Field</h3>
+
+	<p>
+		Okay, so I've figured out how to blur the area of a screen around a certain object's position on the screen. But
+		this isn't true depth of field - a technique which actually uses depth information to focus on a particular object
+		and blur the forward/rear elements. Annoyingly, the WebGL book that I got has a picture of a depth of field
+		technique on the cover...and that was a main reason for buying the book...but it's just a picture. I judged a book
+		by its cover...
+		Anyway here are some enlightening sources of information;
+	</p>
+	<ul>
+		<li>
+			A nice WebGL depth of field demo:
+			<a href="http://www.nutty.ca/?page_id=352&link=depth_of_field">
+				http://www.nutty.ca/?page_id=352&link=depth_of_field
+			</a>
+		</li>
+		<li>
+			And a rather nice elaboration with clear diagrams about doing it in a general way (distorting the camera position
+			for objects around the focus):
+			<a href="http://screamyguy.net/DepthOfField/index.htm">
+				http://screamyguy.net/DepthOfField/index.htm
+			</a>
+		</li>
+	</ul>
+
+</body>
+
+</html>

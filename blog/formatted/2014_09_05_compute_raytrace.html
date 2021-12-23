@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2014_09_05_compute_raytrace</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>Real-Time Ray-Tracer in OpenGL using Compute Shaders</h2>
+
+	<p>
+		Yesterday, I upgraded the previous post's single-threaded CPU-based ray-tracer
+		demo.
+		I replaced the CPU-based ray-tracing operations with compute shaders, which use
+		the parallelism of the GPU.
+		This gave me a speed up of more than 10 times.
+		The documentation/instruction material available for this, rather new, OpenGL
+		feature is pretty lacking - there are not many tutorials, and the reference
+		information isn't very instructional. Eventually I found the information that I
+		needed, but the details/features are not communicated with sensible context.
+		I'll try to make a tutorial or set of instructions for getting started with a
+		minimal demo like this.
+	</p>
+
+	<img src="../images/raytraceshot2.png" />
+
+	<p>
+		The basic idea is that each pixel in my 800x800 display area fires a
+		mathematical ray forward, and checks if it hits the sphere. Instead of
+		calculating this on the CPU, I write this in a compute shader. GL has this very
+		confused notion of work unit division in global and local allotments and
+		different dimensions. Basically, I wanted one ray calculation to run for each
+		pixel. The way to do this is to say that each pixel is a work unit, and we can
+		say that we have a two-dimensional set of work units - 800x800 of them. Each
+		compute shader processes a "work group" - it is repeated for an arbitrary range
+		of these work units. To maximise parallelism we can say that a compute shader
+		invocation will process one work item in its work group. [I tried doing larger
+		subdivisions and it went more and more slowly - I guess it must do these one
+		after the other, rather than in a parallel slot]. To do this we write a
+		<tt>layout()</tt> instruction in the compute shader says that it will only
+		process one 1x1 subdivision of the total
+		work unit area. The advantage of using a 2d work unit area is that it is then
+		trivial to work out which pixel co-ordinate (<i>x,y</i>) we are processing for
+		inside the compute shader.
+		With this we can work out the ray origin and direction, and we also know which
+		pixel to write to for the output. I also do the
+		intersection test inside the shader, and write the result to a pixel in an
+		image.
+	</p>
+
+	<h3>The Compute Shader</h3>
+
+	<textarea rows=58>
+/* compute shader for making rays
+Anton Gerdelan
+First version 4 Sep 2014
+ */
+#version 430
+
+// this is a 2d local wg layout.
+// global wg layout was 800x800 units, and subdivided so that each cs processes
+// a 1x1 'local wg' unit of this
+layout (local_size_x = 1, local_size_y = 1) in;
+// you have to specify the image format here (we write the output pixel to this)
+layout (rgba32f, binding = 0) uniform image2D img_output;
+
+void main () {
+  vec4 texel = vec4 (0.0, 0.0, 0.0, 1.0);
+
+  // get position in global work group 800x800
+  ivec2 p = ivec2 (gl_GlobalInvocationID.xy);
+  // NB this also gives us the texture coords
+  
+  // sample or work-out ray origin and direction
+  float max_x = 5.0;
+  float max_y = 5.0;
+  float x = (float(p.x * 2 - 800) / 800.0);
+  float y = (float(p.y * 2 - 800) / 800.0);
+  vec3 ray_o = vec3 (x * max_x, y * max_y, 0.0);
+  vec3 ray_d = vec3 (0.0, 0.0, -1.0); // ortho
+
+  // do intersection test
+  // t = -b +- sqrt (b*b - c)
+  vec3 sphere_c = vec3 (0.0, 0.0, -10.0);
+  float sphere_r = 3.0;
+  vec3 omc = ray_o - sphere_c;
+  float b = dot (ray_d, omc);
+  float c = dot (omc, omc) - sphere_r * sphere_r;
+  float bsqmc = b * b - c;
+  // hit one or both sides
+  if (bsqmc >= 0.0) {
+    float srbsqmc = sqrt (bsqmc);
+    float pos_t = -b + srbsqmc;
+    float neg_t = -b - srbsqmc;
+    
+    // one or more sides behind viewer (pos means `in direction of ray`)
+    if (pos_t > 0.0f && neg_t > 0.0f) {
+      float t = neg_t;
+      // lesser is closer, even along -z direction
+      if (pos_t < neg_t) {
+        t = pos_t;
+      }
+      // colour sphere on pixel
+      float max_range = 7.0f;
+      texel.g = 1.0 * (1.0 - t / max_range) + 0.5;
+    }
+  }
+  
+  // store result in image
+  imageStore (img_output, p, texel);
+}</textarea>
+
+	<p>
+		I just use the output image to texture a quad in a subsequent drawing operation.
+		My main loop looks like this:
+	</p>
+
+	<textarea rows=32>
+while (!glfwWindowShouldClose (g_window)) {
+  _update_fps_counter (g_window);
+  
+  glUseProgram (ray_sp);
+  // sends a single 'global work group' to GL for processing
+  // xyz params divide this into 'local work groups' in 3 dimensions
+  // local work group size in each dimension is defined in shader layout qualifier
+  // each work group is a block of 'work items'
+  // a compute shader is invoked to process each work item
+  // example:
+  // params 4,7,10 would give 4*7*10 = 280 work items per local work group
+  glDispatchCompute (800, 800, 1);
+  
+  // wipe the drawing surface clear
+  glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glViewport (0, 0, g_gl_width, g_gl_height);
+  
+  // bind the texture that we coloured with the compute shaders' outputs
+  glActiveTexture (GL_TEXTURE0);
+  glBindTexture (GL_TEXTURE_2D, tex_output);
+  
+  // draw the texture onto a full-screen quad
+  glUseProgram (basic_sp);
+  glBindVertexArray (vao);
+  glDrawArrays (GL_TRIANGLES, 0, 6);
+  
+  glfwPollEvents ();
+  if (GLFW_PRESS == glfwGetKey (g_window, GLFW_KEY_ESCAPE)) {
+    glfwSetWindowShouldClose (g_window, 1);
+  }
+  glfwSwapBuffers (g_window);
+}</textarea>
+
+	<h3>Scene Management</h3>
+
+	<p>
+		It might be worth upgrading this little demo to a proper ray-tracer as a flashy
+		demo project. In this case I will need to work out how to represent a more
+		dynamic/bigger scene.
+	</p>
+
+	<h3>Reflection</h3>
+
+	<p>
+		So, I achieved my main goal of implementing a GL compute shaders for a practical
+		task. They are quite easy to use, just a bit lacking in instructions at the
+		moment. You can use all the same uniforms and UBOs as you can with normal GL
+		shaders. They seem to process like a drawing operation, so I guess to combine
+		them with regular rasterised scenes you would just fire a
+		<tt>glDispatchCompute</tt> to upgrade a fancy dynamic effect to a texture before
+		using that texture in a normal drawing operation. The texture could be an actual
+		surface' mapped texture with some ray-traced lighting, or it could be a list of particle
+		positions for a particle shader to use. The draw-back is that it requires GL 4.3
+		or newer, so for wide distribution, they must remain an optional feature with a fall-back,
+		which is an expensive pain in the butt, and probably not worth the effort for
+		solo/small game development. That might go away soon though - new Apple OSX
+		supports 4.3 (I think?), OpenGL ES 3.1 has compute shaders, and it looks like
+		WebGL will get compute shader support soon. A real-time ray-tracer on your
+		home page would be a pretty awesome portfolio/bragging piece.
+	</p>
+
+</body>
+
+</html>

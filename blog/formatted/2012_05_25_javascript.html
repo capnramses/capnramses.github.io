@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2012_05_25_javascript</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2 id="25may2012">25 May 2012</h2>
+	<h3>Javascript</h3>
+	<p class="small">
+		I had to take a few steps back and get to know Javascript better. I started with a completely blank HTML5 canvas,
+		and worked my way up slowly. Debugging Javascript is hard. Google Chrome's development tool really just tells you
+		when there's an error - what I really need is a step-through debugger AND a profiler. Anyway, I battled on,
+		sprinkling
+		<tt>alert()</tt> like <tt>printf()</tt>s. One of the annoying things about Javascript is that when it fails it
+		doesn't throw an error message, it just quietly gives up. Sometimes I didn't even realise when an error had occured.
+		Chrome was good for this.
+	</p>
+
+	<h3>Ajax</h3>
+	<p class="small">
+		File I/O is a bit wonky in Javascript. Everything is web-based, of course, so you use a method called Ajax
+		(Asynchronous Javascript And XML) to make a standard HTML <tt>GET</tt> request for your file. It doesn't have to
+		be asynchronous, and it doesn't have to be XML. The trick to Ajax is that when you get the file returned from the
+		request, it fires a little callback function that you write to parse the file. In asynchronous mode it may take some
+		time before your
+		function is called. I forgot about this and it gave me the weirdest problems later on.
+		The trick was to turn off asynchronous callbacks - making the programme wait at that line before running any other
+		code.
+	<p>
+
+	<h3>JSON</h3>
+	<p class="small">
+		Parsing flat files in Javascript is every bit as long-winded and disgusting as doing it with C. You don't have a
+		<tt>scanf()</tt> function, but you can parse using regular expressions. This means that your old plain text files
+		are no longer ideal, and the parsing code is even longer and uglier. You could rewrite your files to something more
+		suited to regular expression matching, but Javascript has its own format called JSON (Javascript Object Notation).
+		JSON is excellent. In my opinion much nicer than using XML to construct an object. Rewrite your plain text in JSON
+		format and then it's only one, mindless function call to set all the attributes of your object. Done.
+	</p>
+
+	<h3>Next Steps</h3>
+	<p class="small">
+		Familiarise more with drawing objects in WebGL. Build up the shader object (not class) or shader manager mentioned
+		last time.
+		I can see now why it's very handy to have things like .obj meshes converted into JSON format first.
+	</p>
+</body>
+
+</html>

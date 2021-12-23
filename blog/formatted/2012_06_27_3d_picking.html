@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2012_06_27_3d_picking</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2 id="27june2012">27 June 2012</h2>
+	<h3>3D Picking, Debug Geometry, Engines</h3>
+	<p>
+		I coded an algorithm for 3D mouse picking of objects based on their bounding sphere. I have a C version and
+		a Javascript version. Experience tells me that I need to visualise as much of the algorithm as possible to make
+		sure that all the ducks are in a row. I think that I can draw some debug geometry to show the bounding spheres;
+		actually draw transluscent spheres around each pick-able object. I could change their colour when they are being
+		clicked on. That would give me an indication if the algorithm is working accurately, but also if the spheres are
+		a good enough approximation for bounds, based on how much the spheres overlap.
+	</p>
+	<p>
+		My Javascript WebGL demos are a bit messy, so I've started to build a little engine. I think something like a
+		<tt>Renderable.createSphere()</tt> sort of function is in order. My OpenGL C code is pretty stable, so I think
+		I can just create a <tt>createSphere</tt> sort of function directly.
+	</p>
+	<h3>Timers</h3>
+	<p>
+		I had a look at the timer javascript that I've been using. I suspect that I can tweak it a bit to improve the
+		rendering rate.
+	</p>
+
+</body>
+
+</html>

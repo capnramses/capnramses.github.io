@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2014_04_24_gamma</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>Playing with Things</h2>
+
+	<h3>Colours and Gamma Correction</h3>
+
+	<p>
+		I got sick of loading up GIMP to pick a nice colour for shaders, and then
+		converting from 0-255 into 0.0-1.0 so <a href="https://antongerdelan.net/colour/">
+			I made a colour chooser</a> using WebGL. I
+		copied GIMP's HSV (Hue/Saturation/Value) widget, which looks pretty much the
+		same as Photoshop's. This meant learning a bit about colour space
+		representations but it wasn't too tricky.
+	</p>
+
+	<p>
+		I've been curious about gamma correction lately, so I thought it would be neat
+		to add an option to set a gamma value that should apply a correction to all the
+		colour space boxes in view e.g. a preview what the colour values should look
+		like if a gamma of 2.2 were applied afterwards.
+	</p>
+
+	<h3>Three.js</h3>
+
+	<p>
+		I had a play with the Three.js framework for WebGL. My hunch was that if I built
+		webgl software on top of Three.js then it would be easier for non-graphics
+		experts to add to it later. So far I've been reading through Tony Parisi's book
+		on WebGL, which is very simplistic. Both the framework and the book target the
+		web developer crowd I think, as it relies heavily on JavaScript OO ideas, but
+		hides almost all the OpenGL-style interface and does not require strong working
+		knowledge of maths or graphics theory. There is a certain appeal to this because
+		it opens up 3d graphics to a whole new group of people. It's worth noting that
+		Eric Haines' online course also uses Three.js, which is a very safe way to avoid
+		getting mired with all the inevitable low-level GL API problems which would
+		otherwise take up the vast majority of learning time.
+	</p>
+
+	<a href="https://antongerdelan.net/demos/threejs_01">WebGL Up and Running Exercise 2</a>
+
+	<p>
+		I found a couple of things surprising, going through the book. Firstly, it is
+		taking just as long to learn Three.js and go through the examples as it did to
+		go through the core WebGL interface with Cantor/Jones' "Beginner's Guide" book.
+		Secondly, it's not easy to debug the "nothing is showing on the screen" errors
+		with
+		Three.js. I expected some sort of idiot-proof validation or error throwing, but
+		nope - traditional black screen. So far I get the impression that it's really just a wrapper
+		that presents a web-developer style interface in place of the native
+		C-style interface. Certainly OpenGL-style interfaces are absolutely terrifying
+		for most modern web and object-oriented programmers, so maybe that's a big
+		advantage. Even the colours expect
+		HTML-style hex instead of floating point. There are default shaders, which means
+		that it looks like you can render stuff without writing a shader. So far I have
+		a feeling that a lot of stuff is unnecessarily hidden behind
+		HTML/CSS/JS cruft layers. It's not clear what's happening behind
+		the scenes a lot of the time. Advocates of top-down or high-level programming
+		would say this is the right way to go. Is this the right way to go - I'm not
+		sure yet, but I'll keep going for now.
+	</p>
+
+	<h3>Archicture</h3>
+
+	<p>
+		I've been playing with AchiCAD, AutoCAD, and Revit, and building renderers for
+		building models. I'll write another post on this when I get some time.
+	</p>
+
+	<h3>Books</h3>
+
+	<p>
+		I'm reading Kerninghan and Ritchie's "The C Programming Language" - I had never
+		read the original. The first edition was also the C Language specification
+		before ANSI C was formed. This second edition is the semi-official programmers
+		reference. I'm interested both from a teaching viewpoint as well as seeing if I
+		can pick up a few tricks that I've missed. I'm not sure that I like it - it
+		reads like an average 101 programming course, but it's very dull, and not
+		entirely clear. As a reference, I actually found some of the pocket-sized C
+		books better and easier to read, but these are often lambasted by C aficionados,
+		who you'll see have entire websites criticising them that are almost as long as
+		the books themselves... I note that Ritchie himself is guilty of many of the
+		unforgivable crimes that are enumerated by critics of other books. Programmers
+		go a bit funny over languages. I'll write a review when/if I make it to the end.
+	</p>
+
+	<h3>OpenCV</h3>
+
+	<p>
+		I got sick of crappy webcam software for Ubuntu. Cheese has a nasty habit of
+		crashing the entire system after it takes a photo, and Camorama doesn't give
+		you a delay. So...I made my own using OpenCV. One version records a
+		high-resolution video using a nanosecond precision timer (OpenCV's own timer is
+		bad - it's based on the inconsistent C timers), and another one gives you a 5
+		second countdown before taking a picture...and then loops again and again so
+		that if you screw it up slightly you don't have to go over to the computer to
+		make another attempt. In other words you can bust out pose after pose after
+		pose! The video recorder version was for rotoscoping animation
+		work - you can specify the time between frames to match up with the intended
+		animation frames.
+	</p>
+
+
+</body>
+
+</html>

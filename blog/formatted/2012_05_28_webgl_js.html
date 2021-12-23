@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2012_05_28_webgl_js</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2 id="28may2012">28 May 2012</h2>
+	<h3>Shader Programme Object in Javascript</h3>
+	<p class="small">
+		I have a better grasp of encapsulation of objects with Javascript now so I banged my ShaderProgramme object together
+		in one go. The two caveats are; (1) remembering to explicitly use the <tt>this.</tt> keyword to refer to member
+		attributes and variables, (2) defining whole member functions inside the constructor, not outside like you would in
+		C++.
+		This seemed to be a much cleaner way to go. The third trap is when creating an object from a JSON source; default
+		constructors are not called, and any original object is completely wiped and rebuilt, so you have to remember to
+		add in any member-creation code again after loading from JSON.
+	</p>
+
+	<h3>Handy Documents</h3>
+	<p class="small">
+		I found a nice "<a href="http://www.nihilogic.dk/labs/webgl_cheat_sheet/WebGL_Cheat_Sheet.htm">cheat sheet</a>" for
+		WebGL that is a little bit more accessible than the Khronos
+		<a href="http://www.khronos.org/files/webgl/webgl-reference-card-1_0.pdf">Quick Reference</a>
+		because it retains the comments (says what each function does!). Sometimes it's hard to know which order you should
+		use the functions. Mozilla has a nice introductory <a href="https://developer.mozilla.org/en/WebGL/">tutorial
+			series</a>.
+		It doesn't go beyond the absolute basics, but that's all we need to get started anyway. They've made some common
+		mistakes with regards to what goes inside the rendering loop, and not making it clear how to scale the code up,
+		but I was used to this from OpenGL so dodged a few early trip-ups.
+	</p>
+
+	<h3>Implementation and Console Debugging</h3>
+
+	<div class="centre">
+		<a href="https://antongerdelan.net/demos/basicshader/">
+			<img src="../images/shadersDemo.png" width="512" />
+		</a>
+		<br />
+		<small><i>Loading a pair of OpenGL ES 2.0 shaders from separate URLs. I have the Chrome development tool open,
+				where the debug context is dumping a log of function calls and parameters. Click image to run.</i></small>
+	</div>
+
+	<p class="small">
+		In the last few demos I went over every single OpenGL call with a fine-toothed comb, so it was no problem putting
+		it all together now. Interestingly, all of the standard "<tt>glFunctionName</tt>" calls are
+		done as methods of the context object in WebGL, rather than being functions from the <tt>GL.h</tt> file, as they
+		are in C. I used the <tt>webgl-utils.js</tt> and <tt>webgl-debug.js</tt> wrappers suggested by Khronos.
+	</p>
+	<ul>
+		<li>
+			The utils wrapper does exactly what I was doing before when creating the GL context, but with more graceful
+			validation and better cross-browser support.
+		</li>
+		<li>
+			The debug wrapper prints out all of your <tt>gl...</tt> function calls to the scripts console (under
+			Tools->Development
+			in Chrome). This is really handy, because it also tells you the values that are sent to each function, so you
+			finally get a <i>sort-of</i> debugger for Javascript (which otherwise silently dies). In Javascript, if you refer
+			to
+			a variable and make a typo in the name it's not an error - a new object is created with that name, and value
+			<tt>null</tt>.
+			This is sometimes a valid value - so you can get silent bugs. You can also use the debug wrapper
+			to check for these typos in variable names. It's a bit CPU-hungry, especially when running a rendering loop, so
+			I added a few flags to enable/disable parts of it.
+		</li>
+	</ul>
+
+	<h3>Going to GLES 2.0 from GLSL 4.2.0</h3>
+
+	<p class="small">
+		WebGL 1.0 use OpenGL ES 2.0 shaders. These are a little different to GLSL 4.2.0, which I have been using lately.
+	<ol>
+		<li>per-vertex attribute variables have to be preceeded with the <tt>attribute</tt> keyword.</li>
+		<li>there doesn't seem to be a <tt>layout</tt> keyword for manually specifying the location of each attribute.</li>
+		<li>there is a <tt>precision mediump float;</tt> line that can go into the fragment shader to explicitly limit the
+			precision of floats. Apparently this is because most mobile devices can't handle high precision yet (my PC+web
+			browser was fine without it).</li>
+		<li>There is no support for geometry shaders in ES 2.0.</li>
+		<li>There is no support for tessellation shaders in ES 2.0.</li>
+	</ol>
+	</p>
+	<h5>vertex shader:</h5>
+	<tt>
+		1: attribute vec3 lc_vp;<br />
+		2: <br />
+		3: void main (void) {<br />
+		4: gl_Position = vec4 (lc_vp, 1);<br />
+		5: } <br />
+	</tt>
+	<h5>fragment shader:</h5>
+	<tt>
+		1: precision mediump float;<br />
+		2: <br />
+		3: void main (void) {<br />
+		4: gl_FragColor = vec4 (0, 0, 1, 1);<br />
+		5: }<br />
+	</tt>
+
+	<h3>Matrices</h3>
+
+	<p>
+		There's <a href="http://stepheneb.github.com/webgl-matrix-benchmarks/matrix_benchmark.html">a website</a> that
+		benchmarks the most popular Javascript matrix mathematics libraries. I had a look at the Google option, "Closure",
+		but it looks a bit over-kill in terms of the bits and pieces involved. <a
+			href="https://github.com/toji/gl-matrix">glMatrix</a> looks rather nice. Will try.
+	</p>
+
+	<h3>Timers</h3>
+
+	<p>
+		There's a lot of mis-information floating around on the Intertubes. This, however, looks okay <a
+			href="https://github.com/eligrey/timer.js">timer.js</a>.
+	</p>
+
+	<h3>Next Steps</h3>
+	<p class="small">
+		Matrix transformation, some sort of time step, and more use of uniform variables. Then later, a renderable object,
+		similar to the shader object. This should contain the Vertex Buffer and Vertex Attribute handles,
+		have a <tt>draw()</tt> operation, know which shader programme that it's supposed to use, and (hopefully) load a
+		mesh from a file.
+	</p>
+</body>
+
+</html>

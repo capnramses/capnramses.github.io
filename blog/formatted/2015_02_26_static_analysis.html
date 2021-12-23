@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2015_02_26_static_analysis</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>Static Code Analysis</h2>
+
+	<p>
+		Today I used a
+		<a href="http://en.wikipedia.org/wiki/Static_program_analysis">static analysis</a>
+		tool on some of my source code, and gave it a good, thorough run through. I'd
+		never really done this before. I used "cppcheck" on my C source code. You just
+		invoke it on your source folder with some optional flags - all very simple.
+		Summary:
+	</p>
+
+	<ul>
+		<li>Trivial to use</li>
+		<li>Catches lots of bugs that compilers don't</li>
+		<li>Can hint about where to improve performance or portability</li>
+		<li>Names unused functions and variables that you can delete</li>
+		<li>No mess, no fuss - gives you the specific source file and line number</li>
+		<li>Worth it</li>
+	</ul>
+
+	<p>
+		It immediately found 2 invalid array accesses, and told me about an invalid
+		pointer assignment, that I was relying on working later in my code.
+	</p>
+
+	<p>
+		You can also go into verbose mode and get a whole list of potential problems,
+		or style warnings - every time you use <tt>fscanf</tt> for a string parsing
+		operation it warns you that it's unsafe, for example. I can see how you might
+		use this occasionally during development to help write better code as you go,
+		by always aiming for a "no warnings" output or so. I was pleasantly surprised
+		that my code was pretty water-tight. The couple of problems it found were very
+		worth finding, as it would have been a real pain to track them down after a
+		segfault later.
+	</p>
+
+	<p>
+		There are other programmes that might be more comprehensive, but most are
+		commercial or IDE-tied. For C code (not C++) there is a free programme called
+		"splint". I found that it gets caught up on library includes quite easily,
+		which makes it less practical to use but perhaps there is an option to ignore
+		certain includes.
+	</p>
+
+</body>
+
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2012_06_15_ifc_render</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2 id="15june2012">13 to 15 June 2012</h2>
+
+	<h3>Rendering Building Plans from Industry Foundation Class (IFC) Format</h3>
+
+	<p>
+		I assumed the IFC format would be a little like Wavefront Obj; text-based, and containing a series of 3D points. My
+		first
+		attempt at a parser grabbed everything that looked like a 3D point, and I rendered the lot as a cloud of 3D points:
+		<a href="https://antongerdelan.net/demos/ifcview/">ifcview prototype</a>. Great! Something looked okay. You can see
+		the revolving door from the building model,
+		but that's about it. The door seems to be hanging in space, and there are some points from the bottoms of the
+		foundations in another
+		area. Okay...so some assembly required.
+	</p>
+
+	<p>
+		On closer inspection the IFC format is really not very nice, and certainly not designed with parsing efficieny in
+		mind. It takes a very
+		long CPU time, and a lot of memory, to assemble geometry from an IFC file. This means that they are unsuitable for
+		loading into a viewing
+		application on the web. I kind of expected this; and that's okay because I am already pre-processing my .Obj format
+		meshes into a JSON
+		format, so I can do that with IFC as well.
+	</p>
+
+	<p>
+		Rewrote my parser to load the entire file into a hash-table accessed dynamic structure. Made a log of all unique and
+		unhandled (by my
+		parser) IFC elements in the file. Good. Started to step through the IFC specs to find a good starting point. Messy.
+		Very very messy. Lots of
+		cross-references. Lots of meta-data junk that can be thrown out. The API/spec for IFC2X3 says that <orange>there are
+			optional parameters in
+			just about every IFC element</orange>. This makes parsing IFC several orders of magnitude more complex. New plan:
+		find a pre-made IFC to OBJ
+		converter and then use my own OBJ to JSON converter.
+	</p>
+
+	<h3>Using a Manual Toolchain</h3>
+
+	<p>
+		The IFC to Obj converter that I found worked. It used a format that my obj parser didn't have, and it didn't export
+		any texture coordinates
+		(which I need just temporarily for my demo). So, I imported it into Blender3D, which worked. But - big problem. The
+		model requires a lot of
+		manual clean-up before it is 'render ready'. Orientation, origin location, and various offsets are all a bit off.
+		There are an enormous
+		number of duplicate vertices, and too many sub-meshes (which gave me a neat research idea for later). Existing WebGL
+		IFC viewers suffer from
+		some pretty poor rendering rates - I think probably due to this. So, I batched it all together into one cleaned-up,
+		plum mesh, and exported
+		it with texture coordinates. Conversion with my tool into Obj worked splendidly, and I have a sample running here <a
+			href="https://antongerdelan.net/demos/ifcview2/">ifcview2</a>. It's running much faster than existing webgl tools
+		which I tested with the same IFC file. Looking good.
+	</p>
+
+	<h3>Next</h3>
+
+	<p>
+		It might be nice to rewrite the IFC to Obj converter tool that I found. Perhaps I can eliminate duplicate mesh data,
+		and do all the bits
+		that I did manually in Blender3D and go straight to JSON instead of Obj. Skeptical. Could be a waste of time. It
+		would be nice to do this to
+		get a custom JSON format - I have a plan to make some optimisations based on building structure and elements. It
+		would also be nice to put
+		some textures onto different elements (perhaps based on a palette).
+	</p>
+
+	<p>
+		Eventually I'll need to construct some tools to interact with the building. It's going to be a mix of jquery
+		controls and point and click
+		stuff I think. Probably worth playing with some options.
+	</p>
+
+	<h3>3D Mouse Picking</h3>
+	<p>
+		I don't have my textbooks handy and I couldn't find a straight-forward
+		guide so I just nutted out how to do 3D mouse picking on paper by
+		guessing (I've never implemented it directly). I think I've got it
+		right. Just have to double-check the order of matrix multiplications to
+		go from a direction vector in the coordinates of the camera into world
+		coordinates...
+	</p>
+	<div class="centre">
+		<img src="../images/mousepicking0.png" width="512" />
+	</div>
+
+</body>
+
+</html>

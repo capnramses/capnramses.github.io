@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2014_09_03_books_games</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>Books and New Tutorials and Games</h2>
+
+	<p>
+		My experiment turning my on-line OpenGL tutorials into an e-book was waaay more
+		successful (and fun) than I imagined. It was nice getting closure by
+		archiving my website material into a book, and actually publishing something to
+		justify my last year or two's existence as a research fellow. It's also given
+		me my first experience with on-line publishing of digital work - I have to try a
+		game next! However, I now have a gap to fill on my website. I'm thinking of
+		doing some different topics as tutorials:
+	</p>
+
+	<ul>
+		<li>Getting into WebGL (assuming a little bit of OpenGL experience)</li>
+		<li>WebGL design for use on mobile devices (touch-screens etc.)</li>
+		<li>Interesting uses for compute shaders in games</li>
+		<li>Some sort of OpenGL ray-tracing basics</li>
+		<li>Something interesting with tessellation shaders - a practical example with
+			a character mesh including the Blender steps?</li>
+		<li>Some postmortems of my WebGL games or "How to make a simple game in WebGL"</li>
+	</ul>
+
+	<p>
+		I also want to write a bit about my experiences with publishing an e-book, and
+		look into non-Amazon alternatives in the next few days.
+	</p>
+
+	<h2>Ray Tracer in OpenGL Mk.I</h2>
+
+	<p>
+		I want to try something useful with compute shaders (GPGPU) within OpenGL, as
+		opposed to using CUDA or something. Today I coded up a little OpenGL ray tracing
+		demo. I just did it off the top off my head - wasn't very difficult, although
+		I made some grammar mistakes in GLSL that produced some weird graphical offsets
+		that had me scratching my head for a while.
+	</p>
+
+	<img src="../images/raytraceshot1.png" />
+
+	<p>
+		This is just a basic 800x800 window generating that many rays. I used simple
+		intersection tests versus a sphere and a distance test for the shading. This is
+		worked out linearly in a single CPU thread (no parallelism yet), and I write the
+		results to a 800x800 texel GL texture. A simple screen-sized quad renders the
+		texture - inspired by the first assignment for graphics programming at BTH. Now
+		what I want to do is replace the CPU ray calculations with compute shader
+		calculations that write directly to the texture. It seems like an ideal
+		application...let's see...
+	</p>
+
+	<h4>Update</h4>
+
+	<p>
+		Apparently you can update to the back-buffer from a compute shader - no need for
+		the screen-sized quad any more.
+	</p>
+
+
+</body>
+
+</html>

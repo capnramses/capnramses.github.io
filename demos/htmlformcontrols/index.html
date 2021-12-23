@@ -1,0 +1,338 @@
+<html>
+	<head>
+		<link rel=stylesheet type="text/css" href="https://antongerdelan.net/greysans.css">
+		<title>WebGL with HTML User Interface</title>
+		<script src="webgl-utils.js"></script> <!-- include initialisation helper -->
+		<script src="webgl-debug.js"></script> <!-- include debugging helper (prints to javascript console) -->
+		<script type="text/javascript" src="initGL.js"></script>
+		<script type="text/javascript" src="settings.js"></script>
+		<script type="text/javascript" src="shaderProgramme.js"></script>
+		<script type="text/javascript" src="gl-matrix.js"></script>
+		<script type="text/javascript" src="timer.js"></script>
+		<script type="text/javascript" src="mesh.js"></script>
+		<script type="text/javascript" src="camera.js"></script>
+	</head>
+	<body onload="main();" lang="en-NZ" bgcolor="#333333" dir="LTR"3>
+		<h1>WebGL with HTML User Interface</h1>
+		<p><i>W,S,A,D,Q,E keys to move. Click and drag left and right anywhere on the page to rotate.</i></p>
+		<canvas id="mainCanvas" style="border: none;" width="256" height="256"></canvas>
+		<h3>HTML Form Control</h3>
+		
+		<p id="warningzone"></p>
+		
+		<FORM NAME="myform" ACTION="" METHOD="GET">
+			<p>r<INPUT TYPE="text" NAME="inputboxr" VALUE="" size="2">g<INPUT TYPE="text" NAME="inputboxg" VALUE="" size="2">b<INPUT TYPE="text" NAME="inputboxb" VALUE="" size="2">a<INPUT TYPE="text" NAME="inputboxa" VALUE="" size="2">
+			<INPUT TYPE="button" NAME="button" Value="Apply" onClick="testResults(this.form)">
+			</p>
+		</FORM>
+
+		<FORM NAME="radioForm" ACTION="" METHOD="GET">
+		<p>
+			<input type="radio" name="rotydir" value="pos" onClick="radioChange(this.form)" checked="checked"/> turn <i>this</i> way<br />
+			<input type="radio" name="rotydir" value="neg" onClick="radioChange(this.form)"/> no, turn <i>that</i> way
+		</p>
+		</FORM>
+		
+		<h3>Cam Pos</h3>
+		
+		<table>
+		<tr>
+		<td><small>FPS (Hz)</small></td><td id="FPS"><small>...</small></td>
+		</tr>
+		<tr>
+		<td><small>Cam World Pos</small></td><td id="campos"><small>...</small></td>
+		</tr><tr>
+		<td><small>Cam Direction</small></td><td id="camdir"><small>...</small></td>
+		</tr><tr>
+		<td><small>Mouse Deltas</small></td><td id="mousedeltas"><small>...</small></td>
+		</tr><tr>
+		<td><small>Yaw</small></td><td id="currentyaw"><small>...</small></td>
+		</tr>
+		</table>
+		
+		<h3>Settings</h3>
+		<p id="summaryP">summary details appear here</p>	
+
+		<script type="text/javascript">
+			// global for vertex buffer for testing the shader
+			var vboHandle;
+			var vboVNHandle;
+			var myShaderProg;
+			var modelMatLoc;
+			// degrees
+			var degrees = 0.0;
+			var frameTimer;
+			var glContext;
+			var stepTimeAccum = 0;
+			var stepSize = 0.02;
+			var myMesh;
+			var texture;
+			var gCam;
+			var currentlyPressedKeys = {};
+			var mouseHasMovedEver = false;
+			var lastMouseX = 0;
+			var lastMouseY = 0;
+			var mousedown = false;
+			var frameCount = 0;
+			var frameCounterTime = 0.0;
+			var turnPos = true;
+			
+			function radioChange (form) {
+				if (form.rotydir[0].checked) {
+					turnPos = true;
+				}
+				if (form.rotydir[1].checked) {
+					turnPos = false;
+				}
+			}
+			
+			function testResults (form) {
+				var r = form.inputboxr.value;
+				var g = form.inputboxg.value;
+				var b = form.inputboxb.value;
+				var a = form.inputboxa.value;
+				if (r > 1 || g > 1 || b > 1 || a > 1 || r < 0 || g < 0 || b < 0 || a < 0) {
+					document.getElementById('warningzone').innerHTML="<green>* ERROR: values must be between 0.0 and 1.0</green>";
+				} else {
+					document.getElementById('warningzone').innerHTML="";
+				}
+				glContext.clearColor (r, g, b, a);
+			}
+			
+			function main() {
+				// get handle to the HTML5 canvas that we made
+				var canvas = document.getElementById ("mainCanvas");
+				// start GL
+				var debugging = true;
+				var withLogging = false;
+				glContext = initGL (canvas, debugging, withLogging);
+				// validate
+				if (!glContext) {
+					alert("failed to start GL");
+					return;
+				}
+				// create global settings object from JSON file
+				gGLSettings.loadFromFile("glsettings.json");
+				// update HTML section
+				gGLSettings.printAll();
+				
+				// create a shader programme
+				myShaderProg = new ShaderProgramme (glContext);
+				myShaderProg.loadVertexShaderFromURL (glContext, "basic_vs.glsl");
+				myShaderProg.loadFragmentShaderFromURL (glContext, "basic_fs.glsl");
+				myShaderProg.link (glContext);
+				
+				// enable the shader
+				myShaderProg.use (glContext);
+				// get matrix location in shader
+				modelMatLoc = myShaderProg.getUniformLocation (glContext, "modelMat");
+				// load mesh data from JSON
+				myMesh = loadMeshFromJSON ("dungeondoor.json");
+			//	alert(myMesh.mVertexPoints.length / 3 + " vertices, " + myMesh.mTextureCoords.length / 2 + " texture coords," + myMesh.mVertexNormals.length / 3 + " normals");
+				
+				// set up vp data
+				vboHandle = glContext.createBuffer (); // create a vertex buffer
+				glContext.bindBuffer (glContext.ARRAY_BUFFER, vboHandle); // enable buffer
+				glContext.bufferData (glContext.ARRAY_BUFFER, new Float32Array (myMesh.mVertexPoints), glContext.STATIC_DRAW); // put data into buffer
+				// enable vertex position attribute in shader
+				var vertexPositionAttribute = myShaderProg.getAttributeLocation (glContext, "lc_vp"); // get a handle to the vp attribute in the shader
+				glContext.enableVertexAttribArray (vertexPositionAttribute); // enable attribute for rendering
+				glContext.vertexAttribPointer (vertexPositionAttribute, 3, glContext.FLOAT, false, 0, 0);  // define attribute using currently bound VBO
+				
+				// set up vt data
+				vboVTHandle = glContext.createBuffer ();
+				glContext.bindBuffer (glContext.ARRAY_BUFFER, vboVTHandle);
+				glContext.bufferData (glContext.ARRAY_BUFFER, new Float32Array (myMesh.mTextureCoords), glContext.STATIC_DRAW);
+				// enable uv attribute in shader
+				var textureCoordAttribute = myShaderProg.getAttributeLocation (glContext, "vt");
+				glContext.enableVertexAttribArray (textureCoordAttribute);
+				glContext.vertexAttribPointer (textureCoordAttribute, 2, glContext.FLOAT, false, 0, 0); 
+				
+				// send in vn data
+				vboVNHandle = glContext.createBuffer ();
+				glContext.bindBuffer (glContext.ARRAY_BUFFER, vboVNHandle);
+				glContext.bufferData (glContext.ARRAY_BUFFER, new Float32Array (myMesh.mVertexNormals), glContext.STATIC_DRAW);
+				// enable normals attribute in shader
+				var vnAttribute = myShaderProg.getAttributeLocation (glContext, "lc_vn");
+				glContext.enableVertexAttribArray (vnAttribute);
+				glContext.vertexAttribPointer (vnAttribute, 3, glContext.FLOAT, false, 0, 0); 
+				
+				// goes into a separate looping function later
+				glContext.clearColor (gGLSettings.mBackgroundColour.r, gGLSettings.mBackgroundColour.g, gGLSettings.mBackgroundColour.b, 1.0);
+				glContext.enable (glContext.DEPTH_TEST);
+				
+				// load texture
+				texture = glContext.createTexture();
+				texture.image = new Image();
+				texture.image.onload = function() {
+					//alert("loaded texture");
+					glContext.bindTexture(glContext.TEXTURE_2D, texture);
+					glContext.pixelStorei(glContext.UNPACK_FLIP_Y_WEBGL, true);
+					glContext.texImage2D(glContext.TEXTURE_2D, 0, glContext.RGBA, glContext.RGBA, glContext.UNSIGNED_BYTE, texture.image);
+					glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_MAG_FILTER, glContext.LINEAR); // bi-linear filtering
+					glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_MIN_FILTER, glContext.LINEAR); // tri-linear filtering
+				//	glContext.bindTexture(glContext.TEXTURE_2D, null); // unbind -- this was screwing me up
+				}
+				texture.image.src = "dungeonDoor.png";
+				
+				// also bind texture (hopefully this is not too soon)
+				glContext.activeTexture(glContext.TEXTURE0);
+				glContext.bindTexture(glContext.TEXTURE_2D, texture);
+				var samplerLocation = myShaderProg.getUniformLocation (glContext, "tex");
+				myShaderProg.setUniformIntByLocation(glContext, samplerLocation, 0); // texture location 0 in shader
+				
+				// CAMERA!
+				gCam = new Camera (45, 512 / 512, 0.1, 100, [0, 0, 3], [0, 0, -1]);
+				var projMatLoc = myShaderProg.getUniformLocation (glContext, "projMat");
+				myShaderProg.setUniformMat4ByLocation (glContext, projMatLoc, gCam.mProjMat);
+				var viewMatLoc = myShaderProg.getUniformLocation (glContext, "viewMat");
+				myShaderProg.setUniformMat4ByLocation (glContext, viewMatLoc, gCam.mViewMat);
+				
+				// add keyboard handling callbacks
+				document.onkeydown = function (event) {
+					currentlyPressedKeys[event.keyCode] = true;
+				}
+				document.onkeyup = function (event) {
+					currentlyPressedKeys[event.keyCode] = false;
+					
+				}
+				
+				document.onmousedown = handleMouseDown = function (event) { // only do when cursor inside scene -- want this????
+					mousedown = true;
+				}
+				document.onmouseup = handleMouseUp = function (event) { // do this on document so it can be detected when cursor outside scene
+					mousedown = false;
+					// reset to avoid springy warping mouse when next clicking
+					mouseHasMovedEver = false;
+				}
+				document.onmousemove = handleMouseMove = function (event) {
+					if (!mousedown) {
+						return;
+					}
+					//// could only do when mouse down for sub-window stuff
+					// change to positive and negative coords
+					var newX = event.clientX;
+					var newY = event.clientY;
+
+					// avoid annoying first time mouse move jump
+					if (mouseHasMovedEver == false) {
+						mouseHasMovedEver = true;
+						lastMouseX = newX;
+						lastMouseY = newY;
+						return;
+					}
+					
+					var deltaX = newX - lastMouseX;
+					var deltaY = newY - lastMouseY;
+					lastMouseX = newX
+					lastMouseY = newY;
+					
+					var yawSpeed = 0.1;
+					gCam.deltaYaw (deltaX * yawSpeed);
+					 
+					
+					/*var newRotationMatrix = mat4.create();
+					mat4.identity(newRotationMatrix);
+					mat4.rotate(newRotationMatrix, degToRad(deltaX / 10), [0, 1, 0]);
+					mat4.rotate(newRotationMatrix, degToRad(deltaY / 10), [1, 0, 0]);
+					mat4.multiply(newRotationMatrix, moonRotationMatrix, moonRotationMatrix);*/
+					
+					var viewMatLoc = myShaderProg.getUniformLocation (glContext, "viewMat");
+					myShaderProg.setUniformMat4ByLocation (glContext, viewMatLoc, gCam.mViewMat);
+				}
+				
+				// create a frame timer
+				frameTimer = new Timer();
+				frameTimer.start();
+				
+				// render loop
+				render (canvas);
+			}
+
+			// rendering loop
+			function render (canvas) {
+				// update matrix based on timer
+				var milliSeconds = frameTimer.milliseconds();
+				var deltaSeconds = milliSeconds / 1000.0;
+				if (milliSeconds > 10) {
+					stepTimeAccum += deltaSeconds;
+					frameCounterTime += deltaSeconds;
+					frameTimer.start();
+				}
+				
+				// compute time steps
+				while (stepTimeAccum > stepSize) {
+					// update matrix for shader
+					var modelMat = mat4.create();
+					mat4.identity (modelMat);
+					if (turnPos) {
+						degrees += stepSize * 0.5;
+					} else {
+						degrees -= stepSize * 0.5;
+					}var axis = vec3.createFrom(0, 1, 0);
+					vec3.normalize(axis);
+					mat4.rotate (modelMat, degrees, axis);
+					mat4.scale (modelMat, [.25, .25, .25]);
+					// enable the shader
+					myShaderProg.use (glContext);
+					myShaderProg.setUniformMat4ByLocation(glContext, modelMatLoc, modelMat);
+					// TODO there are functions in glmatrix to get the normal matrix
+					
+					// camera movement
+					var camMove = [0, 0, 0];
+					var camspeed = 1.0;
+					var updateMove = false;
+					// keys listed by code: http://stackoverflow.com/questions/1465374/javascript-event-keycode-constants
+					if (currentlyPressedKeys[87] == true) { // w
+						//camMove[2] = -1.0 * camspeed * stepSize;
+						gCam.moveInCamDirBy (camspeed * stepSize);
+						updateMove = true;
+					}
+					if (currentlyPressedKeys[83] == true) { // s
+						//camMove[2] = 1.0 * camspeed * stepSize;
+						gCam.moveInCamDirBy (-camspeed * stepSize);
+						updateMove = true;
+					}
+					if (currentlyPressedKeys[65] == true) { // a
+						//camMove[0] = -1.0 * camspeed * stepSize;
+						gCam.slideCamBy (-camspeed * stepSize);
+						updateMove = true;
+					}
+					if (currentlyPressedKeys[68] == true) { // d
+						//camMove[0] = 1.0 * camspeed * stepSize;
+						gCam.slideCamBy (camspeed * stepSize);
+						updateMove = true;
+					}
+					if (currentlyPressedKeys[69] == true) { // d
+						camMove[1] = -1.0 * camspeed * stepSize;
+						gCam.moveBy (camMove);
+						updateMove = true;
+					}
+					if (currentlyPressedKeys[81] == true) { // d
+						camMove[1] = 1.0 * camspeed * stepSize;
+						gCam.moveBy (camMove);
+						updateMove = true;
+					}
+					if (updateMove == true) {
+						//gCam.moveBy (camMove);
+						
+						var viewMatLoc = myShaderProg.getUniformLocation (glContext, "viewMat");
+						myShaderProg.setUniformMat4ByLocation (glContext, viewMatLoc, gCam.mViewMat);
+					}
+					
+					stepTimeAccum -= stepSize;
+				}
+				
+				// draw geometry (the suggest order of functions on the webgl wiki was wrong)
+				drawScene (glContext);
+				frameCount++;
+				if (frameCount > 9) {
+					frameCount = 0;
+					document.getElementById('FPS').innerHTML="<small>" + (10.0 / frameCounterTime).toFixed(2) + "</small>";
+					frameCounterTime = 0.0;
+				}
+				window.requestAnimFrame(render, canvas); // this function is from webgl-utils
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,180 @@
+<!--
+Beyond 2022 - PRONI Interactive Demonstration
+Language:    HTML, JavaScript
+History:
+2020 Aug 24: First version. Anton Gerdelan
+-->
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Beyond 2022 - PRONI VR Demonstration</title>
+	<script src="https://cdn.babylonjs.com/babylon.js"></script> <!-- latest stable release of Babylon.js framework -->
+	<script src="https://cdn.babylonjs.com/loaders/babylon.glTFFileLoader.js"></script> <!-- loading GLTF models -->
+	<script src="https://code.jquery.com/pep/0.4.3/pep.js"></script> <!-- touchscreen support -->
+</head>
+
+<body>
+	<canvas id="my_canvas" touch-action="none" width="800" height="800"></canvas>
+	<!-- Note: lots more sliding window options from https://doc.babylonjs.com/api/classes/babylon.performancemonitor -->
+</body>
+
+</html>
+
+<script src="js/camera.js"></script>
+<script src="js/firebreak.js"></script>
+<script src="js/hotspots.js"></script>
+<script src="js/ulster.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/woods_guide.js"></script>
+<script src="js/zones.js"></script>
+
+<!-- set up the Babylon.js scene rendering and start the program -->
+<script>
+	let mesh_loaded = false;
+	var navMeshes = [];
+	// Start the party!
+
+	// the chains on lamps in the reading room are supposed to render as double-sided but will not be by default so call this
+	function chain_lamps_disable_backface_culling() {
+		var chainLinkMaterial = scene.getMaterialByID("ChainLink");
+		if (chainLinkMaterial) {
+			chainLinkMaterial.backFaceCulling = false;
+			console.log("Disabled backface culling on lamp chain material.");
+		} else {
+			console.error("Couldn't find chain link material ChainLink to disable backface culling.");
+		}
+	}
+
+	// set up the scene (load models etc).
+	var createScene = function () {
+		scene = new BABYLON.Scene(engine);
+		// universal camera should work with gamepad + touch swipes + mouse/kb
+		camera_init();
+
+		// default HDR environment map -- required to make PBR meshes not be dark. options https://doc.babylonjs.com/api/interfaces/babylon.ienvironmenthelperoptions
+		var env = scene.createDefaultEnvironment({
+			// createGround: false, //Specifies whether or not to create a ground. True by default.
+			// TODO environmentTexture: string | BaseTexture, //  The texture used as your environment texture in the scene. Comes from the BabylonJS CDN by default and in use if setupImageProcessing is true.
+			createSkybox: false, // stops big blue box
+			//skyboxSize: 150, //number, // 20 by default
+			// skyboxTexture: string | BaseTexture, The texture used on the skybox for the main color. Comes from the BabylonJS CDN by default. Can be texture or url.
+			// toneMappingEnabled
+		});
+
+		// NOTE(Anton) calling an Append() function starts the loading splash-screen, and ImportMesh() does not, so we do that explicitly here
+		console.log("loading utility meshes...");
+		BABYLON.SceneLoader.Append("./mesh/", "utils_draco.glb", scene, function (meshes, particleSystems, skeletons) {
+			console.log("starting VR helper...");
+			// Enable VR. Docs here https://doc.babylonjs.com/how_to/webvr_helper
+			// Lots of options here: https://doc.babylonjs.com/api/interfaces/babylon.vrexperiencehelperoptions
+			var vrHelper = scene.createDefaultVRExperience({
+				createDeviceOrientationCamera: false, // don't replace my non-VR camera as well
+				useXR: true, // This will enable XR if supported
+				// "A list of meshes to be used as the teleportation floor. If specified, teleportation will be enabled (default: undefined)"
+				floorMeshes: navMeshes, // teleportation is only enabled if meshes are put here
+				// Sets the scale of the vrDevice in babylon space. (default: 1)
+				// positionScale: number    -- there are a few options related to scaling of bits
+				positionScale: 1.0
+			});
+			{
+				var navMeshesNode = scene.getNodeByID("NavMeshes");
+				if (!navMeshesNode) {
+					console.error("Couldn't find nav meshes head node `NavMeshes`");
+				} else {
+					navMeshes = navMeshesNode.getChildren();
+					for (var i = 0; i < navMeshes.length; i++) {
+						//console.log("Found nav mesh " + navMeshes[i].id);
+						navMeshes[i].visibility = 0; // navmesh has to be visible to be pickable so isVisible=true but visibility=0!
+						navMeshes[i].isPickable = true; // whitelist for picking
+						navMeshes[i].checkCollisions = true;
+					}
+				}
+			}
+
+			console.log("loading building mesh...");
+			// Loads all babylon assets from the file and appends them to the scene
+			//let treasury_mesh = BABYLON.SceneLoader.Append("./mesh/", "treasury_draco.glb", scene, function (scene) {
+			BABYLON.SceneLoader.ImportMesh(["Ground", "House", "Shelves", "Treasury"], "./mesh/", "treasury_draco.glb", scene, function (meshes, particleSystems, skeletons) {
+				console.log("Loaded Utilities.glb");
+				chain_lamps_disable_backface_culling();
+				hotspots_init();
+				woods_guide_init();
+				zones_init();
+				firebreak_init();
+
+				// default all meshes to not pickable
+				for (var i = 0; i < scene.meshes.length; i++) {
+					scene.meshes[i].isPickable = false;
+				}
+				ulster_init(); // don't disable pickable on books!
+			});
+			mesh_loaded = true;
+		});
+
+		/* TODO(anton) trying to figure out how to make sure VR controllers only 'pick' when a trigger is held
+		scene.gamepadManager.onGamepadConnectedObservable.add(function (gamepad) {
+			console.log("new gamepad connected: " + gamepad.id);
+			gamepad.onTriggerStateChangedObservable.add(function (stateObject) {
+				let value = stateObject.value;
+				console.log(value);
+			});
+		});*/
+
+		// type this into web console to get the inspector:
+		// scene.debugLayer.show();
+		return scene;
+	}; // endfunc createScene()
+
+	var canvas = document.getElementById("my_canvas");
+	canvas.width = window.innerWidth - 32;
+	canvas.height = window.innerHeight - 32;
+	var engine = new BABYLON.Engine(canvas, true);
+	//engine.enterFullscreen(false); // note: also possible to request fullscreen on a click event (see original version of this file)
+	var scene = createScene();
+
+	// resize the canvas and the rendering whenever browser window resizes
+	window.addEventListener("resize", function () {
+		canvas.width = window.innerWidth - 32;
+		canvas.height = window.innerHeight - 32;
+		engine.resize();
+	});
+
+	// check if the user clicked on an interactive item.
+	window.addEventListener("click", function () {
+		// add book to picking
+		var pickResult = scene.pick(scene.pointerX, scene.pointerY);
+		if (pickResult.pickedMesh) {
+			console.log("picked mesh " + pickResult.pickedMesh.id + " at " + pickResult.pickedPoint );
+
+			woods_guide_handle_clicks(pickResult.pickedMesh.id);
+			ulster_check_for_bays_map_interactions( pickResult.pickedMesh.id, pickResult.distance);
+			ulster_check_for_book_interactions(pickResult.pickedMesh.id, pickResult.distance);
+		}
+	});
+
+	var prev_ms = performance.now();
+
+	engine.runRenderLoop(function () {
+		var curr_ms = performance.now();
+		var elapsed_ms = curr_ms - prev_ms;
+		prev_ms = curr_ms;
+		var elapsed_s = elapsed_ms / 1000.0;
+
+		scene.activeCamera.speed = 0.1;
+
+		// only do this when not in VR teleport mode
+		if (scene.activeCamera.id != "WebVRHelper") {
+			if (mesh_loaded && navMeshes.length > 0) {
+				camera_follow_ground(navMeshes);
+			}
+		}
+
+		zones_update();
+		firebreak_update(elapsed_s);
+		ulster_update_animations(elapsed_s);
+		scene.render();
+	});
+</script>

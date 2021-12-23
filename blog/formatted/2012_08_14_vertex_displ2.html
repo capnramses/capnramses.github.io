@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2012_08_14_vertex_displ2</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2 id="14aug2012">14 August 2012.</h2>
+	<h3>Write Up of Vertex Displacement Animation</h3>
+	<p>
+		When I was building the vertex displacement demo I noticed that there's scant explanation of how to calculate
+		normals
+		to a wave. So I've made a little mini tech-report/tutorial on the topic:
+	</p>
+
+	<p>
+		<a
+			href="https://antongerdelan.net/opengl/index.php?title=Vertex_Displacement_Animation">Vertex_Displacement_Animation</a>
+	</p>
+
+	<img src="../images/anotherwave.png" />
+
+	<h3>Pretty gnuplot Charts</h3>
+
+	<p>
+		I keep losing the information on how to make gnuplot charts look nice, so I'll paste it right here. It's from
+		<a
+			href="http://youinfinitesnake.blogspot.ie/2011/02/attractive-scientific-plots-with.html">http://youinfinitesnake.blogspot.ie/2011/02/attractive-scientific-plots-with.html</a>
+	</p>
+
+	<p>SVG or EPS are the formats of purists, but most of the time we need a PNG or PDF. There is also a PDFCAIRO with the
+		same parameters.</p>
+
+	<p><b>
+			<orange>PNG Version</orange>
+		</b></p>
+	<textarea cols="72" rows="25">
+set terminal pngcairo font "sans,9" linewidth 4 rounded
+set style line 80 lt rgb "#808080"
+set style line 81 lt 0  # dashed
+set style line 81 lt rgb "#808080"  # grey
+set grid back linestyle 81
+set border 3 back linestyle 80 # Remove border on top and right
+set xtics nomirror
+set ytics nomirror
+#set log x
+#set mxtics 10    # Makes logscale look good.
+set style line 1 lt rgb "#A00000" lw 2 pt 1
+set style line 2 lt rgb "#00A000" lw 2 pt 6
+set style line 3 lt rgb "#5060D0" lw 2 pt 2
+set style line 4 lt rgb "#F25900" lw 2 pt 9
+set output "test.png"
+set xlabel "x axis label"
+set ylabel "y axis label"
+set key bottom right
+set xrange [0:1]
+set yrange [0:1]
+
+plot "datapoints.xy" \
+   index 0 title "Example line" w lp ls 1, \
+"" index 1 title "Another example" w lp ls 2
+</textarea>
+
+	<img src="../images/richandcompelling.png" />
+
+	<p>Extra chunky for print and for the visually impeded! For the slim version, change pngcairo from linewidth 4 to 1:
+	</p>
+
+	<img src="../images/richandcompelling2.png" />
+
+	<p>I did teach a <a href="https://antongerdelan.net/teaching/vis/gnuplotlab.pdf">tutorial</a> on gnuplot, but it's so
+		easy to forget these obscure little commands...note that you can also run a script by copy-pasting the commands to a
+		file and calling <tt>gnuplot script.gp</tt></p>
+
+
+</body>
+
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Dr Anton Gerdelan</title>
+	<link rel='stylesheet' type='text/css' href='greysans.css'>
+	<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
+</head>
+
+<body onload="main()">
+	<!--<video class="background-video" src="videos/flyaround.mp4" autoplay muted loop></video>-->
+	<div class="maincontent">
+		<h1>Dr Anton Gerdelan</h1>
+
+		<div class="social_media">
+			<a href="https://twitter.com/capnramses"><img src="images/Twitter_logo_blue_32px.png" /></a>
+			<a href="https://github.com/capnramses"><img src="images/GitHub-Mark-32px.png" /></a>
+			<a href="http://capnramses.itch.io"><img src="images/itch.png" /></a>
+			<a href="https://ie.linkedin.com/pub/anton-gerdelan/101/112/4a9" "><img src=" images/In-2C-28px-TM.png " alt="
+				View Anton Gerdelan 's LinkedIn profile" /></a>
+      <img src="images/email_address.png" />
+    </div>
+
+		<p>
+			<a href="blog/">blog</a> |
+			<a href="opengl/">opengl 4 tutorials</a> |
+			<a href="games/">games</a> |
+			<a href="publications/">bibliography</a> |
+			<a href="teaching/">teaching/talks</a> |
+			<a href="demos/">demos</a> |
+		</p>
+
+
+		<div class="centre">
+			<a href="pro_programming_tools_book/index.html">
+				<img src="pro_programming_tools_book/images/cover_title_image.png"
+					alt="Professional Programming Tools for C and C++ by Anton Gerdelan. Illustrated by Katja Žibrek." /><br />
+				<i>Check out our new book!</i>
+			</a>
+		</div>
+		<br />
+
+		<div class="centre">
+			<canvas id="canvas" width=610 height=610></canvas><br />
+			<i>Guinness store yard outside my apartment. Panorama captured with a mobile phone and Google Street app, and
+				projected into six side views for WebGL cube texture mapping.</i>
+		</div>
+
+		<br />
+		<br />
+
+		<div class="centre">
+			<iframe src="https://store.steampowered.com/widget/467790/" frameborder="0" width="512px" height="190"></iframe>
+		</div> <!-- centre -->
+
+		<div class="centre">
+		<table class="centre">
+			<tr><td><h3>Anton' s OpenGL 4 Tutorials</h3></td>
+				</tr>
+				<tr>
+					<td><a href="https://amzn.to/3jxjBWq"><img src="images/book_ad_thumb.jpg" /></a></td>
+				</tr>
+				<tr>
+					<td><a href="https://amzn.to/3jxjBWq">Amazon Kindle</a></td>
+				</tr>
+				<tr>
+					<td><a href="https://capnramses.itch.io/antons-opengl-4-tutorials">ePub and MOBI format at itch.io</a></td>
+				</tr>
+				</table>
+		</div> <!-- centre -->
+
+	</div> <!-- maincontent -->
+</body>
+
+<script id="skybox.vert" type="text/glsl">
+	attribute vec3 a_point;
+
+	varying vec3 v_texcoords;
+	
+	void main () {
+		v_texcoords = a_point;
+		gl_Position = vec4( a_point, 1.0 );
+	}
+</script>
+
+<script id="skybox.frag" type="text/glsl">
+	precision mediump float;
+
+	varying vec3 v_texcoords;
+
+	uniform samplerCube cube_texture;
+	uniform mat4 R;
+
+	void main () {
+		vec3 texcoord = vec3(R * vec4(v_texcoords, 0.0));
+		gl_FragColor = textureCube(cube_texture, normalize(texcoord));
+	}
+</script>
+
+<script src="webgl_skybox/js/webgl-utils.js"></script>
+<script src="webgl_skybox/js/apg_maths.js"></script>
+<script src="webgl_skybox/js/main.js"></script>
+
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2015_02_09_gpu_mem</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>Memory Analytics for Graphics Development</h2>
+
+	<p>
+		Working with 3d graphics today means interacting with a GPU (graphics processing
+		unit) through the interface of a graphics programming library. At the low-ish
+		level that I work at this might be Direct3D, OpenGL, WebGL, or something newer.
+		Most of how the GPU is used is decided by the people who implement the library.
+		Typically you are not given the details of how the memory or resources of the
+		GPU are managed by the library (or drivers underneath that) so it becomes something of a black box at times.
+		Normally I don't care about memory because I'm not allocating much, and only
+		rendering one scene that is [hopefully] cleaned up properly when the
+		programme is no longer running. There are two situations where it might be a
+		problem:
+	</p>
+
+	<ol>
+		<li>rendering large scenes (like building architecture) on devices with varying
+			and potentially small amounts of memory</li>
+		<li>running a rendering application that can change scene, or a game that can
+			start a new level</li>
+	</ol>
+
+	<p>
+		There don't appear to be any nice ways to query the main API for device memory
+		capacity before you try to allocate it. What happens if it runs out? Who knows?
+		Does it do some sort of swapping? Does it exit gracefully? Does it explode? I
+		suspect that this might vary based on device and platform - mobile devices in
+		particular.
+	</p>
+
+	<p>
+		Apparently you can query <tt>glGetError</tt> to check for out-of-memory errors
+		after allocation. Not very helpful. Exposing the memory capacity of the card
+		itself seems to be done differently, <i>via</i> extensions, by the different
+		vendors - according to this blog post <a
+			href="http://nasutechtips.blogspot.ie/2011/02/how-to-get-gpu-memory-size-and-usage-in.html">http://nasutechtips.blogspot.ie/2011/02/how-to-get-gpu-memory-size-and-usage-in.html</a>.
+		Do you really have to detect the manufacturer, and then branch based on which
+		one? What if it's neither of these? They don't even agree on the units of memory
+		here. Gah! I bet Direct3D is better.
+	</p>
+
+	<p>
+		In the first of my two cases we either need to find out if there's enough
+		memory, and print a warning, or just warn in advance and let the user find out
+		if their phone is underpowered. WebGL doesn't seem to have any way of doing this
+		yet - unless I missed something! (Perhaps there are similar extensions). For
+		desktop software this is less of an issue
+		until we get into the GB range - unlikely. If we did we could start that messy
+		vendor-specific query code, but it would be nicer to just leave that out
+		altogether - any new OpenGL function introduces yet more unpredictable errors
+		on systems that you can't test on.
+	</p>
+
+	<div class="centre">
+		<img src="../images/fps_counter.png" /><br />
+		<small><i>adding memory use on the GPU to my debug overlay</i></small>
+	</div>
+
+	<p>
+		In the second case we really want to keep track of how much memory we are
+		allocating. I feel like we should be able to query OpenGL for this in different
+		categories, but I don't remember seeing anything at all. What I did was just
+		keep a few globals that I added to with the size of any buffer or texture that
+		I allocated with <tt>glBufferData</tt> or <tt>glTexImage</tt>. I could then
+		easily append this to my frame-counter and debug overlay (pictured above).
+		I added memory from VBOs, memory from textures loaded from images, and memory
+		from framebuffers in different categories.
+	</p>
+
+	<p>
+		Right after I added memory use stats I noticed that I had a big memory leak -
+		when I start a new scene, even if it's the same scene re-loaded, my numbers got
+		bigger! I looked at my code and found that I was freeing GPU resources based
+		on <tt>if (this null pointer which is always null is not null)</tt>, and also
+		forgetting to free my whole complement of scene elements. Easily fixed, but I
+		wouldn't have noticed without the stats! I decrement my counts whenever a buffer
+		is freed or resized on the GPU memory so it's easy to tell what's happening. I
+		don't use a lot of memory for buffers, so really I'd only run into trouble if
+		I was say running a game session with lots of levels.
+	</p>
+
+	<p>
+		Interestingly, my texture memory use dominates the GPU memory - remember that
+		even compressed PNGs are decompressed into raw bitmaps before being copied to
+		the GPU with <tt>glTexImage2D</tt>. I haven't used compressed S3 format textures
+		(DDS-like compression) because the extensions didn't work properly on OSX.
+		Getting this to comply would be one way to reduce memory usage.
+	</p>
+
+</body>
+
+</html>

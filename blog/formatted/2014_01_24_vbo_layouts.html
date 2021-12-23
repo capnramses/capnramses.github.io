@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2014_01_24_vbo_layouts</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>More On Vertex Buffer Layouts</h2>
+
+	<p>
+		My little <a href="https://antongerdelan.net/opengl/buffers.pdf">tech report
+			write-up</a> did the rounds <i>via</i> Twitter (it's curious
+		how Twitter is the big social network for this sort of thing...I should probably
+		try and be more polite and less critical and conscience-dumpy on Twitter or
+		I'll get myself into trouble!). The gist is that I wasn't sure which buffer
+		layout was going to be faster, so I tried it, and it looks like it doesn't make
+		any difference. I think pretty much everyone disagreed with the
+		results, and I got a few interesting suggestions from some well-known experts
+		(which is pretty cool really) to try to get a more objective or insightful
+		measurement:
+	</p>
+
+	<ul>
+		<li>Disable rasterisation before drawing with
+			<tt>glEnable (GL_RASTERIZER_DISCARD);</tt></li>
+		<li>Try drawing twice with 2 vertex array objects, to see the difference in
+			costs due to switching.</li>
+		<li>Different memory strides</li>
+		<li>Indexed buffers (divided opinions)</li>
+		<li>Not artificially increasing draw time to increase measurement size for
+			better accuracy.</li>
+		<li>A longer study showing rendering time as number of per-vertex attributes increases</li>
+	</ul>
+
+	<p>
+		I gave the rasteriser discard and VAO switching a go this week. I built a new
+		measurement programme. I just used really simple VAO+VBO code - same as before.
+		Instead of pulling numbers out of
+		<a href="https://github.com/apitrace/apitrace">apitrace</a>
+		I used the
+		<a href="http://www.opengl.org/registry/specs/ARB/timer_query.txt">timer query extension</a>.
+		Graham Sellers says that I should have been getting < 0.5ms for drawing with my AMD 7500 which I have at work, so I
+			thought I'd give that a confirmation first. There should also be some switching cost, so I collected times for
+			both 1 and 2 drawing operations in sequence for each of the 3 different buffer layouts. </p>
+
+			<p>
+				I'm sort of amazed that this seems to be an open question that nobody has any
+				numbers for, given that it's a choice that you have to make right at the
+				beginning of rendering something with OpenGL (or any graphics API I suppose).
+				Anyway, I guess the crowd interested means that it's worth getting
+				to the bottom of.
+			</p>
+
+			<h2>The Problem With Time Measurement</h2>
+
+			<p>
+				The main problem with any measurements like this is that these things are
+				<b>incredibly quick</b>. Less than 1 millisecond is an extremely short amount
+				of time. That's important because computer clocks typically report up to 1
+				nanosecond at the smallest. Yes, our number fits into that range, but it doesn't
+				leave us with a lot of digits (significant figures) to represent each number.
+				When we print out a few of these 64-bit measurements, despite there being a wide
+				dispersion of results overall, the individual numbers have recurring patterns
+				in the least significant few digits. That might be correct, given the nature of
+				electronics, but could also mean that the clocks aren't as accurate as they
+				say. If that's the case then it looks like we only get accurate results of
+				about 3 s.f. That's absolutely not good enough precision for a serious
+				scientific investigation that compares results. We're not that serious, but it
+				means that we need to be a bit careful because we are vulnerable to drawing
+				incorrect conclusions. I printed the first 100 measurements for one category.
+				The first one is slower, but after 1 frame they repeat exactly, down to the
+				nanosecond level - maybe that's correct but call me very suspicious:
+			</p>
+
+			<tt>
+				first 100 time measurments (ns) of one multi vbo:<br />
+				331111<br />
+				326222<br />
+				326222<br />
+				326222<br />
+				326111<br />
+				326222<br />
+				326111<br />
+				326222<br />
+				326222<br />
+				326333<br />
+				326111<br />
+				326222<br />
+				326222<br />
+				326111<br />
+				326111<br />
+				326111<br />
+				...
+			</tt>
+
+			<p>
+				If I run my little programme 1024 times (a few seconds worth of rendering) it
+				gives me some averaged results. "Ah this way is faster". I see people that
+				should know better do 'benchmarks' like this all the time - which means jumping
+				to false conclusions. If I run it a second time, with the exact same
+				parameters I get different average time results. So, I need to run for a much
+				larger number of runs, and compute a proper deviation measurement to allow us
+				to compare dispersion of results for each category as well. In my first
+				experiment I did a million measurements per category (about a working day's
+				worth) and still got quite a lot of variation. There are lots of external
+				factors that can jump in and interfere with the rendering process - the timer
+				query extension documentation lists a few of these (mostly operating system
+				activity).
+			</p>
+
+			<p>
+				Another interesting thing about modern GPUs is that they run
+				out-of-synch with CPU instructions. It's also possible that some of the
+				processing for the <b>next</b> drawing operation has started before the
+				previous operation has finished. I could fluff around trying to get clean
+				measurements, but this doesn't represent how they'll be used in practice, and
+				I expect this should become less important over a larger accumulation of cycles.
+			</p>
+
+			<p>
+				I didn't bother with the CPU-side measurements this time because they were
+				less interesting - seem to be a small fixed cost. They were also very short,
+				and I got criticised for artificially making them longer to get more precise
+				measurements. I don't want do try and compare rubbish little measurements to
+				each other, so better to dump that entirely and look just at the GPU side.
+			</p>
+
+			<h2>Preliminary Results</h2>
+
+			<p>
+				I did a short run of n=4096. First, I print out the size of the local system's
+				<tt>long unsigned int</tt> to make doubly sure that it can hold all 64 bits
+				of the timer query result.
+			</p>
+
+			<tt>
+				bunny.obj loaded with 208353 vertices<br />
+				Renderer: AMD Radeon HD 7500 Series<br />
+				OpenGL version supported 4.2.12217 Compatibility Profile Context 8.96.7<br />
+				size of long unsigned int in bits is 64<br />
+				N=4096 samples have been collected for each measurement<br />
+				one_draw_multi mu: 0.326205 (ms) sigma: 0.000231<br />
+				one_draw_concat mu: 0.326206 (ms) sigma: 0.000251<br />
+				one_draw_interl mu: 0.326396 (ms) sigma: 0.000236<br />
+				two_draw_multi mu: 0.646754 (ms) sigma: 0.000239<br />
+				two_draw_concat mu: 0.646742 (ms) sigma: 0.000163<br />
+				two_draw_interl mu: 0.646946 (ms) sigma: 0.000249<br />
+			</tt>
+
+			<p>
+				I calculated sample standard deviation using Bessel's correction. So yes, I
+				got the rendering time under the expected result at around 0.33 milliseconds.
+				Good. It didn't make any difference though - all the results are exactly the
+				same. If you like, the interleaved values are ever so marginally slower, which
+				is kind of funny. Anyway, they're all going to be within 2 standard deviations.
+				If you don't know what this means - look at the smallest mean and add 2x the
+				sigma value to it. Then get the largest mean and subtract 2x the sigma value
+				from it. If the results have crossed over this means that any difference in
+				mean is not <b>statistically significant</b> - you absolutely can't say that one
+				is faster than the other, even if the means are different. This is what
+				scientists call a <b>P < 0.05</b> (very, very confident) measurement. The
+						standard approach to reducing the error values (standard deviation in this case)
+						is to collect more results - so I'll do that next. This is
+						a problem that we see all the time in computer science - the proper stats are
+						not done and we draw conclusions from bad analysis. I really want to try and do
+						a proper job here so I shall continue. [actually that's not fair to CS - the
+						pharmaceutical and medical research journals got caught out recently for
+						publishing a huge number of 'bad science' articles for exactly this reason, and
+						these guys deal with life-and-death].
+			</p>
+
+			<p>
+				It looks like switching VAOs didn't make any difference - the results are
+				equally all double the single VAO results. I even used a completely new copy
+				of the data in new buffers, and a new VAO just to be sure that nothing was being
+				optimised out somewhere.
+			</p>
+
+			<h2>Next</h2>
+
+			<p>
+				I'll repeat my experiment on both GPUs again with this new programme, just to
+				be sure, and do it with n=1mil. I'll make another little chart, and <u>put all
+					of my code online</u> - perhaps someone with more experience can see why I'm not
+				getting the results that they expect? I can take the criticism!
+			</p>
+
+			<p>
+				Yes, I'm aware that I have a bee in my bonnet about statistics and science - I
+				learned from the best!
+			</p>
+
+</body>
+
+</html>

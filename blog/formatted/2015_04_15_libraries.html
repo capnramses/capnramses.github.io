@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2015_04_15_libraries</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>Libraries</h2>
+
+	<p>
+		I've been working on my skill-base by making lots of little mini-libraries. The
+		latest additions are the memory allocation wrapper, and
+		data structures library, GLSL parser. I mentioned the interpolation work in the
+		previous post. The other libraries are older and have been updated.
+	</p>
+
+	<table>
+		<tr>
+			<td><a href="https://github.com/capnramses/apg_malloc">apg_malloc</a></td>
+			<td>experimental <tt>malloc()</tt> and <tt>free()</tt> wrapper for accounting
+				and leak checking</td>
+		</tr>
+		<tr>
+			<td><a href="https://github.com/capnramses/apg_data_structures">apg_data_structures</a></td>
+			<td>light-weight c99 data structures library</td>
+		</tr>
+		<tr>
+			<td><a href="https://github.com/capnramses/apg_glsl">apg_glsl</a></td>
+			<td>experimental GLSL pre-processor supporting <tt>#include</tt></td>
+		</tr>
+		<tr>
+			<td><a href="https://github.com/capnramses/apg_interp">apg_interp</a></td>
+			<td>interpolation functions aka "tweening" or "easing"</td>
+		</tr>
+		<tr>
+			<td><a href="https://github.com/capnramses/apg_mesh">apg_mesh</a></td>
+			<td>converter and viewer for custom animated 3d mesh format</td>
+		</tr>
+		<tr>
+			<td><a href="https://github.com/capnramses/apg_maths">apg_maths</a></td>
+			<td>minimalist vector/matrix/quaternion maths header for 3d graphics</td>
+		</tr>
+	</table>
+
+	<p>
+		The memory allocation wrapper was an experiment to see if I could wrap extant
+		calls to built-in functions in a convenient way (answer=yes). I basically just
+		created a linked list accounting for all memory allocations versus all freeing
+		operations. A better solution would be to put these little accounting
+		structures on the end of the actual blocks to reduce fragmentation, but I found
+		this was vulnerable to segfaults - probably due to memory overflows somewhere
+		in the code base I was testing, which is a separate issue. It did it's job well
+		at reporting leaks, but I do an order O(n) search in each freeing operation,
+		which would go away with the end-of-block idea which can be address-indexed.
+	</p>
+
+	<p>
+		The data structures library for C99 was an attempt to help get rid of old STL
+		vector reliance, which I would use when being lazy. These were introducing
+		segfault bugs due to unsafe random item erasure, so it's better to have an
+		on-hand linked list or dynamic array ready to go. Having a single point of
+		failure and improvement seems like a good idea.
+	</p>
+
+	<p>
+		I have had lingering issues with AJAX loading of shaders from files for WebGL,
+		so my GLSL parser was an experiment to get around asynchronous issues by
+		reading shaders from HTML5 script blocks instead of files, with some additional
+		pre-processor features like support for #include from other scripts to make
+		code re-use less of a pain (repeating changes to lighting algorithms for each
+		shader in a project is a pain). I added additional error checking, and also
+		supporting single-file splits for vertex and fragment shaders using
+		<tt>#vert</tt> and <tt>#frag</tt> to indicate sub-sections.
+	</p>
+
+	<p>
+		I made some clarifications to my mesh format. I feel that this should really be
+		turned into a tech report or workshop paper, as it's a common question,
+		especially for beginners, and is really quite simple and not well addressed
+		anywhere.
+	</p>
+
+	<h2>Prototypes</h2>
+
+	<p>
+		I made <a href="https://antongerdelan.net/2015_03_20_page_icon_vis/">another mock-up</a> of a page of text with
+		analytics for my visualisation
+		project. WebGL was far superior to SVG, D3, and canvas2d in terms of
+		performance, so I wanted to try a 2d vector graphics display with some nice
+		bars, and some pointless but eye-catchy interpolated animations, using my
+		library.
+	</p>
+
+	<div class="centre">
+		<img src="../images/pagevis1.png" width="256" /><img src="../images/pagevis2.png" width="256" />
+	</div>
+
+	<p>
+		We're busy breaking down the linked data processes, with provenance, into a
+		formalisation that might be easier to make into a nice visualisation tool.
+	</p>
+
+</body>
+
+</html>

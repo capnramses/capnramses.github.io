@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2015_02_25_canvas2dcube</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>Making HTML5 Canvas 2d Work Very Hard Indeed</h2>
+
+	<div class="centre">
+		<img src="../images/barycentric.png" /><br />
+		<small><i>Using a barycentric algorithm to rasterise and fill a triangle into
+				pixels, based on 3 input vertices.</i></small>
+	</div>
+
+	<p>
+		This morning I had a go at writing my own triangle rasteriser (pictured above),
+		in C, using M&ouml;bius' barycentric co-ordinates. Apparently using a variation
+		of Bresenham's line-drawing has a faster fill-rate, but I wanted to try
+		something new. "Why not make a live on-line one?" I thought - hence, the Canvas
+		2d version below. I have the power!
+	</p>
+
+	<div class="centre">
+		<img src="../images/canvas2dcube.png" /><br />
+		<small><i>
+				'Canvas 2d? Crom laughs at your 2d. Laughs from his mountain.'
+			</i></small>
+	</div>
+
+	<p>
+		I wrote a 3d renderer. You will see in the live demo that I didn't add
+		depth-testing - that could be easily done! I don't know what algorithm the
+		canvas 2d "fill" uses.
+		<a href="https://antongerdelan.net/demos/canvas2d3d/">For the live version click here</a> - I couldn't
+		embed it in this blog feed because security, main thread, etc, etc.
+	</p>
+
+</body>
+
+</html>

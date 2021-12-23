@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2015_06_03_python</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>Antonstein 3-D, Python, New Tools</h2>
+
+	<h3>The Mansion of Dr Anton</h3>
+
+	<p>
+		<a href="https://antongerdelan.net/dungeo/">Play online here</a>.
+	</p>
+
+	<div class="centre">
+		<img src="../images/dungeo0.png"><br />
+		<small><i>"!naledreG notnA ,em llik tsum uoy niw oT"</i></small>
+	</div>
+
+	<p>
+		After experimenting with a debug 1st-person camera view in my ongoing Crongdor
+		the Barbarian game development, I thought it would be cool to make a first
+		person game. Amazingly, I have never done this, despite these being the
+		inspiration for a lot of my career choices. I wanted to make an eerie Underworld
+		type of game but it ended up gravitating itself into a blend of Wolfenstein 3-D,
+		Dangerous Dave in the Haunted Mansion, with a bit of Blake Stone, Nightmare 3-D,
+		and Ken's Labyrinth nodded to. Of course WebGL was the medium.
+	</p>
+
+	<div class="centre">
+		<img src="../images/dungeo1.png"><br />
+		<small><i>I drew a pixel-art map in GIMP, with a unique colour for each game
+				element.</i></small>
+	</div>
+
+	<p>
+		I decided to do yet another cube-ish blocks plan to make level design easy and
+		retro. I put GIMP in pixel mode, disabled anti-aliasing, and drew a map using
+		unique colours for each type of wall, item, monster, etc. I used HTML5
+		Canvas2D to load the image and extract each pixel's colour as an unique
+		number, which is the code to load a specific item at a location determined by
+		pixel row and column number * 2.0 to get into world co-ordinates.
+	</p>
+
+	<div class="centre">
+		<img src="../images/dungeo2.png"><br />
+		<small><i>
+				Secret panels, treasure, keys, weird blue colours instead of black, silver,
+				and grey, fenced off areas that make you wonder how to get the goodies behind
+				them, silly retro sound jingles - it needed to be recreated!
+			</i></small>
+	</div>
+
+	<p>
+		Upon seeing the first 3d rendering of my game level I was hit by a nostalgia
+		bomb from early 90s 3d games and it just sort of turned into a mash-up of
+		those, with some Dangerous Dave action thrown in.
+	</p>
+
+	<p>
+		Interestingly I didn't need to do much in the way of culling optimisation. It
+		was okay to have one draw per wall section, thing, monster, etc. The bottleneck,
+		even on my piece of crap laptop was the fragment count and/or fill rate, so I
+		just did some crude dot-product culls and reduced the viewport size.
+	</p>
+
+	<p>
+		Keys, locked doors, secret panels, treasure, and so on were all very easy to
+		do. Low-res pixel art looks nice and is really quick to make. I disabled all
+		anti-aliasing in the rendering. The monsters I could not be bothered animating,
+		I just loaded a different mesh to use for the "attacking" state. Some neat
+		shaders to make stuff flash in an old-school way to indicate damage were a
+		nice idea and easy to do. That plus sound queues was enough - no need for
+		particles or anything fancy. I think making a really old-style surround HUD
+		for the player's stats set a tone - I used similar colours to the crappy
+		dull palettes of 90s games. I rendered to a smaller viewport inside this for
+		the 3d stuff - same as how the original games worked. The text using CSS and
+		native browser text was such a relief - really clear text is so nice to have.
+		Doing text rendering in OpenGL is an exercise in disappointing frustration.
+		I implemented Doom/Underworld's diminished lighting to give a spooky tone,
+		and didn't bother with Phong or anything - just normal-based basic shading,
+		which is cheap and nice looking. I'm less and less impressed with expensive,
+		difficult-to-manage traditional lighting models. I added a flare alpha-blended
+		thing to make lamps look like they're shining - worked really well. Sorting
+		transparent objects by distance was trivial in JavaScript - yay!
+	</p>
+
+	<p>
+		I finally figured out how to pre-load sound effects with Howler. It required
+		reading the instructions. I found it doesn't work on my mobile phone though -
+		humm.
+	</p>
+
+	<p>
+		For the AI spotting the player I just used Bresenham's line drawing to see if
+		sight was blocked by a wall - not accurate but accurate enough. For shooting
+		I used an interesting little algorithm - distance of a point from a line plotted
+		between two points. Simple and effective! The point being the monster in question
+		and the line being the forward vector of the camera. I didn't bother doing a
+		wall collision check, so you can shoot through walls at short distances. It
+		worked really well, and means you can shoot multiple baddies with a single
+		shot.
+	</p>
+
+	<p>
+		The story I based on an artistic "thing" two of my friends in the graphics
+		group were doing. The main character is lifted/reproduced from Tim's
+		<a href="https://play.google.com/store/apps/details?id=com.survivaltrail&hl=en">Survival Trail</a> game, where he is
+		the main character. Had to.
+	</p>
+
+	<p>
+		I think the only thing I wasn't happy with was that the boss drops the key in
+		a slightly wrong location which sometimes disappears - didn't quite figure that
+		out. Must be a rounding error or invalid parameter somewhere?
+	</p>
+
+	<h3>Python</h3>
+
+	<p>
+		I'm having yet another crack at learning Python for the purposes of making a
+		Blender script, some visualisation data pre-processing, and just generally
+		sharpening a new tool. I want to get learn enough to
+		evaluate the language's usefulness for my own purposes. I suspect there are
+		some general scripting and file parsing tasks that will make it a superior
+		choice in some cases, and I would like to investigate the GUI potential for
+		mutli-platform native OS tools, as at the moment I have no really nice tool
+		for this.
+	</p>
+
+	<p>
+		I've to-date put off learning Python properly, because like all cute
+		technologies it has a voracious community of hooded fanatics that want you to
+		py-everything, and frankly I find that very offputting - some sort of
+		psychological shortcoming, a tendancy to tribalism perhaps - that catches a
+		lot of humanity and makes them especially difficult to tolerate.
+	</p>
+
+	<p>
+		I'm putting my notes and stuff <a href="https://github.com/capnramses/lang/tree/master/python">github</a>.
+		So far I've found it a lot more difficult to learn and deal with than JavaScript,
+		which I can't help but compare it to. It has some extra powerful features, but
+		is just different enough to other languages to be difficult to learn as quickly
+		as I would like.
+	</p>
+
+	<p>
+		I managed to create a working exporter script for Blender to
+		<a href="https://github.com/capnramses/apg_mesh">my own
+			3d mesh format</a>. I feel another pass over this once I've improved my Python
+		skills would be beneficial. I need to add support for export of bones, skeleton
+		hierarchy, and animations, but the per-vertex core of data is working.
+	</p>
+
+	<h3>New Debugging Tools and Text Editors</h3>
+
+	<p>
+		I want to try some more visual C/C++ debuggers for non-windows. I only want
+		light-weight tools, not full IDEs, but having the ability to click breakpoints,
+		maintain a watchlist, inspect the call stack side-by-side, and most importantly
+		<b>inspect the compiled assembler code</b>, would be a great insight to writing more
+		efficient code.
+	</p>
+
+	<ul>
+		<li>Insight, a GDB GUI - <a href="https://www.sourceware.org/insight/">https://www.sourceware.org/insight/</a></li>
+		<li>DDD, another GDB front-end - <a href="http://www.gnu.org/software/ddd/">http://www.gnu.org/software/ddd/</a>
+		</li>
+	</ul>
+
+	<P>
+		I had a go with Microsoft Visual Studio Code, which is available on Linux and
+		Apple ?!!?! It's a very light IDE with some debug support for web development
+		and .: completely useless.
+	</P>
+
+	<p>
+		All the cool kids are using Sublime Text editor these days. I recently wrote a
+		post giving my opinion on plug-ins being a massive waste of time. This is the
+		extreme end of that. It's a text editor presenting a sensible interface, with
+		all the advantages of non-sensible Vim and Emacs. It's a very nice text editor,
+		nicer than gedit, which I use a lot. I find a lot of the fancy productivity
+		enhancers end up wasting my time by accidentally clicking twice and getting
+		two cursors or something. It has a very good JSON validator (and other code
+		validators) which will put big red stuff over bad bracket endings and stuff,
+		which is very handy indeed if you work in these areas. Nice but not better
+		overall than what I've been using.
+		You can do some interesting compile-as-you-type stuff with C, which I've heard
+		from very authoritive sources is a big development-time improver. Have not
+		tried yet. I can't see that being so useful for me because I often work on a
+		junkyard laptop, and I never make mistakes.
+	</p>
+
+</body>
+
+</html>

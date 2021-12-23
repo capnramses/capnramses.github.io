@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2012_06_18_morph_anim</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2 id="18june2012">18 June 2012</h2>
+	<h3>Morph Animation</h3>
+	<p>
+		As far as I am aware, ES 1.0 Shaders don't allow texture sampling in the vertex shader. This means that using vertex
+		displacement maps as
+		keyframes (a very efficient method for doing morph animation) is not going to work. Calculating it on the CPU is out
+		of the question. I found <a
+			href="http://stackoverflow.com/questions/8680329/opengl-es-2-ios-morph-animate-between-two-set-of-vertexes">a
+			post</a> that suggested loading the whole lot into a massive set of vertex buffers. This means with 20 key-frames
+		your geometry buffers occupy 20x more
+		GPU memory. At the calculation level, you only need 2 key-frames at any one time, and really these can just be a set
+		of differences from the original mesh. Maybe it would be cheaper to send an array of key-frames in a uniform just
+		after the shader is linked, rather tham using per-vertex attributes. It seems more intuitive...will try.
+	</p>
+
+	<p>
+		Note to self - think about using Ambient Occlusion to improve face rendering...
+	</P>
+
+	<p>
+		Current plan;
+	</p>
+
+	<ol>
+		<li>
+			Create a basic mesh with 3-4 render targets. Or grab a free one <a
+				href="http://www.turbosquid.com/3d-models/head-morph-lwo-free/150572">like this</a>.
+		</li>
+		<li>
+			Export each render target as a separate .obj
+		</li>
+		<li>
+			Convert each .obj to a .json using my little tool
+		</li>
+		<li>
+			Create a set of little jQuery sliders that update shader uniform weights for each target. (Maybe start between
+			just two targets)
+		</li>
+		<li>
+			Think about if the existing system should output weights in place of the sliders (probably better), or if I should
+			write an interpreter to convert output tags/text into weights (probably a bit rigid).
+		</li>
+		<li>
+			Profit!
+		</li>
+	</ol>
+
+	<h3>Implementation</h3>
+	<p>
+		So, I got a basic morph target demo working. A couple of minor issues:
+	</p>
+	<ul>
+		<li>
+			When exporting the 2 targets, the exporter changed the order of some of the vertices in the 2nd target which
+			mangles the animation.
+		</li>
+		<li>
+			I got a misleading GL error complaining about <tt>enableVertexAttribArray</tt> when it was really a problem inside
+			the shader (my normals were not being used in a calculation).
+		</li>
+	</ul>
+	<p>
+		You can see my demo here (click image). I'll leave in the bug so you can see what happens (triangles near the top of
+		the door are affected). Otherwise it's fine. I'm relying on Blender3D to export my mesh here - it does have an
+		"export animations" option which might solve this consistency problem, and still give me separate .obj files.
+		<b>edit: I fixed the vertex order problem by associating each animation with a bone in Blender. This will be a pain
+			for facial animation. This is a bit gross but it might be the easiest way around the problem. It looks like the
+			proper way to do this is to use the F-Curve editor in Blender but I'm not sure that this will be picked up by the
+			.obj exporter. I could also looking at modifying the Python export script. Lots of work, very little pay-off.</b>
+	</p>
+	<div class="centre">
+		<a href="https://antongerdelan.net/demos/morphtargets/">
+			<img src="../images/morphtargets.png" width="512" />
+		</a>
+	</div>
+
+</body>
+
+</html>
