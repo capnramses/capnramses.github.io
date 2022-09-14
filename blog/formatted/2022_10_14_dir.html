@@ -97,8 +97,11 @@ void print_dir_contents( const char* path_ptr ) {
 	char tmp[2048];
 	WIN32_FIND_DATA fdFile;
   HANDLE hFind = NULL;
-	sprintf( tmp, "%s/*.*", path_ptr ); // Specify a file mask. "*.*" means we want everything!
-	if ( ( hFind = FindFirstFile( tmp, &fdFile ) ) == INVALID_HANDLE_VALUE ) { return; } // Error.
+	// Specify a file mask. "*.*" means everything.
+	sprintf( tmp, "%s/*.*", path_ptr );
+	if ( ( hFind = FindFirstFile( tmp, &fdFile ) ) == INVALID_HANDLE_VALUE ) {
+		return; // Error.
+	}
 	do {
 		printf( "%s\n", fdFile.cFileName );
 	} while ( FindNextFile( hFind, &fdFile ) );
