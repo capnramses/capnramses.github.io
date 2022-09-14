@@ -69,7 +69,7 @@
 
 	<pre>#ifndef _MSC_VER
 
-#include &lang;dirent.h&rang;
+#include &lt;dirent.h&gt;
 
 void print_dir_contents( const char* path_ptr ) {
 	struct dirent* entry_ptr;
@@ -91,7 +91,7 @@ void print_dir_contents( const char* path_ptr ) {
 	<pre>#ifndef _MSC_VER
 
 // You could reduce the size of this include with Windows macro tricks.
-#include &lang;windows.h&rang;
+#include &lt;windows.h&gt;
 
 void print_dir_contents( const char* path_ptr ) {
 	char tmp[2048];
