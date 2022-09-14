@@ -121,19 +121,17 @@ void print_dir_contents( const char* path_ptr ) {
 	</p>
 
 	<ul>
-		<li>MinGW GCC couldn't handle trailing slashes in supplied paths.</li>
+		<li>MinGW GCC couldn't handle trailing slashes in supplied paths. MSVC could.</li>
 		<li>User-supplied directory strings may need to be converted to Unix-style slashes.</li>
 		<li>When collecting an array of contents, it's slightly tricky to get the number of directory entries to
-			pre-allocate for. I did
-			another loop to count the number of entries first.</li>
+			pre-allocate for. I did another loop to count the number of entries first.</li>
 		<li>You may want to check if an entry is a file, a directory, or another type. This requires some more
 			platform-branching code.</li>
 		<li>Determining symbolic links doesn't usually work, so I settled on 'file' and 'directory' as the types of entry.
 		</li>
-		<li>The entries are not necessarily given in alphabetical order, so you may want to sort them thusly.</li>
+		<li>The entries are not necessarily given in alphabetical order, so you may want to sort them.</li>
 		<li>Determining a file's size or type is best done with <tt>stat</tt>, which does not require opening or reading
-			through the file.
-			Using stat portably is quite tricky. See my code for how I abstract that also.</li>
+			through the file. Using stat portably is quite tricky. See my code for how I abstract that also.</li>
 	</ul>
 
 </body>
