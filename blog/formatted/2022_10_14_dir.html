@@ -23,25 +23,19 @@
 	<h3>The Operating System Portability Problem</h3>
 
 	<p>
-		It's a common task to have program read a user-specified directory for loading data from user files.
-		The
-		C and its standard libraries include a file I/O interface, but there isn't a full interface for reading filesystem
-		directories.
-	</p>
-
-	<p>
-		Operating system-portable libraries for C are taken care of by the POSIX libraries, and there is a directory
+		It's a common task to have a program retrieve a list of entries in a filesystem directory for loading data from user
+		files. Operating system-portable libraries for C are taken care of by the POSIX libraries, and there is a directory
 		interface in POSIX; <tt>dirent.h</tt>.
 		POSIX libraries are unfortunately are not fully implemented by Microsoft Windows for the MSVC compiler, where there
-		is instead an equivalent Win32 interface. This includes directories, threads, and there are similar issues with
+		is instead an equivalent Win32 interface. This includes directories, and threads. There are similar issues with
 		socket-level networking.
-		To make fully portable C code we then abstract over both interfaces.
+		To make fully portable C code we must then abstract over both interfaces.
 	</p>
 
 	<p>
 		I handle small, common, tasks like this in my <a
 			href="https://github.com/capnramses/apg/tree/master/apg"><tt>apg.h</tt></a> snippets file that I drag around
-		between projects, which is quite a common approach in C-land.
+		between projects. This is quite a common approach in C-land.
 	</p>
 
 	<h3>Abstracting Operating Systems</h3>
@@ -51,21 +45,21 @@
 		choice to use POSIX on Windows if GCC is used. Either strategy works:
 	</p>
 
-	<code>
+	<pre>
 		#ifdef _WIN32
 			// All compilers on Windows using Win32 calls.
 		#else
 			// Other operating systems use POSIX calls here.
 		#endif
-	</code>
+	</pre>
 
-	<code>
+	<pre>
 		#ifdef _MSC_VER
 			// Only MSVC using Win32 calls.
 		#else
 			// Non-Microsoft compilers, including GCC on Windows, using POSIX.
 		#endif
-	</code>
+	</pre>
 
 	<p>
 		These compiler branches will be used to determine header files, and also inside your wrapper functions.
@@ -75,7 +69,7 @@
 
 	<p>Here's a minimal version, with no validation. I'll mention additional steps I took later.</p>
 
-	<code>#ifndef _MSC_VER
+	<pre>#ifndef _MSC_VER
 
 #include <dirent.h>
 
@@ -90,13 +84,13 @@ void print_dir_contents( const char* path_ptr ) {
   closedir( dir_ptr );
 }
 
-#endif</code>
+#endif</pre>
 
 	<h3>Win32 Code</h3>
 
 	<p>Again, with validation removed:</p>
 
-	<code>#ifndef _MSC_VER
+	<pre>#ifndef _MSC_VER
 
 #include <windows.h> // You could reduce the size of this include with Windows macro tricks.
 
@@ -112,7 +106,7 @@ void print_dir_contents( const char* path_ptr ) {
 	FindClose( hFind );
 }
 
-#endif</code>
+#endif</pre>
 
 	<h3>Caveats and Improvements</h3>
 
