@@ -46,20 +46,18 @@
 	</p>
 
 	<pre>
-		#ifdef _WIN32
-			// All compilers on Windows using Win32 calls.
-		#else
-			// Other operating systems use POSIX calls here.
-		#endif
-	</pre>
+#ifdef _WIN32
+	// All compilers on Windows using Win32 calls.
+#else
+	// Other operating systems use POSIX calls here.
+#endif</pre>
 
 	<pre>
-		#ifdef _MSC_VER
-			// Only MSVC using Win32 calls.
-		#else
-			// Non-Microsoft compilers, including GCC on Windows, using POSIX.
-		#endif
-	</pre>
+#ifdef _MSC_VER
+	// Only MSVC using Win32 calls.
+#else
+	// Non-Microsoft compilers, including GCC on Windows, using POSIX.
+#endif</pre>
 
 	<p>
 		These compiler branches will be used to determine header files, and also inside your wrapper functions.
@@ -71,7 +69,7 @@
 
 	<pre>#ifndef _MSC_VER
 
-#include <dirent.h>
+#include &lang;dirent.h&rang;
 
 void print_dir_contents( const char* path_ptr ) {
 	struct dirent* entry_ptr;
@@ -92,7 +90,8 @@ void print_dir_contents( const char* path_ptr ) {
 
 	<pre>#ifndef _MSC_VER
 
-#include <windows.h> // You could reduce the size of this include with Windows macro tricks.
+// You could reduce the size of this include with Windows macro tricks.
+#include &lang;windows.h&rang;
 
 void print_dir_contents( const char* path_ptr ) {
 	char tmp[2048];
