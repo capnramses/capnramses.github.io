@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Anton's Research Ramblings - 2022_10_14_dir</title>
+	<link rel="stylesheet" type=text/css href="..\..\greysans.css">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+	<a href="../index.html">[index]</a>
+	<h1>Anton's Research Ramblings</h1>
+	<h2>Reading Filesystem Directory Contents in C</h2>
+
+	<!-- TODO image here
+  <img src="../../demos/111_screen_melt/doomgif.gif"  alt="Animation of the recreated screen melt effect from Doom." />
+	-->
+
+	<p>This post explains how I wrote directory-reading code for use in C, with links to working code.</p>
+
+	<h3>The Operating System Portability Problem</h3>
+
+	<p>
+		It's a common task to have program read a user-specified directory for loading data from user files.
+		The
+		C and its standard libraries include a file I/O interface, but there isn't a full interface for reading filesystem
+		directories.
+	</p>
+
+	<p>
+		Operating system-portable libraries for C are taken care of by the POSIX libraries, and there is a directory
+		interface in POSIX; <tt>dirent.h</tt>.
+		POSIX libraries are unfortunately are not fully implemented by Microsoft Windows for the MSVC compiler, where there
+		is instead an equivalent Win32 interface. This includes directories, threads, and there are similar issues with
+		socket-level networking.
+		To make fully portable C code we then abstract over both interfaces.
+	</p>
+
+	<p>
+		I handle small, common, tasks like this in my <a
+			href="https://github.com/capnramses/apg/tree/master/apg"><tt>apg.h</tt></a> snippets file that I drag around
+		between projects, which is quite a common approach in C-land.
+	</p>
+
+	<h3>Abstracting Operating Systems</h3>
+
+	<p>
+		Generally in C you can use the pre-processor to detect the operating system, or the compiler. Here, you have a
+		choice to use POSIX on Windows if GCC is used. Either strategy works:
+	</p>
+
+	<code>
+		#ifdef _WIN32
+			// All compilers on Windows using Win32 calls.
+		#else
+			// Other operating systems use POSIX calls here.
+		#endif
+	</code>
+
+	<code>
+		#ifdef _MSC_VER
+			// Only MSVC using Win32 calls.
+		#else
+			// Non-Microsoft compilers, including GCC on Windows, using POSIX.
+		#endif
+	</code>
+
+	<p>
+		These compiler branches will be used to determine header files, and also inside your wrapper functions.
+	</p>
+
+	<h3>POSIX Code</h3>
+
+	<p>Here's a minimal version, with no validation. I'll mention additional steps I took later.</p>
+
+	<code>#ifndef _MSC_VER
+
+#include <dirent.h>
+
+void print_dir_contents( const char* path_ptr ) {
+	struct dirent* entry_ptr;
+  DIR* dir_ptr = opendir( path_ptr );
+
+  while ( ( entry_ptr = readdir( dir_ptr ) ) ) {
+		printf( "%s\n", entry_ptr->d_name );
+	}
+
+  closedir( dir_ptr );
+}
+
+#endif</code>
+
+	<h3>Win32 Code</h3>
+
+	<p>Again, with validation removed:</p>
+
+	<code>#ifndef _MSC_VER
+
+#include <windows.h> // You could reduce the size of this include with Windows macro tricks.
+
+void print_dir_contents( const char* path_ptr ) {
+	char tmp[2048];
+	WIN32_FIND_DATA fdFile;
+  HANDLE hFind = NULL;
+	sprintf( tmp, "%s/*.*", path_ptr ); // Specify a file mask. "*.*" means we want everything!
+	if ( ( hFind = FindFirstFile( tmp, &fdFile ) ) == INVALID_HANDLE_VALUE ) { return; } // Error.
+	do {
+		printf( "%s\n", fdFile.cFileName );
+	} while ( FindNextFile( hFind, &fdFile ) );
+	FindClose( hFind );
+}
+
+#endif</code>
+
+	<h3>Caveats and Improvements</h3>
+
+	<p>
+		There are several snags I discovered here:
+	</p>
+
+	<ul>
+		<li>MinGW GCC couldn't handle trailing slashes in supplied paths.</li>
+		<li>User-supplied directory strings may need to be converted to Unix-style slashes.</li>
+		<li>When collecting an array of contents, it's slightly tricky to get the number of directory entries to
+			pre-allocate for. I did
+			another loop to count the number of entries first.</li>
+		<li>You may want to check if an entry is a file, a directory, or another type. This requires some more
+			platform-branching code.</li>
+		<li>Determining symbolic links doesn't usually work, so I settled on 'file' and 'directory' as the types of entry.
+		</li>
+		<li>The entries are not necessarily given in alphabetical order, so you may want to sort them thusly.</li>
+		<li>Determining a file's size or type is best done with <tt>stat</tt>, which does not require opening or reading
+			through the file.
+			Using stat portably is quite tricky. See my code for how I abstract that also.</li>
+	</ul>
+
+</body>
+
+</html>
