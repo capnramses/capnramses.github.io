@@ -1,0 +1,92 @@
+<html>
+
+<head>
+  <title>Mansions of Madness Dice Roller</title>
+  <style>
+    .fade-in-image {
+      animation: fadeIn 3s;
+      width: 128px;
+      height: 128px;
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    .roller {
+      margin-right: 20px;
+      width: 64px;
+    }
+
+  </style>
+</head>
+
+<body>
+  <h2>Mansions of Madness Dice Roller</h2>
+
+  <div id="rollers"></div>
+  <br />
+  <div id="images"></div>
+
+  <p><i>Click on dice to reroll.</i></p>
+  <hr />
+  <p>
+    <small>2023. By Anton Gerdelan. [<a href="https://antongerdelan.net/">www</a>] [<a
+        href="https://github.com/capnramses">src</a>]. Audio from <a href="https://pixabay.com/">pixabay.com</a></small>
+  </p>
+
+  <audio id="aud1" src="rolling-dice-2-102706.mp3" preload="auto"></audio>
+  <audio id="aud2" src="rpg-dice-rolling-95182.mp3" preload="auto"></audio>
+
+  <script>
+    function init() {
+      for (i = 1; i <= 8; i++) {
+        let roller = document.createElement("button");
+        roller.id = i;
+        roller.onclick = function () { roll(roller) };
+        roller.innerHTML = "Roll " + i;
+        roller.className = "roller";
+        document.getElementById("rollers").appendChild(roller);
+
+        let butt = document.createElement("button");
+        butt.id = "butt" + i;
+        butt.onclick = function () { reroll(butt); }
+        butt.innerHTML = '<img src="blank.png" />';
+        butt.hidden = true;
+        document.getElementById("images").appendChild(butt);
+      }
+    }
+    function face() {
+      let res = Math.floor(Math.random() * 8);
+      if (res < 3) { return '<img src="star.png" width="100%" class="fade-in-image" />'; }
+      if (res < 5) { return '<img src="clue.png" width="100%" class="fade-in-image" />'; }
+      return '<img src="blank.png" width="100%" class="fade-in-image" />';
+    }
+    function roll(roller) {
+      let count = parseInt(roller.id);
+      document.getElementById("aud1").play();
+      for (i = 1; i <= 8; i++) {
+        let butt = document.getElementById("butt" + i);
+        butt.hidden = true;
+        if (i <= count) {
+          butt.innerHTML = face();
+          butt.hidden = false;
+        }
+      }
+    }
+    function reroll(butt) {
+      document.getElementById("aud2").play();
+      butt.innerHTML = face();
+    }
+    init();
+  </script>
+
+</body>
+
+</html>
