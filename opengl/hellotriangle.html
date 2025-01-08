@@ -400,8 +400,8 @@ const char* vertex_shader =
 "}";</pre>
 
 	<p>
-		The first line says which version of the shading language to use; in this case
-		4.1.0. My vertex shader has 1 input variable; a <tt>vec3</tt> (vector made from 3 floats), which matches up to
+		The first line says which version of the shading language to use; <a href="https://en.wikipedia.org/wiki/OpenGL_Shading_Language#Versions">in this case</a>
+		it's a short-hand for "4.10.6", which was released with OpenGL 4.1. My vertex shader has 1 input variable; a <tt>vec3</tt> (vector made from 3 floats), which matches up to
 		our VAO's attribute pointer. This means that each vertex shader invocation gets 3 of the 9 floats from our
 		buffer -
 		therefore 3 vertex shaders will run concurrently; each one positioning 1 of the vertices. The output has
