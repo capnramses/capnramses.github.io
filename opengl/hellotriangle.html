@@ -101,13 +101,11 @@ int main( void ) {
 	<ul>
 		<li>Language: C/C++.</li>
 		<li>API: gl Version 4.1.</li>
-		<li>Specification: OpenGL.</li>
-		<li>Profile: Core.</li>
-		<li>&check; Generate a loader.</li>
+		<li>Compatibility/Core profile: Core.</li>
 	</ul>
 
 	<p>
-		We will revist these options here later. For now, we are generating a C interface to desktop OpenGL, version
+		For now, we are generating a C interface to desktop OpenGL, version
 		4.1,
 		including only the core functions from version 4.1, and we want it to generate an OpenGL function loader for us.
 		Add the generated files to your project's directory, such that it looks like this:
@@ -168,6 +166,12 @@ brew install glfw
 		into your project folder, including GLFW's <tt>include</tt> folder, and the dynamic library files.
 	</p>
 
+<p>
+If you're using Visual Studio you'll see the GLFW download includes a subfolder for each major version. Drop the appropriate files from the subfolder matching your version instead.
+GLFW can also be built into your program as a static library. I'm not doing that in this example.
+For further explanation see the very helpful GLFW <a href="https://www.glfw.org/docs/3.3/build_guide.html">build_guide.html</a>.
+</p>
+
 	<pre>
 .
 ├── glad
@@ -176,7 +180,8 @@ brew install glfw
 ├── glfw
 │   └── include
 ├── glfw3.dll
-├── libglfw3dll.a
+├── glfw3dll.lib  (if using Visual Studio)
+├── libglfw3dll.a (if using MinGW)
 └── main.c</pre>
 
 	<h2>Initialisation Code</h2>
