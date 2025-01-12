@@ -10,127 +10,36 @@
 	-->
 </head>
 
+
+<!-- TODO
+ full rewrite
+ - mention that start with hello triangle and modify
+ note useful bits from old one
+ explain bits in a little more detail
+ goal is how to get more info/expose more options, and how to scale up from a nice base for next demos
+ base on e.g. gfx.c
+ -> explain version and core
+ -> gettings logs for shaders <- key
+ -> how to start some utility type coding that will scale up well, and how i code this.
+    explain that the article is a full-rewrite 10 years later.
+ -> mention renderdoc
+ -> briefly look at useful bits from glget
+ -> window hints and antialiasing
+ -> extensions for e.g. texture filter thing that i use
+ -> mention the debug callback feature - link to article? 
+
+-->
+
+
 <body>
 	<p><a href="index.html">[index]</a></p>
-	<h1>Extended Initialisation</h1>
-	<h4>Anton Gerdelan. Last Updated 2 Oct 2016</h4>
+	<h1>Extended OpenGL Initialisation</h1>
+	<h4>Anton Gerdelan. Last Updated 12 Jan 2025</h4>
 
 	<p>
-		So, following on from the minimal start-up last time, it's useful to get some statistics
+		Following on from the minimal start-up last time, it's useful to get some statistics
 		on what the computer's video driver can handle, and specify some additional parameters
-		for start-up. Our OpenGL programme will dump <u>a lot</u> of information, which can be a
-		little infuriating to pick through when there's a problem, so we'll start by setting up
-		a log file for capturing OpenGL-related output.
-	</p>
-
-	<h2>Starting a Log File</h2>
-
-	<p>
-		Debugging graphical programmes is a huge pain. They don't have functions to print text to
-		the screen any more, and having a console open on the side printing things out can
-		quickly get overwhelming. I strongly suggest starting a "GL log" straight away, so you
-		can load it up to check out what specifications a user's system has, and also debug
-		any problems <u>after</u> the programme has finished.
-	</p>
-
-	<p>
-		The actual structure of your log functions will depend on your preferences. I
-		prefer C <tt>fprintf()</tt> to C++ output streams so I'm going to make something
-		that takes a variable number of arguments like <tt>printf()</tt> does. You might
-		prefer to stream variables out, <tt>cout</tt> style. To make functions that
-		take a variable number of arguments; <tt>#include &lt;stdarg.h&gt;</tt>.
-	</p>
-
-	<pre>
-#include &lt;time.h&gt;
-#include &lt;stdarg.h&gt;
-#define GL_LOG_FILE "gl.log"
-
-bool restart_gl_log() {
-  FILE* file = fopen(GL_LOG_FILE, "w");
-  if(!file) {
-    fprintf(stderr,
-      "ERROR: could not open GL_LOG_FILE log file %s for writing\n",
-      GL_LOG_FILE);
-    return false;
-  }
-  time_t now = time(NULL);
-  char* date = ctime(&now);
-  fprintf(file, "GL_LOG_FILE log. local time %s\n", date);
-  fclose(file);
-  return true;
-}</pre>
-
-	<p>
-		This first function just opens the log file and prints the date and time at the
-		top - always handy. It might make sense to print the version number of your code
-		here too. In GCC this would be the built-in strings <tt>__DATE__</tt> and
-		<tt>__TIME__</tt>. Note that after printing to the log file we close it again
-		rather than keep it open.
-	</p>
-
-
-	<pre>
-bool gl_log(const char* message, ...) {
-  va_list argptr;
-  FILE* file = fopen(GL_LOG_FILE, "a");
-  if(!file) {
-    fprintf(
-      stderr,
-      "ERROR: could not open GL_LOG_FILE %s file for appending\n",
-      GL_LOG_FILE
-    );
-    return false;
-  }
-  va_start(argptr, message);
-  vfprintf(file, message, argptr);
-  va_end(argptr);
-  fclose(file);
-  return true;
-}
-</pre>
-
-	<p>
-		This function is the main log print-out. The "<tt>...</tt>" parameter is part of
-		C's variable arguments format, and lets us give it any number of parameters,
-		which will be mapped to corresponding string formatting in the <tt>message</tt>
-		string, just like <tt>printf()</tt>. We open the file in "a[ppend]" mode,
-		which means adding a line to the existing end of the file, which is what we
-		want, because we just closed it again since we wrote the time at the top.
-		C has a rather funny-looking start and end function for processing the variable
-		arguments. After writing to the file, we close it again. Why? Because if the
-		programme crashes we don't lose our log - the last appended message can be very
-		enlightening.
-	</p>
-
-
-	<pre>
-bool gl_log_err(const char* message, ...) {
-  va_list argptr;
-  FILE* file = fopen(GL_LOG_FILE, "a");
-  if(!file) {
-    fprintf(stderr,
-      "ERROR: could not open GL_LOG_FILE %s file for appending\n",
-      GL_LOG_FILE);
-    return false;
-  }
-  va_start(argptr, message);
-  vfprintf(file, message, argptr);
-  va_end(argptr);
-  va_start(argptr, message);
-  vfprintf(stderr, message, argptr);
-  va_end(argptr);
-  fclose(file);
-  return true;
-}
-</pre>
-
-	<p>
-		I wrote a slight variation of the log function, specifically for error messages.
-		It's the same, but also prints to the <tt>stderr</tt> terminal. I usually run
-		OpenGL with the terminal open. If I print my error message to <tt>stderr</tt> it
-		should pop up as soon as it occurs, which can make it obvious when something
-		has gone wrong.
+		for start-up.
 	</p>
 
 	<h2>Start GLFW Again</h2>
@@ -142,421 +51,272 @@ bool gl_log_err(const char* message, ...) {
 		will tell us if we've made a mistake such as calling a GLFW function with the
 		wrong parameters.
 		<u>Before</u> initialising GLFW, we can set up an error callback, which we can
-		use to spit out some error information, then exit the programme. We create a
+		use to spit out some error information, then exit the program. We create a
 		little function for the callback:
 	</p>
 
 	<pre>
-void glfw_error_callback(int error, const char* description) {
-  gl_log_err("GLFW ERROR: code %i msg: %s\n", error, description);
-}
-</pre>
-
-	<p>
-		This will tell is if there was a special problem initialising GLFW. I also put in
-		an <tt>assert()</tt> to make sure that the log file could be opened. If you
-		want to use this then you'll need to include <tt>assert.h</tt>.
-	</p>
+void error_callback_glfw(int error, const char* description) {
+  fprintf( stderr, "GLFW ERROR: code %i msg: %s.\n", error, description );
+}</pre>
 
 	<pre>
 int main() {
-  assert(restart_gl_log());
-  // start GL context and O/S window using the GLFW helper library
-  gl_log("starting GLFW\n%s\n", glfwGetVersionString());
-  // register the error call-back function that we wrote, above
-  glfwSetErrorCallback(glfw_error_callback);
-  if(!glfwInit()) {
-    fprintf(stderr, "ERROR: could not start GLFW3\n");
+  printf( "Starting GLFW %s.\n", glfwGetVersionString() );
+
+  // Register the error callback function that we wrote earlier.
+  glfwSetErrorCallback( error_callback_glfw );
+
+	// Start GLFW.
+  if( !glfwInit() ) {
+    fprintf( stderr, "ERROR: could not start GLFW3.\n" );
     return 1;
   }
-...
-</pre>
+...</pre>
 
 	<h3>Setting a Minimum OpenGL Version to Use</h3>
 
 	<p>
-		Before creating a window with GLFW, we can give it a number of "hints" to set
-		specific window and GL settings. Our primary reason for doing this is to force
+		Before creating a window with GLFW, we can give it a number of <i>hints</i> to set
+		specific window and OpenGL settings. Our primary reason for doing this is to force
 		OpenGL to use at least the minimum version of OpenGL that we are writing our
-		code to support. For example; if we're using tessellation shaders, then we
-		should probably stop the programme from running if the drivers can't support
-		OpenGL 4. If you're using a Mac then this step is necessary - only a limited set
-		of OpenGL implementations are available; 4.1 and 3.3 on Mavericks, and 3.2 on
-		pre-Mavericks. These are also limited to a "forward-compatible, core profile"
-		context - the most conservative set of features with no backwards-compatibility
-		support for features that have been made obsolete. To request the newest of
-		these three
-		versions, we "hint" to the window-creation process that we want
-		<b>OpenGL 3.2 forward-compatible core profile</b>. Yes we can put "3.2", even if
-		we are on Mavericks:
+		code to support. For example; if we're using <i>tessellation</i> shaders, a feature
+		from OpenGL 4, then we should probably stop the program from running if the drivers
+		can't support OpenGL 4.
 	</p>
 
 	<pre>
-glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-</pre>
+glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 4 );
+glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 1 );
+glfwWindowHint( GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE );
+glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );</pre>
 
-	<p>
-		This should make us Mac-compatible. In the previous version of GLFW I had to
-		manually hint the number of bits to use for depth and colour channels on Mac,
-		but it looks like GLFW3 has sensible defaults instead. The "forward compatible"
-		profile disables all of the functionality from previous versions of OpenGL that
-		has been flagged for removal in the future. If you get the OpenGL 3.2 or 4.x
-		Quick Reference Card, then this means that all of the functions in blue font are
-		not available. This future-proofs our code, and there's no other option on Mac.
-		The "compatibility" profile doesn't flag any functions as deprecated, so for
-		this to work we also must enable the "core" profile, which does mark
-		deprecation. Check your GL version printout. Mine now says:
-	</p>
-
-	<p>
-		<tt>
-			OpenGL version supported 3.2.11903 Core Profile Forward-Compatible Context
-		</tt>
-	</p>
+	<ul>
+		<li>If you have an idea what versions of OpenGL your video driver supports you can try changing the version numbers
+			here.</li>
+		<li>The <i>forward-compatible</i> profile disables all of the functionality in your chosen version of OpenGL that is
+			marked as "deprecated". You don't normally need this hint, but it can be quite helpful for first-timers to avoid
+			accidentally using older parts of the API, and forcing yourself to use the newer parts.
+			If you get the OpenGL 4.x <a href="https://www.khronos.org/developers/reference-cards">Quick Reference Card</a>,
+			then this means that all of the functions in blue font are not available.
+		</li>
+		<li>The <i>core</i> profile you can think of as the default. The alternative is a "compatibility" profile,
+			which includes features of OpenGL from older versions. That might be handy if you were, for example, updating an
+			old OpenGL video game to a modern standard.</li>
+	</ul>
 
 	<p>
 		You can also use the hinting system to enable things like stereoscopic
 		rendering, if supported by your hardware.
+		See the <a href="https://www.glfw.org/docs/latest/window_guide.html">GLFW Window Guide</a> for more information.
 	</p>
 
-	<h3>Anti-Aliasing</h3>
+	<h3>Multisample Anti-Aliasing (MSAA)</h3>
 
 	<p>
 		Whilst we're adding window hints, it's good to know that we can put
 		anti-aliasing hints here too. Even if our textures and colours are nicely
-		filtered, the edges our our meshes and triangles are going to look harsh when
-		drawn diagonally on the screen (we'll see pixels along the edges). OpenGL has
-		a built-in "smoothing" ability that blurs over these parts called multi-sample
-		anti-aliasing. The more "samples" or passes it does, the more smoothed it will
-		look, but it gets more expensive. Set it to "16" before taking screen shots!
+		filtered, the edges of our meshes and triangles are going to look jagged when
+		drawn diagonally on the screen - you'll see the rectangular pixels along the diagonal edges of your triangle.
+		OpenGL has a built-in "smoothing" algorithm that blurs over these parts called multisample
+		anti-aliasing (MSAA). The more colour samples it takes around polygon edges, the more smoothed the resulting edge
+		pixels will
+		look, but it also gets more expensive. Set it to "16" before taking screen captures!
+		You should see a difference in your triangle edges if you change this value - the default is 0, or off.
 	</p>
 
 	<pre>
-glfwWindowHint(GLFW_SAMPLES, 4);
-</pre>
+glfwWindowHint( GLFW_SAMPLES, 8 );</pre>
 
-	<h3>Window Resolution and Full-Screen</h3>
+	<div class="centre">
+		<img src="images/msaa_comp.png"
+			alt="Comparison of two Hello Triangle demos; MSAA with 0 samples (left), and 16 samples (right)." /><br />
+		<i><small>A zoomed-in comparison of two Hello Triangle demos; MSAA with 0 samples (left), and 16 samples
+				(right).</small></i>
+	</div>
+
+	<h3>Window Resolution and Full Screen</h3>
 
 	<p>
 		To change the resolution, or start in a full-screen window, we can set the
-		parameters of the
-		<a href="http://www.glfw.org/docs/latest/group__window.html#ga5c336fddf2cbb5b92f65f10fb6043344">glfwCreateWindow</a>
+		parameters of the <tt>glfwCreateWindow</tt>
 		function. To use full-screen mode we need to tell it which monitor to
 		use, which is a new feature of GLFW 3.0. You can get quite precise control over
-		what renders on the different monitors, which you can read about
-		<a href="http://www.glfw.org/docs/latest/group__monitor.html">here</a>.
-		We can just assume that we will use the primary monitor for full-screen mode.
+		what renders on the different monitors, which you can read about in GLFW's online documentation.
+		For now, we will use your primary monitor for full-screen mode.
 	</p>
 
 	<p>
 		You can ask GLFW to give you a list of supported resolutions and video modes
-		with <a
-			href="http://www.glfw.org/docs/latest/group__monitor.html#ga820b0ce9a5237d645ea7cbb4bd383458">glfwGetVideoModes()</a>
-		which will be useful for supporting a range of machines. For full-screen we can
-		just use the current resolution, and change our <tt>glfwCreateWindow</tt> call:
+		with <tt>glfwGetVideoModes()</tt>, which will be useful for supporting a range of machines.
+		For full-screen we can just use the current, desktop, resolution, and change our <tt>glfwCreateWindow</tt> call:
 	</p>
 
 	<pre>
-GLFWmonitor* mon = glfwGetPrimaryMonitor();
-const GLFWvidmode* vmode = glfwGetVideoMode(mon);
-GLFWwindow* window = glfwCreateWindow(
-  vmode->width, vmode->height, "Extended GL Init", mon, NULL
-);
-</pre>
+// Set this to false to go back to windowed mode.
+bool full_screen = true; // NB. include stdbool.h for bool in C.
+
+GLFWmonitor *mon = NULL;
+int win_w = 800, win_h = 600; // Our window dimensions, in pixels.
+
+if ( full_screen ) {
+	mon = glfwGetPrimaryMonitor();
+
+	const GLFWvidmode* mode = glfwGetVideoMode( mon );
+
+	// Hinting these properties lets us use "borderless" full screen" mode.
+	glfwWindowHint( GLFW_RED_BITS, mode->redBits );
+	glfwWindowHint( GLFW_GREEN_BITS, mode->greenBits );
+	glfwWindowHint( GLFW_BLUE_BITS, mode->blueBits );
+	glfwWindowHint( GLFW_REFRESH_RATE, mode->refreshRate );
+
+	win_w = mode->width;  // Use our 'desktop' resolution for window size
+	win_h = mode->height; // to get a 'full screen borderless' window.
+}
+
+GLFWwindow *window = glfwCreateWindow(
+	win_w,
+	win_h,
+	"Extended OpenGL Init",
+	mon,
+	NULL
+);</pre>
 
 	<p>
 		Now we can run in full-screen mode! It's a little bit tricky to close the window
-		though - you might want to look at implementing GLFW's keyboard handling to
-		allow an escape key to close the window. Put this at the end of the rendering
-		loop:
+		though (<i>ALT+F4</i>) - you might want to look at implementing GLFW's keyboard handling to
+		allow an escape key to close the window. Put this inside your rendering <tt>while</tt>
+		loop, after the <tt>glfwPollEvents()</tt> call:
 	</p>
 
 	<pre>
 if (GLFW_PRESS == glfwGetKey(window, GLFW_KEY_ESCAPE)) {
   glfwSetWindowShouldClose(window, 1);
-}
-</pre>
+}</pre>
 
 	<p>
 		Remember that our loop ends when the window is told to close.
-		You'll find a list of all the key codes and other input handling commands at
-		<a href="http://www.glfw.org/docs/latest/group__input.html">http://www.glfw.org/docs/latest/group__input.html</a>.
+		You'll find a list of all the key codes, and other input-handling commands in the documentation on the GLFW website.
+		You can also detect if the mouse was clicked, get the mouse coordinates inside the window, and even use gamepads and
+		joysticks.
 	</p>
 
 	<p>
-		You'll notice GLFW 3.0 has functions for getting and setting the gamma ramp of
-		the monitor itself, which gives you much more control over the range of colours
-		that are output, which was kind of a pain to do before. This is more of an
-		advanced rendering topic so don't worry about this if you're just starting.
+		If you're running in a window, then you'll want to know when the user resizes
+		the window, or if the system does, for example if the window is too big and
+		needs to be squished to fit the menu bars. You can then adjust all your
+		variables to suit the new size. GLFW has callbacks available for this, but I find it more handy to retrieve the
+		window and rendering
+		area (framebuffer) dimensions every time I draw a frame - on every iteration of the rendering <tt>while</tt> loop.
+		Let's disable full screen mode, and give this a try. We will call <tt>glfwGetWindowSize()</tt> inside our rendering
+		loop to
+		update our window width and height variables.
 	</p>
 
 	<p>
-		If you're running in a window then you'll want to know when the user resizes
-		the window, or if the system does (for example if the window is too big and
-		needs to be squished to fit the menu bars). You can then adjust all your
-		variables to suit the new size.
+		You'll notice that, if you resize your window, the cleared background colour fills the window, but the
+		triangle is drawing at the same size - it's not scaling up to fill a larger window.
+		We need to update the OpenGL <i>viewport</i> size to the new window size. Let's update our rendering loop:
 	</p>
 
 	<pre>
-// keep track of window size for things like the viewport and the mouse cursor
-int g_gl_width = 640;
-int g_gl_height = 480;
+while ( !glfwWindowShouldClose( window ) ) {
+    glfwPollEvents();
+    if ( GLFW_PRESS == glfwGetKey( window, GLFW_KEY_ESCAPE ) ) {
+			glfwSetWindowShouldClose( window, 1 );
+		}
 
-// a call-back function
-void glfw_window_size_callback(GLFWwindow* window, int width, int height) {
-  g_gl_width = width;
-  g_gl_height = height;
-  
-  /* update any perspective matrices used here */
-}
-</pre>
+		// Check if the window resized.
+    glfwGetWindowSize( window, &win_w, &win_h );
+    // Update the viewport (drawing area) to fill the window dimensions.
+		glViewport( 0, 0, win_w, win_h );
 
-	<p>
-		Then we can call: <tt>glfwSetWindowSizeCallback(window, glfw_window_size_callback);</tt>
-	</p>
+    // Wipe the drawing surface clear.
+    glClearColor( 0.6f, 0.6f, 0.8f, 1.0f );
+    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
-	<p>
-		You'll notice that if you resize your window that the OpenGL part doesn't scale
-		to fit. We need to update the viewport size. Put this in the rendering loop,
-		just after the <tt>glClear()</tt> function:
-	</p>
+    glUseProgram( shader_program );
+    glBindVertexArray( vao );
 
-	<pre>
-glViewport(0, 0, g_gl_width, g_gl_height);
-</pre>
+    glDrawArrays( GL_TRIANGLES, 0, 3 );
 
-	<h2>Printing Parameters from the GL Context</h2>
-
-	<p>
-		After initialising GLEW we can start to use the GL interface - <a
-			href="http://www.opengl.org/sdk/docs/man4/xhtml/glGet.xml">
-			glGet</a> to print out some more parameters. Most of this information is from previous
-		incarnations of OpenGL, and is no longer useful. Some information is going to be really
-		useful to determine the capabilities of the graphics hardware - how big textures can be,
-		how many textures each shader can use, etc. We can log that here. I called this
-		function right after where I log the GL version being used.
-	</p>
-
-	<pre>
-void log_gl_params() {
-  GLenum params[] = {
-    GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS,
-    GL_MAX_CUBE_MAP_TEXTURE_SIZE,
-    GL_MAX_DRAW_BUFFERS,
-    GL_MAX_FRAGMENT_UNIFORM_COMPONENTS,
-    GL_MAX_TEXTURE_IMAGE_UNITS,
-    GL_MAX_TEXTURE_SIZE,
-    GL_MAX_VARYING_FLOATS,
-    GL_MAX_VERTEX_ATTRIBS,
-    GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS,
-    GL_MAX_VERTEX_UNIFORM_COMPONENTS,
-    GL_MAX_VIEWPORT_DIMS,
-    GL_STEREO,
-  };
-  const char* names[] = {
-    "GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS",
-    "GL_MAX_CUBE_MAP_TEXTURE_SIZE",
-    "GL_MAX_DRAW_BUFFERS",
-    "GL_MAX_FRAGMENT_UNIFORM_COMPONENTS",
-    "GL_MAX_TEXTURE_IMAGE_UNITS",
-    "GL_MAX_TEXTURE_SIZE",
-    "GL_MAX_VARYING_FLOATS",
-    "GL_MAX_VERTEX_ATTRIBS",
-    "GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS",
-    "GL_MAX_VERTEX_UNIFORM_COMPONENTS",
-    "GL_MAX_VIEWPORT_DIMS",
-    "GL_STEREO",
-  };
-  gl_log("GL Context Params:\n");
-  char msg[256];
-  // integers - only works if the order is 0-10 integer return types
-  for (int i = 0; i < 10; i++) {
-    int v = 0;
-    glGetIntegerv(params[i], &v);
-    gl_log("%s %i\n", names[i], v);
-  }
-  // others
-  int v[2];
-  v[0] = v[1] = 0;
-  glGetIntegerv(params[10], v);
-  gl_log("%s %i %i\n", names[10], v[0], v[1]);
-  unsigned char s = 0;
-  glGetBooleanv(params[11], &s);
-  gl_log(m"%s %u\n", names[11], (unsigned int)s);
-  gl_log("-----------------------------\n");
-}
-</pre>
-
-	<p>
-		Now, if we have a look at the log file after running
-		this (call it after the window creation). My log says:
-	</p>
-
-	<pre>
-GL Context Params:
-GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS 32
-GL_MAX_CUBE_MAP_TEXTURE_SIZE 16384
-GL_MAX_DRAW_BUFFERS 8
-GL_MAX_FRAGMENT_UNIFORM_COMPONENTS 16384
-GL_MAX_TEXTURE_IMAGE_UNITS 16
-GL_MAX_TEXTURE_SIZE 16384
-GL_MAX_VARYING_FLOATS 128
-GL_MAX_VERTEX_ATTRIBS 29
-GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS 16
-GL_MAX_VERTEX_UNIFORM_COMPONENTS 16384
-GL_MAX_VIEWPORT_DIMS 16384 16384
-GL_STEREO 0
-</pre>
-
-	<p>
-		This tells me that my shader programmes can use 32 different textures each - lots of
-		multi-texturing options with my graphics card here. I can access 16 different textures
-		in the vertex shader, and 16 more in the fragment shader. My laptop can support only
-		8 textures, so if I want to write programmes that run nicely on both you can see that I
-		would make sure that they don't use more than 8 textures at once. In theory my texture resolution
-		can be up to 16384x16384, but multiply this by 4 bytes, and we see that 16k textures
-		will use up my memory pretty quickly. I might get away with 8224x8224x4 bytes.
-	</p>
-
-	<p>
-		The "max uniform
-		components" means that I can send tonnes and tonnes of floats to each shader. Each matrix
-		is going to use 16 floats, and if we're doing hardware skinning we might want to send
-		a complex skeleton of 256 joints - 4096 floats to the vertex shader. So we can say that
-		we have plenty of space there.
-	</p>
-
-	<p>
-		"Varying" floats are those sent from the vertex shader to
-		the fragment shaders. Usually these are vectors, so we can say that we can send around
-		30 4d vectors between shaders. Varyings are computationally expensive, and some devices still
-		have a limit of 16 floats (4 vectors), so it's best to keep these to a minimum.
-	</p>
-
-	<p>
-		Vertex attributes are variables loaded from a mesh e.g.
-		vertex points, texture coordinates, normals, per-vertex colours, etc. OpenGL means 4d
-		vectors here. I would struggle to come up with more than about 6 useful per-vertex
-		attributes, so no problem here. Draw buffers is useful for more advanced effects where
-		we want to split the output from our rendering into different images - we can split this
-		into 8 parts. And, sadly, my video card doesn't support stereo rendering.
-	</p>
-
-	<h2>Monitoring the GL State Machine</h2>
-
-	<p>
-		If you look at the list for <tt>glGet</tt> you will see plenty of state queries;
-		"the currently enabled buffer", the "currently active texture slot" etc. OpenGL works on
-		the principle of a <b>state machine</b>. This means that once we set a state (like
-		transparency, for example), it is then globally enabled for all future drawing operations,
-		until we change it again. In GL parlance, setting a state is referred to as <b>"binding"</b>
-		(for buffers of data), <b>"enabling"</b> (for rendering modes), or <b>"using"</b> for
-		shader programmes.
-	</p>
-
-	<p>
-		The state machine can be very confusing. Lots of errors in OpenGL programmes come from
-		setting a state by accident, forgetting to unset a state, or mixing up the numbering
-		of different OpenGL indices. Some of the most useful state machine variables can be
-		fetched during run-time. You probably don't need to write a function to log all
-		of these states, but keep in mind that, if it all gets a bit confusing, you can
-		check individual states.
-	</p>
+    // Put the stuff we've been drawing onto the visible area.
+    glfwSwapBuffers( window );
+  }</pre>
 
 	<h2>Frame Rate Counter</h2>
 
 	<p>
-		We can add our familiar drawing (clearing) loop, but at the top call a <tt>_update_fps_counter()</tt> function which
-		will update the title bar of our window with the number of times this loop draws per
-		second.
+		If you want to know how fast your program is running, you can count how many times per second your while loop
+		iterates.
+		This is often referred to as <i>frames per second</i> or FPS. You may find that the inverse, <i>milliseconds per
+			frame</i>,
+		is more intuitive for measuring the performance of your program. We can work these numbers out and write the result
+		into the
+		title bar of the window.
 	</p>
 
 	<pre>
-while (!glfwWindowShouldClose(window)) {
-  _update_fps_counter(window);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glViewport(0, 0, g_gl_width, g_gl_height);
-  
-  /* DRAW STUFF HERE */
-  
-  glfwSwapBuffers(window);
-  glfwPollEvents();
-  if (GLFW_PRESS == glfwGetKey(window, GLFW_KEY_ESCAPE)) {
-    glfwSetWindowShouldClose(window, 1);
-  }
-}
-</pre>
+double prev_s = glfwGetTime();  // Set the initial 'previous time'.
+double title_countdown_s = 0.1;
+while ( !glfwWindowShouldClose( window ) ) {
+	double curr_s     = glfwGetTime();   // Get the current time.
+	double elapsed_s  = curr_s - prev_s; // Work out the time elapsed over the last frame.
+	prev_s            = curr_s;          // Set the 'previous time' for the next frame to use.
+
+	title_countdown_s -= elapsed_s;
+	if ( title_countdown_s <= 0.0 && elapsed_s > 0.0 ) {
+		double fps        = 1.0 / elapsed_s;    // Work out FPS.
+		// Create a string and put the FPS and ms as the window title.
+		char tmp[256];
+		sprintf( tmp, "FPS %.2lf", fps );
+		glfwSetWindowTitle(window, tmp );
+		title_countdown_s = 0.1;
+	}
+
+	...</pre>
 
 	<p>
-		So, GLFW has a function <tt>glfwGetTime</tt> which gives us a double-precision floating
-		point number, containing the number of seconds since GLFW started. A lot of OpenGL
-		tutorials use the (notoriously inaccurate) GLUT microseconds timer, but this one seems
-		to do the trick. I didn't want to have floating global variables keeping track of the
-		previous time, so I made it a <tt>static double</tt>. Working out the frame rate every
-		frame is <u>too accurate</u>, and will incur a small cost as well. So I average the
-		rate accrued over 0.25 seconds (or thereabouts - I assume it never gets slower than
-		4 frames per second). This gives me a readable result that is still responsive to
-		changes in the scene. I use the <tt>glfwSetWindowTitle</tt> function to put the rate in
-		the title bar. You may prefer to render this as text on the screen...but we don't have
+		GLFW has a function <tt>glfwGetTime</tt> which gives us a double-precision floating
+		point number, containing the number of seconds since GLFW started. The basic process is this:
+	</p>
+
+	<ul>
+		<li>Every frame get the current time <tt>curr_s</tt>, in seconds.</li>
+		<li>Work out the time elapsed over the last frame <tt>elapsed_s</tt>, by subtracting the current time from the
+			previous time <tt>prev_s</tt>.</li>
+		<li>Update the previous time with the current time, so that this works in the next frame too.</li>
+		<li>Work out the FPS as <tt>1.0 / elapsed_s</tt>, being careful never to divide by zero.</li>
+		<li>Because updating the FPS text every frame will flicker too much, reduce the updates to e.g. every 0.1s or so, by
+			using a countdown timer.</li>
+	</ul>
+
+	<p>
+		You may prefer to render this as text on the screen, but we don't have
 		the functionality to do that just yet.
 	</p>
 
-	<pre>
-void _update_fps_counter(GLFWwindow* window) {
-  static double previous_seconds = glfwGetTime();
-  static int frame_count;
-  double current_seconds = glfwGetTime();
-  double elapsed_seconds = current_seconds - previous_seconds;
-  if (elapsed_seconds > 0.25) {
-    previous_seconds = current_seconds;
-    double fps = (double)frame_count / elapsed_seconds;
-    char tmp[128];
-    sprintf(tmp, "opengl @ fps: %.2f", fps);
-    glfwSetWindowTitle(window, tmp);
-    frame_count = 0;
-  }
-  frame_count++;
-}
-</pre>
-
 	<p>
-		Graphics programmers tend to measure time in milliseconds for comparisons, so you might like to
-		put the frame time in milliseconds next to, or instead of, the frames-per-second count.
-		Keep in mind that the frame rate is not an objective measure of how fast your
-		code is. You can't display faster than the refresh rate of the monitor (around 60Hz or 60FPS).
-		Rendering at 100Hz is therefore not beneficial in the same way as it would be
-		to game logic, which can then compute more time steps per second (more detailed
-		movement paths and stuff). Fast GPU clocks will give you huge numbers when
-		drawing nothing. This doesn't really
-		mean anything that you can compare until you start drawing a more involved scene.
-		Measuring frame rate is useful when optimising more complex scenes. If you are drawing at
-		30fps in a game with fast-moving animations it will be noticeably bad, but it
-		might be okay in a slightly slower-paced game. You can use the FPS counter to
-		improve rendering techniques to get it back to whatever your programme's
-		reasonable level is. Remember that frame rate is
-		dependent on your particular hardware configuration - you want to look at frame rate on
-		your "minimum spec" machine. That said, on any machine, it can give you a good idea of
-		which techniques are relatively more GPU hungry than others.
+		Graphics programmers tend to measure time in milliseconds for performance comparisons, so you might like to
+		put the frame time in milliseconds next to, or instead of, the frames per second count.
 	</p>
 
 	<p>
-		The maxim <b>never optimise early</b> has some truth behind it. It is of course
-		very important for us in real time rendering to use highly efficient code, and
-		reasoning about how the underlying hardware deals with complexity we create can
-		be most beneficial. However, there is a bit of a trap in spending a huge amount of your
-		programming time on optimisations that don't end up making much practical improvement,
-		or are for experimental features that end up getting cut from the project.
-		I still catch myself doing this all the time. I think it takes some experience
-		to know how to write graphics (and general) code that is efficient <u>to begin with</u>
-		for whatever platform you are using, and then how to be very selective about which areas
-		would genuinely benefit more than others from some hours spent on optimisation work.
-		In the beginning, it would be wise to wait until you know your programme is running
-		too slowly, then use all the profiling and timing tools at your disposal to find
-		how inefficient different conventions and blocks of code are in reality -
-		<b>optimise selectively</b>.
+		Keep in mind that the frame rate is not an objective measure of how fast your
+		code is. You can't display faster than the refresh rate of your monitor (e.g. 60Hz or 60FPS).
+		Rendering at 200Hz is therefore not beneficial in the same way as it would be
+		to e.g. game logic, which could make use of more time steps per second (more detailed
+		movement paths and stuff). Fast GPU clocks will give you huge numbers when
+		drawing nothing. This doesn't really
+		mean anything that you can compare against until you start drawing a more involved scene.
+		Measuring frame rate or time is useful when optimising more complex scenes. If you are drawing at
+		30FPS in a game with fast-moving animations it will be noticeably bad, but it
+		might be okay in an animated chess game. You can use the FPS counter to
+		improve rendering techniques to get it back to whatever your program's
+		reasonable level is. Remember that frame rate is
+		dependent on your particular hardware configuration - you want to look at frame rate on
+		your <i>minimum spec</i> machine. That said, on any machine, it can give you a good idea of
+		which techniques are relatively more GPU hungry than others.
 	</p>
 
 	<h2>Extending Further</h2>
@@ -567,24 +327,28 @@ void _update_fps_counter(GLFWwindow* window) {
 		all of those identifiers to a log as well.
 	</p>
 
-	<h2>Problem?</h2>
+	<h2>Troubleshooting</h2>
 
-	<p>
-		Remember to link GL, glfw, and GLEW. My link path looks like this:
-	</p>
-	<p>
-		<tt>g++ -o demo main.cpp -lglfw -lGLEW -lGL</tt>
-	</p>
+	<ul>
+		<li>
+			Remember to link OpenGL, glfw, and Glad. My link path looks like this on Windows, using GCC on the command-line: <tt>gcc -o b.exe -D GLFW_DLL main2.c glad/src/gl.c libglfw3dll.a -I ./glad/include/ -I ./glfw/include -L ./
+				-lglfw3 -lopengl32 -lgdi32</tt>
+		</li>
 
-	<p>
-		Remember to initialise GLFW first, then do any parameter setting, then create the window,
-		then start GLEW, then start the drawing loop. Parameter fetching code can go just about
-		anywhere.
-	</p>
+		<li>
+			Remember to initialise GLFW first, then do any window hints, before creating the window and setting the context.
+			Then start Glad, then start the drawing loop.
+		</li>
 
-	<p>
-		Include the GLEW header file <b>before</b> GLFW.
-	</p>
+		<li>
+			Include the Glad header file <b>before</b> GLFW.
+		</li>
+		<li>
+			Read through the documentation for each GLFW function, and OpenGL function that you use. The parameters are tricky, and you
+			will miss lots of the useful hints and features if you skip doing this. GLFW has excellent online documentation. OpenGL has a specification document, which is more of a reference,
+			some Quick Reference Cards, which are quite useful overviews of available functions, and some HTML API documentation. A better formatting of the API documentation is
+			the <a href="https://docs.gl/">docs.gl</a> website, which I use frequently.
+		</li>
 </body>
 
 </html>
