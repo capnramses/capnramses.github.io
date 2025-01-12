@@ -278,6 +278,7 @@ while ( !glfwWindowShouldClose( window ) ) {
 		<li>Work out the FPS as <tt>1.0 / elapsed_s</tt>, being careful never to divide by zero.</li>
 		<li>Because updating the FPS text every frame will flicker too much, reduce the updates to e.g. every 0.1s or so, by
 			using a countdown timer.</li>
+		<li>Note that I initialise the previous time variable to GLFW's time value, and not zero.</li>
 	</ul>
 
 	<p>
