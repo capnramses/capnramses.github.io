@@ -292,14 +292,14 @@ while ( !glfwWindowShouldClose( window ) ) {
 
 	<p>
 		Keep in mind that the frame rate is not an objective measure of how fast your
-		code is. You can't display faster than the refresh rate of your monitor (e.g. 60Hz or 60FPS).
-		Rendering at 200Hz is therefore not beneficial in the same way as it would be
+		code is. You can't display faster than the refresh rate of your monitor (e.g. 60 Hz or 60 FPS).
+		Rendering at 200 Hz is therefore not beneficial in the same way as it would be
 		to e.g. game logic, which could make use of more time steps per second (more detailed
 		movement paths and stuff). Fast GPU clocks will give you huge numbers when
 		drawing nothing. This doesn't really
 		mean anything that you can compare against until you start drawing a more involved scene.
 		Measuring frame rate or time is useful when optimising more complex scenes. If you are drawing at
-		30FPS in a game with fast-moving animations it will be noticeably bad, but it
+		30 FPS in a game with fast-moving animations it will be noticeably bad, but it
 		might be okay in an animated chess game. You can use the FPS counter to
 		improve rendering techniques to get it back to whatever your program's
 		reasonable level is. Remember that frame rate is
