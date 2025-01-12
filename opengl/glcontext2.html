@@ -349,10 +349,10 @@ if ( GL_TRUE != params ) {
 	</p>
 
 	<p>
-		Errors can also occur in the linking stage. This won't affect us until we have more complex shaders, but, for
-		example, you might have an output variable in your vertex shader that doesn't
-		match the data type of an input variable in the fragment shader. We can put this check in now too. It goes after our
-		call to <tt>glLinkProgram()</tt>.
+		Errors can also occur in the linking stage. This won't affect us until we have more complex shaders,
+		but we will see in the next article that it's possible to output a variable from your vertex shader to your fragment shader.
+		If the output/input data types don't match we'll get a linker error that this check will catch.
+		We can put this check in now too. It goes after our call to <tt>glLinkProgram()</tt>.
 	</p>
 
 	<pre>
