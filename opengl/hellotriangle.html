@@ -161,16 +161,21 @@ brew install glfw
 #include &lt;GLFW/glfw3.h&gt;</pre>
 
 	<p>
-		On Windows you may not have installed with a package manager. If that's the case you should drop the contents of
-		the GLFW binary zip
-		into your project folder, including GLFW's <tt>include</tt> folder, and the dynamic library files.
+		On Windows you may not have installed with a package manager. Because the default download for GLFW is just the
+		source code,
+		you should download the <i>64-bit Windows binaries</i> package from the <a
+			href="https://www.glfw.org/download.html">GLFW Downloads</a> page.
+		Unzip the contents of the package into your project folder, including GLFW's <tt>include</tt> folder, and the
+		dynamic library files.
 	</p>
 
-<p>
-If you're using Visual Studio you'll see the GLFW download includes a subfolder for each major version. Drop the appropriate files from the subfolder matching your version instead.
-GLFW can also be built into your program as a static library. I'm not doing that in this example.
-For further explanation see the very helpful GLFW <a href="https://www.glfw.org/docs/3.3/build_guide.html">build_guide.html</a>.
-</p>
+	<p>
+		If you're using Visual Studio you'll see the GLFW download includes a subfolder for each major version. Drop the
+		appropriate files from the subfolder matching your version instead.
+		GLFW can also be built into your program as a static library. I'm not doing that in this example.
+		For further explanation see the very helpful GLFW <a
+			href="https://www.glfw.org/docs/3.3/build_guide.html">build_guide.html</a>.
+	</p>
 
 	<pre>
 .
@@ -250,9 +255,8 @@ int main( void ) {
 		to the GLFW headers. I have this compile command, using MinGW GCC:
 	</p>
 
-	<tt>
-		gcc -D GLFW_DLL main.c glad/src/gl.c libglew32.dll.a -I ./glad/include/ -I ./glfw/include -L ./ -lglfw3
-		-lopengl32 -lgdi32</tt>
+	<tt>gcc -D GLFW_DLL main.c glad/src/gl.c libglfw3dll.a -I ./glad/include/ -I ./glfw/include -L ./ -lglfw3 -lopengl32
+		-lgdi32</tt>
 
 	<h4>Linux Compile</h4>
 
@@ -260,8 +264,7 @@ int main( void ) {
 		On Ubuntu the OpenGL library file is <tt>libGL</tt>. I have this compile command:
 	</p>
 
-	<tt>
-		gcc main.c glad/src/gl.c -I ./glad/include/ -lglfw -lGL</tt>
+	<tt>gcc main.c glad/src/gl.c -I ./glad/include/ -lglfw -lGL</tt>
 
 
 	<h4>macOS Compile</h4>
@@ -400,8 +403,10 @@ const char* vertex_shader =
 "}";</pre>
 
 	<p>
-		The first line says which version of the shading language to use; <a href="https://en.wikipedia.org/wiki/OpenGL_Shading_Language#Versions">in this case the code</a> 410 is
-		a short-hand for "4.10.6", which was released with OpenGL 4.1. My vertex shader has 1 input variable; a <tt>vec3</tt> (vector made from 3 floats), which matches up to
+		The first line says which version of the shading language to use; <a
+			href="https://en.wikipedia.org/wiki/OpenGL_Shading_Language#Versions">in this case the code</a> 410 is
+		a short-hand for "4.10.6", which was released with OpenGL 4.1. My vertex shader has 1 input variable; a
+		<tt>vec3</tt> (vector made from 3 floats), which matches up to
 		our VAO's attribute pointer. This means that each vertex shader invocation gets 3 of the 9 floats from our
 		buffer -
 		therefore 3 vertex shaders will run concurrently; each one positioning 1 of the vertices. The output has
