@@ -15,7 +15,7 @@
 	<p><a href="index.html">[index]</a></p>
 
 	<h1>OpenGL 4 Shaders</h1>
-	<h4>Anton Gerdelan. Last edited: 2 October 2016</h4>
+	<h4>Anton Gerdelan. Last edited: 12 Jan 2025</h4>
 
 	<p>
 		Shaders tell OpenGL <u>how</u> to draw, but we don't have anything to draw yet - we will
@@ -27,9 +27,9 @@
 	<h2>Overview</h2>
 
 	<p>
-		Shaders are mini-programmes that define a <b>style</b> of rendering. They are compiled
+		Shaders are mini-programs that define a <b>style</b> of rendering. They are compiled
 		to run on the specialised GPU (graphics processing unit). The GPU has lots of
-		processors specialised for floating-point operations.
+		"cores" specialised for floating-point operations.
 		Each rendering stage can be split into many separate calculations - with one calculation
 		done on each GPU processor; transform each vertex,
 		colour each tiny square separately, etc. This means that we can compute a lot of the
@@ -42,7 +42,7 @@
 	<div class="centre">
 		<img src="images/shaders_2016_redo_512.png" /><br />
 		<small><i>Common drawing operations such as transforming each vertex and
-				colouring each fragment can be done independently. We write a shader (mini programme) to
+				colouring each fragment can be done independently. We write a shader (mini program) to
 				compute these operations, and the GPU's highly parallel architecture will
 				attempt to compute them all concurrently.</i></small>
 	</div>
@@ -50,8 +50,8 @@
 	<p>
 		Shaders are a way of re-programming the graphics pipeline. If we wanted to use a different
 		colouring method for the cube in the image, or have an animated, spinning cube, we could tell OpenGL
-		to switch to using a different shader programme. The rendering process has several
-		distinct stages of transforming a 3d object in a final 2d image. We call this staged
+		to switch to using a different shader program. The rendering process has several
+		distinct stages of transforming a 3D object in a final 2D image. We call this staged
 		process the <b>graphics pipeline</b>.
 		All of the stages of the graphics pipeline that happen on the GPU are called the
 		<b>[programmable] hardware pipeline</b>. Older OpenGL APIs had pre-canned functions like
@@ -66,25 +66,25 @@
 	</div>
 
 	<p>
-		A complete shader programme comprises a set of separate shader
-		(mini-programmes) - one to control each stage. Each mini-programme - called a <tt><b>shader</b></tt>
+		A complete shader program comprises a set of separate shader
+		(mini-programs) - one to control each stage. Each mini-program - called a <tt><b>shader</b></tt>
 		by OpenGL - is compiled, and the whole set are linked together to form the executable
-		shader programme - called a <tt><b>program</b></tt> by OpenGL. Yes, that's the worst
+		shader program - called a <tt><b>program</b></tt> by OpenGL. Yes, that's the worst
 		naming convention ever. If you look at the Quick
 		Reference Card (or further down the page) you can see that the API differentiates
-		functions into <tt>glShader</tt> and <tt>glProgram</tt> (note US spelling of "programme").
+		functions into <tt>glShader</tt> and <tt>glProgram</tt> (note US spelling of "program").
 	</p>
 
 	<p>
 		Each individual shader has a different job. At minimum, we usually have 1
-		vertex shader and 1 fragment shader per shader programme, but OpenGL 4 allows us to use
+		vertex shader and 1 fragment shader per shader program, but OpenGL 4 allows us to use
 		some optional shaders too.
 	</p>
 
 	<h2>Shader Parallelism</h2>
 
 	<p>
-		Shader programmes run on the GPU, and are highly parallelised. Each vertex shader only
+		Shader programs run on the GPU, and are highly parallelised. Each vertex shader only
 		transforms 1 vertex. If we have a mesh of 2000 vertices, then 2000 vertex shaders will
 		be launched when we draw it. Because we can compute each one separately, we can also run them
 		all in parallel. Depending on the number of processors on the GPU, you might
@@ -136,7 +136,7 @@
 
 	<p>
 		A <b>pixel</b> is a "picture element". In OpenGL lingo, pixels are the
-		elements that make up the final 2d image that it draws inside a window on your
+		elements that make up the final 2D image that it draws inside a window on your
 		display. A <b>fragment</b> is a pixel-sized area of a surface. A fragment
 		shader determines the colour of each one. Sometimes surfaces overlap - we then
 		have more than 1 fragment for 1 pixel. <b>All of the fragments are drawn, even
@@ -145,12 +145,11 @@
 
 	<p>
 		Each fragment is written into the framebuffer image that will be displayed as
-		the final pixels. If <b>depth testing</b> is enabled it will paint the
+		the final pixels. If <i>depth testing</i> is enabled it will paint the
 		front-most fragments on top of the further-away fragments. In this case, when
 		a farther-away fragment is drawn after a closer fragment, then the GPU is
 		clever enough to skip drawing it, but it's actually quite tricky to organise
-		the scene to take advantage of this, so we'll often end up executing huge
-		numbers of redundant fragment shaders.
+		the scene to take advantage of this, so we'll often end up executing many redundant fragment shader invocations.
 	</p>
 
 	<h2>Shader Language</h2>
@@ -244,7 +243,7 @@
 	</p>
 
 	<p>
-		If you leave out the version tag, OpenGL fall back to an earlier default - it's
+		If you leave out the version tag, OpenGL falls back to an earlier default - it's
 		always better to specify the version.
 	</p>
 
@@ -281,7 +280,7 @@
 		</tr>
 		<tr>
 			<td><tt>vec3</tt></td>
-			<td>3d floating-point value</td>
+			<td>3D floating-point value</td>
 			<td>Points and direction vectors</td>
 		</tr>
 		<tr>
@@ -301,7 +300,7 @@
 		</tr>
 		<tr>
 			<td><tt>sampler2D</tt></td>
-			<td>2d texture loaded from an image file</td>
+			<td>2D texture loaded from an image file</td>
 		</tr>
 		<tr>
 			<td><tt>samplerCube</tt></td>
@@ -325,11 +324,11 @@
 		<caption><b>My GLSL File Naming Convention</b></capation>
 		<tr>
 			<td><tt>texturemap.vert</tt></td>
-			<td>the vertex shader for my texture-mapping shader programme</td>
+			<td>the vertex shader for my texture-mapping shader program</td>
 		</tr>
 		<tr>
 			<td><tt>texturemap.frag</tt></td>
-			<td>the fragment shader for my texture-mapping shader programme</td>
+			<td>the fragment shader for my texture-mapping shader program</td>
 		</tr>
 		<tr>
 			<td><tt>particle.vert</tt></td>
@@ -356,7 +355,7 @@
 
 	<p>
 		GLSL is designed to resemble the C programming language. Each shader resembles a small
-		C programme. Let us examine a very minimal shader programme that has only a vertex
+		C program. Let us examine a very minimal shader program that has only a vertex
 		shader and a fragment shader. Each of these shaders can be stored in a C string, or in
 		a plain text file.
 	</p>
@@ -367,7 +366,7 @@
 		depending on the draw mode that we set. Every pixel-sized piece (fragment) of triangle,
 		line, or point goes to a fragment shader. Just for the sake of example, we want to be
 		able to control the colour of each fragment by updating a <tt><b>uniform</b></tt>
-		variable in our C programme.
+		variable in our C program.
 	</p>
 
 	<h3>Vertex Shader</h3>
@@ -393,7 +392,7 @@ void main() {
 		GLSL has some built-in data types that we can see here:
 	</p>
 	<ul>
-		<li><tt>vec3</tt> is a 3d vector that can be used to store positions, directions, or colours.</li>
+		<li><tt>vec3</tt> is a 3D vector that can be used to store positions, directions, or colours.</li>
 		<li><tt>vec4</tt> is the same but has a fourth component which, in this variable, is used
 			to determine perspective. We will examine this in the <a href="virtualcamera">virtual
 				camera</a> article, but for now we can leave it at 1.0, which means "don't calculate any
@@ -401,7 +400,7 @@ void main() {
 	</ul>
 
 	<p>
-		We can also see the <tt><b>in</b></tt> key-word for input to the programme from the
+		We can also see the <tt><b>in</b></tt> key-word for input to the program from the
 		previous stage. In this case the <tt>vertex_position_local</tt> is one of the vertex
 		points from the object that we are drawing. GLSL also has an <tt><b>out</b></tt> key-word for
 		sending a variable to the next stage.
@@ -446,8 +445,8 @@ void main() {
 
 	<p>
 		The <tt><b>uniform</b></tt> key-word says that we are sending in a variable to the
-		shader programme from the CPU. This variable is global to all shaders within the
-		programme, so we could also access it in the vertex shader if we wanted to.
+		shader program from the CPU. This variable is global to all shaders within the
+		program, so we could also access it in the vertex shader if we wanted to.
 	</p>
 
 	<p>
@@ -462,13 +461,13 @@ void main() {
 	<h2 id="minimal_example">Minimal C Code</h2>
 
 	<p>
-		Note that there is a distinction between a shader, which is a mini-programme for just
-		one stage in the hardware pipeline, and a shader programme which is a GPU programme
+		Note that there is a distinction between a shader, which is a mini-program for just
+		one stage in the hardware pipeline, and a shader program which is a GPU program
 		that comprises several shaders that have been linked together.
 	</p>
 
 	<p>
-		To get shaders up and running quickly you can bang this into a minimal GL programme:
+		To get shaders up and running quickly you can bang this into a minimal GL program:
 	</p>
 
 	<ol>
@@ -490,7 +489,7 @@ void main() {
 		locations.
 		Now we are ready to draw - we will look at drawing geometry with <tt><b>glDrawArrays</b></tt> in the next tutorial.
 		To set or change uniform variables you can use the various <tt>glUniform</tt> functions, but they <u>only affect the
-			shader programme
+			shader program
 			that has been switched to with <tt>glUseProgram</tt></u>.
 	</p>
 
@@ -535,24 +534,24 @@ void main() {
 	</table>
 	<br />
 	<table>
-		<caption><b>OpenGL "Program" (Combined Shader Programme) Functions</b></caption>
+		<caption><b>OpenGL "Program" Functions</b></caption>
 		<tr>
 			<td><b>Function Name</b></td>
 			<td><b>Description</b></td>
 		</tr>
 		<tr>
 			<td><tt>glCreateProgram()</tt></td>
-			<td>create a variable for storing a combined shader programme in OpenGL. returns <tt>unsigned int</tt> index to
+			<td>create a variable for storing a combined shader program in OpenGL. returns <tt>unsigned int</tt> index to
 				it.</td>
 		</tr>
 		<tr>
 			<td><tt>glAttachShader()</tt></td>
-			<td>attach a compiled OpenGL shader variable to a shader programme variable
+			<td>attach a compiled OpenGL shader variable to a shader program variable
 			<td></td>
 		</tr>
 		<tr>
 			<td><tt>glLinkProgram()</tt></td>
-			<td>after all shaders are attached, link the parts into a complete shader programme</td>
+			<td>after all shaders are attached, link the parts into a complete shader program</td>
 		</tr>
 		<tr>
 			<td><tt>glValidateProgram()</tt></td>
@@ -568,7 +567,7 @@ void main() {
 		</tr>
 		<tr>
 			<td><tt>glUseProgram()</tt></td>
-			<td>switch to drawing with a specified shader programme</td>
+			<td>switch to drawing with a specified shader program</td>
 		</tr>
 		<tr>
 			<td><tt>glGetActiveAttrib()</tt></td>
@@ -650,12 +649,12 @@ void _print_shader_info_log(GLuint shader_index) {
 	<pre>
 // check if link was successful
 int params = -1;
-glGetProgramiv(programme, GL_LINK_STATUS, &amp;params);
+glGetProgramiv(program, GL_LINK_STATUS, &amp;params);
 if (GL_TRUE != params) {
   fprintf(stderr,
-    "ERROR: could not link shader programme GL index %u\n",
-    programme);
-  _print_programme_info_log(programme);
+    "ERROR: could not link shader program GL index %u\n",
+    program);
+  _print_program_info_log(program);
   return false;
 }</pre>
 
@@ -667,16 +666,16 @@ if (GL_TRUE != params) {
 	<h3>Print the Program Info Log</h3>
 
 	<pre>
-void _print_programme_info_log(GLuint programme) {
+void _print_program_info_log(GLuint program) {
   int max_length = 2048;
   int actual_length = 0;
   char program_log[2048];
-  glGetProgramInfoLog(programme, max_length, &amp;actual_length, program_log);
-  printf("program info log for GL index %u:\n%s", programme, program_log);
+  glGetProgramInfoLog(program, max_length, &amp;actual_length, program_log);
+  printf("program info log for GL index %u:\n%s", program, program_log);
 }</pre>
 
 	<p>
-		Where <tt>programme</tt> is printing the index of my programme.
+		Where <tt>program</tt> is printing the index of my program.
 	</p>
 
 	<h3>Print All Information</h3>
@@ -686,22 +685,22 @@ void _print_programme_info_log(GLuint programme) {
 		Another is where an attribute or uniform variable is not "active"; not
 		actually used in the code of the shader, and has been optimised out by the
 		shader compiler. We can check this by printing it,
-		and we can print all sorts of other information as well. Here, <tt>programme</tt>
-		is the index of my shader programme.
+		and we can print all sorts of other information as well. Here, <tt>program</tt>
+		is the index of my shader program.
 	</p>
 
 
 	<pre>
-void print_all(GLuint programme) {
-  printf("--------------------\nshader programme %i info:\n", programme);
+void print_all(GLuint program) {
+  printf("--------------------\nshader program %i info:\n", program);
   int params = -1;
-  glGetProgramiv(programme, GL_LINK_STATUS, &amp;params);
+  glGetProgramiv(program, GL_LINK_STATUS, &amp;params);
   printf("GL_LINK_STATUS = %i\n", params);
   
-  glGetProgramiv(programme, GL_ATTACHED_SHADERS, &amp;params);
+  glGetProgramiv(program, GL_ATTACHED_SHADERS, &amp;params);
   printf("GL_ATTACHED_SHADERS = %i\n", params);
   
-  glGetProgramiv(programme, GL_ACTIVE_ATTRIBUTES, &amp;params);
+  glGetProgramiv(program, GL_ACTIVE_ATTRIBUTES, &amp;params);
   printf("GL_ACTIVE_ATTRIBUTES = %i\n", params);
   for (int i = 0; i < params; i++) {
     char name[64];
@@ -710,7 +709,7 @@ void print_all(GLuint programme) {
     int size = 0;
     GLenum type;
     glGetActiveAttrib (
-      programme,
+      program,
       i,
       max_length,
       &amp;actual_length,
@@ -722,18 +721,18 @@ void print_all(GLuint programme) {
       for(int j = 0; j < size; j++) {
         char long_name[64];
         sprintf(long_name, "%s[%i]", name, j);
-        int location = glGetAttribLocation(programme, long_name);
+        int location = glGetAttribLocation(program, long_name);
         printf("  %i) type:%s name:%s location:%i\n",
           i, GL_type_to_string(type), long_name, location);
       }
     } else {
-      int location = glGetAttribLocation(programme, name);
+      int location = glGetAttribLocation(program, name);
       printf("  %i) type:%s name:%s location:%i\n",
         i, GL_type_to_string(type), name, location);
     }
   }
   
-  glGetProgramiv(programme, GL_ACTIVE_UNIFORMS, &amp;params);
+  glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &amp;params);
   printf("GL_ACTIVE_UNIFORMS = %i\n", params);
   for(int i = 0; i < params; i++) {
     char name[64];
@@ -742,7 +741,7 @@ void print_all(GLuint programme) {
     int size = 0;
     GLenum type;
     glGetActiveUniform(
-      programme,
+      program,
       i,
       max_length,
       &amp;actual_length,
@@ -754,18 +753,18 @@ void print_all(GLuint programme) {
       for(int j = 0; j < size; j++) {
         char long_name[64];
         sprintf(long_name, "%s[%i]", name, j);
-        int location = glGetUniformLocation(programme, long_name);
+        int location = glGetUniformLocation(program, long_name);
         printf("  %i) type:%s name:%s location:%i\n",
           i, GL_type_to_string(type), long_name, location);
       }
     } else {
-      int location = glGetUniformLocation(programme, name);
+      int location = glGetUniformLocation(program, name);
       printf("  %i) type:%s name:%s location:%i\n",
         i, GL_type_to_string(type), name, location);
     }
   }
   
-  _print_programme_info_log(programme);
+  _print_program_info_log(program);
 }</pre>
 
 	<p>
@@ -809,23 +808,23 @@ const char* GL_type_to_string(GLenum type) {
 		called them "other". Look up <tt>glGetActiveUniform</tt> to get the rest of the list.
 	</p>
 
-	<h3>Validate Programme</h3>
+	<h3>Validate Program</h3>
 
 	<p>
-		You can also "validate" a shader programme before using it. Only do this during development,
-		because it is quite computationally expensive. When a programme is not valid, the details
-		will be written to the program info log. <tt>programme</tt> is my shader programme
+		You can also "validate" a shader program before using it. Only do this during development,
+		because it is quite computationally expensive. When a program is not valid, the details
+		will be written to the program info log. <tt>program</tt> is my shader program
 		index.
 	</p>
 
 	<pre>
-bool is_valid(GLuint programme) {
-  glValidateProgram(programme);
+bool is_valid(GLuint program) {
+  glValidateProgram(program);
   int params = -1;
-  glGetProgramiv(programme, GL_VALIDATE_STATUS, &amp;params);
-  printf("program %i GL_VALIDATE_STATUS = %i\n", programme, params);
+  glGetProgramiv(program, GL_VALIDATE_STATUS, &amp;params);
+  printf("program %i GL_VALIDATE_STATUS = %i\n", program, params);
   if (GL_TRUE != params) {
-    _print_programme_info_log(programme);
+    _print_program_info_log(program);
     return false;
   }
   return true;
@@ -835,12 +834,12 @@ bool is_valid(GLuint programme) {
 
 	<ul>
 		<li>
-			All uniform variables are intitialised to 0 when a programme links, so you only need to
+			All uniform variables are intitialised to 0 when a program links, so you only need to
 			initialise them if the initial value should be something else. Example: you might want to set
 			matrices to the identity matrix, rather than a zeroed matrix.
 		</li>
 		<li>
-			Calling <tt>glUniform</tt> is quite expensive during run-time. Structure your programme
+			Calling <tt>glUniform</tt> is quite expensive during run-time. Structure your program
 			so that <tt>glUniform</tt> is only called when the value needs to change. This might be
 			the case every time that you draw a new object (e.g. its position might be different),
 			but some uniforms may not change often (e.g. projection matrix).
@@ -879,7 +878,7 @@ bool is_valid(GLuint programme) {
 			large volumes of information from each loaded shader.
 		</li>
 		<li>
-			Larger projects will use many different shader programmes. It would make sense to have
+			Larger projects will use many different shader programs. It would make sense to have
 			a <var>Shader Manager</var> interface or class to load shaders, and to make sure that
 			shaders are re-used, rather than loaded multiple times.
 		</li>
