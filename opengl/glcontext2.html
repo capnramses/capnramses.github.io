@@ -329,7 +329,7 @@ glCompileShader( vs );
 
 // After glCompileShader check for errors.
 int params = -1;
-glGetShaderiv( vs, GL_COMPILE_STATUS, &params );
+glGetShaderiv( vs, GL_COMPILE_STATUS, &amp;params );
 
 // On error, capture the log and print it.
 if ( GL_TRUE != params ) {
@@ -363,7 +363,7 @@ glAttachShader( shader_program, vs );
 glLinkProgram( shader_program );
 
 // Check for linking errors:
-glGetProgramiv( shader_program, GL_LINK_STATUS, &params );
+glGetProgramiv( shader_program, GL_LINK_STATUS, &amp;params );
 
 // Print the linking log:
 if ( GL_TRUE != params ) {    
