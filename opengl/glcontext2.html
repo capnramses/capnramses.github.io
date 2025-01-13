@@ -4,15 +4,10 @@
 <head>
 	<title>Extended Initialisation - Anton's OpenGL 4 Tutorials</title>
 	<link rel="stylesheet" type="text/css" href="../greysans.css">
-	<!--
-		<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro&display=swap" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
-	-->
 </head>
 
 
 <!-- TODO
- -> mention renderdoc
  -> extensions for e.g. texture filter thing that i use
  -> mention the debug callback feature - link to article? 
 -->
@@ -79,16 +74,21 @@ glfwWindowHint( GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE );
 glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );</pre>
 
 	<ul>
-		<li>If you have an idea what versions of OpenGL your video driver supports you can try changing the version numbers
+		<li>If you have an idea what versions of OpenGL your video driver supports you can try changing the version
+			numbers
 			here.</li>
-		<li>The <i>forward-compatible</i> profile disables all of the functionality in your chosen version of OpenGL that is
-			marked as "deprecated". You don't normally need this hint, but it can be quite helpful for first-timers to avoid
+		<li>The <i>forward-compatible</i> profile disables all of the functionality in your chosen version of OpenGL
+			that is
+			marked as "deprecated". You don't normally need this hint, but it can be quite helpful for first-timers to
+			avoid
 			accidentally using older parts of the API, and forcing yourself to use the newer parts.
-			If you get the OpenGL 4.x <a href="https://www.khronos.org/developers/reference-cards">Quick Reference Card</a>,
+			If you get the OpenGL 4.x <a href="https://www.khronos.org/developers/reference-cards">Quick Reference
+				Card</a>,
 			then this means that all of the functions in blue font are not available.
 		</li>
 		<li>The <i>core</i> profile you can think of as the default. The alternative is a "compatibility" profile,
-			which includes features of OpenGL from older versions. That might be handy if you were, for example, updating an
+			which includes features of OpenGL from older versions. That might be handy if you were, for example,
+			updating an
 			old OpenGL video game to a modern standard.</li>
 	</ul>
 
@@ -98,15 +98,16 @@ glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );</pre>
 		See the <a href="https://www.glfw.org/docs/latest/window_guide.html">GLFW Window Guide</a> for more information.
 	</p>
 
-	<h3>Multisample Anti-Aliasing (MSAA)</h3>
+	<h3>Multisample Initialising (MSAA)</h3>
 
 	<p>
 		Whilst we're adding window hints, it's good to know that we can put
 		anti-aliasing hints here too. Even if our textures and colours are nicely
 		filtered, the edges of our meshes and triangles are going to look jagged when
 		drawn diagonally on the screen - you'll see the rectangular pixels along the diagonal edges of your triangle.
-		OpenGL has a built-in "smoothing" algorithm that blurs over these parts called multisample
-		anti-aliasing (MSAA). The more colour samples it takes around polygon edges, the more smoothed the resulting edge
+		OpenGL has a built-in "smoothing" algorithm that blurs over these parts called Multisample
+		Anti-aliasing (MSAA). The more colour samples it takes around polygon edges, the more smoothed the resulting
+		edge
 		pixels will
 		look, but it also gets more expensive. Set it to "16" before taking screen captures!
 		You should see a difference in your triangle edges if you change this value - the default is 0, or off.
@@ -183,8 +184,10 @@ if (GLFW_PRESS == glfwGetKey(window, GLFW_KEY_ESCAPE)) {
 
 	<p>
 		Remember that our loop ends when the window is told to close.
-		You'll find a list of all the key codes, and other input-handling commands in the documentation on the GLFW website.
-		You can also detect if the mouse was clicked, get the mouse coordinates inside the window, and even use gamepads and
+		You'll find a list of all the key codes, and other input-handling commands in the documentation on the GLFW
+		website.
+		You can also detect if the mouse was clicked, get the mouse coordinates inside the window, and even use gamepads
+		and
 		joysticks.
 	</p>
 
@@ -194,8 +197,10 @@ if (GLFW_PRESS == glfwGetKey(window, GLFW_KEY_ESCAPE)) {
 		needs to be squished to fit the menu bars. You can then adjust all your
 		variables to suit the new size. GLFW has callbacks available for this, but I find it more handy to retrieve the
 		window and rendering
-		area (framebuffer) dimensions every time I draw a frame - on every iteration of the rendering <tt>while</tt> loop.
-		Let's disable full screen mode, and give this a try. We will call <tt>glfwGetWindowSize()</tt> inside our rendering
+		area (framebuffer) dimensions every time I draw a frame - on every iteration of the rendering <tt>while</tt>
+		loop.
+		Let's disable full screen mode, and give this a try. We will call <tt>glfwGetWindowSize()</tt> inside our
+		rendering
 		loop to
 		update our window width and height variables.
 	</p>
@@ -238,7 +243,8 @@ while ( !glfwWindowShouldClose( window ) ) {
 		iterates.
 		This is often referred to as <i>frames per second</i> or FPS. You may find that the inverse, <i>milliseconds per
 			frame</i>,
-		is more intuitive for measuring the performance of your program. We can work these numbers out and write the result
+		is more intuitive for measuring the performance of your program. We can work these numbers out and write the
+		result
 		into the
 		title bar of the window.
 	</p>
@@ -276,7 +282,8 @@ while ( !glfwWindowShouldClose( window ) ) {
 			previous time <tt>prev_s</tt>.</li>
 		<li>Update the previous time with the current time, so that this works in the next frame too.</li>
 		<li>Work out the FPS as <tt>1.0 / elapsed_s</tt>, being careful never to divide by zero.</li>
-		<li>Because updating the FPS text every frame will flicker too much, reduce the updates to e.g. every 0.1s or so, by
+		<li>Because updating the FPS text every frame will flicker too much, reduce the updates to e.g. every 0.1s or
+			so, by
 			using a countdown timer.</li>
 		<li>Note that I initialise the previous time variable to GLFW's time value, and not zero.</li>
 	</ul>
@@ -291,16 +298,37 @@ while ( !glfwWindowShouldClose( window ) ) {
 		put the frame time in milliseconds next to, or instead of, the frames per second count.
 	</p>
 
+	<p>You might notice that your frame rate is more or less exactly tied to your monitor's refresh rate e.g. 60 FPS or
+		120 FPS.
+		What's happening here is that, at the end of your drawing loop, the <tt>glfwSwapBuffers()</tt> call is waiting
+		until
+		your monitor is ready to refresh before swapping its <i>back buffer</i>, the hidden 2D image that we draw our
+		triangle to,
+		with the visible <i>front buffer</i>, which we see displayed in our window. The delay is to prevent any visible
+		<i>tearing</i>
+		of the display while the swap is happening. When you're analysing the performance of your program, or want to
+		minimise latency
+		at the cost of visual quality, then you can disable this by calling <tt>glfwSwapInterval( int interval )</tt>,
+		where the parameter
+		is the number of screen updates to wait for before swapping the buffers.
+
+	<pre>
+	glfwSwapInterval( 0 ); // The value of 0 means "swap immediately".
+	glfwSwapInterval( 1 ); // Lock to normal refresh rate for your monitor.</pre>
+
 	<p>
 		Keep in mind that the frame rate is not an objective measure of how fast your
-		code is. You can't display faster than the refresh rate of your monitor (e.g. 60 Hz or 60 FPS).
+		code is. You can run, but can't display, faster than the refresh rate of your monitor (e.g. 60 Hz or 60 FPS).
 		Rendering at 200 Hz is therefore not beneficial in the same way as it would be
-		to e.g. game logic, which could make use of more time steps per second (more detailed
-		movement paths and stuff). Fast GPU clocks will give you huge numbers when
+		to e.g. game logic, which could make use of more time steps per second - more detailed
+		movement paths and stuff. Fast GPU clocks will give you huge numbers when
 		drawing nothing. This doesn't really
 		mean anything that you can compare against until you start drawing a more involved scene.
+	</p>
+
+	<p>
 		Measuring frame rate or time is useful when optimising more complex scenes. If you are drawing at
-		30 FPS in a game with fast-moving animations it will be noticeably bad, but it
+		30 FPS in a game with fast-moving animations it will be noticeably jerky looking, but it
 		might be okay in an animated chess game. You can use the FPS counter to
 		improve rendering techniques to get it back to whatever your program's
 		reasonable level is. Remember that frame rate is
@@ -312,12 +340,14 @@ while ( !glfwWindowShouldClose( window ) ) {
 	<h2>Shader Error Logs</h2>
 
 	<p>
-		It's easy to make mistakes writing shader programs. It's a good first step to start collecting, and printing errors
+		It's easy to make mistakes writing shader programs. It's a good first step to start collecting, and printing
+		errors
 		when they
 		aren't working. We skipped this in Hello Triangle to keep the code shorter, but let's add it now.
 		After each call to <tt>glCompileShader()</tt>, we have 2 of them, we can check for compilation errors using
 		<tt>glGetShaderiv()</tt>.
-		If we find there are errors, we can print the compilation log with <tt>glGetShaderInfoLog()</tt>, which should tell
+		If we find there are errors, we can print the compilation log with <tt>glGetShaderInfoLog()</tt>, which should
+		tell
 		us what the error is, and
 		what line number of the shader the error was on.
 	</p>
@@ -344,14 +374,16 @@ if ( GL_TRUE != params ) {
 // Repeat the above check for the fragment shader next.</pre>
 
 	<p>
-		After adding that check for both your shaders, try deliberately making a typo in your shader code. Run your program,
+		After adding that check for both your shaders, try deliberately making a typo in your shader code. Run your
+		program,
 		and you should
 		get a much more useful compiler printout of what your bug is, and which line of the shader it's on.
 	</p>
 
 	<p>
 		Errors can also occur in the linking stage. This won't affect us until we have more complex shaders,
-		but we will see in the next article that it's possible to output a variable from your vertex shader to your fragment shader.
+		but we will see in the next article that it's possible to output a variable from your vertex shader to your
+		fragment shader.
 		If the output/input data types don't match we'll get a linker error that this check will catch.
 		We can put this check in now too. It goes after our call to <tt>glLinkProgram()</tt>.
 	</p>
@@ -380,16 +412,42 @@ if ( GL_TRUE != params ) {
 		shaders. My advice is to try to keep this very simple - really just 1 or 2 small functions.
 	</p>
 
+	<h2>Cleaning Up</h2>
+
+	<p>
+		When we called <tt>glfwTerminate()</tt> it cleaned up all the resources we created in our Hello Triangle demo.
+		But, what if we are creating a larger program and want to clean up as we go to make space for other resources?
+	</p>
+
+	<ul>
+		<li>After linking a shader program with <tt>glLinkProgram()</tt> you can actually delete both of the compiled
+			shaders; the program will still work. Call <tt>glDeleteShader();</tt> for your vertex shader, and fragment
+			shader.</li>
+		<li>If you wish to delete a shader program call <tt>glDeleteProgram()</tt>. You might want to do this if you
+			wish to live edit, and recreate your shaders interactively while your program is still running. This is
+			really handy while you are learning about shaders later. See my article on <a
+				href="https://antongerdelan.net/opengl/shader_hot_reload.html">Hot Reloading Shaders</a>.</li>
+		<li>You can delete a <i>vertex array object</i> with <tt>glDeleteVertexArrays( 1, &vao )</tt>. The first
+			parameter of value 1 is because the function can also delete an array of VAOs. Note that this does not
+			delete the <i>vertex buffer object</i> with the actual vertex values.</li>
+		<li>Our vertex buffer can be deleted with <tt>glDeleteBuffers( 1, &vbo )</tt>, in a similar style to the vertex
+			arrays function, above.</li>
+	</ul>
+
+
 	<h2>Extending Further</h2>
 
 	<p>
-		We will look at shaders in more detail in the next article, so our extra error logs will come in really handy. We've started to
+		We will look at shaders in more detail in the next article, so our extra error logs will come in really handy.
+		We've started to
 		get some insight into how OpenGL works, and how to debug some issues.
 	</p>
 
-	<p>For a really insightful look at what the state machine is doing, the <a href="https://renderdoc.org/">RenderDoc</a>
+	<p>For a really insightful look at what the state machine is doing, the <a
+			href="https://renderdoc.org/">RenderDoc</a>
 		tool
-		is a fantastic debugging companion to application development. It might not be clear what it's doing just yet, but
+		is a fantastic debugging companion to application development. It might not be clear what it's doing just yet,
+		but
 		when we look at the
 		different hardware and shader pipeline stages it will become very useful.
 	</p>
@@ -398,16 +456,19 @@ if ( GL_TRUE != params ) {
 
 	<ul>
 		<li>If you're
-			loading shaders from files it makes sense to read them in binary mode with <tt>fread()</tt> to avoid issues with
+			loading shaders from files it makes sense to read them in binary mode with <tt>fread()</tt> to avoid issues
+			with
 			line endings.</li>
 		<li>
-			Remember to link OpenGL, glfw, and Glad. My link path looks like this on Windows, using GCC on the command-line:
+			Remember to link OpenGL, glfw, and Glad. My link path looks like this on Windows, using GCC on the
+			command-line:
 			<tt>gcc -o b.exe -D GLFW_DLL main2.c glad/src/gl.c libglfw3dll.a -I ./glad/include/ -I ./glfw/include -L ./
 				-lglfw3 -lopengl32 -lgdi32</tt>
 		</li>
 
 		<li>
-			Remember to initialise GLFW first, then do any window hints, before creating the window and setting the context.
+			Remember to initialise GLFW first, then do any window hints, before creating the window and setting the
+			context.
 			Then start Glad, then start the drawing loop.
 		</li>
 
@@ -417,7 +478,8 @@ if ( GL_TRUE != params ) {
 		<li>
 			Read through the documentation for each GLFW function, and OpenGL function that you use. The parameters are
 			tricky, and you
-			will miss lots of the useful hints and features if you skip doing this. GLFW has excellent online documentation.
+			will miss lots of the useful hints and features if you skip doing this. GLFW has excellent online
+			documentation.
 			OpenGL has a specification document, which is more of a reference,
 			some Quick Reference Cards, which are quite useful overviews of available functions, and some HTML API
 			documentation. A better formatting of the API documentation is
