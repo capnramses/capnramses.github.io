@@ -437,7 +437,7 @@ glFrontFace(GL_CW); // GL_CCW for counter clock-wise
 
 <div class="hint">
 In most scenes we will have more complex geometry where triangles overlap.
-To get these to draw in the correct order OpenGL uses a <i>depth buffer</i>.
+To get these to draw in the correct order based on distance from viewpoint (depth) OpenGL uses a <i>depth buffer</i>.
 You would typically also enable that here where you enable other states.
 Sensible defaults are set by:<br />
 <tt>glDepthFunc( GL_LESS );</tt><br />
