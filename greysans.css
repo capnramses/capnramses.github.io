@@ -69,6 +69,19 @@ pre {
 	word-wrap: break-word;
 	padding: 0.3em 0.3em 0.3em 0.1em;
 }
+div.hint {
+	line-height: 1.2;
+	background-color: rgb(255, 216, 172);
+	border: 1px solid #ddd;
+	border-left: 3px solid #383838;
+	tab-size: 2;
+	page-break-inside: avoid;
+	max-width: 100%;
+	overflow: auto;
+	display: block;
+	word-wrap: break-word;
+	padding: 0.3em 0.3em 0.3em 0.1em;
+}
 img {
 	max-width: 100%;
 }
@@ -108,6 +121,10 @@ table.compact {
 table.compact td, table.compact th {
 	border: 0px solid #FFFFFF;
 	padding: 1px 1px;
+}
+
+table td, table th {
+	padding: 1px 10px;
 }
 
 table.compact td {
