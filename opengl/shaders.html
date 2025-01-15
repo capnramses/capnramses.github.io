@@ -15,32 +15,65 @@
 	<p><a href="index.html">[index]</a></p>
 
 	<h1>OpenGL 4 Shaders</h1>
-	<h4>Anton Gerdelan. Last edited: 12 Jan 2025</h4>
+	<h4>Anton Gerdelan. Last edited: 15 Jan 2025</h4>
 
 	<p>
-		Shaders tell OpenGL <u>how</u> to draw, but we don't have anything to draw yet - we will
-		cover that in the vertex buffers article. If you would rather skip the introduction, you
-		can jump straight to the <a href="#example_shaders">Example Shaders</a> and get them
-		loaded into GL with the <a href="#minimal_example">Minimal C Code</a>.
+		Shaders tell OpenGL <i>how</i> to draw, and we have a lot of creative opportunity to do interesting effects.
+		We'll cover the <i>what</i> to draw, the geometry, in more detail in the following article.
 	</p>
 
 	<h2>Overview</h2>
 
 	<p>
-		Shaders are mini-programs that define a <b>style</b> of rendering. They are compiled
-		to run on the specialised GPU (graphics processing unit). The GPU has lots of
-		"cores" specialised for floating-point operations.
-		Each rendering stage can be split into many separate calculations - with one calculation
-		done on each GPU processor; transform each vertex,
-		colour each tiny square separately, etc. This means that we can compute a lot of the
-		rendering in parallel - which makes it much faster than doing it with a CPU-based
-		<b>software renderer</b> where we only have 1-8 processors (in the graphics world, "hardware" implies the graphics
-		adapter).
-		Example:
+		Shaders are mini-programs that define a <i>style</i> of rendering. They are compiled, by a special shader
+		compiler,
+		and run on the specialised GPU (graphics processing unit). The GPU is built to do lots of floating point
+		operations in parallel (at once).
+		Many more than your CPU (central processing unit) can.
+		You should look up the statistics for your particular GPU's float32 operations per second (flop/s),
+		and compare that to your particular CPU model's flop/s to get a rough idea.
+		Many of the tasks in computer graphics fall into the category of "<i>embarrassingly parallel</i>" problems:
 	</p>
 
+	<ul>
+		<li>Setting the position in our scene for each vertex point in a 3D shape. We do this with a vertex shader.</li>
+		<li>Setting the colour of each pixel-sized piece of shapes we render. We do this in a fragment shader.</li>
+		<li>Casting and reflecting each ray of light in a <i>ray-traced</i> scene. It's possible to do this, for
+			example, in a fragment shader.</li>
+		<li>Calculating the physics of individual particles in e.g. a fluid simulation. It's possible to do this using
+			another type of shader called a <i>compute shader</i>.</li>
+		<li>And many other tasks.</li>
+	</ul>
+
+	<p>
+		It's also convenient to make use of lots of floating point numbers in these calculations. We can use them for
+		positions in 3D,
+		for the values of colours, for timers, and lots of in-between variables we make up ourselves like the intensity
+		of lights in our scenes.
+		You can see how the GPU hardware is going to be really useful here. Because the GPU can process many floating
+		point instructions at once, you can guess why our shaders
+		are designed to operate on only one item { vertex, fragment, etc. }, and not loop over all of them. We're
+		trying to make the most use of the GPU's highly parallel architecture,
+		and run as many things at once as we can. Thus, each vertex we position will invoke another vertex shader,
+		each fragment will invoke another of our fragment shaders, and the GPU can schedule as much as possible to run
+		in parallel.
+	</p>
+
+	<div class="hint">
+		We don't need to know the details of GPU hardware architecture to start writing shaders
+		for OpenGL, but as an aside, here's an overview. Note that terms for each part differ by manufacturer.
+		A GPU has a block of processing cores. These aren't really equivalent to your CPU's cores.
+		Each core has a hierarchical organisation, comprising groups of <i>shader cores</i>,
+		and possibly also specialised cores for AI and ray tracing. The shader cores, in turn, contain groups of
+		<i>threads</i>
+		that execute the instructions from your shaders. Each thread group is called a
+		<i>warp</i>, or <i>wavefront</i>.
+		There are usually 32 or 64 threads in a warp. A warp runs the same instruction over all 32 threads,
+		and each can use different data. This is called SIMD (single instruction, multiple data).
+	</div>
+
 	<div class="centre">
-		<img src="images/shaders_2016_redo_512.png" /><br />
+		<img src="images/shaders_2025_redo_512.png" /><br />
 		<small><i>Common drawing operations such as transforming each vertex and
 				colouring each fragment can be done independently. We write a shader (mini program) to
 				compute these operations, and the GPU's highly parallel architecture will
@@ -69,11 +102,17 @@
 		A complete shader program comprises a set of separate shader
 		(mini-programs) - one to control each stage. Each mini-program - called a <tt><b>shader</b></tt>
 		by OpenGL - is compiled, and the whole set are linked together to form the executable
-		shader program - called a <tt><b>program</b></tt> by OpenGL. Yes, that's the worst
-		naming convention ever. If you look at the Quick
+		shader program - called a <tt>program</tt> by OpenGL. Yes, that's confusing! If you look at the Quick
 		Reference Card (or further down the page) you can see that the API differentiates
-		functions into <tt>glShader</tt> and <tt>glProgram</tt> (note US spelling of "program").
+		functions into <tt>glShader</tt> and <tt>glProgram</tt>.
 	</p>
+
+	
+	<div class="hint">
+		Note that there is a distinction between a shader, indicated by white boxes in the pipeline image, above, which is a mini-program for just
+		one stage in the hardware pipeline, and a shader program, which is a GPU program
+		that comprises several shaders that have been linked together.
+	</div>
 
 	<p>
 		Each individual shader has a different job. At minimum, we usually have 1
@@ -94,32 +133,24 @@
 	<table>
 		<caption><b>Comparison of Selected OpenGL4-Capable GPUs</b></caption>
 		<tr>
-			<td><b>GPU type</b></td>
-			<td><b>GPU cores</b></td>
+			<th>Release Date</th>
+			<th>GPU type</th>
+			<th>GPU cores / shading units</th>
 		</tr>
 		<tr>
-			<td>GeForce 605</td>
-			<td>48</td>
+			<td>2017</td>
+			<td>GeForce GTX 1080 Ti</td>
+			<td>3584</td>
 		</tr>
 		<tr>
-			<td>Radeon HD 7350</td>
-			<td>80</td>
+			<td>2022</td>
+			<td>Radeon RX 7900 XTX</td>
+			<td>6144</td>
 		</tr>
 		<tr>
-			<td>GeForce GTX 580</td>
-			<td>512</td>
-		</tr>
-		<tr>
-			<td>Radeon HD 8750</td>
-			<td>768</td>
-		</tr>
-		<tr>
-			<td>GeForce GTX 690</td>
-			<td>1536</td>
-		</tr>
-		<tr>
-			<td>Radeon HD 8990</td>
-			<td>2304</td>
+			<td>2022</td>
+			<td>GeForce RTX 4090</td>
+			<td>16384</td>
 		</tr>
 	</table>
 
@@ -127,10 +158,20 @@
 		Because there is a lot of variation in user GPU hardware, we can only make very general
 		assumptions about the ideal number of vertices or facets each mesh should have for
 		best performance. Because we only draw one mesh at a time, keeping the number of
-		<u>separate meshes drawn</u> per-scene to a low-ish level is more beneficial
+		<u>separate meshes drawn</u> per-scene to a low-ish level is often beneficial
 		(reducing the <b>batch count</b> <i>per</i> rendered frame) - the idea is to keep as
 		many of the processors in use at once as possible.
 	</p>
+
+
+	<div class="hint">
+GPUs don't use <i>branch prediction</i> optimisations like a CPU does. Things like if-statements introduce branching.
+In SIMD architectures the GPU might have to execute <i>both</i> paths of an if-else condition, one after the other in sequence.
+This could also leave some threads idle. That would essentially make your shader take longer to render, and might mean your
+rendering performs worse. The advice would generally be to use branching sparingly in shaders.
+GPUs since about 2016 use newer SIMT (single instruction multiple thread) architecture which can improve branching performance.
+So, the advice might be, don't be scared to use branching, but if you want to improve performance, try removing some, and check the
+difference on a couple of different machines.</div>
 
 	<h2>Difference Between Fragments and Pixels</h2>
 
@@ -163,9 +204,7 @@
 		shader should start with the simplified version tag:
 	</p>
 
-	<p><tt>
-			#version 400
-		</tt></p>
+	<p><tt>#version 410 core</tt></p>
 
 	<p>
 		The different version tags are:
@@ -174,9 +213,9 @@
 	<table>
 		<caption><b>Version Tags for OpenGL and GLSL Versions</b></caption>
 		<tr>
-			<td><b>OpenGL Version</b></td>
-			<td><b>GLSL Version</b></td>
-			<td><b><tt>#version</tt> tag</b></td>
+			<th>OpenGL Version</th>
+			<th>GLSL Version</th>
+			<th><tt>#version</tt> tag</th>
 		</tr>
 		<tr>
 			<td>1.2</td>
@@ -225,13 +264,28 @@
 		</tr>
 		<tr>
 			<td>4.2</td>
-			<td>4.20.6</td>
+			<td>4.20.11</td>
 			<td>420</td>
 		</tr>
 		<tr>
 			<td>4.3</td>
-			<td>4.30.6</td>
+			<td>4.30.8</td>
 			<td>430</td>
+		</tr>
+		<tr>
+			<td>4.4</td>
+			<td>4.40.9</td>
+			<td>430</td>
+		</tr>
+		<tr>
+			<td>4.5</td>
+			<td>4.50.7</td>
+			<td>450</td>
+		</tr>
+		<tr>
+			<td>4.6</td>
+			<td>4.60.5</td>
+			<td>460</td>
 		</tr>
 	</table>
 
@@ -372,20 +426,20 @@
 	<h3>Vertex Shader</h3>
 
 	<p>
-		The vertex shader is responsible for transforming vertex positions into clip space. It
+		The vertex shader is responsible for transforming vertex positions into a final position in our viewing area called <i>clip space</i>. It
 		can also be used to send data from the vertex buffer to fragment shaders. This vertex
 		shader does nothing, except take in vertex positions that are already in clip space, and
 		output them as final clip-space positions. We can write this into a plain text file
-		called: <tt>test_vs.glsl</tt>.
+		called: <tt>test_vs.vert</tt>.
 	</p>
 
 	<pre>
-#version 420
+#version 410 core
 
 in vec3 vertex_position;
 
 void main() {
-  gl_Position = vec4(vertex_position, 1.0);
+  gl_Position = vec4( vertex_position, 1.0 );
 }</pre>
 
 	<p>
@@ -393,33 +447,33 @@ void main() {
 	</p>
 	<ul>
 		<li><tt>vec3</tt> is a 3D vector that can be used to store positions, directions, or colours.</li>
-		<li><tt>vec4</tt> is the same but has a fourth component which, in this variable, is used
-			to determine perspective. We will examine this in the <a href="virtualcamera">virtual
+		<li><tt>vec4</tt> is the same but has a fourth component which, in the <tt>gl_Position</tt> variable, is used
+			to represent perspective. We will examine this in the <a href="virtualcamera">virtual
 				camera</a> article, but for now we can leave it at 1.0, which means "don't calculate any
 			perspective".</li>
 	</ul>
 
 	<p>
-		We can also see the <tt><b>in</b></tt> key-word for input to the program from the
-		previous stage. In this case the <tt>vertex_position_local</tt> is one of the vertex
-		points from the object that we are drawing. GLSL also has an <tt><b>out</b></tt> key-word for
-		sending a variable to the next stage.
+		We can also see the <tt>in</tt> key-word for input to the program from the
+		previous stage. In this case the <tt>vertex_position</tt> is one of the vertex
+		points from the object that we are drawing. GLSL also has an <tt>out</tt> key-word for
+		sending a variable to the next shader stage in the pipeline.
 	</p>
 
 	<p>
-		The entry point to every shader is a <tt><b>void main()</b></tt> function.
+		The entry point to every shader is a <tt>void main()</tt> function.
 	</p>
 
 	<p>
-		The <tt><b>gl_Position</b></tt> variable is a built-in GLSL variable used to set the
-		final <b>clip-space</b> position of each vertex.
+		The <tt>gl_Position</tt> variable is a built-in GLSL variable used to set the
+		final <b>clip-space</b> position of each vertex. We are required to set the value of this variable in the vertex shader.
 	</p>
 
 	<p>
 		The input to a vertex buffer (the <tt>in</tt> variables) are called per-vertex
-		<b>attributes</b>, and come from blocks of memory on
-		the graphics hardware memory called <b>vertex buffers</b>. We usually copy our vertex
-		positions into vertex buffers before running our main loop. We will look at vertex
+		<i>attributes</i>, and come from blocks of memory on
+		the graphics hardware memory called <i>vertex buffers</i>. We usually copy our vertex
+		positions into vertex buffers in our C program, before running our main loop. We will look at vertex
 		buffers in the next tutorial. This vertex shader will run one instance for every vertex
 		in the vertex buffer.
 	</p>
@@ -430,44 +484,43 @@ void main() {
 		Once all of the vertex shaders have computed the position of every vertex in clip space,
 		then the fragment shader is run once for every pixel-sized space (fragment) between
 		vertices. The fragment shader is responsible for setting the colour of each fragment.
-		Write a new plain-text file: <tt>test_fs.glsl</tt>.
+		Write a new plain-text file: <tt>test_fs.frag</tt>.
 	</p>
 
 	<pre>
-#version 420
+#version 410 core
 
-uniform vec4 inputColour;
-out vec4 fragColour;
+uniform vec4 input_colour;
+out vec4 frag_colour;
 
 void main() {
-  fragColour = inputColour;
+	frag_colour = input_colour;
 }</pre>
 
 	<p>
-		The <tt><b>uniform</b></tt> key-word says that we are sending in a variable to the
+		The <tt>uniform</tt> key-word says that we are sending in a variable to the
 		shader program from the CPU. This variable is global to all shaders within the
 		program, so we could also access it in the vertex shader if we wanted to.
 	</p>
+
+	<div class="hint">Uniforms in GLSL are actually constants in our shaders, meaning we can read, but not change the values.
+In the Direct3D API these are actually named <i>constants</i>.
+	</div>
 
 	<p>
 		The hardware pipeline knows that the first <tt>vec4</tt> it gets as output from the
 		fragment shader should be the colour of the fragment. The colours are <b>rgba</b>, or
 		red, green, blue, alpha. The values of each component are floats between 0.0 and 1.0,
 		(not between 0 and 255). The alpha channel output can be used for a variety of effects,
-		which you define by setting a <b>blend mode</b> in OpenGL. It is commonly used to
-		indicate opacity (for transparent effects), but by default it does nothing.
+		which you define by setting a <i>blend mode</i> in OpenGL. It is commonly used to
+		indicate opacity (for a transparent, or colour-blending effect), but by default it does nothing.
 	</p>
 
 	<h2 id="minimal_example">Minimal C Code</h2>
 
-	<p>
-		Note that there is a distinction between a shader, which is a mini-program for just
-		one stage in the hardware pipeline, and a shader program which is a GPU program
-		that comprises several shaders that have been linked together.
-	</p>
 
 	<p>
-		To get shaders up and running quickly you can bang this into a minimal GL program:
+		To get shaders up and running quickly you can bang this into a minimal OpenGL program:
 	</p>
 
 	<ol>
@@ -478,17 +531,22 @@ void main() {
 		<li>call <tt>glCreateProgram</tt> to create an index to a new program</li>
 		<li>call <tt>glAttachShader</tt> twice, to attach both shader indices to the program</li>
 		<li>call <tt>glLinkProgram</tt></li>
-		<li>call <tt>glGetUniformLocation</tt> to get the unique location of the variable called "<tt>inputColour</tt>"</li>
+		<li>call <tt>glGetUniformLocation</tt> to get the unique location of the variable called "<tt>inputColour</tt>"
+		</li>
 		<li>call <tt>glUseProgram</tt> to switch to your shader before calling...
 		<li><tt>glUniform4f(location, r,g,b,a)</tt> to assign an initial colour to your fragment shader (e.g.
-			<tt>glUniform4f(colour_loc, 1.0f, 0.0f, 0.0f, 1.0f)</tt> for red)</li>
+			<tt>glUniform4f(colour_loc, 1.0f, 0.0f, 0.0f, 1.0f)</tt> for red)
+		</li>
 	</ol>
 
 	<p>
-		The only variables that you need to keep track of are the index created by <tt>glCreateProgram</tt>, and any uniform
+		The only variables that you need to keep track of are the index created by <tt>glCreateProgram</tt>, and any
+		uniform
 		locations.
-		Now we are ready to draw - we will look at drawing geometry with <tt><b>glDrawArrays</b></tt> in the next tutorial.
-		To set or change uniform variables you can use the various <tt>glUniform</tt> functions, but they <u>only affect the
+		Now we are ready to draw - we will look at drawing geometry with <tt><b>glDrawArrays</b></tt> in the next
+		tutorial.
+		To set or change uniform variables you can use the various <tt>glUniform</tt> functions, but they <u>only affect
+			the
 			shader program
 			that has been switched to with <tt>glUseProgram</tt></u>.
 	</p>
@@ -541,7 +599,8 @@ void main() {
 		</tr>
 		<tr>
 			<td><tt>glCreateProgram()</tt></td>
-			<td>create a variable for storing a combined shader program in OpenGL. returns <tt>unsigned int</tt> index to
+			<td>create a variable for storing a combined shader program in OpenGL. returns <tt>unsigned int</tt> index
+				to
 				it.</td>
 		</tr>
 		<tr>
@@ -587,7 +646,8 @@ void main() {
 		</tr>
 		<tr>
 			<td><tt>glUniform{1234}{ifd}()</tt></td>
-			<td>set the value of a uniform variable of a given shader (function name varies by dimensionality and data type)
+			<td>set the value of a uniform variable of a given shader (function name varies by dimensionality and data
+				type)
 			</td>
 		</tr>
 		<tr>
@@ -618,7 +678,7 @@ glCompileShader(shader_index);
 int params = -1;
 glGetShaderiv(shader_index, GL_COMPILE_STATUS, &amp;params);
 if (GL_TRUE != params) {
-  fprintf(stderr, "ERROR: GL shader index %i did not compile\n", shader_index);
+  fprintf(stderr, "ERROR: OpenGL shader index %i did not compile\n", shader_index);
   _print_shader_info_log(shader_index);
   return false; // or exit or something
 }</pre>
@@ -636,7 +696,7 @@ void _print_shader_info_log(GLuint shader_index) {
   int actual_length = 0;
   char shader_log[2048];
   glGetShaderInfoLog(shader_index, max_length, &amp;actual_length, shader_log);
-  printf("shader info log for GL index %u:\n%s\n", shader_index, shader_log);
+  printf("shader info log for OpenGL index %u:\n%s\n", shader_index, shader_log);
 }</pre>
 
 	<p>This is the most useful shader debugging function; it will tell you which line in
@@ -652,7 +712,7 @@ int params = -1;
 glGetProgramiv(program, GL_LINK_STATUS, &amp;params);
 if (GL_TRUE != params) {
   fprintf(stderr,
-    "ERROR: could not link shader program GL index %u\n",
+    "ERROR: could not link shader program OpenGL index %u\n",
     program);
   _print_program_info_log(program);
   return false;
@@ -671,7 +731,7 @@ void _print_program_info_log(GLuint program) {
   int actual_length = 0;
   char program_log[2048];
   glGetProgramInfoLog(program, max_length, &amp;actual_length, program_log);
-  printf("program info log for GL index %u:\n%s", program, program_log);
+  printf("program info log for OpenGL index %u:\n%s", program, program_log);
 }</pre>
 
 	<p>
@@ -771,7 +831,7 @@ void print_all(GLuint program) {
 		The interesting thing here are the printing of the attribute and uniform "locations".
 		Sometimes uniforms or attributes are themselves arrays of variables - when this happens
 		<tt>size</tt> is > 1, and I loop through and print each index' location separately. I
-		also have a home-made function for printing the GL data type as a string (normally it
+		also have a home-made function for printing the OpenGL data type as a string (normally it
 		is an enum which doesn't look very meaningful when printed as an integer) - see next
 		section.
 	</p>
@@ -779,7 +839,7 @@ void print_all(GLuint program) {
 	<h3>GLenum Data Type to C String</h3>
 
 	<p>
-		This function converts a GL enumerated data type to a C string (for readable printing).
+		This function converts a OpenGL enumerated data type to a C string (for readable printing).
 	</p>
 
 	<pre>
