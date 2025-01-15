@@ -4,16 +4,12 @@
 <head>
 	<title>Vertex Buffer Objects - Anton's OpenGL 4 Tutorials</title>
 	<link rel="stylesheet" type="text/css" href="../greysans.css">
-	<!--
-		<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro&display=swap" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
-	-->
 </head>
 
 <body>
 	<p><a href="index.html">[index]</a></p>
 	<h1>Vertex Buffer Objects</h1>
-	<h4>Anton Gerdelan. Last Updated 2 October 2016</h4>
+	<h4>Anton Gerdelan. Last Updated 15 Jan 2025</h4>
 
 	<p>
 		A vertex buffer object (VBO) is nothing fancy - it's just an array of data
@@ -242,35 +238,35 @@ glEnableVertexAttribArray(1);
 		attribute pointers, earlier.
 	</p>
 
-	<hr>
-
-	<p>
-		<b><i>A little aside about this...</i></b><br />
-		Other GL incarnations don't have vertex array objects, and need to
-		explicitly enable and disable the attributes every time a new type of object is
-		drawn, which changes the enabled attributes <u>globally</u> in the state
+	<div class="hint">
+		A little aside about this...
+		Earlier OpenGL versions don't have vertex array objects, and need to
+		explicitly enable and disable the vertex attributes, bind buffers, and set vertex attribute data pointers,
+		every time geometry is drawn, which changes these bindings <u>globally</u> in the state
 		machine. We don't need to worry about that in OpenGL 4; <b>the vertex attribute
-			object will remember its enabled attributes.</b> i.e. they are no longer global
-		states. This isn't clear in the official documentation, nor is it
-		explained properly in other tutorials - it's very easy to get a false-positive
-		misunderstanding of how these things work and run into hair-pulling problems
-		later when you're trying to draw 2 different shapes. I actually figured this
-		out by <u>writing a programme that used the scientific method</u> to try and
-		falsify (break in every conceivable way) my theory for how the logic of
-		attribute enabling worked; if I'd just tried it until it worked (deduction) then
-		I'd have been wrong! Well...I just don't know what to say...the bind/enable
-		design is not a good one.
-	</p>
-
-	<hr>
+			object will remember its enabled attributes, and attribute pointers into buffers.</b> i.e. they are no longer global
+		states. This is the part of the OpenGL API that confuses most people.
+		The naming conventions used here by OpenGL certainly do not help clarify things.
+		</div>
 
 	<p>
 		If you forget to enable an attribute, the shader won't know where to read the data from
 		and you'll get weird results e.g. black colours. I believe attribute 0 is enabled by
 		default, but the second attribute that we added will not be. This process is a bit
-		excessive, and I feel should really be handled internally by OpenGL, but in this version
+		excessive, and I feel should really be handled differently by OpenGL, but in this version
 		we still need to do it.
 	</p>
+
+
+	<div class="hint">
+		A lot of OpenGL programmers extremely dislike the vertex array object concept,
+		and just use one in their program, always bound globally.
+		They then bind vertex buffers and attribute layouts each time they draw something, as if
+		they were using an older version of OpenGL.
+
+		</div>
+
+
 
 	<h3>Modify the Vertex Shader</h3>
 
@@ -442,9 +438,9 @@ glFrontFace(GL_CW); // GL_CCW for counter clock-wise
 <div class="hint">
 In most scenes we will have more complex geometry where triangles overlap.
 To get these to draw in the correct order OpenGL uses a <i>depth buffer</i>.
-You would typically enable that here where you enable other states.
-Sensible defaults are:
-<tt>glDepthFunc( GL_LESS );</tt>
+You would typically also enable that here where you enable other states.
+Sensible defaults are set by:<br />
+<tt>glDepthFunc( GL_LESS );</tt><br />
 <tt>glEnable( GL_DEPTH_TEST );</tt>
 </div>
 
