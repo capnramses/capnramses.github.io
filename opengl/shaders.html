@@ -107,9 +107,10 @@
 		functions into <tt>glShader</tt> and <tt>glProgram</tt>.
 	</p>
 
-	
+
 	<div class="hint">
-		Note that there is a distinction between a shader, indicated by white boxes in the pipeline image, above, which is a mini-program for just
+		Note that there is a distinction between a shader, indicated by white boxes in the pipeline image, above, which
+		is a mini-program for just
 		one stage in the hardware pipeline, and a shader program, which is a GPU program
 		that comprises several shaders that have been linked together.
 	</div>
@@ -165,13 +166,18 @@
 
 
 	<div class="hint">
-GPUs don't use <i>branch prediction</i> optimisations like a CPU does. Things like if-statements introduce branching.
-In SIMD architectures the GPU might have to execute <i>both</i> paths of an if-else condition, one after the other in sequence.
-This could also leave some threads idle. That would essentially make your shader take longer to render, and might mean your
-rendering performs worse. The advice would generally be to use branching sparingly in shaders.
-GPUs since about 2016 use newer SIMT (single instruction multiple thread) architecture which can improve branching performance.
-So, the advice might be, don't be scared to use branching, but if you want to improve performance, try removing some, and check the
-difference on a couple of different machines.</div>
+		GPUs don't use <i>branch prediction</i> optimisations like a CPU does. Things like if-statements introduce
+		branching.
+		In SIMD architectures the GPU might have to execute <i>both</i> paths of an if-else condition, one after the
+		other in sequence.
+		This could also leave some threads idle. That would essentially make your shader take longer to render, and
+		might mean your
+		rendering performs worse. The advice would generally be to use branching sparingly in shaders.
+		GPUs since about 2016 use newer SIMT (single instruction multiple thread) architecture which can improve
+		branching performance.
+		So, the advice might be, don't be scared to use branching, but if you want to improve performance, try removing
+		some, and check the
+		difference on a couple of different machines.</div>
 
 	<h2>Difference Between Fragments and Pixels</h2>
 
@@ -426,7 +432,8 @@ difference on a couple of different machines.</div>
 	<h3>Vertex Shader</h3>
 
 	<p>
-		The vertex shader is responsible for transforming vertex positions into a final position in our viewing area called <i>clip space</i>. It
+		The vertex shader is responsible for transforming vertex positions into a final position in our viewing area
+		called <i>clip space</i>. It
 		can also be used to send data from the vertex buffer to fragment shaders. This vertex
 		shader does nothing, except take in vertex positions that are already in clip space, and
 		output them as final clip-space positions. We can write this into a plain text file
@@ -466,7 +473,8 @@ void main() {
 
 	<p>
 		The <tt>gl_Position</tt> variable is a built-in GLSL variable used to set the
-		final <b>clip-space</b> position of each vertex. We are required to set the value of this variable in the vertex shader.
+		final <b>clip-space</b> position of each vertex. We are required to set the value of this variable in the vertex
+		shader.
 	</p>
 
 	<p>
@@ -503,8 +511,9 @@ void main() {
 		program, so we could also access it in the vertex shader if we wanted to.
 	</p>
 
-	<div class="hint">Uniforms in GLSL are actually constants in our shaders, meaning we can read, but not change the values.
-In the Direct3D API these are actually named <i>constants</i>.
+	<div class="hint">Uniforms in GLSL are actually constants in our shaders, meaning we can read, but not change the
+		values.
+		In the Direct3D API these are actually named <i>constants</i>.
 	</div>
 
 	<p>
@@ -894,66 +903,36 @@ bool is_valid(GLuint program) {
 
 	<ul>
 		<li>
-			All uniform variables are intitialised to 0 when a program links, so you only need to
-			initialise them if the initial value should be something else. Example: you might want to set
-			matrices to the identity matrix, rather than a zeroed matrix.
-		</li>
-		<li>
-			Calling <tt>glUniform</tt> is quite expensive during run-time. Structure your program
-			so that <tt>glUniform</tt> is only called when the value needs to change. This might be
-			the case every time that you draw a new object (e.g. its position might be different),
-			but some uniforms may not change often (e.g. projection matrix).
-		</li>
-		<li>
-			Calling <tt>glGetUniformLocation</tt> during run-time can be expensive. It is best to
-			do this during intialisation of the component that updates the uniform e.g. the virtual
-			camera for the projection and view matrices, or a renderable object in the scene for
-			the model matrix. Store the uniform locations once, then call <tt>glUniform</tt> as
-			needed, rather than updating everything every frame.
+			All uniform variables are intitialised to 0 when a program links. If you are wondering why your
+			triangle is black, for example, it could be that the colour isn't being sent to the uniform correctly,
+			and it's using values of 0 instead, which means black as a colour.
+			This is quite a common bug.
 		</li>
 		<li>
 			When calling <tt>glGetUniformLocation</tt>, it returns -1 if the uniform
 			variable wasn't found to be active. You can check for this. Usually it means
-			that either you've made a typo in the name, or the variable isn't actually used
-			anywhere in the shader, and has been "optimised out" by the compiler/linker.
-		</li>
-		<li>
-			Modifying attributes (vertex buffers) during run-time is extremely expensive. Avoid.
+			that either you've made a typo in the name, you've bound the wrong shader program beforehand, or the
+			variable isn't actually used anywhere in the shader, and has been "optimised out" by the compiler/linker.
 		</li>
 		<li>
 			Get your shaders to do as much work as is possible; because of their parallel nature
 			they are much faster than looping on the CPU for most tasks.
-		</li>
-		<li>
-			Drawing lots of separate, small objects at once does not make efficient use of the GPU,
-			as most parallel shader slots will be empty, and separate objects must be drawn in series.
-			Where possible, merge many, smaller objects into fewer, larger objects.
 		</li>
 	</ul>
 
 	<h2>Possible Extensions</h2>
 	<ul>
 		<li>
-			Create a log file system, rather than a print-out system, so that you can scan through
-			large volumes of information from each loaded shader.
+			There are newer variations of OpenGL shader calls that reduce the amount of binding required.
+			You might like at the <tt>glProgramUniform</tt> family of functions. These were'nt available in OpenGL 4.0,
+			but if you are happy with 4.1 or newer, you can use them happily.
 		</li>
 		<li>
-			Larger projects will use many different shader programs. It would make sense to have
-			a <var>Shader Manager</var> interface or class to load shaders, and to make sure that
-			shaders are re-used, rather than loaded multiple times.
-		</li>
-		<li>
-			In the future we will sometimes use geometry and tessellation shaders, so we can
-			consider upgrading our shader functions to handle more than just vertex and fragment shaders. We
-			can just set some boolean flags to true or false to indicate which types of shader
-			have been loaded before attaching and linking.
-		</li>
-
-		<li>
-			If you have a shader manager, and have written a function along the lines of <tt>setUniform(shader_index,
-				value)</tt>
-			from the manager, it could then check to make sure that shader is <u>in use</u> first (a common
-			cause of error).
+			<a href="https://antongerdelan.net/opengl/shader_hot_reload.html">Hot reloading</a> will add an incredible amount of power to your shader development.
+			I would recommend adding this to every project where you are doing something creative with shaders. If you add a few interesting uniform variables
+			e.g. mouse cursor position, viewport dimensions, the time, then you can have a lot of fun with some basic mathematics and some use of <tt>sin()</tt>
+			waves. For some idea for the potential see the <a href="https://www.shadertoy.com/">Shadertoy</a> website, which lets you write and share a fragment shader
+			written in GLSL using WebGL.
 		</li>
 	</ul>
 </body>
