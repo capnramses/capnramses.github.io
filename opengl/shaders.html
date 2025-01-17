@@ -5,8 +5,13 @@
 	<title>Shaders - Anton's OpenGL 4 Tutorials</title>
 	<link rel="stylesheet" type="text/css" href="../greysans.css">
 	<!--
-		<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro&display=swap" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
+		TODO
+
+		[ ] Add u_time to both shaders
+		[ ] Add u_mouse_xy to frag shader (in fb coords as as a factor?)
+		[ ] Add u_fbdims_xy to frag shader
+		[ ] Do something fun with a sin() function in frag shader e.g. draw a circle
+
 	-->
 </head>
 
@@ -317,9 +322,9 @@
 	<table>
 		<caption><b>Commonly-Used GLSL Data Types</b></caption>
 		<tr>
-			<td><b>Data Type</b></td>
-			<td><b>Description</b></td>
-			<td><b>Common Usage</b></td>
+			<th>Data Type</th>
+			<th>Description</th>
+			<th>Common Usage</th>
 		</tr>
 		<tr>
 			<td><tt>void</tt></td>
@@ -345,7 +350,7 @@
 		</tr>
 		<tr>
 			<td><tt>vec4</tt></td>
-			<td>4d floating-point value</td>
+			<td>4D floating-point value</td>
 			<td>Points and direction vectors</td>
 		</tr>
 		<tr>
