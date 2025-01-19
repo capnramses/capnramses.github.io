@@ -4,15 +4,6 @@
 <head>
 	<title>Shaders - Anton's OpenGL 4 Tutorials</title>
 	<link rel="stylesheet" type="text/css" href="../greysans.css">
-	<!--
-		TODO
-
-		[ ] Add u_time to both shaders
-		[ ] Add u_mouse_xy to frag shader (in fb coords as as a factor?)
-		[ ] Add u_fbdims_xy to frag shader
-		[ ] Do something fun with a sin() function in frag shader e.g. draw a circle
-
-	-->
 </head>
 
 <body>
@@ -20,7 +11,7 @@
 	<p><a href="index.html">[index]</a></p>
 
 	<h1>OpenGL 4 Shaders</h1>
-	<h4>Anton Gerdelan. Last edited: 15 Jan 2025</h4>
+	<h4>Anton Gerdelan. Last edited: 19 Jan 2025</h4>
 
 	<p>
 		Shaders tell OpenGL <i>how</i> to draw, and we have a lot of creative opportunity to do interesting effects.
@@ -386,101 +377,76 @@
 	</p>
 
 	<table>
-		<caption><b>My GLSL File Naming Convention</b></capation>
+		<caption><b>A GLSL File Naming Convention</b></caption>
 		<tr>
-			<td><tt>texturemap.vert</tt></td>
-			<td>the vertex shader for my texture-mapping shader program</td>
+			<td><tt>font.vert</tt></td>
+			<td>The vertex shader for my text rendering shader program.</td>
 		</tr>
 		<tr>
-			<td><tt>texturemap.frag</tt></td>
-			<td>the fragment shader for my texture-mapping shader program</td>
+			<td><tt>font.frag</tt></td>
+			<td>The fragment shader for my text rendering shader program.</td>
 		</tr>
 		<tr>
 			<td><tt>particle.vert</tt></td>
-			<td>the vertex shader for my particle system shader</td>
+			<td>The vertex shader for a particle system shader.</td>
 		</tr>
 		<tr>
 			<td><tt>particle.geom</tt></td>
-			<td>the geometry shader for my particle system shader</td>
+			<td>The geometry shader for a particle system shader.</td>
 		</tr>
 		<tr>
 			<td><tt>particle.frag</tt></td>
-			<td>the fragment shader for my particle system shader</td>
+			<td>The fragment shader for a particle system shader.</td>
 		</tr>
 	</table>
 
 	<p>
-		Some text editors (notepad++, gedit, ...) will do syntax highlighting for GLSL
+		Some coding text editors will do syntax highlighting for GLSL
 		if you end with a ".glsl" extension. The GLSL reference compiler;
 		<a href="http://www.khronos.org/opengles/sdk/tools/Reference-Compiler/">Glslang</a>
 		can check your shaders for bugs if they end in ".vert" and ".frag".
 	</p>
 
-	<h2 id="example_shaders">Example Shaders</h2>
+	<h2>Expanding the Vertex Shader with a Uniform</h2>
 
 	<p>
 		GLSL is designed to resemble the C programming language. Each shader resembles a small
-		C program. Let us examine a very minimal shader program that has only a vertex
+		C program. In <a href="hellotriangle.html">Hello Triangle</a> we wrote a very minimal shader program that has only a
+		vertex
 		shader and a fragment shader. Each of these shaders can be stored in a C string, or in
-		a plain text file.
+		a plain text file first, for convenience, and then loaded into a string. Let's start from a working Hello Triangle
+		program,
+		and modify it to add some new features.
 	</p>
 
 	<p>
-		In this case we just want to be able to accept a buffer of points and place them
-		directly onto the screen. The hardware will draw triangles, lines, or points using these,
-		depending on the draw mode that we set. Every pixel-sized piece (fragment) of triangle,
-		line, or point goes to a fragment shader. Just for the sake of example, we want to be
-		able to control the colour of each fragment by updating a <tt><b>uniform</b></tt>
-		variable in our C program.
+		Recall that our vertex shader has the job of positioning any one of the vertex points, from a vertex buffer,
+		inside the view area. It does this by assigning a value to the built-in GLSL variable <tt>gl_Position</tt>.
+		The viewing area is actually a 3D volume with dimensions -1 to 1 on the x, y, and z axes.
+		This volume is called <i>clip space</i>, as any parts of geometry outside it will be "clipped" off, and not
+		rendered.
 	</p>
 
-	<h3>Vertex Shader</h3>
-
 	<p>
-		The vertex shader is responsible for transforming vertex positions into a final position in our viewing area
-		called <i>clip space</i>. It
-		can also be used to send data from the vertex buffer to fragment shaders. This vertex
-		shader does nothing, except take in vertex positions that are already in clip space, and
-		output them as final clip-space positions. We can write this into a plain text file
-		called: <tt>test_vs.vert</tt>.
+		We can make our vertex shader a little bit more fun by modifying our triangle's position. If we use the current time
+		as a variable, we can animate this too. Let's modify our vertex shader, and add in a <tt>uniform</tt> for the
+		current time.
+		I wont add string quotes or line endings here. If you're not loading the shader from a file, you'll need to add
+		that.
 	</p>
 
 	<pre>
 #version 410 core
 
 in vec3 vertex_position;
+uniform float time;      // uniform is a keyword in GLSL
 
 void main() {
-  gl_Position = vec4( vertex_position, 1.0 );
+  vec3 pos = vertex_position;
+  pos.y += sin( time );
+
+  gl_Position = vec4( pos, 1.0 );
 }</pre>
-
-	<p>
-		GLSL has some built-in data types that we can see here:
-	</p>
-	<ul>
-		<li><tt>vec3</tt> is a 3D vector that can be used to store positions, directions, or colours.</li>
-		<li><tt>vec4</tt> is the same but has a fourth component which, in the <tt>gl_Position</tt> variable, is used
-			to represent perspective. We will examine this in the <a href="virtualcamera">virtual
-				camera</a> article, but for now we can leave it at 1.0, which means "don't calculate any
-			perspective".</li>
-	</ul>
-
-	<p>
-		We can also see the <tt>in</tt> key-word for input to the program from the
-		previous stage. In this case the <tt>vertex_position</tt> is one of the vertex
-		points from the object that we are drawing. GLSL also has an <tt>out</tt> key-word for
-		sending a variable to the next shader stage in the pipeline.
-	</p>
-
-	<p>
-		The entry point to every shader is a <tt>void main()</tt> function.
-	</p>
-
-	<p>
-		The <tt>gl_Position</tt> variable is a built-in GLSL variable used to set the
-		final <b>clip-space</b> position of each vertex. We are required to set the value of this variable in the vertex
-		shader.
-	</p>
 
 	<p>
 		The input to a vertex buffer (the <tt>in</tt> variables) are called per-vertex
@@ -491,455 +457,285 @@ void main() {
 		in the vertex buffer.
 	</p>
 
-	<h3>Fragment Shader</h3>
+	<p>
+		You'll notice the new line <tt>uniform float time;</tt> declares a new variable.
+		Instead of <tt>in</tt> for attribute, we have <tt>uniform</tt> <i>storage qualifier</i> here. A
+		storage qualifier basically says where the data comes from or goes to. In this case it will come from a variable
+		in our C program that we'll feed into OpenGL.
+		The data type here is a <tt>float</tt>, as we also know from C. I've named it <tt>time</tt>.
+		There is no rule here, call it whatever you want, as long as it's not the same as a GLSL keyword.
+	</p>
+
+	<div class="hint">
+		Uniforms in GLSL are actually constants in our shaders, meaning we can read, but not change the values.
+		In the Microsoft Direct3D API they are named <i>constants</i>.
+	</div>
 
 	<p>
-		Once all of the vertex shaders have computed the position of every vertex in clip space,
-		then the fragment shader is run once for every pixel-sized space (fragment) between
-		vertices. The fragment shader is responsible for setting the colour of each fragment.
-		Write a new plain-text file: <tt>test_fs.frag</tt>.
+		I've also created a new <tt>vec3</tt> variable in our shader called <tt>pos</tt>. I'm just making it a copy of the
+		vertex position
+		value from our vertex buffer to begin with.
+		You can access individual components of a complex type like a <tt>vec3</tt>.
+		A <tt>vec4</tt> has <tt>.x .y .z .w</tt>, or, alternatively, because these types can also represent colours, <tt>.r
+			.g .b .a</tt>.
+		On the line <tt>pos.y += sin( time );</tt> I'm modifying only the vertical component of the position. Note the
+		<tt>+=</tt>
+		operator. I'm using the built-in <tt>sin()</tt> (sine wave) function to return a value between -1.0 and 1.0. That's
+		handy because it won't move
+		the triangle far outside the viewable area. I'm using the time value, which will be the current time, in seconds as
+		the <tt>x</tt> value.
+		In the last instruction note that I'm using our new <tt>pos</tt> variable for the final vertex position in clip
+		space.
+	</p>
+
+	<p>
+		If you compile and run your program at this point it should still work without errors, and nothing should have
+		changed. Why? Uniform variables default to the
+		value 0, and we are adding 0 to our triangle's y position. We need to modify our C program and update the uniform
+		value. If you have not done so already,
+		at the top of your <tt>while</tt> loop add the following GLFW function call to get the current time every frame:
+	</p>
+
+	<pre>
+double curr_s = glfwGetTime(); // Get the current time. </pre>
+
+	<p>When our shader program is linked, every uniform value will be assigned a <i>location</i> number. We can use this
+		to refer to it.
+		You can fetch the location of the <tt>time</tt> uniform after the shader is linked. Call
+		<tt>glGetUniformLocation()</tt>, using the the shader program's
+		OpenGL handle, and the name you gave the variable. If the uniform is not found by name, then the value of -1 is
+		returned. This can happen if the name
+		has a typo in it, or if the variable wasn't used and the compiler optimised it out.
+	</p>
+
+	<pre>
+int time_loc = glGetUniformLocation( shader_program, "time" );
+assert( time_loc > -1 ); // NB. include assert.h for assert().</pre>
+
+	<p>
+		Now, right before our call to draw the triangle, we can update the uniform to our shader, using our current time,
+		and the location we retrieved earlier.
+		The drawing section of our <tt>while</tt> loop now looks like this, with the addition of a function call to
+		<tt>glUniform1f</tt>:
+	</p>
+
+	<pre>
+glClearColor( 0.6f, 0.6f, 0.8f, 1.0f );
+glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+
+glUseProgram( shader_program );
+glUniform1f( time_loc, (float)curr_s); // <--- new line
+glBindVertexArray( vao );
+
+glDrawArrays( GL_TRIANGLES, 0, 3 );</pre>
+
+	<p>
+		The <tt>glUniform</tt> family of functions have variations matching all the GLSL data types. Here, I'm updating a
+		GLSL <tt>float</tt> so I call
+		<tt>glUniform1f()</tt> for 1 (f)loat. If I was updating a <tt>vec3</tt> uniform, then I'd call
+		<tt>glUniform3f()</tt>. Look these functions up on
+		<a href="https://docs.gl/gl4/glUniform">docs.gl</a> to see the full list, and how the parameters differ. Note that I
+		explicitly cast our time
+		value to a <tt>float</tt>, as it's a <tt>double</tt> normally. <tt>glUniform</tt> calls operate only on the
+		<i>currently bound</i> shader program,
+		so I called our new function <i>after</i> the call to <tt>glUseProgram()</tt>. It won't matter in our 1-shader
+		program, but it will if you add in another
+		shader program later. If you are using OpenGL 4.1, or newer, then you can use an alternative function
+		family, <a href="https://docs.gl/gl4/glProgramUniform">glProgramUniform</a>, which does not have this limitation.
+	</p>
+
+	<p>
+		Compile, and run your program - you should get a bouncing triangle. You might have set a different colour.
+	</p>
+
+	<img src="images/bouncing_triangle.gif" alt="A vertically bouncing triangle" />
+
+	<p>
+		Our vertex shader has some built-in data types that we can see here:
+	</p>
+	<ul>
+		<li><tt>vec3</tt> is a 3D vector that can be used to store positions, directions, or colours.</li>
+		<li><tt>vec4</tt> is the same but has a fourth component which, in the <tt>gl_Position</tt> variable, is used
+			to represent perspective. When building a virtual camera, we can set this, <tt>w</tt>, component to produce
+			perspective.
+			After the vertex shader completes, there is a built-in stage called <i>perspective division</i> that divides
+			the <tt>.xyz</tt> components by the <tt>.w</tt> component. We don't have anything with depth in our scene,
+			so it won't be obvious what this does yet, but you can try changing the value to 0.5 and 2.0 to get an idea.
+			1.0 has no effect, of course, because it is dividing the <tt>.xyz</tt> components by 1.0.
+	</ul>
+
+	<p>
+		We can also see the <tt>in</tt> key-word for input to the program from the
+		previous stage. In this case the <tt>vertex_position</tt> is one of the vertex
+		points from the vertex buffer that we are drawing. GLSL also has an <tt>out</tt> key-word for
+		sending a variable to the next shader stage in the pipeline.
+	</p>
+
+	<div class="hint">
+		In larger shaders I like to be reminded what I'm working with.
+		You can't change the value of uniforms or attributes, for example.
+		I haven't here, but I usually use prefixes for variable storage qualifiers;
+		<tt>a_</tt> for vertex shader input attributes,
+		<tt>v_</tt> for <i>varyings</i> - variables passed between shader stages,
+		<tt>u_</tt> for uniforms,
+		and <tt>o_</tt> for fragment shader outputs like the colour of the fragment.
+		If it's a variable I declared in the shader then I don't use a prefix.
+	</div>
+
+	<h3>Expanding the Fragment Shader</h3>
+
+	<p>
+		The hardware pipeline knows that the first <tt>vec4</tt> it gets as output from the
+		fragment shader should be the colour of the fragment. The colours are <b>RGBA</b>, or
+		red, green, blue, alpha, in that order. The values of each component are floats between 0.0 and 1.0,
+		not bytes between 0 and 255, as is common elsewhere. The alpha channel output can be used for a variety of effects,
+		which you define by setting a <i>blend mode</i> in OpenGL. It is commonly used to
+		indicate opacity (for a transparent, or colour-blending effect), but by default it does nothing.
+	</p>
+
+	<div class="hint">
+		If you're wondering why we don't set a built-in variable for output colour here, that's a good question.
+		Older versions of GLSL had a built-in <tt>gl_FragColor</tt> variable to set, similar to <tt>gl_Position</tt>
+		in vertex shaders. When we get into further tutorials you will see that there is a lot more flexibility
+		for multiple outputs possible now.
+	</div>
+
+	<pre>
+#version 410 core
+
+uniform float time;
+out vec4 frag_colour;
+
+void main() {
+  float wild = sin( time ) * 0.5 + 0.5;
+  frag_colour.rba = vec3( 1.0 );
+  frag_colour.g = wild;
+}</pre>
+
+
+	<p>
+		The <tt>uniform</tt> variables are global to all shaders within the
+		program, so we have accessed our <tt>time</tt> variable here too. I've created a new variable, using the
+		<tt>time</tt>,
+		called <tt>wild</tt>. This is similar to the position change, except we will use it for a colour component. Because
+		sine
+		wave values are between -1.0 and 1.0 I scale and offset it to be between a colour range of 0.0 and 1.0.
+		The line <tt>frag_colour.rba = vec3( 1.0 );</tt> is just showing a different way to set variables by their
+		components.
+		GLSL has a mix-up ability it calls <i>swizzling</i> that lets you set any subset of components, in any order.
+		Because I'm only changing 3 of the 4 components, I'm assigning a <tt>vec3()</tt>. Giving a single parameter to a
+		complex type constructor sets <i>all</i> of that components to that value. Here it means that the red, blue, and,
+		alpha components will be set to 1.0. You should get an interesting colour animation now. Try setting the other
+		components
+		to different <tt>sin()</tt> functions, perhaps one with <tt>time * 0.5</tt> as input.
+	</p>
+
+
+	<h3>Passing a Variable from Vertex to Fragment Shader</h3>
+
+	<p>
+		We can also output a variable from a shader to send it to the next shader stage down the pipeline. Let's modify our
+		shaders to do that.
+		We will specify an <tt>out</tt> variable in the vertex shader, that matches the name of an <tt>in</tt> variable in
+		the fragment shader.
+		The vertex shader:
 	</p>
 
 	<pre>
 #version 410 core
 
-uniform vec4 input_colour;
+in vec3 vertex_position;
+uniform float time;
+out vec3 pos;            // <-- pos now declared here
+
+void main() {
+	pos = vertex_position; // <-- removed declaration
+	pos.y += sin( time );
+
+	gl_Position = vec4( pos, 1.0 );
+}</pre>
+
+	<p>
+		Now we can input that position in the fragment shader. Let's use it as a colour, commenting out our time-based code.
+	</p>
+
+	<pre>
+#version 410 core
+
+in vec3 pos;         // <-- matching name required.
+uniform float time;
 out vec4 frag_colour;
 
 void main() {
-	frag_colour = input_colour;
+	// float wild = sin( time ) * 0.5 + 0.5;
+	// frag_colour.rba = vec3( 1.0 );
+	// frag_colour.g = wild;
+
+	frag_colour = vec4( pos, 1.0 );
 }</pre>
 
+	<img src="images/varying_triangle.gif" alt="A triangle using its clip space coordinates as colours" />
+
 	<p>
-		The <tt>uniform</tt> key-word says that we are sending in a variable to the
-		shader program from the CPU. This variable is global to all shaders within the
-		program, so we could also access it in the vertex shader if we wanted to.
+		Now we are visualising the clip space coordinates of each fragment as a colour. <tt>x</tt> corresponding
+		to red, <tt>y</tt> to green, and <tt>z</tt> to blue. We don't see any blue on the triangle because, if you recall,
+		we set Z to 0 for all 3 vertex points. You'll note that we only set 3 positions, one for each vertex, but we get a
+		whole gradient of colours over a larger number of fragments. When variables are output from a vertex to a fragment
+		they are <i>interpolated</i> to each fragment, based on a fragment's distance to each vertex.
 	</p>
 
-	<div class="hint">Uniforms in GLSL are actually constants in our shaders, meaning we can read, but not change the
-		values.
-		In the Direct3D API these are actually named <i>constants</i>.
+	<div class="hint">
+		These input and output variables were called <i>varyings</i> in older versions of GLSL, and used the
+		<tt>varying</tt> storage qualifier
+		instead of <tt>in</tt> and <tt>out</tt>.
 	</div>
 
 	<p>
-		The hardware pipeline knows that the first <tt>vec4</tt> it gets as output from the
-		fragment shader should be the colour of the fragment. The colours are <b>rgba</b>, or
-		red, green, blue, alpha. The values of each component are floats between 0.0 and 1.0,
-		(not between 0 and 255). The alpha channel output can be used for a variety of effects,
-		which you define by setting a <i>blend mode</i> in OpenGL. It is commonly used to
-		indicate opacity (for a transparent, or colour-blending effect), but by default it does nothing.
+		Having an input for time lets you create animations. Having a position value lets you create patterns that vary
+		across
+		a surface. Combining these two, and using some of the built-in functions like <tt>sin()</tt> creatively lets you
+		create
+		some very cool effects. If you add some sort of user input, so as the mouse cursor position, or a uniform to
+		indicate if a button
+		is held down, you can also make them interactive.
 	</p>
 
-	<h2 id="minimal_example">Minimal C Code</h2>
-
-
-	<p>
-		To get shaders up and running quickly you can bang this into a minimal OpenGL program:
-	</p>
-
-	<ol>
-		<li>load a vertex shader file and fragment shader file and store each in a separate C string</li>
-		<li>call <tt>glCreateShader</tt> twice; for 1 vertex and 1 fragment shader index</li>
-		<li>call <tt>glShaderSource</tt> to copy code from a string for each of the above</li>
-		<li>call <tt>glCompileShader</tt> for both shader indices</li>
-		<li>call <tt>glCreateProgram</tt> to create an index to a new program</li>
-		<li>call <tt>glAttachShader</tt> twice, to attach both shader indices to the program</li>
-		<li>call <tt>glLinkProgram</tt></li>
-		<li>call <tt>glGetUniformLocation</tt> to get the unique location of the variable called "<tt>inputColour</tt>"
-		</li>
-		<li>call <tt>glUseProgram</tt> to switch to your shader before calling...
-		<li><tt>glUniform4f(location, r,g,b,a)</tt> to assign an initial colour to your fragment shader (e.g.
-			<tt>glUniform4f(colour_loc, 1.0f, 0.0f, 0.0f, 1.0f)</tt> for red)
-		</li>
-	</ol>
-
-	<p>
-		The only variables that you need to keep track of are the index created by <tt>glCreateProgram</tt>, and any
-		uniform
-		locations.
-		Now we are ready to draw - we will look at drawing geometry with <tt><b>glDrawArrays</b></tt> in the next
-		tutorial.
-		To set or change uniform variables you can use the various <tt>glUniform</tt> functions, but they <u>only affect
-			the
-			shader program
-			that has been switched to with <tt>glUseProgram</tt></u>.
-	</p>
-
-	<h2>OpenGL Shader Functions</h2>
-
-	<p>
-		For a complete list of OpenGL shader functions see the
-		<a href="http://www.opengl.org/documentation/glsl/">Quick Reference Card</a>. The most
-		useful functions are tabulated below. We will implement all of these:
-	</p>
-
-	<table>
-		<caption><b>OpenGL <i>Shader</i> Functions</b></caption>
-		<tr>
-			<td><b>Function Name</b></td>
-			<td><b>Description</b></td>
-		</tr>
-		<tr>
-			<td><tt>glCreateShader()</tt></td>
-			<td>create a variable for storing a shader's code in OpenGL. returns <tt>unsigned int</tt> index to it.</td>
-		</tr>
-		<tr>
-			<td><tt>glShaderSource()</tt></td>
-			<td>copy shader code from C string into an OpenGL shader variable</td>
-		</tr>
-		<tr>
-			<td><tt>glCompileShader()</tt></td>
-			<td>compile an OpenGL shader variable that has code in it</td>
-		</tr>
-		<tr>
-			<td><tt>glGetShaderiv()</tt></td>
-			<td>can be used to check if compile found errors</td>
-		</tr>
-		<tr>
-			<td><tt>glGetShaderInfoLog()</tt></td>
-			<td>creates a string with any error information</td>
-		</tr>
-		<tr>
-			<td><tt>glDeleteShader()</tt></td>
-			<td>free memory used by an OpenGL shader variable</td>
-		</tr>
-	</table>
-	<br />
-	<table>
-		<caption><b>OpenGL <i>Program</i> Functions</b></caption>
-		<tr>
-			<td><b>Function Name</b></td>
-			<td><b>Description</b></td>
-		</tr>
-		<tr>
-			<td><tt>glCreateProgram()</tt></td>
-			<td>create a variable for storing a combined shader program in OpenGL. returns <tt>unsigned int</tt> index
-				to
-				it.</td>
-		</tr>
-		<tr>
-			<td><tt>glAttachShader()</tt></td>
-			<td>attach a compiled OpenGL shader variable to a shader program variable
-			<td></td>
-		</tr>
-		<tr>
-			<td><tt>glLinkProgram()</tt></td>
-			<td>after all shaders are attached, link the parts into a complete shader program</td>
-		</tr>
-		<tr>
-			<td><tt>glValidateProgram()</tt></td>
-			<td>check if a program is ready to execute. information stored in a log</td>
-		</tr>
-		<tr>
-			<td><tt>glGetProgramiv()</tt></td>
-			<td>can be used to check for link and validate errors</td>
-		</tr>
-		<tr>
-			<td><tt>glGetProgramInfoLog()</tt></td>
-			<td>writes any information from link and validate to a C string</td>
-		</tr>
-		<tr>
-			<td><tt>glUseProgram()</tt></td>
-			<td>switch to drawing with a specified shader program</td>
-		</tr>
-		<tr>
-			<td><tt>glGetActiveAttrib()</tt></td>
-			<td>get details of a numbered per-vertex attribute used in the shader</td>
-		</tr>
-		<tr>
-			<td><tt>glGetAttribLocation()</tt></td>
-			<td>get the unique "location" identifier of a named per-vertex attribute</td>
-		</tr>
-		<tr>
-			<td><tt>glGetUniformLocation()</tt></td>
-			<td>get the unique "location" identifier of a named uniform variable</td>
-		</tr>
-		<tr>
-			<td><tt>glGetActiveUniform()</tt></td>
-			<td>get details of a named uniform variable used in the shader</td>
-		</tr>
-		<tr>
-			<td><tt>glUniform{1234}{ifd}()</tt></td>
-			<td>set the value of a uniform variable of a given shader (function name varies by dimensionality and data
-				type)
-			</td>
-		</tr>
-		<tr>
-			<td><tt>glUniform{1234}{ifd}v()</tt></td>
-			<td>same as above, but with a whole array of values</td>
-		</tr>
-		<tr>
-			<td><tt>glUniformMatrix{234}{fd}v()</tt></td>
-			<td>same as above, but for matrices of dimensions 2x2,3x3, or 4x4</td>
-		</tr>
-	</table>
-
-	<h2>Adding Error-Checking Functionality</h2>
-
-	<p>
-		The first thing to do is extend the minimal code with some error-checking.
-	</p>
-
-	<h3>Check for Compilation Errors</h3>
-
-	<p>
-		Right after calling <tt>glCompileShader</tt>:
-	</p>
-
-	<pre>
-glCompileShader(shader_index);
-// check for compile errors
-int params = -1;
-glGetShaderiv(shader_index, GL_COMPILE_STATUS, &amp;params);
-if (GL_TRUE != params) {
-  fprintf(stderr, "ERROR: OpenGL shader index %i did not compile\n", shader_index);
-  _print_shader_info_log(shader_index);
-  return false; // or exit or something
-}</pre>
-
-	<p>
-		I call a user-defined function here to print even more information from the shader. See
-		next section.
-	</p>
-
-	<h3>Print the Shader Info Log</h3>
-
-	<pre>
-void _print_shader_info_log(GLuint shader_index) {
-  int max_length = 2048;
-  int actual_length = 0;
-  char shader_log[2048];
-  glGetShaderInfoLog(shader_index, max_length, &amp;actual_length, shader_log);
-  printf("shader info log for OpenGL index %u:\n%s\n", shader_index, shader_log);
-}</pre>
-
-	<p>This is the most useful shader debugging function; it will tell you which line in
-		which shader is causing the error.</p>
-
-	<h3>Check for Linking Errors</h3>
-
-	<p>Right after calling <tt>glLinkProgram</tt>:</p>
-
-	<pre>
-// check if link was successful
-int params = -1;
-glGetProgramiv(program, GL_LINK_STATUS, &amp;params);
-if (GL_TRUE != params) {
-  fprintf(stderr,
-    "ERROR: could not link shader program OpenGL index %u\n",
-    program);
-  _print_program_info_log(program);
-  return false;
-}</pre>
-
-	<p>
-		I call a user-defined function here to print even more information from the shader. See
-		next section.
-	</p>
-
-	<h3>Print the Program Info Log</h3>
-
-	<pre>
-void _print_program_info_log(GLuint program) {
-  int max_length = 2048;
-  int actual_length = 0;
-  char program_log[2048];
-  glGetProgramInfoLog(program, max_length, &amp;actual_length, program_log);
-  printf("program info log for OpenGL index %u:\n%s", program, program_log);
-}</pre>
-
-	<p>
-		Where <tt>program</tt> is printing the index of my program.
-	</p>
-
-	<h3>Print All Information</h3>
-
-	<p>
-		One of the more common errors is mixing up the "location" of uniform variables.
-		Another is where an attribute or uniform variable is not "active"; not
-		actually used in the code of the shader, and has been optimised out by the
-		shader compiler. We can check this by printing it,
-		and we can print all sorts of other information as well. Here, <tt>program</tt>
-		is the index of my shader program.
-	</p>
-
-
-	<pre>
-void print_all(GLuint program) {
-  printf("--------------------\nshader program %i info:\n", program);
-  int params = -1;
-  glGetProgramiv(program, GL_LINK_STATUS, &amp;params);
-  printf("GL_LINK_STATUS = %i\n", params);
-  
-  glGetProgramiv(program, GL_ATTACHED_SHADERS, &amp;params);
-  printf("GL_ATTACHED_SHADERS = %i\n", params);
-  
-  glGetProgramiv(program, GL_ACTIVE_ATTRIBUTES, &amp;params);
-  printf("GL_ACTIVE_ATTRIBUTES = %i\n", params);
-  for (int i = 0; i < params; i++) {
-    char name[64];
-    int max_length = 64;
-    int actual_length = 0;
-    int size = 0;
-    GLenum type;
-    glGetActiveAttrib (
-      program,
-      i,
-      max_length,
-      &amp;actual_length,
-      &amp;size,
-      &amp;type,
-      name
-    );
-    if (size > 1) {
-      for(int j = 0; j < size; j++) {
-        char long_name[64];
-        sprintf(long_name, "%s[%i]", name, j);
-        int location = glGetAttribLocation(program, long_name);
-        printf("  %i) type:%s name:%s location:%i\n",
-          i, GL_type_to_string(type), long_name, location);
-      }
-    } else {
-      int location = glGetAttribLocation(program, name);
-      printf("  %i) type:%s name:%s location:%i\n",
-        i, GL_type_to_string(type), name, location);
-    }
-  }
-  
-  glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &amp;params);
-  printf("GL_ACTIVE_UNIFORMS = %i\n", params);
-  for(int i = 0; i < params; i++) {
-    char name[64];
-    int max_length = 64;
-    int actual_length = 0;
-    int size = 0;
-    GLenum type;
-    glGetActiveUniform(
-      program,
-      i,
-      max_length,
-      &amp;actual_length,
-      &amp;size,
-      &amp;type,
-      name
-    );
-    if(size > 1) {
-      for(int j = 0; j < size; j++) {
-        char long_name[64];
-        sprintf(long_name, "%s[%i]", name, j);
-        int location = glGetUniformLocation(program, long_name);
-        printf("  %i) type:%s name:%s location:%i\n",
-          i, GL_type_to_string(type), long_name, location);
-      }
-    } else {
-      int location = glGetUniformLocation(program, name);
-      printf("  %i) type:%s name:%s location:%i\n",
-        i, GL_type_to_string(type), name, location);
-    }
-  }
-  
-  _print_program_info_log(program);
-}</pre>
-
-	<p>
-		The interesting thing here are the printing of the attribute and uniform "locations".
-		Sometimes uniforms or attributes are themselves arrays of variables - when this happens
-		<tt>size</tt> is > 1, and I loop through and print each index' location separately. I
-		also have a home-made function for printing the OpenGL data type as a string (normally it
-		is an enum which doesn't look very meaningful when printed as an integer) - see next
-		section.
-	</p>
-
-	<h3>GLenum Data Type to C String</h3>
-
-	<p>
-		This function converts a OpenGL enumerated data type to a C string (for readable printing).
-	</p>
-
-	<pre>
-const char* GL_type_to_string(GLenum type) {
-  switch(type) {
-    case GL_BOOL: return "bool";
-    case GL_INT: return "int";
-    case GL_FLOAT: return "float";
-    case GL_FLOAT_VEC2: return "vec2";
-    case GL_FLOAT_VEC3: return "vec3";
-    case GL_FLOAT_VEC4: return "vec4";
-    case GL_FLOAT_MAT2: return "mat2";
-    case GL_FLOAT_MAT3: return "mat3";
-    case GL_FLOAT_MAT4: return "mat4";
-    case GL_SAMPLER_2D: return "sampler2D";
-    case GL_SAMPLER_3D: return "sampler3D";
-    case GL_SAMPLER_CUBE: return "samplerCube";
-    case GL_SAMPLER_2D_SHADOW: return "sampler2DShadow";
-    default: break;
-  }
-  return "other";
-}</pre>
-
-	<p>
-		I only included the most-commonly used data types - I don't use the others so I just
-		called them "other". Look up <tt>glGetActiveUniform</tt> to get the rest of the list.
-	</p>
-
-	<h3>Validate Program</h3>
-
-	<p>
-		You can also "validate" a shader program before using it. Only do this during development,
-		because it is quite computationally expensive. When a program is not valid, the details
-		will be written to the program info log. <tt>program</tt> is my shader program
-		index.
-	</p>
-
-	<pre>
-bool is_valid(GLuint program) {
-  glValidateProgram(program);
-  int params = -1;
-  glGetProgramiv(program, GL_VALIDATE_STATUS, &amp;params);
-  printf("program %i GL_VALIDATE_STATUS = %i\n", program, params);
-  if (GL_TRUE != params) {
-    _print_program_info_log(program);
-    return false;
-  }
-  return true;
-}</pre>
-
-	<h2>General Conventions</h2>
-
-	<ul>
-		<li>
-			All uniform variables are intitialised to 0 when a program links. If you are wondering why your
-			triangle is black, for example, it could be that the colour isn't being sent to the uniform correctly,
-			and it's using values of 0 instead, which means black as a colour.
-			This is quite a common bug.
-		</li>
-		<li>
-			When calling <tt>glGetUniformLocation</tt>, it returns -1 if the uniform
-			variable wasn't found to be active. You can check for this. Usually it means
-			that either you've made a typo in the name, you've bound the wrong shader program beforehand, or the
-			variable isn't actually used anywhere in the shader, and has been "optimised out" by the compiler/linker.
-		</li>
-		<li>
-			Get your shaders to do as much work as is possible; because of their parallel nature
-			they are much faster than looping on the CPU for most tasks.
-		</li>
-	</ul>
+	<div class="hint">A handy <a href="https://www.khronos.org/opengl/wiki/Built-in_Variable_(GLSL)">built-in variable</a> is available in fragment shaders that you can access to create
+		more interesting effects. <tt>vec4 gl_FragCoord</tt> gives window-relative coordinate of the current fragment. Note that this isn't in clip coordinate space as our vertex position was,
+		but in pixel dimensions. If you want the 0.0 to 1.0 range, divide the <tt>x</tt> and <tt>y</tt> components by your view resolution (we set something like 800 and 600, respectively, in Hello Triangle).
+		Try using this as the output colour to get an idea.
+	</div>
 
 	<h2>Possible Extensions</h2>
-	<ul>
-		<li>
-			There are newer variations of OpenGL shader calls that reduce the amount of binding required.
-			You might like at the <tt>glProgramUniform</tt> family of functions. These were'nt available in OpenGL 4.0,
-			but if you are happy with 4.1 or newer, you can use them happily.
-		</li>
-		<li>
-			<a href="https://antongerdelan.net/opengl/shader_hot_reload.html">Hot reloading</a> will add an incredible amount of power to your shader development.
-			I would recommend adding this to every project where you are doing something creative with shaders. If you add a few interesting uniform variables
-			e.g. mouse cursor position, viewport dimensions, the time, then you can have a lot of fun with some basic mathematics and some use of <tt>sin()</tt>
-			waves. For some idea for the potential see the <a href="https://www.shadertoy.com/">Shadertoy</a> website, which lets you write and share a fragment shader
-			written in GLSL using WebGL.
-		</li>
-	</ul>
+
+	<p>
+		<a href="https://antongerdelan.net/opengl/shader_hot_reload.html">Hot reloading</a> will add an incredible amount
+		of experimentation power to your shader development.
+		I would recommend adding this to every project where you are doing something creative with shaders. If you add a
+		few interesting uniform variables
+		e.g. mouse cursor position, viewport dimensions, the time, then you can have a lot of fun with some basic
+		mathematics and some use of <tt>sin()</tt>
+		waves.
+	</p>
+
+	<p>For some idea for the potential see the <a href="https://www.shadertoy.com/">Shadertoy</a> website, which
+		lets you write and share a fragment shader
+		written in GLSL using WebGL. If you add hot reloading, the view resolution, and mouse coordinates as uniforms, and make your triangle cover the screen
+		(either with two triangles, or with one huge triangle where the edges are outside clip space), then you can recreate
+		the basics of Shadertoy in OpenGL.
+	</p>
+
+	<p>
+		If you have all of that, then you can actually take a diversion and write a <i>ray tracer</i>, or <i>path tracer</i>
+		at this point.
+		Each fragment would represent one ray. You would write your ray-casting code into your fragment shader. We did this
+		at BTH in Sweden
+		in the computer graphics class as a first assignment. If you want to check out Ray Tracing I suggest Peter Shirley's
+		<a href="https://raytracing.github.io/">Ray Tracing in One Weekend</a>
+		series. It's a similar style to my OpenGL e-book, and I enjoyed running through the first book. It doesn't use
+		OpenGL, but you could easily adapt it.
+	</p>
+
 </body>
 
 </html>
