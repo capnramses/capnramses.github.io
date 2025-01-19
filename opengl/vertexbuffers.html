@@ -88,8 +88,8 @@
 	<h2>Using Multiple Vertex Buffers for One Object</h2>
 
 	<p>
-		We can store more than just 3d points in a vertex buffer. Common uses also include; 2d
-		texture coordinates that describe how to fit an image to a surface, and 3d normals that
+		We can store more than just 3D points in a vertex buffer. Common uses also include; 2D
+		texture coordinates that describe how to fit an image to a surface, and 3D normals that
 		describe which way a surface is facing so that we can calculate lighting. So it's quite
 		likely that most of your objects will have 2 or 3 vertex buffers each.</p>
 
@@ -98,8 +98,8 @@
 		retrieved <b>once per vertex</b>. If you tell OpenGL to draw an array of 3 points, using
 		a given vertex array object, then it is going to launch <u>3 vertex shaders in parallel</u>,
 		and each vertex shader will get a one variable from each of the attached arrays; the first
-		vertex shader will get the first 3d point, 2d texture coordinate, and 3d normal, the
-		second vertex shader will get the second 3d point, 2d texture coordinate, and 3d normal,
+		vertex shader will get the first 3D point, 2D texture coordinate, and 3D normal, the
+		second vertex shader will get the second 3D point, 2D texture coordinate, and 3D normal,
 		and so on, where the number of variables, and size of each variable is laid out in the
 		vertex array object.
 	</p>
@@ -110,7 +110,7 @@
 		Vertex colours are very seldom used in practise, but most modern GL tutorials will get
 		you to create a buffer of colours as a second vertex buffer. Why? Because it's easy to
 		<b>visualise how interpolation works</b> with colours. So let's do that - our colours will be
-		similar to 3d points - except they will have r,g,b values of 0.0 to 1.0 instead of
+		similar to 3D points - except they will have r,g,b values of 0.0 to 1.0 instead of
 		positions. Let's use our triangle of points again (as pictured above), and make a buffer
 		of colours with one vertex completely blue, one completely red, and one completely green.
 	</p>
@@ -412,7 +412,7 @@ while(!glfwWindowShouldClose(window)) {
 		back-face culling. This gives a hint to GL so that it can throw away the hidden "back"
 		or inside faces of a mesh. This should remove half of the vertex shaders, and half of the
 		fragment shader instances from the GPU - allowing you to render things twice as large in
-		the same time. It's not appropriate all of the time - you might want our 2d triangle to
+		the same time. It's not appropriate all of the time - you might want our 2D triangle to
 		spin and show both sides.
 	</p>
 
