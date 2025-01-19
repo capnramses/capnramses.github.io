@@ -9,7 +9,7 @@
 <body>
 	<p><a href="index.html">[index]</a></p>
 	<h1>Vertex Buffer Objects</h1>
-	<h4>Anton Gerdelan. Last Updated 15 Jan 2025</h4>
+	<h4>Anton Gerdelan. Last Updated 19 Jan 2025</h4>
 
 	<p>
 		A vertex buffer object (VBO) is nothing fancy - it's just an array of data
@@ -58,8 +58,8 @@
 
 	<p>
 		Write up a working demo that renders a triangle. You might use <a href="hellotriangle.html">
-			Hello Triangle</a> if you haven't got one already. Then we can play with the <tt>
-			<a href="http://www.opengl.org/sdk/docs/man4/xhtml/glDrawArrays.xml">glDrawArrays()</a></tt> function. So far, we
+			Hello Triangle</a> if you haven't got one already. Then we can play with the
+			<tt>glDrawArrays()</tt> function. So far, we
 		have just looked at rendering triangles from
 		sets of 3 points, but you can actually render in several different modes:
 	</p>
@@ -70,11 +70,10 @@
 
 	<p>Try changing your <tt>GL_TRIANGLES</tt> parameter. You can see that points and lines
 		are going to be useful for drawing thing like charts or outlines. Triangle strip is a
-		slightly more efficient method for drawing ribbon-like shapes. I've never found a
-		legitimate use for triangle fans. You can actually change the
-		<a href="http://www.opengl.org/sdk/docs/manglsl/xhtml/gl_PointSize.xml">size</a>
-		of the points in the vertex shader, so they are quite versatile. Lines no
-		longer have very good supporting functions, so they're not as useful.
+		slightly more efficient method for drawing ribbon-like shapes. You can actually change the size
+		of the points in the vertex shader using the <tt>gl_PointSize</tt> built-in variable, so they are quite versatile.
+		Lines no longer have very good supporting functions, as hardware and drivers have become triangle based, so they're not reliable. These days you would
+		likely construct lines out of triangles.
 	</p>
 
 	<h3>But How Do I Render a Wire-Frame Mode?</h3>
@@ -82,8 +81,7 @@
 	<p>
 		All of my students tried to make a wire-frame rendering mode so I thought I'd point this out
 		here - it's much easier to use the
-		<a href="http://www.opengl.org/sdk/docs/man4/xhtml/glPolygonMode.xml">
-			built-in function</a> than to attempt to draw everything
+			built-in function than to attempt to draw everything
 		with <tt>GL_LINES</tt>. Call <tt>glPolygonMode(GL_FRONT, GL_LINE);</tt> before rendering.
 	</p>
 
@@ -177,8 +175,7 @@ glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), colours, GL_STATIC_DRAW);
 	</p>
 
 	<p>
-		Note that we have to bind each VBO before calling <tt><a
-				href="http://www.opengl.org/sdk/docs/man4/xhtml/glVertexAttribPointer.xml">glVertexAttribPointer()</a></tt>,
+		Note that we have to bind each VBO before calling <tt>glVertexAttribPointer()</tt>,
 		which describes the layout of each buffer to the VAO.</p>
 
 	<p>
@@ -302,8 +299,8 @@ void main() {
 	</p>
 
 	<p>
-		If you want your GLSL code to be compatible with OpenGL 3.2, for example, so
-		that it runs on a Mac, then you can't use the <tt>layout</tt> keyword. You can
+		If you want your GLSL code to be compatible with OpenGL 3.2, for example,
+		then you can't use the newer <tt>layout</tt> keyword. You can
 		achieve the exact same effect by telling the shader's linker which variable
 		should have which location. Right after compiling <u>but before linking</u>, you
 		can call <tt>glBindAttribLocation()</tt> to do this:
@@ -321,8 +318,7 @@ glBindAttribLocation(shader_programme, 0, "vertex_position");
 glBindAttribLocation(shader_programme, 1, "vertex_colour");
 
 glLinkProgram(shader_programme);
-...
-</pre>
+...</pre>
 
 	<p>
 		You don't need to use both methods - one or the other is fine. The third option
@@ -355,8 +351,8 @@ void main() {
 
 	<p>
 		That's it! Our drawing loop should look the same as with the Hello Triangle demo. Note
-		that it's just the single VAO that needs to be bound for drawing; other GL
-		implementations will have you bind both arrays, but not OpenGL 4:
+		that it's just the single VAO that needs to be bound for drawing; older OpenGL
+		versions will have you bind both arrays, but not OpenGL 4:
 	</p>
 
 	<pre>
