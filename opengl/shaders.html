@@ -407,7 +407,7 @@
 		can check your shaders for bugs if they end in ".vert" and ".frag".
 	</p>
 
-	<h2>Expanding the Vertex Shader with a Uniform</h2>
+	<h2>Expanding Shaders with Uniforms and Varyings</h2>
 
 	<p>
 		GLSL is designed to resemble the C programming language. Each shader resembles a small
@@ -487,6 +487,8 @@ void main() {
 		In the last instruction note that I'm using our new <tt>pos</tt> variable for the final vertex position in clip
 		space.
 	</p>
+
+	<H3>Hooking Up C Code to Shader Code</h3>
 
 	<p>
 		If you compile and run your program at this point it should still work without errors, and nothing should have
@@ -700,9 +702,12 @@ void main() {
 		is held down, you can also make them interactive.
 	</p>
 
-	<div class="hint">A handy <a href="https://www.khronos.org/opengl/wiki/Built-in_Variable_(GLSL)">built-in variable</a> is available in fragment shaders that you can access to create
-		more interesting effects. <tt>vec4 gl_FragCoord</tt> gives window-relative coordinate of the current fragment. Note that this isn't in clip coordinate space as our vertex position was,
-		but in pixel dimensions. If you want the 0.0 to 1.0 range, divide the <tt>x</tt> and <tt>y</tt> components by your view resolution (we set something like 800 and 600, respectively, in Hello Triangle).
+	<div class="hint">A handy <a href="https://www.khronos.org/opengl/wiki/Built-in_Variable_(GLSL)">built-in variable</a>
+		is available in fragment shaders that you can access to create
+		more interesting effects. <tt>vec4 gl_FragCoord</tt> gives window-relative coordinate of the current fragment. Note
+		that this isn't in clip coordinate space as our vertex position was,
+		but in pixel dimensions. If you want the 0.0 to 1.0 range, divide the <tt>x</tt> and <tt>y</tt> components by your
+		view resolution (we set something like 800 and 600, respectively, in Hello Triangle).
 		Try using this as the output colour to get an idea.
 	</div>
 
@@ -720,13 +725,15 @@ void main() {
 
 	<p>For some idea for the potential see the <a href="https://www.shadertoy.com/">Shadertoy</a> website, which
 		lets you write and share a fragment shader
-		written in GLSL using WebGL. If you add hot reloading, the view resolution, and mouse coordinates as uniforms, and make your triangle cover the screen
+		written in GLSL using WebGL. If you add hot reloading, the view resolution, and mouse coordinates as uniforms, and
+		make your triangle cover the screen
 		(either with two triangles, or with one huge triangle where the edges are outside clip space), then you can recreate
 		the basics of Shadertoy in OpenGL.
 	</p>
 
 	<p>
-		If you have all of that, then you can actually take a diversion and write a <i>ray tracer</i>, or <i>path tracer</i>,
+		If you have all of that, then you can actually take a diversion and write a <i>ray tracer</i>, or <i>path
+			tracer</i>,
 		at this point.
 		Each fragment would represent one ray. You would write your ray-casting code into your fragment shader. We did this
 		at BTH in Sweden
