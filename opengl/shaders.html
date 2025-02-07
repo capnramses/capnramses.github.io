@@ -66,6 +66,7 @@
 		<i>warp</i>, or <i>wavefront</i>.
 		There are usually 32 or 64 threads in a warp. A warp runs the same instruction over all 32 threads,
 		and each can use different data. This is called SIMD (single instruction, multiple data).
+		You can learn more about how GPUs work by following non-graphics GPU use; tutorials for AMD ROCm HIP and Nvidia CUDA.
 	</div>
 
 	<div class="centre">
@@ -164,14 +165,11 @@
 	<div class="hint">
 		GPUs don't use <i>branch prediction</i> optimisations like a CPU does. Things like if-statements introduce
 		branching.
-		In SIMD architectures the GPU might have to execute <i>both</i> paths of an if-else condition, one after the
-		other in sequence.
-		This could also leave some threads idle. That would essentially make your shader take longer to render, and
-		might mean your
+		In SIMD architectures the GPU might have to execute <i>both</i> paths of an if-else condition, and this could also leave some threads idle. That might mean your
 		rendering performs worse. The advice would generally be to use branching sparingly in shaders.
 		GPUs since about 2016 use newer SIMT (single instruction multiple thread) architecture which can improve
 		branching performance.
-		So, the advice might be, don't be scared to use branching, but if you want to improve performance, try removing
+		So, the newer advice might be, don't be scared to use branching, but if you want to improve performance, try removing
 		some, and check the
 		difference on a couple of different machines.</div>
 
@@ -574,9 +572,9 @@ glDrawArrays( GL_TRIANGLES, 0, 3 );</pre>
 	</p>
 
 	<div class="hint">
-		In larger shaders I like to be reminded what I'm working with.
-		You can't change the value of uniforms or attributes, for example.
-		I haven't here, but I usually use prefixes for variable storage qualifiers;
+		In larger shaders I like to use a variable naming convention to be reminded what I'm working with.
+		You can't change the value of uniforms or attributes, for example, and it's quite annoying getting an error when you do this by accident.
+		I haven't done so in this article, but I use variable name prefixes for variable storage qualifiers;
 		<tt>a_</tt> for vertex shader input attributes,
 		<tt>v_</tt> for <i>varyings</i> - variables passed between shader stages,
 		<tt>u_</tt> for uniforms,
