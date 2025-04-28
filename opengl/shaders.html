@@ -64,21 +64,25 @@
 			for OpenGL, but as an aside, here's an overview. Note that terms for each part differ by manufacturer.
 		</p>
 		<p>
-			A GPU has a block of processing cores. These aren't really equivalent to your CPU's cores.
-			Each core has a hierarchical organisation, comprising groups of <i>shader cores</i>,
-			and possibly also specialised cores for AI and ray tracing.
+			A GPU has clusters of processing <i>cores</i>.
+			AMD calls these clusters <i>compute units</i>, and Nvidia calls them <i>streaming multiprocessors</i>.
+			These aren't really equivalent to your CPU's cores.
+			Each <i>compute unit</i> has a hierarchical organisation, comprising groups of processing elements.
+			The processing elements are called <i>shader cores</i> (Nvidia) or <i>stream processors</i> (AMD).
+			Some GPUs also have specialised core clusters for AI and ray tracing.
 		</p>
 		<p>
 			The shader cores, in turn, contain groups of
 			<i>threads</i>
 			that execute the instructions from your shaders. Threads are grouped into
 			<i>warps</i> - also called <i>wavefronts</i>.
-			There are usually 32 or 64 threads in a warp. A warp runs the same instruction over all 32 threads,
+			There are usually 32 or 64 threads in a warp. A warp runs the same instruction over all its threads,
 			and each can use different data. This is called SIMD (single instruction, multiple data).
+			Lots of the mathematics we will write in our shaders will make use of this to get a big speed up.
 		</p>
 		<p>
-			You can learn more about how GPUs work by following non-graphics GPU use; tutorials for AMD ROCm HIP and
-			Nvidia CUDA.
+			You can learn more about how GPUs work by following non-graphics GPU use;
+			e.g. official tutorials for AMD ROCm HIP and Nvidia CUDA.
 		</p>
 	</div>
 
@@ -149,7 +153,7 @@
 		<tr>
 			<th>Release Date</th>
 			<th>GPU type</th>
-			<th>GPU cores / shading units</th>
+			<th>shading units / stream processors</th>
 		</tr>
 		<tr>
 			<td>2017</td>
