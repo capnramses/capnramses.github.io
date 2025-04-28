@@ -6,17 +6,12 @@
 	<link rel="stylesheet" type="text/css" href="../greysans.css">
 </head>
 
-
-<!-- TODO
- -> extensions for e.g. texture filter thing that i use
- -> mention the debug callback feature - link to article? 
--->
-
-
 <body>
 	<p><a href="index.html">[index]</a></p>
 	<h1>Extended OpenGL Initialisation</h1>
-	<h4>Anton Gerdelan. Last Updated 13 Jan 2025</h4>
+	<p>
+		<i>By Anton Gerdelan. Last edited: 28 April 2025.</i>
+	</p>
 
 	<p>
 		Following on from the minimal start-up last time, it's useful to get some statistics
@@ -313,8 +308,8 @@ while ( !glfwWindowShouldClose( window ) ) {
 		is the number of screen updates to wait for before swapping the buffers.
 
 	<pre>
-	glfwSwapInterval( 0 ); // The value of 0 means "swap immediately".
-	glfwSwapInterval( 1 ); // Lock to normal refresh rate for your monitor.</pre>
+glfwSwapInterval( 0 ); // The value of 0 means "swap immediately".
+glfwSwapInterval( 1 ); // Lock to normal refresh rate for your monitor.</pre>
 
 	<p>
 		Keep in mind that the frame rate is not an objective measure of how fast your
@@ -443,14 +438,17 @@ if ( GL_TRUE != params ) {
 		get some insight into how OpenGL works, and how to debug some issues.
 	</p>
 
-	<p>For a really insightful look at what the state machine is doing, the <a
-			href="https://renderdoc.org/">RenderDoc</a>
-		tool
-		is a fantastic debugging companion to application development. It might not be clear what it's doing just yet,
-		but
-		when we look at the
-		different hardware and shader pipeline stages it will become very useful.
-	</p>
+	<div class="hint">
+		<p>For a really insightful look at what the state machine is doing, the <a
+				href="https://renderdoc.org/">RenderDoc</a>
+			tool
+			is a fantastic debugging companion to application development. It might not be clear what it's doing just
+			yet,
+			but
+			when we look at the
+			different hardware and shader pipeline stages it will become very useful.
+		</p>
+	</div>
 
 	<h2>Troubleshooting</h2>
 
