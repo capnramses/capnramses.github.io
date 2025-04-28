@@ -141,8 +141,6 @@ table td, table th {
 
 table tr:nth-child(even){background-color: #f2f2f2;}
 table.compact tr:nth-child(even){background-color: #f2f2f2;}
-table tr:hover {background-color: #ddd;}
-table.compact tr:hover {background-color: #ddd;}
 table th {
 	text-align: left;
 	background-color: #616161;
