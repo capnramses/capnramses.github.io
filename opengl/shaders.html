@@ -68,11 +68,11 @@
 			AMD calls these clusters <i>compute units</i>, and Nvidia calls them <i>streaming multiprocessors</i>.
 			These aren't really equivalent to your CPU's cores.
 			Each <i>compute unit</i> has a hierarchical organisation, comprising groups of processing elements.
-			The processing elements are called <i>shader cores</i> (Nvidia) or <i>stream processors</i> (AMD).
+			The processing elements are called <i>shading units</i> or <i>stream processors</i>.
 			Some GPUs also have specialised core clusters for AI and ray tracing.
 		</p>
 		<p>
-			The shader cores, in turn, contain groups of
+			The shading units, in turn, contain groups of
 			<i>threads</i>
 			that execute the instructions from your shaders. Threads are grouped into
 			<i>warps</i> - also called <i>wavefronts</i>.
@@ -152,22 +152,22 @@
 		<caption><b>Comparison of Selected OpenGL4-Capable GPUs</b></caption>
 		<tr>
 			<th>Release Date</th>
-			<th>GPU type</th>
-			<th>shading units / stream processors</th>
+			<th>GPU</th>
+			<th>shading units</th>
 		</tr>
 		<tr>
 			<td>2017</td>
-			<td>GeForce GTX 1080 Ti</td>
+			<td>Nvidia GeForce GTX 1080 Ti</td>
 			<td>3584</td>
 		</tr>
 		<tr>
 			<td>2022</td>
-			<td>Radeon RX 7900 XTX</td>
+			<td>AMD Radeon RX 7900 XTX</td>
 			<td>6144</td>
 		</tr>
 		<tr>
 			<td>2022</td>
-			<td>GeForce RTX 4090</td>
+			<td>Nvidia GeForce RTX 4090</td>
 			<td>16384</td>
 		</tr>
 	</table>
