@@ -59,28 +59,34 @@ pre {
 	font-family: 'Ubuntu Mono', monospace;
 	line-height: 1.2;
 	background-color: rgb(238, 238, 238);
-	border: 1px solid #ddd;
-	border-left: 3px solid #383838;
+	border: 1px solid rgb(171, 171, 171);
+	border-left: 3px solid rgb(134, 134, 134);
 	tab-size: 2;
 	page-break-inside: avoid;
 	max-width: 100%;
 	overflow: auto;
 	display: block;
 	word-wrap: break-word;
-	padding: 0.3em 0.3em 0.3em 0.1em;
+	padding: 4px;
+	padding-left: 4px;
 }
 div.hint {
 	line-height: 1.2;
 	background-color: rgb(255, 216, 172);
-	border: 1px solid #ddd;
-	border-left: 3px solid #383838;
+	border: 1px solid rgb(177, 119, 54);
+	border-left: 3px solid rgb(177, 119, 54);
+	border-radius: 4px;
 	tab-size: 2;
 	page-break-inside: avoid;
 	max-width: 100%;
 	overflow: auto;
 	display: block;
 	word-wrap: break-word;
-	padding: 0.3em 0.3em 0.3em 0.1em;
+	padding: 5px;
+}
+div.hint::before {
+	content: '🛈 Note \A';
+	white-space: pre-wrap;
 }
 img {
 	max-width: 100%;
@@ -109,6 +115,9 @@ div.sidepanel {
 table {
 	min-width: 50%;
 	max-width: 100%;
+	border-collapse: collapse;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 table.compact {
@@ -116,21 +125,37 @@ table.compact {
 	min-width: 50%;
 	max-width: 100%;
 	text-align: left;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 table.compact td, table.compact th {
-	border: 0px solid #FFFFFF;
+	border: 1px solid #ddd;
 	padding: 1px 1px;
 }
 
 table td, table th {
 	padding: 1px 10px;
+	border: 1px solid #ddd;
+}
+
+table tr:nth-child(even){background-color: #f2f2f2;}
+table.compact tr:nth-child(even){background-color: #f2f2f2;}
+table tr:hover {background-color: #ddd;}
+table.compact tr:hover {background-color: #ddd;}
+table th {
+	text-align: left;
+	background-color: #616161;
+	color: white;
+}
+table.compact th {
+	text-align: left;
+	background-color: #616161;
+	color: white;
 }
 
 table.compact td {
 	font-size: 11px;
-}
-table.compact thead {
 }
 table.compact thead th {
 	font-size: 12px;

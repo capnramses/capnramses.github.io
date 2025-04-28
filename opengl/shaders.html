@@ -56,17 +56,27 @@
 	</p>
 
 	<div class="hint">
-		We don't need to know the details of GPU hardware architecture to start writing shaders
-		for OpenGL, but as an aside, here's an overview. Note that terms for each part differ by manufacturer.
-		A GPU has a block of processing cores. These aren't really equivalent to your CPU's cores.
-		Each core has a hierarchical organisation, comprising groups of <i>shader cores</i>,
-		and possibly also specialised cores for AI and ray tracing. The shader cores, in turn, contain groups of
-		<i>threads</i>
-		that execute the instructions from your shaders. Each thread group is called a
-		<i>warp</i>, or <i>wavefront</i>.
-		There are usually 32 or 64 threads in a warp. A warp runs the same instruction over all 32 threads,
-		and each can use different data. This is called SIMD (single instruction, multiple data).
-		You can learn more about how GPUs work by following non-graphics GPU use; tutorials for AMD ROCm HIP and Nvidia CUDA.
+		<p>
+			We don't need to know the details of GPU hardware architecture to start writing shaders
+			for OpenGL, but as an aside, here's an overview. Note that terms for each part differ by manufacturer.
+		</p>
+		<p>
+			A GPU has a block of processing cores. These aren't really equivalent to your CPU's cores.
+			Each core has a hierarchical organisation, comprising groups of <i>shader cores</i>,
+			and possibly also specialised cores for AI and ray tracing.
+		</p>
+		<p>
+			The shader cores, in turn, contain groups of
+			<i>threads</i>
+			that execute the instructions from your shaders. Threads are grouped into
+			<i>warps</i> - also called <i>wavefronts</i>.
+			There are usually 32 or 64 threads in a warp. A warp runs the same instruction over all 32 threads,
+			and each can use different data. This is called SIMD (single instruction, multiple data).
+		</p>
+		<p>
+			You can learn more about how GPUs work by following non-graphics GPU use; tutorials for AMD ROCm HIP and
+			Nvidia CUDA.
+		</p>
 	</div>
 
 	<div class="centre">
@@ -106,10 +116,13 @@
 
 
 	<div class="hint">
-		Note that there is a distinction between a shader, indicated by white boxes in the pipeline image, above, which
-		is a mini-program for just
-		one stage in the hardware pipeline, and a shader program, which is a GPU program
-		that comprises several shaders that have been linked together.
+		<p>
+			Note that there is a distinction between a shader, indicated by white boxes in the pipeline image, above,
+			which
+			is a mini-program for just
+			one stage in the hardware pipeline, and a shader program, which is a GPU program
+			that comprises several shaders that have been linked together.
+		</p>
 	</div>
 
 	<p>
@@ -163,15 +176,22 @@
 
 
 	<div class="hint">
-		GPUs don't use <i>branch prediction</i> optimisations like a CPU does. Things like if-statements introduce
-		branching.
-		In SIMD architectures the GPU might have to execute <i>both</i> paths of an if-else condition, and this could also leave some threads idle. That might mean your
-		rendering performs worse. The advice would generally be to use branching sparingly in shaders.
-		GPUs since about 2016 use newer SIMT (single instruction multiple thread) architecture which can improve
-		branching performance.
-		So, the newer advice might be, don't be scared to use branching, but if you want to improve performance, try removing
-		some, and check the
-		difference on a couple of different machines.</div>
+		<p>
+			GPUs don't use <i>branch prediction</i> optimisations like a CPU does. Things like if-statements introduce
+			branching.
+			In SIMD architectures the GPU might have to execute <i>both</i> paths of an if-else condition, and this
+			could
+			also leave some threads idle. That might mean your
+			rendering performs worse. The advice would generally be to use branching sparingly in shaders.
+		</p>
+		<p>
+			GPUs since about 2016 use newer SIMT (single instruction multiple thread) architecture which can improve
+			branching performance.
+			So, the newer advice might be; don't be scared to use branching, but if you want to improve performance, try
+			removing
+			some, and check the
+			difference on a couple of different machines.</p>
+	</div>
 
 	<h2>Difference Between Fragments and Pixels</h2>
 
@@ -304,8 +324,10 @@
 	<h3>GLSL Data Types</h3>
 
 	<p>
-		The most commonly used data types in GLSL are in the table below. For a complete list, and tables of functions and operators available,
-		see any of the <a href="https://www.khronos.org/files/opengl41-quick-reference-card.pdf">Quick Reference Cards</a>, and find GLSL in the back pages.
+		The most commonly used data types in GLSL are in the table below. For a complete list, and tables of functions
+		and operators available,
+		see any of the <a href="https://www.khronos.org/files/opengl41-quick-reference-card.pdf">Quick Reference
+			Cards</a>, and find GLSL in the back pages.
 	</p>
 
 	<table>
@@ -323,14 +345,17 @@
 		<tr>
 			<td><tt>bool</tt></td>
 			<td>Boolean value as in C++</td>
+			<td></td>
 		</tr>
 		<tr>
 			<td><tt>int</tt></td>
 			<td>Signed integer as in C</td>
+			<td></td>
 		</tr>
 		<tr>
 			<td><tt>float</tt></td>
 			<td>Floating-point scalar value as in C</td>
+			<td></td>
 		</tr>
 		<tr>
 			<td><tt>vec3</tt></td>
@@ -355,14 +380,17 @@
 		<tr>
 			<td><tt>sampler2D</tt></td>
 			<td>2D texture loaded from an image file</td>
+			<td></td>
 		</tr>
 		<tr>
 			<td><tt>samplerCube</tt></td>
 			<td>6-sided sky-box texture</td>
+			<td></td>
 		</tr>
 		<tr>
 			<td><tt>sampler2DShadow</tt></td>
 			<td>shadow projected onto a texture</td>
+			<td></td>
 		</tr>
 	</table>
 
@@ -409,10 +437,12 @@
 
 	<p>
 		GLSL is designed to resemble the C programming language. Each shader resembles a small
-		C program. In <a href="hellotriangle.html">Hello Triangle</a> we wrote a very minimal shader program that has only a
+		C program. In <a href="hellotriangle.html">Hello Triangle</a> we wrote a very minimal shader program that has
+		only a
 		vertex
 		shader and a fragment shader. Each of these shaders can be stored in a C string, or in
-		a plain text file first, for convenience, and then loaded into a string. Let's start from a working Hello Triangle
+		a plain text file first, for convenience, and then loaded into a string. Let's start from a working Hello
+		Triangle
 		program,
 		and modify it to add some new features.
 	</p>
@@ -426,7 +456,8 @@
 	</p>
 
 	<p>
-		We can make our vertex shader a little bit more fun by modifying our triangle's position. If we use the current time
+		We can make our vertex shader a little bit more fun by modifying our triangle's position. If we use the current
+		time
 		as a variable, we can animate this too. Let's modify our vertex shader, and add in a <tt>uniform</tt> for the
 		current time.
 		I wont add string quotes or line endings here. If you're not loading the shader from a file, you'll need to add
@@ -465,22 +496,28 @@ void main() {
 	</p>
 
 	<div class="hint">
-		Uniforms in GLSL are actually constants in our shaders, meaning we can read, but not change the values.
-		In the Microsoft Direct3D API they are named <i>constants</i>.
+		<p>
+			Uniforms in GLSL are actually constants in our shaders, meaning we can read, but not change the values.
+			In the Microsoft Direct3D API they are named <i>constants</i>.
+		</p>
 	</div>
 
 	<p>
-		I've also created a new <tt>vec3</tt> variable in our shader called <tt>pos</tt>. I'm just making it a copy of the
+		I've also created a new <tt>vec3</tt> variable in our shader called <tt>pos</tt>. I'm just making it a copy of
+		the
 		vertex position
 		value from our vertex buffer to begin with.
 		You can access individual components of a complex type like a <tt>vec3</tt>.
-		A <tt>vec4</tt> has <tt>.x .y .z .w</tt>, or, alternatively, because these types can also represent colours, <tt>.r
+		A <tt>vec4</tt> has <tt>.x .y .z .w</tt>, or, alternatively, because these types can also represent colours,
+		<tt>.r
 			.g .b .a</tt>.
 		On the line <tt>pos.y += sin( time );</tt> I'm modifying only the vertical component of the position. Note the
 		<tt>+=</tt>
-		operator. I'm using the built-in <tt>sin()</tt> (sine wave) function to return a value between -1.0 and 1.0. That's
+		operator. I'm using the built-in <tt>sin()</tt> (sine wave) function to return a value between -1.0 and 1.0.
+		That's
 		handy because it won't move
-		the triangle far outside the viewable area. I'm using the time value, which will be the current time, in seconds as
+		the triangle far outside the viewable area. I'm using the time value, which will be the current time, in seconds
+		as
 		the <tt>x</tt> value.
 		In the last instruction note that I'm using our new <tt>pos</tt> variable for the final vertex position in clip
 		space.
@@ -491,7 +528,8 @@ void main() {
 	<p>
 		If you compile and run your program at this point it should still work without errors, and nothing should have
 		changed. Why? Uniform variables default to the
-		value 0, and we are adding 0 to our triangle's y position. We need to modify our C program and update the uniform
+		value 0, and we are adding 0 to our triangle's y position. We need to modify our C program and update the
+		uniform
 		value. If you have not done so already,
 		at the top of your <tt>while</tt> loop add the following GLFW function call to get the current time every frame:
 	</p>
@@ -513,7 +551,8 @@ int time_loc = glGetUniformLocation( shader_program, "time" );
 assert( time_loc > -1 ); // NB. include assert.h for assert().</pre>
 
 	<p>
-		Now, right before our call to draw the triangle, we can update the uniform to our shader, using our current time,
+		Now, right before our call to draw the triangle, we can update the uniform to our shader, using our current
+		time,
 		and the location we retrieved earlier.
 		The drawing section of our <tt>while</tt> loop now looks like this, with the addition of a function call to
 		<tt>glUniform1f</tt>:
@@ -530,18 +569,21 @@ glBindVertexArray( vao );
 glDrawArrays( GL_TRIANGLES, 0, 3 );</pre>
 
 	<p>
-		The <tt>glUniform</tt> family of functions have variations matching all the GLSL data types. Here, I'm updating a
+		The <tt>glUniform</tt> family of functions have variations matching all the GLSL data types. Here, I'm updating
+		a
 		GLSL <tt>float</tt> so I call
 		<tt>glUniform1f()</tt> for 1 (f)loat. If I was updating a <tt>vec3</tt> uniform, then I'd call
 		<tt>glUniform3f()</tt>. Look these functions up on
-		<a href="https://docs.gl/gl4/glUniform">docs.gl</a> to see the full list, and how the parameters differ. Note that I
+		<a href="https://docs.gl/gl4/glUniform">docs.gl</a> to see the full list, and how the parameters differ. Note
+		that I
 		explicitly cast our time
 		value to a <tt>float</tt>, as it's a <tt>double</tt> normally. <tt>glUniform</tt> calls operate only on the
 		<i>currently bound</i> shader program,
 		so I called our new function <i>after</i> the call to <tt>glUseProgram()</tt>. It won't matter in our 1-shader
 		program, but it will if you add in another
 		shader program later. If you are using OpenGL 4.1, or newer, then you can use an alternative function
-		family, <a href="https://docs.gl/gl4/glProgramUniform">glProgramUniform</a>, which does not have this limitation.
+		family, <a href="https://docs.gl/gl4/glProgramUniform">glProgramUniform</a>, which does not have this
+		limitation.
 	</p>
 
 	<p>
@@ -572,14 +614,21 @@ glDrawArrays( GL_TRIANGLES, 0, 3 );</pre>
 	</p>
 
 	<div class="hint">
-		In larger shaders I like to use a variable naming convention to be reminded what I'm working with.
-		You can't change the value of uniforms or attributes, for example, and it's quite annoying getting an error when you do this by accident.
-		I haven't done so in this article, but I use variable name prefixes for variable storage qualifiers;
-		<tt>a_</tt> for vertex shader input attributes,
-		<tt>v_</tt> for <i>varyings</i> - variables passed between shader stages,
-		<tt>u_</tt> for uniforms,
-		and <tt>o_</tt> for fragment shader outputs like the colour of the fragment.
-		If it's a variable I declared in the shader then I don't use a prefix.
+		<p>
+			In larger shaders I like to use a variable naming convention to be reminded what I'm working with.
+			You can't change the value of uniforms or attributes, for example, and it's quite annoying getting an error
+			when
+			you do this by accident.
+			I haven't done so in this article, but I use variable name prefixes for variable storage qualifiers;
+		</p>
+		<ul>
+			<li><tt>a_</tt> for vertex shader input attributes,</li>
+			<li><tt>v_</tt> for <i>varyings</i> - variables passed between shader stages,</li>
+			<li><tt>u_</tt> for uniforms,</li>
+			<li>and <tt>o_</tt> for fragment shader outputs like the colour of the fragment.</li>
+			<li>If it's a variable I declared in the shader then I don't use a prefix.</li>
+		</ul>
+
 	</div>
 
 	<h3>Expanding the Fragment Shader</h3>
@@ -588,16 +637,18 @@ glDrawArrays( GL_TRIANGLES, 0, 3 );</pre>
 		The hardware pipeline knows that the first <tt>vec4</tt> it gets as output from the
 		fragment shader should be the colour of the fragment. The colours are <b>RGBA</b>, or
 		red, green, blue, alpha, in that order. The values of each component are floats between 0.0 and 1.0,
-		not bytes between 0 and 255, as is common elsewhere. The alpha channel output can be used for a variety of effects,
+		not bytes between 0 and 255, as is common elsewhere. The alpha channel output can be used for a variety of
+		effects,
 		which you define by setting a <i>blend mode</i> in OpenGL. It is commonly used to
 		indicate opacity (for a transparent, or colour-blending effect), but by default it does nothing.
 	</p>
 
 	<div class="hint">
-		If you're wondering why we don't set a built-in variable for output colour here, that's a good question.
-		Older versions of GLSL had a built-in <tt>gl_FragColor</tt> variable to set, similar to <tt>gl_Position</tt>
-		in vertex shaders. When we get into further tutorials you will see that there is a lot more flexibility
-		for multiple outputs possible now.
+		<p>
+			If you're wondering why we don't set a built-in variable for output colour here, that's a good question.
+			Older versions of GLSL had a built-in <tt>gl_FragColor</tt> variable to set, similar to <tt>gl_Position</tt>
+			in vertex shaders. When we get into further tutorials you will see that there is a lot more flexibility
+			for multiple outputs possible now.</p>
 	</div>
 
 	<pre>
@@ -617,14 +668,16 @@ void main() {
 		The <tt>uniform</tt> variables are global to all shaders within the
 		program, so we have accessed our <tt>time</tt> variable here too. I've created a new variable, using the
 		<tt>time</tt>,
-		called <tt>wild</tt>. This is similar to the position change, except we will use it for a colour component. Because
+		called <tt>wild</tt>. This is similar to the position change, except we will use it for a colour component.
+		Because
 		sine
 		wave values are between -1.0 and 1.0 I scale and offset it to be between a colour range of 0.0 and 1.0.
 		The line <tt>frag_colour.rba = vec3( 1.0 );</tt> is just showing a different way to set variables by their
 		components.
 		GLSL has a mix-up ability it calls <i>swizzling</i> that lets you set any subset of components, in any order.
 		Because I'm only changing 3 of the 4 components, I'm assigning a <tt>vec3()</tt>. Giving a single parameter to a
-		complex type constructor sets <i>all</i> of that components to that value. Here it means that the red, blue, and,
+		complex type constructor sets <i>all</i> of that components to that value. Here it means that the red, blue,
+		and,
 		alpha components will be set to 1.0. You should get an interesting colour animation now. Try setting the other
 		components
 		to different <tt>sin()</tt> functions, perhaps one with <tt>time * 0.5</tt> as input.
@@ -634,9 +687,11 @@ void main() {
 	<h3>Passing a Variable from Vertex to Fragment Shader</h3>
 
 	<p>
-		We can also output a variable from a shader to send it to the next shader stage down the pipeline. Let's modify our
+		We can also output a variable from a shader to send it to the next shader stage down the pipeline. Let's modify
+		our
 		shaders to do that.
-		We will specify an <tt>out</tt> variable in the vertex shader, that matches the name of an <tt>in</tt> variable in
+		We will specify an <tt>out</tt> variable in the vertex shader, that matches the name of an <tt>in</tt> variable
+		in
 		the fragment shader.
 		The vertex shader:
 	</p>
@@ -656,7 +711,8 @@ void main() {
 }</pre>
 
 	<p>
-		Now we can input that position in the fragment shader. Let's use it as a colour, commenting out our time-based code.
+		Now we can input that position in the fragment shader. Let's use it as a colour, commenting out our time-based
+		code.
 	</p>
 
 	<pre>
@@ -678,16 +734,21 @@ void main() {
 
 	<p>
 		Now we are visualising the clip space coordinates of each fragment as a colour. <tt>x</tt> corresponding
-		to red, <tt>y</tt> to green, and <tt>z</tt> to blue. We don't see any blue on the triangle because, if you recall,
-		we set Z to 0 for all 3 vertex points. You'll note that we only set 3 positions, one for each vertex, but we get a
-		whole gradient of colours over a larger number of fragments. When variables are output from a vertex to a fragment
+		to red, <tt>y</tt> to green, and <tt>z</tt> to blue. We don't see any blue on the triangle because, if you
+		recall,
+		we set Z to 0 for all 3 vertex points. You'll note that we only set 3 positions, one for each vertex, but we get
+		a
+		whole gradient of colours over a larger number of fragments. When variables are output from a vertex to a
+		fragment
 		they are <i>interpolated</i> to each fragment, based on a fragment's distance to each vertex.
 	</p>
 
 	<div class="hint">
-		These input and output variables were called <i>varyings</i> in older versions of GLSL, and used the
-		<tt>varying</tt> storage qualifier
-		instead of <tt>in</tt> and <tt>out</tt>.
+		<p>
+			These input and output variables were called <i>varyings</i> in older versions of GLSL, and used the
+			<tt>varying</tt> storage qualifier
+			instead of <tt>in</tt> and <tt>out</tt>.
+		</p>
 	</div>
 
 	<p>
@@ -700,19 +761,26 @@ void main() {
 		is held down, you can also make them interactive.
 	</p>
 
-	<div class="hint">A handy <a href="https://www.khronos.org/opengl/wiki/Built-in_Variable_(GLSL)">built-in variable</a>
-		is available in fragment shaders that you can access to create
-		more interesting effects. <tt>vec4 gl_FragCoord</tt> gives window-relative coordinate of the current fragment. Note
-		that this isn't in clip coordinate space as our vertex position was,
-		but in pixel dimensions. If you want the 0.0 to 1.0 range, divide the <tt>x</tt> and <tt>y</tt> components by your
-		view resolution (we set something like 800 and 600, respectively, in Hello Triangle).
-		Try using this as the output colour to get an idea.
+	<div class="hint">
+		<p>A handy <a href="https://www.khronos.org/opengl/wiki/Built-in_Variable_(GLSL)">built-in
+				variable</a>
+			is available in fragment shaders that you can access to create
+			more interesting effects. <tt>vec4 gl_FragCoord</tt> gives window-relative coordinate of the current
+			fragment.
+			Note
+			that this isn't in clip coordinate space as our vertex position was,
+			but in pixel dimensions. If you want the 0.0 to 1.0 range, divide the <tt>x</tt> and <tt>y</tt> components
+			by
+			your
+			view resolution (we set something like 800 and 600, respectively, in Hello Triangle).
+			Try using this as the output colour to get an idea.</p>
 	</div>
 
 	<h2>Possible Extensions</h2>
 
 	<p>
-		<a href="https://antongerdelan.net/opengl/shader_hot_reload.html">Hot reloading</a> will add an incredible amount
+		<a href="https://antongerdelan.net/opengl/shader_hot_reload.html">Hot reloading</a> will add an incredible
+		amount
 		of experimentation power to your shader development.
 		I would recommend adding this to every project where you are doing something creative with shaders. If you add a
 		few interesting uniform variables
@@ -723,9 +791,11 @@ void main() {
 
 	<p>For some idea for the potential see the <a href="https://www.shadertoy.com/">Shadertoy</a> website, which
 		lets you write and share a fragment shader
-		written in GLSL using WebGL. If you add hot reloading, the view resolution, and mouse coordinates as uniforms, and
+		written in GLSL using WebGL. If you add hot reloading, the view resolution, and mouse coordinates as uniforms,
+		and
 		make your triangle cover the screen
-		(either with two triangles, or with one huge triangle where the edges are outside clip space), then you can recreate
+		(either with two triangles, or with one huge triangle where the edges are outside clip space), then you can
+		recreate
 		the basics of Shadertoy in OpenGL.
 	</p>
 
@@ -733,9 +803,11 @@ void main() {
 		If you have all of that, then you can actually take a diversion and write a <i>ray tracer</i>, or <i>path
 			tracer</i>,
 		at this point.
-		Each fragment would represent one ray. You would write your ray-casting code into your fragment shader. We did this
+		Each fragment would represent one ray. You would write your ray-casting code into your fragment shader. We did
+		this
 		at BTH in Sweden
-		in the computer graphics class as a first assignment. If you want to check out Ray Tracing I suggest Peter Shirley's
+		in the computer graphics class as a first assignment. If you want to check out Ray Tracing I suggest Peter
+		Shirley's
 		<a href="https://raytracing.github.io/">Ray Tracing in One Weekend</a>
 		series. It's a similar style to my OpenGL e-book, and I enjoyed running through the first book. It doesn't use
 		OpenGL, but you could easily adapt it.
