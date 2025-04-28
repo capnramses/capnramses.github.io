@@ -4,16 +4,14 @@
 <head>
 	<title>"Hello Triangle" - Anton's OpenGL 4 Tutorials</title>
 	<link rel="stylesheet" type="text/css" href="../greysans.css">
-	<!--
-		<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro&display=swap" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
-	-->
 </head>
 
 <body>
 	<p><a href="index.html">[index]</a></p>
-	<h1>"Hello Triangle"<br />OpenGL 4 Up and Running</h1>
-	<h4>Anton Gerdelan. Last Updated 8 January 2025.</h4>
+	<h1>"Hello Triangle" - OpenGL 4 Up and Running</h1>
+	<p>
+		<i>By Anton Gerdelan. Last edited: 28 April 2025.</i>
+	</p>
 
 	<p>
 		The idea of this article is to give a brief <b>overview</b> of all of the keys
@@ -82,10 +80,12 @@ int main( void ) {
 
 	<h3>Hooking-Up OpenGL Functions with Glad</h3>
 
-	<p>
-		<i>Note: in the earlier versions of this article, I used the alternative, GLEW, library in place of Glad.
-			If you see another example using GLEW, you can switch that with Glad if you wish.</i>
-	</p>
+	<div class="hint">
+		<p>
+			In earlier versions of this article, I used the alternative, GLEW, library in place of Glad.
+			If you see another example using GLEW, you can switch that with Glad if you wish.
+		</p>
+	</div>
 
 	<p>
 		There's a library called <a href="https://github.com/Dav1dde/glad">Glad </a> that creates an OpenGL interface
@@ -123,10 +123,10 @@ int main( void ) {
 │       └── gl.c
 └── main.c</pre>
 
-	<p>
-		<i>Note that if you are using an earlier version of Glad, the files will be called <tt>glad.c, glad.h</tt>,
-			instead of <tt>gl.c, gl.h</tt>.</i>
-	</p>
+	<div class="hint">
+		<p>If you are using an earlier version of Glad, the files will be called <tt>glad.c, glad.h</tt>,
+			instead of <tt>gl.c, gl.h</tt>.</p>
+	</div>
 
 	<h3>Starting the OpenGL Context With GLFW</h3>
 
@@ -134,9 +134,13 @@ int main( void ) {
 		<a href="http://www.glfw.org">GLFW</a> is a helper library that will start
 		the OpenGL <i>context</i> for us, so that it talks to almost any operating system in
 		the same way. The context is a running instance of OpenGL, tied to a window on the
-		operating system. <i>Note: I've updated this tutorial to use GLFW version
-			3. The interface differs slightly from previous versions.</i>
+		operating system.
 	</p>
+
+	<div class="hint">
+		<p>I've updated this tutorial to use GLFW version
+			3. The interface differs slightly from previous versions.</p>
+	</div>
 
 	<p>
 		You may download the binary files for the library from the GLFW website, or install the
@@ -255,8 +259,7 @@ int main( void ) {
 		to the GLFW headers. I have this compile command, using MinGW GCC:
 	</p>
 
-	<tt>gcc -D GLFW_DLL main.c glad/src/gl.c libglfw3dll.a -I ./glad/include/ -I ./glfw/include -L ./ -lglfw3 -lopengl32
-		-lgdi32</tt>
+	<pre>gcc -D GLFW_DLL main.c glad/src/gl.c libglfw3dll.a -I ./glad/include/ -I ./glfw/include -L ./ -lglfw3 -lopengl32 -lgdi32</pre>
 
 	<h4>Linux Compile</h4>
 
@@ -264,7 +267,7 @@ int main( void ) {
 		On Ubuntu the OpenGL library file is <tt>libGL</tt>. I have this compile command:
 	</p>
 
-	<tt>gcc main.c glad/src/gl.c -I ./glad/include/ -lglfw -lGL</tt>
+	<pre>gcc main.c glad/src/gl.c -I ./glad/include/ -lglfw -lGL</pre>
 
 
 	<h4>macOS Compile</h4>
@@ -275,7 +278,7 @@ int main( void ) {
 		On the command line, I have this command:
 	</p>
 
-	<tt>clang main.c glad/src/gl.c -I ./glad/include/ -lglfw -framework Cocoa -framework OpenGL -framework IOKit</tt>
+	<pre>clang main.c glad/src/gl.c -I ./glad/include/ -lglfw -framework Cocoa -framework OpenGL -framework IOKit</pre>
 
 	<p>
 		If you're having trouble linking the libraries, then I suggest having a read through
