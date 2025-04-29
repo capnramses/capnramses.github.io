@@ -85,7 +85,7 @@ div.hint {
 	padding: 5px;
 }
 div.hint::before {
-	content: '🛈 Note \A';
+	content: 'ℹ Note \A';
 	white-space: pre-wrap;
 }
 img {
