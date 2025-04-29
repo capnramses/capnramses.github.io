@@ -50,7 +50,8 @@
 				including OpenGL support.
 				If you have an Nvidia GPU, you will get optimal support by switching to proprietary drivers. e.g. In the
 				<i>Additional Drivers</i> tab
-				on Ubuntu.</td>
+				on Ubuntu.
+			</td>
 		</tr>
 		<tr>
 			<td>macOS</td>
@@ -79,6 +80,19 @@ int main( void ) {
 	return 0;
 }</pre>
 
+	<div class="hint">
+		<ul>
+			<li>If you want to install MinGW GCC for Windows, I recommend Stephan T. Lavavej's <a
+					href="https://nuwen.net/mingw.html">https://nuwen.net/mingw.html</a> distribution.
+			</li>
+			<li>Of course, you can also use Visual Studio. Make sure to select the <i>Desktop development with C++
+					workload</i>
+				during installation. I like to use this from the command-line too. The <i>Terminal</i> application lets
+				you open a tab with Visual Studio paths set up to run <tt>cl.exe</tt>.
+			</li>
+		</ul>
+	</div>
+
 	<p>Next, we'll add a couple of helper libraries, and expand this with OpenGL.</p>
 
 	<h3>Hooking-Up OpenGL Functions with Glad</h3>
@@ -97,7 +111,7 @@ int main( void ) {
 		system path, and it lets us add in OpenGL extensions. On Windows
 		if you try to compile without something like Glad, you will see a list of unrecognised OpenGL
 		functions and constants - that means you're using the '90s Microsoft OpenGL.
-		You can use the Glad web service generate library files for you.
+		You can use the <a href="https://gen.glad.sh/">Glad web service</a> to generate your library files for you.
 		Make sure to check the following fields in the web service:
 	</p>
 
@@ -151,21 +165,26 @@ int main( void ) {
 		You may also compile the library from source yourself.
 	</p>
 
-	<pre>
-# Ubuntu
-sudo apt install libglfw3-dev
-
-# macOS
-brew install glfw
-	</pre>
-
-	<p>
-		We should include Glad <u>before</u> GLFW.
-	</p>
-
-	<pre>
-#include &lt;glad/gl.h&gt;
-#include &lt;GLFW/glfw3.h&gt;</pre>
+	<table>
+		<th>Platform</th>
+		<th>Suggested GLFW Installation</th>
+		<tr>
+			<td>Windows</td>
+			<td><a href="https://www.glfw.org/download.html">Download binaries and headers</a>.</td>
+		</tr>
+		<tr>
+			<td>Ubuntu with apt</td>
+			<td>
+				<pre>sudo apt install libglfw3-dev</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>macOS with Homebrew</td>
+			<td>
+				<pre>brew install glfw</pre>
+			</td>
+		</tr>
+	</table>
 
 	<p>
 		On Windows you may not have installed with a package manager. Because the default download for GLFW is just the
@@ -180,21 +199,31 @@ brew install glfw
 		If you're using Visual Studio you'll see the GLFW download includes a subfolder for each major version. Drop the
 		appropriate files from the subfolder matching your version instead.
 		GLFW can also be built into your program as a static library. I'm not doing that in this example.
-		For further explanation see the very helpful GLFW <a
-			href="https://www.glfw.org/docs/3.3/build_guide.html">build_guide.html</a>.
+		For further explanation see the very helpful <a href="https://www.glfw.org/docs/3.3/build_guide.html">GLFW Build
+			Guide</a>.
 	</p>
 
+	<p>On Windows your project files will now be laid out as follows:</p>
 	<pre>
 .
-├── glad
+├── glad           # Glad files that you generated.
 │   ├── include
 │   └── src
 ├── glfw
-│   └── include
+│   └── include    # GLFW headers.
 ├── glfw3.dll
-├── glfw3dll.lib  (if using Visual Studio)
-├── libglfw3dll.a (if using MinGW)
+├── glfw3dll.lib   # (If using Visual Studio).
+├── libglfw3dll.a  # (If using MinGW GCC).
 └── main.c</pre>
+
+
+	<p>
+		We should include Glad <i>before</i> GLFW. You can add these includes to your <tt>main.c</tt> code.
+	</p>
+
+	<pre>
+#include &lt;glad/gl.h&gt;
+#include &lt;GLFW/glfw3.h&gt;</pre>
 
 	<h2>Initialisation Code</h2>
 
@@ -519,7 +548,7 @@ while ( !glfwWindowShouldClose( window ) ) {
 			Try to move the shape in the vertex shader e.g. <tt>vec4(vp.x, vp.y + 1.0, vp.z, 1.0);</tt>
 		</li>
 		<li>
-			<b>Be Square!</b> Try to add another triangle to the list of points and make a square shape. You will have
+			<i>Be square!</i> Try to add another triangle to the list of points and make a square shape. You will have
 			to
 			change
 			several variables when setting up the buffer and drawing the shape.

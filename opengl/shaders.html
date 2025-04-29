@@ -223,22 +223,22 @@
 	<h2>Shader Language</h2>
 
 	<p>
-		OpenGL 4 shaders are written in OpenGL Shader Language version 4.00.9. The GLSL language
-		from OpenGL versions 3 to 4 is almost identical, so we can port between versions
+		OpenGL 4.1 shaders are written in OpenGL Shader Language version 4.10.6. The GLSL language
+		from OpenGL versions 3 and 4 is almost identical, so we can port between versions
 		without changing the code. OpenGL version 3.2 added a new type of shader: geometry
 		shaders, and version 4.0 added tessellation control and tessellation evaluation shaders.
 		These, of course, can not be rolled back to earlier versions. The first line in a GLSL
 		shader should start with the simplified version tag:
 	</p>
 
-	<p><tt>#version 410 core</tt></p>
+	<pre>#version 410 core</pre>
 
 	<p>
 		The different version tags are:
 	</p>
 
 	<table>
-		<caption><b>Version Tags for OpenGL and GLSL Versions</b></caption>
+		<caption><b>OpenGL and GLSL Versions</b></caption>
 		<tr>
 			<th>OpenGL Version</th>
 			<th>GLSL Version</th>
@@ -342,62 +342,62 @@
 		<tr>
 			<th>Data Type</th>
 			<th>Description</th>
-			<th>Common Usage</th>
+			<th>Common Uses</th>
 		</tr>
 		<tr>
 			<td><tt>void</tt></td>
-			<td>nothing</td>
-			<td>Functions that do not return a value</td>
+			<td>Nothing.</td>
+			<td>Functions that do not return a value.</td>
 		</tr>
 		<tr>
 			<td><tt>bool</tt></td>
-			<td>Boolean value as in C++</td>
+			<td>Boolean value as in C++.</td>
 			<td></td>
 		</tr>
 		<tr>
-			<td><tt>int</tt></td>
-			<td>Signed integer as in C</td>
+			<td><tt>int, uint</tt></td>
+			<td>Signed and unsigned integers as in C.</td>
 			<td></td>
 		</tr>
 		<tr>
 			<td><tt>float</tt></td>
-			<td>Floating-point scalar value as in C</td>
+			<td>Floating-point scalar value as in C.</td>
 			<td></td>
 		</tr>
 		<tr>
-			<td><tt>vec3</tt></td>
-			<td>3D floating-point value</td>
-			<td>Points and direction vectors</td>
+			<td><tt>vec2, vec3, vec4</tt></td>
+			<td>2D, 3D, and 4D floating-point values.</td>
+			<td>Positions, colours, and direction vectors.</td>
 		</tr>
 		<tr>
 			<td><tt>vec4</tt></td>
-			<td>4D floating-point value</td>
-			<td>Points and direction vectors</td>
+			<td>4D floating-point value.</td>
+			<td>Points and direction vectors.</td>
 		</tr>
 		<tr>
 			<td><tt>mat3</tt></td>
-			<td>3x3 floating-point matrix</td>
-			<td>Transforming surface normals</td>
+			<td>3x3 floating-point matrix.</td>
+			<td>Transforming surface normals.</td>
 		</tr>
 		<tr>
 			<td><tt>mat4</tt></td>
-			<td>4x4 floating-point matrix</td>
-			<td>Transforming vertex positions</td>
+			<td>4x4 floating-point matrix.</td>
+			<td>Transforming vertex positions.</td>
 		</tr>
 		<tr>
 			<td><tt>sampler2D</tt></td>
-			<td>2D texture loaded from an image file</td>
-			<td></td>
+			<td>2D texture.</td>
+			<td>Stretching an image over your triangles.</td>
 		</tr>
 		<tr>
 			<td><tt>samplerCube</tt></td>
-			<td>6-sided sky-box texture</td>
-			<td></td>
+			<td>6-sided texture.</td>
+			<td>A sky box back-drop.</td>
 		</tr>
 		<tr>
 			<td><tt>sampler2DShadow</tt></td>
-			<td>shadow projected onto a texture</td>
-			<td></td>
+			<td>2D depth texture/comparison.</td>
+			<td>Projecting shadows onto your triangles.</td>
 		</tr>
 	</table>
 
@@ -435,9 +435,9 @@
 
 	<p>
 		Some coding text editors will do syntax highlighting for GLSL
-		if you end with a ".glsl" extension. The GLSL reference compiler;
+		if you end with a <tt>.glsl</tt> extension. The GLSL reference compiler;
 		<a href="http://www.khronos.org/opengles/sdk/tools/Reference-Compiler/">Glslang</a>
-		can check your shaders for bugs if they end in ".vert" and ".frag".
+		can check your shaders for bugs if they end in <tt>.vert</tt> and <tt>.frag</tt>.
 	</p>
 
 	<h2>Expanding Shaders with Uniforms and Varyings</h2>
@@ -725,7 +725,7 @@ void main() {
 	<pre>
 #version 410 core
 
-in vec3 pos;         // <-- matching name required.
+in vec3 pos;         // <-- match name from vertex shader.
 uniform float time;
 out vec4 frag_colour;
 
