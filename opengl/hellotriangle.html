@@ -360,21 +360,22 @@ int main( void ) {
 
 	<pre>clang main.c glad/src/gl.c -I ./glad/include/ -lglfw -framework Cocoa -framework OpenGL -framework IOKit</pre>
 
-	<p>
-		If you're having trouble linking the libraries, then I suggest having a read through
-		the libraries' instructions for your operating system. Do you have the correct
-		version of the library for your compiler? If you are using an IDE, are you building a Debug or Release
-		application, and are the libraries added to the corresponding Debug or Replace tab in the IDE menu?
-		Are the paths you are giving the compiler matching the locations of the libraries?
-	</p>
+	<div class="hint">
+		<p>
+			If you're having trouble linking the libraries, then I suggest having a read through
+			the libraries' instructions for your operating system. Do you have the correct
+			version of the library for your compiler? If you are using an IDE, are you building a Debug or Release
+			application, and are the libraries added to the corresponding Debug or Replace tab in the IDE menu?
+			Are the paths you are giving the compiler matching the locations of the libraries?
+		</p>
+	</div>
 
 	<p>If I run my program on the command line I get this:</p>
 
 	<pre>
 $ ./a.out 
-Loaded OpenGL 4.1
-Renderer: NVIDIA GeForce GTX 1080 Ti/PCIe/SSE2.
-OpenGL version supported 4.1.0 NVIDIA 550.120.</pre>
+Renderer: Radeon RX 7900 XTX (radeonsi, navi31, LLVM 20.1.2, DRM 3.63, 6.14.0-35-generic)
+OpenGL version supported 4.6 (Core Profile) Mesa 25.0.7-0ubuntu0.25.04.2</pre>
 
 	<p>
 		This tells me that my driver can run OpenGL version 4.1.
