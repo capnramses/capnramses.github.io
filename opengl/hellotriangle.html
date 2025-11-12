@@ -392,7 +392,8 @@ OpenGL version supported 4.6 (Core Profile) Mesa 25.0.7-0ubuntu0.25.04.2</pre>
 	<h2>Define a Triangle in a Vertex Buffer</h2>
 
 	<p>Okay, let's define a triangle from 3 points. Later, we can look at doing transformations and perspective,
-		but for now let's draw it flat onto the final screen area; <i>x</i> between -1.0 and 1.0, <i>y</i> between -1.0 and 1.0, and <i>z</i> = 0.
+		but for now let's draw it flat onto the final screen area; <i>x</i> between -1.0 and 1.0, <i>y</i> between -1.0 and
+		1.0, and <i>z</i> = 0.
 	</p>
 
 	<div class="centre">
@@ -602,10 +603,8 @@ while ( !glfwWindowShouldClose( window ) ) {
 			Try to move the shape in the vertex shader e.g. <tt>vec4(vp.x, vp.y + 1.0, vp.z, 1.0);</tt>
 		</li>
 		<li>
-			<i>Be square!</i> Try to add another triangle to the list of points and make a square shape. You will have
-			to
-			change
-			several variables when setting up the buffer and drawing the shape.
+			Try to add another triangle to the list of points and make a square shape. You will have
+			to change several variables when setting up the buffer and drawing the shape.
 		</li>
 		<li>
 			Try drawing with <tt>GL_POINTS</tt> instead of triangles. How big are the points by default?
@@ -627,7 +626,7 @@ while ( !glfwWindowShouldClose( window ) ) {
 
 	<h2>Common Mistakes</h2>
 
-	<p> In OpenGL, your mistakes are mostly from misusing the interface (it's not the most intuitive API ever...
+	<p>In OpenGL, your mistakes are mostly from misusing the interface (it's not the most intuitive API ever...
 		to put it kindly).</p>
 
 	<h3>GLSL Mistakes</h3>
