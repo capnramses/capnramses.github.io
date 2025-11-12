@@ -10,7 +10,7 @@
 	<p><a href="index.html">[index]</a></p>
 	<h1>"Hello Triangle" - OpenGL 4 Up and Running</h1>
 	<p>
-		<i>By Anton Gerdelan. Last edited: 28 April 2025.</i>
+		<i>By Anton Gerdelan. Last edited: 12 November 2025.</i>
 	</p>
 
 	<p>
@@ -145,6 +145,23 @@ int main( void ) {
 			instead of <tt>gl.c, gl.h</tt>.</p>
 	</div>
 
+
+	<h3>Include Glad</h3>
+
+	<p>
+		We can now include the Glad header at the top of our program. If you look at our directory structure above, the path
+		from our project directory to the glad header is <tt>glad/include/glad/gl.h</tt>. We will add the
+		<tt>glad/include/</tt> path to our compiler's header directories. Therefore we will add the final <tt>glad/gl.h</tt>
+		bit to our <tt>#include</tt>.
+	</p>
+
+	<pre>
+#include &lt;glad/gl.h&gt;</pre>
+
+	<p>This gives us access to the <tt>gladLoadGL()</tt> function that we'll call in our program. We won't add it to the
+		code
+		just yet, because we will combine it with another helper library called GLFW.</p>
+
 	<h3>Starting the OpenGL Context With GLFW</h3>
 
 	<p>
@@ -217,6 +234,8 @@ int main( void ) {
 └── main.c</pre>
 
 
+	<h3>Include GLFW</h3>
+
 	<p>
 		We should include Glad <i>before</i> GLFW. You can add these includes to your <tt>main.c</tt> code.
 	</p>
@@ -224,6 +243,9 @@ int main( void ) {
 	<pre>
 #include &lt;glad/gl.h&gt;
 #include &lt;GLFW/glfw3.h&gt;</pre>
+
+	<p>This gives us the ability to call <tt>glfwInit()</tt>, and other GLFW functions that we'll use to create
+		and interact with a window, our OpenGL context, and even handle keyboard and mouse inputs.</p>
 
 	<h2>Initialisation Code</h2>
 
@@ -281,6 +303,32 @@ int main( void ) {
   return 0;
 }
 </pre>
+
+	<div class="hint">
+		<p>Note that OpenGL function calls are prefixed with "gl...", GLFW function calls are prefixed with "glfw...", and
+			Glad's function "glad...".</p>
+	</div>
+
+	<p>
+		The order of sections in the code above is quite important. First we initialise GLFW with <tt>glfwInit()</tt>. After
+		that, and before creating a window,
+		we set some requests for how our window and context should be created with <tt>glfwWindowHint()</tt>. Then we create
+		the window with <tt>glfwCreateWindow()</tt>.
+		It can then be tied to a rendering context with <tt>glfwMakeContextCurrent()</tt>.
+	</p>
+
+	<p>After our context is established with GLFW we can start Glad with <tt>gladLoadGL()</tt>, and you can see that we
+		integrate with GLFW
+		using the <tt>glfwGetProcAddress</tt> parameter. At this point we can start calling OpenGL functions, and we do so
+		directly to test that it works.
+		The <tt>glGetString()</tt> function lets you print various values from OpenGL. If this works then we should be able
+		to call any functions from OpenGL 4.1.
+	</p>
+
+	<p>
+		Finally the <tt>glfwTerminate()</tt> function is called when the program exits, to make sure the window is closed
+		down properly and resources are freed.
+	</p>
 
 	<h4>Windows Compile</h4>
 
