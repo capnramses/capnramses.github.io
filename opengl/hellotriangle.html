@@ -254,7 +254,7 @@ int main( void ) {
 	<p>
 		We can now expand our Hello World program to start the OpenGL context, print the version, and quit.
 		You might like to compile and run this in a terminal to make sure that everything is working so
-		far, and that your video drivers can support OpenGL 4.1.
+		far, and that your video drivers can support (at least) OpenGL 4.1.
 	</p>
 
 	<pre>
@@ -378,7 +378,8 @@ Renderer: Radeon RX 7900 XTX (radeonsi, navi31, LLVM 20.1.2, DRM 3.63, 6.14.0-35
 OpenGL version supported 4.6 (Core Profile) Mesa 25.0.7-0ubuntu0.25.04.2</pre>
 
 	<p>
-		This tells me that my driver can run OpenGL version 4.1.
+		This tells me that my driver can run OpenGL version 4.1. It's actually running 4.6 - that's fine,
+		we won't change anything.
 		If you're on Windows, and you don't see any output at all, then try running it by clicking on it in Explorer -
 		you might get an error pop-up that your <tt>glfw.dll</tt> file isn't found in the same folder.
 		Otherwise, if you get an error message on the command line - probably your video drivers aren't set up
@@ -394,28 +395,29 @@ OpenGL version supported 4.6 (Core Profile) Mesa 25.0.7-0ubuntu0.25.04.2</pre>
 	<div class="centre">
 		<img src="images/vertex_buffer.png" width="600px" /><br />
 		<small><i>It always helps to draw your problem on paper first. Here I want to
-				define a triangle, with the points given in clock-wise order, that fits
+				define a triangle, with the points given in clockwise order, that fits
 				into the screen area of -1:1 on x and y axes.</i></small>
 	</div>
 
 	<p>
 		We will pack all of these points into a big array of floating-point numbers; 9 in total. We will start with
-		the top point, and proceed clock-wise in order: xyzxyzxyz. The order should always be in the same winding
-		direction, so that we can later determine which side is the front, and which side is the back. We can
-		start writing this under the "<tt>/* OTHER STUFF GOES HERE NEXT */</tt>" comment, from above.
+		the top point, and proceed clockwise in order; <i>xyzxyzxyz</i>. The order should always be in the same
+		<i>winding</i> direction (clockwise or anti-clockwise), so that we can later determine which side is the front, and
+		which side is the back. We can start writing this under the "<tt>/* OTHER STUFF GOES HERE NEXT */</tt>" comment,
+		from above.
 	</p>
 
 	<pre>
 float points[] = {
-   0.0f,  0.5f,  0.0f,
-   0.5f, -0.5f,  0.0f,
-  -0.5f, -0.5f,  0.0f
+   0.0f,  0.5f,  0.0f, // x,y,z of first point.
+   0.5f, -0.5f,  0.0f, // x,y,z of second point.
+  -0.5f, -0.5f,  0.0f  // x,y,z of third point.
 };</pre>
 
 	<p>
 		We will copy this chunk of memory onto the graphics card in a unit called a <b>vertex buffer object</b>
 		(VBO). To do this we "generate" an empty buffer, set it as the current buffer in OpenGL's state machine
-		by "binding", then copy the points into the currently bound buffer:
+		by <i>binding</i> it first, then copy the points into the currently bound buffer:
 	</p>
 
 	<pre>
