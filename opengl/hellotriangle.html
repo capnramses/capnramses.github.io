@@ -442,8 +442,8 @@ glBufferData( GL_ARRAY_BUFFER, 9 * sizeof( float ), points, GL_STATIC_DRAW );</p
 		layout, <b>every time that we draw the mesh</b>. To simplify that, we have a
 		thing called the <b>vertex array object</b> (VAO), which remembers all of
 		the vertex buffers that you want to use, and the memory layout of each one. We
-		will set up the vertex array object once per mesh. When we want to draw, all we do
-		then is bind the VAO and draw.
+		will set up a vertex array object once per mesh. When we want to draw, all we do
+		then is bind the appropriate VAO and draw.
 	</p>
 
 	<pre>
@@ -611,7 +611,8 @@ while ( !glfwWindowShouldClose( window ) ) {
 		</li>
 		<li>
 			Try changing the background colour by using <tt>glClearColor()</tt> before the rendering loop. Something
-			grey-ish is usually fairly neutral; <tt>(0.6f, 0.6f, 0.8f, 1.0f)</tt>. And, if your shaders aren't building properly
+			grey-ish is usually fairly neutral; <tt>(0.6f, 0.6f, 0.8f, 1.0f)</tt>. And, if your shaders aren't building
+			properly
 			they might render the shape black - you'll at least spot this with a non-black background.
 		</li>
 		<li>
