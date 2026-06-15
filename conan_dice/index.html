@@ -60,6 +60,8 @@
     <p id="yellow-total"></p>
   </div>
   <hr />
+  <input id="numdraw" value="6"/><button id="drawbutt">draw</button><p id="drawres"></p>
+  <hr />
   <p>
     <small>2026. By Anton Gerdelan. [<a href="https://antongerdelan.net/">www</a>] [<a
         href="https://github.com/capnramses/capnramses.github.io/tree/master/conandice">src</a>]. Audio from <a
@@ -77,6 +79,14 @@
     let orange_vals = undefined;
     let yellow_vals = undefined;
 
+    
+    document.getElementById("drawbutt").onclick=function draw(){
+      console.log("onclick")
+      let valstr = document.getElementById("numdraw").value;
+      let valint = parseInt(valstr.match(/(\d+)$/)[0], 10);
+      let res = Math.floor(Math.random() * valint);
+      document.getElementById("drawres").innerHTML=res + 1;
+    }
 
     function init(colour) {
       for (i = 1; i <= 8; i++) {
