@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en-UK">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- typical mobile site optisation -->
+  <meta charset="UTF-8" />
+  <title>Conan Dice Roller</title>
+  <style>
+    .fade-in-image {
+      animation: fadeIn 250ms;
+      width: 128px;
+      height: 128px;
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    .roller {
+      margin-right: 20px;
+      width: 64px;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>Conan Dice Roller</h2>
+
+  <hr />
+  <div id="reds">
+    <div id="red-rollers"></div>
+    <br />
+    <div id="red-images"></div>
+
+    <p><i>Click on dice to reroll.</i></p>
+    <p id="red-total"></p>
+  </div>
+  <hr />
+  <div id="oranges">
+    <div id="orange-rollers"></div>
+    <br />
+    <div id="orange-images"></div>
+
+    <p><i>Click on dice to reroll.</i></p>
+    <p id="orange-total"></p>
+  </div>
+  <hr />
+  <div id="yellows">
+    <div id="yellow-rollers"></div>
+    <br />
+    <div id="yellow-images"></div>
+
+    <p><i>Click on dice to reroll.</i></p>
+    <p id="yellow-total"></p>
+  </div>
+  <hr />
+  <p>
+    <small>2026. By Anton Gerdelan. [<a href="https://antongerdelan.net/">www</a>] [<a
+        href="https://github.com/capnramses/capnramses.github.io/tree/master/conandice">src</a>]. Audio from <a
+        href="https://pixabay.com/">pixabay.com</a></small>
+  </p>
+
+  <audio id="aud1" src="rolling-dice-2-102706.mp3" preload="auto"></audio>
+  <audio id="aud2" src="rpg-dice-rolling-95182.mp3" preload="auto"></audio>
+
+  <script>
+    const red_faces = [0, 1, 1, 2, 2, 3];  // avg 1.5 
+    const orange_faces = [0, 0, 1, 1, 2, 2];  // avg 1
+    const yellow_faces = [0, 0, 0, 1, 1, 2];  // avg 0.666
+    let red_vals = undefined;
+    let orange_vals = undefined;
+    let yellow_vals = undefined;
+
+
+    function init(colour) {
+      for (i = 1; i <= 8; i++) {
+        let roller = document.createElement("button");
+        roller.id = colour + "-" + "roller" + i;
+        roller.onclick = function () { roll(colour, roller) };
+        roller.innerHTML = "Roll " + i;
+        roller.className = "roller";
+        document.getElementById(colour + "-" + "rollers").appendChild(roller);
+
+        let butt = document.createElement("button");
+        butt.id = colour + "-" + "butt" + i;
+        butt.onclick = function () { reroll(colour, butt); }
+        butt.innerHTML = '<img src="blank.png" />';
+        butt.hidden = true;
+        document.getElementById(colour + "-" + "images").appendChild(butt);
+      }
+    }
+
+    function face(colour, idx) {
+      let res = Math.floor(Math.random() * 6);
+      if ("red" == colour) {
+        red_vals[idx] = red_faces[res];
+        return '<img src="red' + red_vals[idx] + '.png" width="100%" class="fade-in-image" />';
+      } else if ("orange" == colour) {
+        orange_vals[idx] = orange_faces[res];
+        return '<img src="orange' + orange_vals[idx] + '.png" width="100%" class="fade-in-image" />';
+      } else {
+        yellow_vals[idx] = yellow_faces[res];
+        return '<img src="yellow' + yellow_vals[idx] + '.png" width="100%" class="fade-in-image" />';
+      }
+    }
+
+    function roll(colour, roller) {
+      let count = parseInt(roller.id.match(/(\d+)$/)[0], 10);
+      if ("red" == colour) {
+        red_vals = Array(8).fill(0);
+      } else if ("orange" == colour) {
+        orange_vals = Array(8).fill(0);
+      } else {
+        yellow_vals = Array(8).fill(0);
+      }
+      document.getElementById("aud1").play();
+      for (i = 1; i <= 8; i++) {
+        let butt = document.getElementById(colour + "-" + "butt" + i);
+        butt.hidden = true;
+        if (i <= count) {
+          butt.innerHTML = face(colour, i);
+          butt.hidden = false;
+        }
+      }
+      let sum = 0;
+      if ("red" == colour) {
+        sum = Math.sumPrecise(red_vals);
+      } else if ("orange" == colour) {
+        sum = Math.sumPrecise(orange_vals);
+      } else {
+        sum = Math.sumPrecise(yellow_vals);
+      }
+
+      document.getElementById(colour + "-" + "total").innerHTML = sum;
+    }
+
+    function reroll(colour, butt) {
+      document.getElementById("aud2").play();
+      let face_idx = parseInt(butt.id.match(/(\d+)$/)[0], 10);
+      butt.innerHTML = face(colour, face_idx);
+      let sum = 0;
+      if ("red" == colour) {
+        sum = Math.sumPrecise(red_vals);
+      } else if ("orange" == colour) {
+        sum = Math.sumPrecise(orange_vals);
+      } else {
+        sum = Math.sumPrecise(yellow_vals);
+      }
+      document.getElementById(colour + "-" + "total").innerHTML = sum;
+    }
+    init('red');
+    init('orange');
+    init('yellow');
+  </script>
+
+</body>
+
+</html>
