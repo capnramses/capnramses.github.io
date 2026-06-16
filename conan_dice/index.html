@@ -7,7 +7,7 @@
   <title>Conan Dice Roller</title>
   <style>
     .fade-in-image {
-      animation: fadeIn 250ms;
+      animation: fadeIn 500ms;
       width: 128px;
       height: 128px;
     }
@@ -60,8 +60,71 @@
     <p id="yellow-total"></p>
   </div>
   <hr />
-  <input id="numdraw" value="6"/><button id="drawbutt">draw</button><p id="drawres"></p>
+  <input id="numdraw" value="6" /><button id="drawbutt">draw</button>
+  <p id="drawres"></p>
   <hr />
+  <table>
+    <tr>
+      <th>Character</th>
+      <th>Reserve</th>
+      <th>Fatigue</th>
+      <th>Wounds</th>
+      <th>Defensive</th>
+      <th>Halo</th>
+      <th>Enc.</th>
+      <th>Items</th>
+    </tr>
+    <tr>
+      <td>Bêlit</td>
+      <td><input value="7" size="2"/></td>
+      <td><input value="2"size="2" /></td>
+      <td><input value="0"size="2" /></td>
+      <td><input type=checkbox /></td>
+      <td><input type=checkbox /></td>
+      <td><input size="4" /></td>
+      <td><input size="128" /></td>
+    </tr>
+    <tr>
+      <td>Conan</td>
+      <td><input value="9" size="2"/></td>
+      <td><input value="2" size="2"/></td>
+      <td><input value="0" size="2"/></td>
+      <td><input type=checkbox /></td>
+      <td><input type=checkbox /></td>
+      <td><input size="4" /></td>
+      <td><input size="128" /></td>
+    </tr>
+    <tr>
+      <td>Shevatas</td>
+      <td><input value="8" size="2"/></td>
+      <td><input value="2" size="2"/></td>
+      <td><input value="0"size="2" /></td>
+      <td><input type=checkbox /></td>
+      <td><input type=checkbox /></td>
+      <td><input size="4" /></td>
+      <td><input size="128" /></td>
+    </tr>
+    <tr>
+      <td>Hadrathus</td>
+      <td><input value="8" size="2"/></td>
+      <td><input value="2" size="2"/></td>
+      <td><input value="0" size="2"/></td>
+      <td><input type=checkbox /></td>
+      <td><input type=checkbox checked /></td>
+      <td><input size="4" /></td>
+      <td><input size="128" /></td>
+    </tr>
+  </table>
+
+<dev id="links">
+  <ul>
+    <li><a href="https://companion.the-overlord.com/Conan/#maps">line-of-sight maps</a></li>
+    <li><a href="https://conan-companion.herokuapp.com/heroes">heroes</a></li>
+    <li><a href="https://conan-companion.herokuapp.com/items">items</a></li>
+    <li><a href="https://conan-companion.herokuapp.com/tiles">tiles</a></li>
+  </ul>
+</dev>
+
   <p>
     <small>2026. By Anton Gerdelan. [<a href="https://antongerdelan.net/">www</a>] [<a
         href="https://github.com/capnramses/capnramses.github.io/tree/master/conandice">src</a>]. Audio from <a
@@ -79,13 +142,13 @@
     let orange_vals = undefined;
     let yellow_vals = undefined;
 
-    
-    document.getElementById("drawbutt").onclick=function draw(){
+
+    document.getElementById("drawbutt").onclick = function draw() {
       console.log("onclick")
       let valstr = document.getElementById("numdraw").value;
       let valint = parseInt(valstr.match(/(\d+)$/)[0], 10);
       let res = Math.floor(Math.random() * valint);
-      document.getElementById("drawres").innerHTML=res + 1;
+      document.getElementById("drawres").innerHTML += ( res + 1 ) + ' ';
     }
 
     function init(colour) {
