@@ -1,5 +1,5 @@
 /* WebGL Colour Chooser Widget
-Dr Anton Gerdelan, Trinity College Dublin, Ireland.
+Anton Gerdelan, Trinity College Dublin, Ireland.
 First Version 22 Apr 2014 */
 
 var canvas;

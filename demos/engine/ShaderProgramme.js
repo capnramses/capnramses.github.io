@@ -1,6 +1,6 @@
 /*------------------------------------------------------------*\
 |   Javascript Code for an Encapsulated "Shader Programme"     |
-|   Dr Anton Gerdelan                                          |
+|   Anton Gerdelan                                          |
 |   Trinity College Dublin                                     |
 |   Ireland                                                    |
 |   <gerdela@scss.tcd.ie>                                      |

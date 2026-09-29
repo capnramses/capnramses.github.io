@@ -1,5 +1,5 @@
 /* WebGL Colour Chooser Widget
-Dr Anton Gerdelan, Trinity College Dublin, Ireland.
+Anton Gerdelan, Trinity College Dublin, Ireland.
 First Version 22 Apr 2014
 23 apr 2014 - fixes to gamma sampling. rgb now calculated from hsv, just because
 */
